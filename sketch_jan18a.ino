@@ -4,8 +4,8 @@ int row3 = 28;
 int row4 = 21;
 int val;
 
-byte rows[] { 26, 27, 28, 21 };
-byte columns[] { 15, 16, 17, 18, 5, 6 };
+byte rows[] { 12, 13, 14, 16 };
+byte columns[] { 2, 3, 4, 5, 28, 29};
 
 void setup() {
   // put your setup code here, to run once:
@@ -40,10 +40,11 @@ void readMatrix() {
     for (auto& column : columns) {
       pinMode(column, INPUT_PULLUP);
 
+      delay(1);
+      
       //just a testing to see if a button was pressed
-      if (digitalRead(column) == HIGH) {
-        Serial.print("HIGH: "); Serial.print(column); Serial.print(", "); Serial.println(row);
-        delay(2000);
+      if (digitalRead(column) == LOW) {
+        Serial.print("LOW: "); Serial.print(column); Serial.print(", "); Serial.println(row);
       }
 
       //'disables' the column that just got looped thru
