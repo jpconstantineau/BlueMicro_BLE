@@ -1,38 +1,6 @@
 
 #include <bluefruit.h>
-
-class Key {
-  public:
-    Key() {
-      pressed = false;
-      pressedTime = 400;
-      previousMillis = 0;
-      }
-
-    bool update(const int& currentState) {
-        unsigned long currentMillis = millis();
-
-        //if currently being pressed and delta t is larger than the amount of time that the key shouldn't be pressed for
-        if (currentState == 0 && (currentMillis - previousMillis) >= pressedTime) {
-          previousMillis = currentMillis;
-          pressedTime = 300;
-          
-          return true;
-          }
-
-        else if (currentState == 1) {
-          pressedTime = 50;
-          
-          return false;
-        }  
-        else 
-          return false;
-      } 
-  private:
-    unsigned long pressedTime;
-    unsigned long previousMillis;
-    bool pressed;  
-};
+#include </home/julian/Arduino/sketch_jan18a/Key.h>
 
 int row1 = 26;
 int row2 = 27;
@@ -56,17 +24,35 @@ byte ROWS = 4;
   {0, 0, 0, 0, 0, 0}
   };*/
 
-int firstLayer[4][6] {
-  {116, 114, 101, 119, 113, 27}, 
-  {103, 102, 100, 115, 97, 9}, 
-  {98, 118, 99, 120, 122, 15},
-  {0, 0, 0, 0, 0, 0}
-  };
+
+
+
 
 Key keys[4][6];
-  
+
+
+
+char currentChar = ' ';
+
 void setup() {
   // put your setup code here, to run once:
+  Key::startCurrentLayer();
+  /*int intFirstLayer[4][6] {
+    {116, 114, 101, 119, 113, 27}, 
+    {103, 102, 100, 115, 97, 9}, 
+    {98, 118, 99, 120, 122, 0},
+    {0, 0, 0, 0, 0, 0}
+  };
+  
+  int intShiftLayer[4][6] {
+    {84, 82, 69, 87, 81, 27},
+    {71, 70, 68, 83, 65, 9},
+    {66, 86, 67, 88, 90, 0},
+    {0, 0, 0, 0, 0, 0}
+  };
+  
+  Key::setFirstLayer(intFirstLayer);
+  Key::setShiftLayer(intShiftLayer);*/
   
   Serial.begin(115200);
    pinMode(LED_BUILTIN, OUTPUT);
@@ -138,6 +124,7 @@ void startAdv(void)
    * For recommended advertising interval
    * https://developer.apple.com/library/content/qa/qa1931/_index.html   
    */
+   
   Bluefruit.Advertising.restartOnDisconnect(true);
   Bluefruit.Advertising.setInterval(32, 244);    // in unit of 0.625 ms
   Bluefruit.Advertising.setFastTimeout(30);      // number of seconds in fast mode
@@ -145,27 +132,21 @@ void startAdv(void)
 }
 
 void readMatrix() {
-  for(int j(0); j < ROWS; ++j) {
+  for(int j = 0; j < ROWS; ++j) {
 
     //set the current row as OUPUT and LOW
     pinMode(rows[j], OUTPUT);
     digitalWrite(rows[j], LOW);
 
     //loops thru all of the columns
-    for (int i(0); i < COLS; ++i) {
+    for (int i = 0; i < COLS; ++i) {
       pinMode(columns[i], INPUT_PULLUP);
-      
-      //just a testing to see if a button was pressed
-      /*if (digitalRead(columns[i]) == LOW) {
-        Serial.print("LOW: "); Serial.print(columns[i]); Serial.print(", "); Serial.println(rows[j]);
-        Serial.println(firstLayer[j][i]);
-        
-      }*/
-      if (keys[j][i].update(digitalRead(columns[i]))) {
 
-        char entered = firstLayer[j][i];
-        Serial.print("Pressed: "); Serial.println(entered);
-        blehid.keyPress(entered);
+      currentChar = keys[j][i].update(digitalRead(columns[i]), millis(), j, i);
+      if ( currentChar != ' ' ) {
+        //char entered = firstLayer.keyAt(j, i);
+        Serial.print("Pressed: "); Serial.println(currentChar);
+        blehid.keyPress(currentChar);
 
         delay(5);
 
@@ -185,36 +166,6 @@ void loop() {
   // put your main code here, to run repeatedly:
   readMatrix(); 
 
-  
-  /*if ( hasKeyPressed )
-  {
-    hasKeyPressed = false;
-    blehid.keyRelease();
-    
-    // Delay a bit after a report
-    delay(5);
-  }
-    
-  if (Serial.available())
-  {
-    char ch = (char) Serial.read();
-
-    // echo
-    Serial.write(ch); 
-
-    blehid.keyPress(ch);
-    hasKeyPressed = true;
-    
-    // Delay a bit after a report
-    delay(5);
-  }
-
-  // Request CPU to enter low-power mode until an event/interrupt occurs
-void rtos_idle_callback(void)
-{
-  // Don't call any other FreeRTOS blocking API()
-  // Perform background task(s) here
-}  waitForEvent();*/  
   waitForEvent();
 }
 void rtos_idle_callback(void)
