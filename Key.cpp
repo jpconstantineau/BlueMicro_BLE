@@ -58,8 +58,13 @@ char Key::update(const int& currentState, unsigned long millis, const int& row, 
                 case SpecialKey::CONTROL: controlPressed = true;
             }
         }
-          
-        return currentLayer[row][col];
+        
+        if (currentLayer[row][col] != 0) {
+            return static_cast<char>(currentLayer[row][col]);
+        }
+        else {
+            return ' ';
+        }
     }
 
     else if (currentState == 1) {
@@ -67,7 +72,7 @@ char Key::update(const int& currentState, unsigned long millis, const int& row, 
 
         if (specialKey != SpecialKey::NO) {
         switch(specialKey) {
-            case SpecialKey::SHIFT: shiftPressed = false;
+            case SpecialKey::SHIFT: setCurrentLayer(firstLayer);
             case SpecialKey::WIN: winPressed = false;
             case SpecialKey::CONTROL: controlPressed = false;
             }

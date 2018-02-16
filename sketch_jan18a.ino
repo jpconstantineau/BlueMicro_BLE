@@ -37,22 +37,9 @@ char currentChar = ' ';
 void setup() {
   // put your setup code here, to run once:
   Key::startCurrentLayer();
-  /*int intFirstLayer[4][6] {
-    {116, 114, 101, 119, 113, 27}, 
-    {103, 102, 100, 115, 97, 9}, 
-    {98, 118, 99, 120, 122, 0},
-    {0, 0, 0, 0, 0, 0}
-  };
-  
-  int intShiftLayer[4][6] {
-    {84, 82, 69, 87, 81, 27},
-    {71, 70, 68, 83, 65, 9},
-    {66, 86, 67, 88, 90, 0},
-    {0, 0, 0, 0, 0, 0}
-  };
-  
-  Key::setFirstLayer(intFirstLayer);
-  Key::setShiftLayer(intShiftLayer);*/
+
+  //should be the shift key, which is then set to be the shift key 
+  keys[2][5].setSpecial(Key::SpecialKey::SHIFT);
   
   Serial.begin(115200);
    pinMode(LED_BUILTIN, OUTPUT);
