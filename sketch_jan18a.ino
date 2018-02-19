@@ -1,5 +1,7 @@
-
 #include <bluefruit.h>
+#undef min
+#undef max
+#include <algorithm>
 #include </home/julian/Arduino/sketch_jan18a/Key.h>
 
 int row1 = 26;
@@ -17,29 +19,22 @@ byte columns[] { 2, 3, 4, 5, 28, 29};
 byte COLS = 6;
 byte ROWS = 4;
 
-/*int firstLayer[4][6] = {
-  {0, 113, 119, 101, 114, 116},
-  {0, 97, 115, 100, 102, 103},
-  {0, 122, 120, 99, 118, 98},
-  {0, 0, 0, 0, 0, 0}
-  };*/
-
-
-
-
-
 Key keys[4][6];
 
-
-
 char currentChar = ' ';
+std::array<uint8_t, 6> nullReport {0, 0, 0, 0, 0, 0};
+
+bool isReportedReleased = true;
 
 void setup() {
+
   // put your setup code here, to run once:
   Key::startCurrentLayer();
 
   //should be the shift key, which is then set to be the shift key 
   keys[2][5].setSpecial(Key::SpecialKey::SHIFT);
+  keys[3][2].setSpecial(Key::SpecialKey::DOWN);
+  keys[3][1].setSpecial(Key::SpecialKey::WIN);
   
   Serial.begin(115200);
    pinMode(LED_BUILTIN, OUTPUT);
@@ -129,17 +124,46 @@ void readMatrix() {
     for (int i = 0; i < COLS; ++i) {
       pinMode(columns[i], INPUT_PULLUP);
 
-      currentChar = keys[j][i].update(digitalRead(columns[i]), millis(), j, i);
+      /*currentChar = keys[j][i].update(digitalRead(columns[i]), millis(), j, i);
       if ( currentChar != ' ' ) {
         //char entered = firstLayer.keyAt(j, i);
         Serial.print("Pressed: "); Serial.println(currentChar);
         blehid.keyPress(currentChar);
-
-        delay(5);
+        //delay(2000);
 
         blehid.keyRelease();
-        }
+        }*/
 
+      auto pair = keys[j][i].aUpdate(digitalRead(columns[i]), millis(), j, i);
+
+      /*Serial.print( (int) pair.second[0]); Serial.print(' ');
+      Serial.print((int)pair.second[1]); Serial.print(' ');
+      Serial.print((int)pair.second[2]); Serial.print(' ');
+      Serial.print((int)pair.second[3]); Serial.print(' ');
+      Serial.print((int)pair.second[4]); Serial.print(' ');
+      Serial.println((int)pair.second[5]);
+      //delay(2000);*/
+      
+      if ((pair.first != 0 || pair.second != nullReport)) {
+        Serial.print("Pressed something, modifier: ");
+        Serial.print(pair.first);
+        Serial.print(' ');
+        Serial.print( (int) pair.second[0]); Serial.print(' ');
+        Serial.print((int)pair.second[1]); Serial.print(' ');
+        Serial.print((int)pair.second[2]); Serial.print(' ');
+        Serial.print((int)pair.second[3]); Serial.print(' ');
+        Serial.print((int)pair.second[4]); Serial.print(' ');
+        Serial.println((int)pair.second[5]);
+
+        uint8_t cStyle[6];
+        std::copy(std::begin(pair.second), std::end(pair.second), std::begin(cStyle));
+        blehid.keyboardReport(pair.first, cStyle);  
+
+        isReportedReleased = false;
+      }
+      else if (!isReportedReleased) {
+        blehid.keyRelease();
+        isReportedReleased = true;
       //'disables' the column that just got looped thru
       pinMode(columns[i], INPUT);
       }
