@@ -419,6 +419,7 @@ uint8_t keycode[6];
       #endif 
     }
     }
+    #if BLE_PERIPHERAL ==1   | BLE_CENTRAL ==1 
 if(Key::layerChanged)//layer comms
     {
         str[0]= 1; 
@@ -440,6 +441,7 @@ if(Key::layerChanged)//layer comms
         #endif
         Key::layerChanged = false;
     } 
+    #endif
 }
 
 /****************************************************************************************************/
