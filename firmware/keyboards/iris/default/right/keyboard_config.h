@@ -17,7 +17,6 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-#include "avr_mapping.h"
 #ifndef KEYBOARD_CONFIG_H
 #define KEYBOARD_CONFIG_H
 
@@ -28,19 +27,19 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define RIGHT 1
 #define MASTER 2
 
-#define KEYBOARD_SIDE RIGHT
+#define KEYBOARD_SIDE LEFT
 
 #if   KEYBOARD_SIDE == RIGHT
-#define DEVICE_NAME                         "Minidox_R"                          /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME                         "IrisBLE_R"                          /**< Name of device. Will be included in the advertising data. */
 #elif KEYBOARD_SIDE == LEFT
-#define DEVICE_NAME                         "Minidox_L"                          /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME                         "IrisBLE_L"                          /**< Name of device. Will be included in the advertising data. */
 #else
-#define DEVICE_NAME                         "Minidox"                          /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME                         "IrisBLE"                          /**< Name of device. Will be included in the advertising data. */
 #endif
 
-#define DEVICE_MODEL                        "Minidox_V1"                          /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_MODEL                        "IrisBLE_V1"                          /**< Name of device. Will be included in the advertising data. */
 
-#define MANUFACTURER_NAME                   "ThatCanadian"                      /**< Manufacturer. Will be passed to Device Information Service. */
+#define MANUFACTURER_NAME                   "Keebio"                      /**< Manufacturer. Will be passed to Device Information Service. */
 
 // Set max power. Accepted values are: -40, -30, -20, -16, -12, -8, -4, 0, 4
 #define DEVICE_POWER 0
@@ -50,7 +49,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define PNP_ID_PRODUCT_VERSION              0x0001                                     /**< Product Version. */
 
 
-#define DEBUG_SERIAL 1  
+#define DEBUG_SERIAL 1  // for the Iris this MUST be disabled.
 
 #if KEYBOARD_SIDE == LEFT
 #define BLE_HID 1
@@ -80,15 +79,15 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 /* HARDWARE DEFINITION*/
 /* key matrix size */
-#define MATRIX_ROWS 4
-#define MATRIX_COLS 5
+#define MATRIX_ROWS 5
+#define MATRIX_COLS 6
 
-// Minidox on Arduino
-//#define MATRIX_ROW_PINS { B2, B6, B4, B5 }
-//#define MATRIX_COL_PINS { F4, D3, D2, D1, D4 } 
+// Iris on Arduino
+//#define MATRIX_ROW_PINS { D7, E6, B4, D2, D4 }
+//#define MATRIX_COL_PINS { F6, F7, B1, B3, B2, B6 }
 
-#define MATRIX_ROW_PINS { B2, B6, B4, B5 }
-#define MATRIX_COL_PINS { F4, D3, D2, D1, D4 }
+#define MATRIX_ROW_PINS { 29, 30, 15, 7, 27 }
+#define MATRIX_COL_PINS {3, 2, 12, 14, 13, 11 }
 #define UNUSED_PINS {}
 
 /* COL2ROW or ROW2COL */
@@ -97,4 +96,3 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define DEBOUNCETIME 20
 
 #endif /* KEYBOARD_CONFIG_H */
-

@@ -50,22 +50,27 @@ bool isReportedReleased = true;
 // put your main code here, to run repeatedly:
 /****************************************************************************************************/
 void setup() {
-  
+  #if DEBUG_SERIAL == 1
   Serial.begin(115200);
-
+  #endif
    //inits all the columns as INPUT
    for (const auto& column : columns) {
+  #if DEBUG_SERIAL == 1
       Serial.print("column ");
       Serial.print(column);
       Serial.println(" set to INPUT");
+  #endif
+
       pinMode(column, INPUT);
     }
 
    //inits all the rows as INPUT_PULLUP
    for (const auto& row : rows) {
+#if DEBUG_SERIAL == 1
       Serial.print("row ");
       Serial.print(row);
       Serial.println(" set to INPUT_PULLUP");
+#endif
     pinMode(row, INPUT_PULLUP);
     }
 
@@ -131,8 +136,10 @@ void scan_callback(ble_gap_evt_adv_report_t* report)
   // Check if advertising contain BleUart service3
   if ( Bluefruit.Scanner.checkReportForService(report, clientUart) )
   {
+    #if DEBUG_SERIAL == 1
+
     Serial.print("BLE UART service detected. Connecting ... ");
- 
+#endif 
     // Connect to device with bleuart service in advertising
     Bluefruit.Central.connect(report);
   }
@@ -142,9 +149,11 @@ void prph_connect_callback(uint16_t conn_handle)
 {
   char peer_name[32] = { 0 };
   Bluefruit.Gap.getPeerName(conn_handle, peer_name, sizeof(peer_name));
- 
+ #if DEBUG_SERIAL == 1
+
   Serial.print("[Prph] Connected to ");
   Serial.println(peer_name);
+  #endif
 }
 /****************************************************************************************************/ 
 void prph_disconnect_callback(uint16_t conn_handle, uint8_t reason)
@@ -210,8 +219,10 @@ void cent_disconnect_callback(uint16_t conn_handle, uint8_t reason)
 {
   (void) conn_handle;
   (void) reason;
-  
+  #if DEBUG_SERIAL == 1
+
   Serial.println("[Cent] Disconnected");
+#endif
 }
 #endif
 /****************************************************************************************************/
@@ -459,3 +470,4 @@ void rtos_idle_callback(void)
   // Don't call any other FreeRTOS blocking API()
   // Perform background task(s) here
 }
+

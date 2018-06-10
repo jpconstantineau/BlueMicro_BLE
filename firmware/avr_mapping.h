@@ -1,5 +1,5 @@
 /*
-Copyright 2018 <Pierre Constantineau, Julian Komaromy>
+Copyright 2018 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -17,44 +17,33 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-#include <array>
-#include <utility>
-#include <cstdint>
-#include "hid_keycodes.h"
-#include "keyboard_config.h"
-#include "keymap.h"
 
+/*
 
+These defines map the AVR-based ports of the Arduino Pro Micro to the NRF52832 GPIO pins.
+*/
 
+#ifndef AVR_MAPPING_H
+#define AVR_MAPPING_H
 
-class Key {
-    public:
-        Key();
+#define D3      17  //
+#define D2      7   //
+#define D1      25  //sda
+#define D0      26  //scl
+#define D4      27
+#define C6      28
+#define D7      29
+#define E6      30
+#define B4      15
+#define B5      16
 
+#define F4      5
+#define F5      4
+#define F6      3
+#define F7      2
+#define B1      12  //sck
+#define B3      14  //miso
+#define B2      13  //mosi
+#define B6      11
 
-
-        
-        static bool scanMatrix(const int& currentState,unsigned long millis, const int& row, const int& col);
-
-        static void updateRemoteReport(uint8_t data0, uint8_t data1, uint8_t data2,uint8_t data3, uint8_t data4, uint8_t data5,uint8_t data6, uint8_t data7, uint8_t data8);
-        static void updateRemoteLayer(uint8_t data0);
-        static std::array<uint8_t, 9> getReport();
-        static bool layerChanged;
-        static uint8_t localLayer;
-
-                 static std::array<uint8_t, 9> currentReport;
-
-    private:
-        static void resetReport();
-        static bool updateLayer();
-        static bool updateModifiers();
-        static void copyRemoteReport();
-        static void resetRemoteReport();
-        static std::array<uint8_t, 9> remoteReport;
-        static  uint8_t matrix[2][MATRIX_ROWS][MATRIX_COLS];
-        static unsigned long timestamps[MATRIX_ROWS][MATRIX_COLS]; 
-
-        static uint8_t remoteLayer;
-
-};
-
+#endif /* HID_KEYCODES_H */

@@ -28,7 +28,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define RIGHT 1
 #define MASTER 2
 
-#define KEYBOARD_SIDE RIGHT
+#define KEYBOARD_SIDE LEFT
 
 #if   KEYBOARD_SIDE == RIGHT
 #define DEVICE_NAME                         "Minidox_R"                          /**< Name of device. Will be included in the advertising data. */
