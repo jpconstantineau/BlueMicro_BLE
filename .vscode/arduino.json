@@ -1,4 +1,0 @@
-{
-    "board": "adafruit:nrf52:feather52",
-    "configuration": "softdevice=s132v510,debug=l0"
-}
