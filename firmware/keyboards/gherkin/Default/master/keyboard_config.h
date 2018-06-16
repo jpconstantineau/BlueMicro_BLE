@@ -17,22 +17,20 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-
 #ifndef KEYBOARD_CONFIG_H
 #define KEYBOARD_CONFIG_H
 #include "avr_mapping.h"
 
-#define KEYBOARD_SIDE LEFT
-//#define KEYBOARD_SIDE RIGHT
-// CHANGE THIS FOR THE KEYBOARD TO MATCH WHAT IS BEING FLASHED. OPTIONS: LEFT  RIGHT  MASTER
+#define KEYBOARD_SIDE MASTER
 
-#define DEVICE_NAME_R                         "IrisBLE_R"                          /**< Name of device. Will be included in the advertising data. */
-#define DEVICE_NAME_L                         "IrisBLE_L"                          /**< Name of device. Will be included in the advertising data. */
-#define DEVICE_NAME_M                         "IrisBLE"                          /**< Name of device. Will be included in the advertising data. */
 
-#define DEVICE_MODEL                        "IrisBLE_V1"                          /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME_R                         "GherkinBLE_R"                          /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME_L                         "GherkinBLE_L"                          /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME_M                         "GherkinBLE"                          /**< Name of device. Will be included in the advertising data. */
 
-#define MANUFACTURER_NAME                   "Keebio"                      /**< Manufacturer. Will be passed to Device Information Service. */
+#define DEVICE_MODEL                        "GherkinBLE_V1"                          /**< Name of device. Will be included in the advertising data. */
+
+#define MANUFACTURER_NAME                   "40Percent.Club"                      /**< Manufacturer. Will be passed to Device Information Service. */
 
 
 /* HARDWARE DEFINITION*/
@@ -40,10 +38,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define MATRIX_ROWS 5
 #define MATRIX_COLS 6
 
-// Iris on Arduino
-#define MATRIX_ROW_PINS { D7, E6, B4, D2, D4 }
-#define MATRIX_COL_PINS { F6, F7, B1, B3, B2, B6 }
-
+#define MATRIX_ROW_PINS {2, 12, 14, 13, 11 }
+#define MATRIX_COL_PINS {15, 30, 29, 28, 27,26 }
 #define UNUSED_PINS {}
 
 /* COL2ROW or ROW2COL */
@@ -51,36 +47,20 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 #define DEBOUNCETIME 20
 
+
+
+#define KEYMAP( \
+	 K00,   K01,   K02,   K03,   K04,   K05,   K10,   K11,   K12,   K13 , \
+	 K14,   K15,   K20,   K21,   K22,   K23,   K24,   K25,   K30,   K31 , \
+	 K32,   K33,   K34,   K35,   K40,   K41,   K42,   K43,   K44,   K45   \
+) { \
+	{ K00,   K01,   K02,   K03,   K04,   K05 }, \
+	{ K10,   K11,   K12,   K13,   K14,   K15 }, \
+	{ K20,   K21,   K22,   K23,   K24,   K25 }, \
+	{ K30,   K31,   K32,   K33,   K34,   K35 }, \
+	{ K40,   K41,   K42,   K43,   K44,   K45 }  \
+}
+
+
+
 #endif /* KEYBOARD_CONFIG_H */
-
-    #if KEYBOARD_SIDE == LEFT
-
-//todo: edit KEYMAP so that it makes sense for the Iris.  This is for the Gherkin...
-
-#define KEYMAP( \
-	 K00,   K01,   K02,   K03,   K04,   K05,   K10,   K11,   K12,   K13 , \
-	 K14,   K15,   K20,   K21,   K22,   K23,   K24,   K25,   K30,   K31 , \
-	 K32,   K33,   K34,   K35,   K40,   K41,   K42,   K43,   K44,   K45   \
-) { \
-	{ K00,   K01,   K02,   K03,   K04,   K05 }, \
-	{ K10,   K11,   K12,   K13,   K14,   K15 }, \
-	{ K20,   K21,   K22,   K23,   K24,   K25 }, \
-	{ K30,   K31,   K32,   K33,   K34,   K35 }, \
-	{ K40,   K41,   K42,   K43,   K44,   K45 }  \
-}
-
-    #else
-
-#define KEYMAP( \
-	 K00,   K01,   K02,   K03,   K04,   K05,   K10,   K11,   K12,   K13 , \
-	 K14,   K15,   K20,   K21,   K22,   K23,   K24,   K25,   K30,   K31 , \
-	 K32,   K33,   K34,   K35,   K40,   K41,   K42,   K43,   K44,   K45   \
-) { \
-	{ K00,   K01,   K02,   K03,   K04,   K05 }, \
-	{ K10,   K11,   K12,   K13,   K14,   K15 }, \
-	{ K20,   K21,   K22,   K23,   K24,   K25 }, \
-	{ K30,   K31,   K32,   K33,   K34,   K35 }, \
-	{ K40,   K41,   K42,   K43,   K44,   K45 }  \
-}
-
-    #endif

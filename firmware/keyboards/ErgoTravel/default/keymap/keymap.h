@@ -24,35 +24,6 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define KEYMAP_H
 
 
-#if KEYBOARD_SIDE == LEFT
-#define KEYMAP( \
-      k00, k01, k02, k03, k04, k05, k06, \
-      k10, k11, k12, k13, k14, k15, k16, \
-      k20, k21, k22, k23, k24, k25, k26, \
-      k30, k31, k32, k33, k34, k35,  k36 \
-) \
-{ \
-    { k00, k01, k02, k03, k04, k05, k06 }, \
-    { k10, k11, k12, k13, k14, k15, k16 }, \
-    { k20, k21, k22, k23, k24, k25, k26 }, \
-    { k30, k31, k32, k33, k34, k35, k36 } \
-} 
-#else
-#define KEYMAP( \
-      k00, k01, k02, k03, k04, k05, k06, \
-      k10, k11, k12, k13, k14, k15, k16, \
-      k20, k21, k22, k23, k24, k25, k26, \
-      k30, k31, k32, k33, k34, k35,  k36 \
-) \
-{ \
-    { k06, k05, k04, k03, k02, k01, k00 }, \
-    { k16, k15, k14, k13, k12, k11, k10 }, \
-    { k26, k25, k24, k23, k22, k21, k20 }, \
-    { k36, k35, k34, k33, k32, k31, k30 } \
-}
-#endif
-
-
 #define _QWERTY 0
 #define _L1  1
 #define _L2  2

@@ -1,5 +1,5 @@
 /*
-Copyright 2018 <Pierre Constantineau, Julian Komaromy>
+Copyright 2018 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -17,42 +17,32 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-#include <array>
-#include <utility>
-#include <cstdint>
-#include "hid_keycodes.h"
-#include "keyboard_config.h"
-#include "keymap.h"
+
+#ifndef FIRMWARE_H
+#define FIRMWARE_H
+
+#include "firmware_config.h"
+#include "bluetooth_config.h"
+#include "Key.h"
+
+void setupMatrix(void);
+void scanMatrix(void);
+void startAdv(void);
+void sendKeyPresses(void);
+
+#if BLE_PERIPHERAL == 1
+    void cccd_callback(BLECharacteristic& chr, uint16_t cccd_value)  ;
+    void layer_request_callback (BLECharacteristic& chr, uint8_t* data, uint16_t len, uint16_t offset);
+#endif
 
 
-class Key {
-    public:
-        Key();
- 
-        static bool scanMatrix(const int& currentState,unsigned long millis, const int& row, const int& col);
-        static void updateRemoteMods(uint8_t data0);
-        static void updateRemoteReport(uint8_t data1, uint8_t data2,uint8_t data3, uint8_t data4, uint8_t data5,uint8_t data6);
-        static void updateRemoteLayer(uint8_t data0);
-        static std::array<uint8_t, 8> getReport();
-        static bool layerChanged;
-        static uint8_t localLayer;
+#if BLE_CENTRAL == 1
+    void notify_callback(BLEClientCharacteristic* chr, uint8_t* data, uint16_t len);
+    void scan_callback(ble_gap_evt_adv_report_t* report);
+    void prph_connect_callback(uint16_t conn_handle);
+    void prph_disconnect_callback(uint16_t conn_handle, uint8_t reason);
+    void cent_connect_callback(uint16_t conn_handle);
+    void cent_disconnect_callback(uint16_t conn_handle, uint8_t reason);
+#endif
 
-                 static std::array<uint8_t, 8> currentReport;
-
-    private:
-        static void resetReport();
-        static bool updateLayer();
-        static bool updateModifiers();
-        static void copyRemoteReport();
-        static void resetRemoteReport();
-        static std::array<uint8_t, 8> remoteReport;
-        static  uint8_t matrix[2][MATRIX_ROWS][MATRIX_COLS];
-        static unsigned long timestamps[MATRIX_ROWS][MATRIX_COLS]; 
-
-        static uint8_t remoteLayer;
-        static uint8_t currentMod;
-        static uint8_t remoteMod;
-        static uint8_t bufferposition;
-
-};
-
+#endif /* FIRMWARE_H */

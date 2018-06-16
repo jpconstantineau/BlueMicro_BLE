@@ -19,62 +19,19 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 #ifndef KEYBOARD_CONFIG_H
 #define KEYBOARD_CONFIG_H
-
-#define COL2ROW       0
-#define ROW2COL       1
-
-#define LEFT 0
-#define RIGHT 1
-#define MASTER 2
+#include "avr_mapping.h"
 
 #define KEYBOARD_SIDE LEFT
+//#define KEYBOARD_SIDE RIGHT
+// CHANGE THIS FOR THE KEYBOARD TO MATCH WHAT IS BEING FLASHED. OPTIONS: LEFT  RIGHT  MASTER
 
-#if   KEYBOARD_SIDE == RIGHT
-#define DEVICE_NAME                         "ErgoTravelBLE_R"                          /**< Name of device. Will be included in the advertising data. */
-#elif KEYBOARD_SIDE == LEFT
-#define DEVICE_NAME                         "ErgoTravelBLE_L"                          /**< Name of device. Will be included in the advertising data. */
-#else
-#define DEVICE_NAME                         "ErgoTravelBLE"                          /**< Name of device. Will be included in the advertising data. */
-#endif
+#define DEVICE_NAME_R                         "ErgoTravelBLE_R"                          /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME_L                        "ErgoTravelBLE_L"                          /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME_M                         "ErgoTravelBLE"                          /**< Name of device. Will be included in the advertising data. */
 
 #define DEVICE_MODEL                        "ErgoTravelBLE_V1"                          /**< Name of device. Will be included in the advertising data. */
 
 #define MANUFACTURER_NAME                   "JPConstantineau.com"                      /**< Manufacturer. Will be passed to Device Information Service. */
-
-// Set max power. Accepted values are: -40, -30, -20, -16, -12, -8, -4, 0, 4
-#define DEVICE_POWER 0
-#define PNP_ID_VENDOR_ID_SOURCE             0x02                                       /**< Vendor ID Source. */
-#define PNP_ID_VENDOR_ID                    0x1915                                     /**< Vendor ID. */
-#define PNP_ID_PRODUCT_ID                   0xEEEE                                     /**< Product ID. */
-#define PNP_ID_PRODUCT_VERSION              0x0001                                     /**< Product Version. */
-
-
-#define DEBUG_SERIAL 1
-
-#if KEYBOARD_SIDE == LEFT
-#define BLE_HID 1
-#define BLE_CENTRAL 1
-#define BLE_PERIPHERAL 0
-#define BLE_PAIRS 1
-#define PERIPHERAL_COUNT 1
-#define CENTRAL_COUNT 1
-#endif
-#if KEYBOARD_SIDE == RIGHT
-#define BLE_HID 0
-#define BLE_CENTRAL 0
-#define BLE_PERIPHERAL 1
-#define BLE_PAIRS 1
-#define PERIPHERAL_COUNT 1
-#define CENTRAL_COUNT 0
-#endif
-#if KEYBOARD_SIDE == MASTER
-#define BLE_CENTRAL 0
-#define BLE_PERIPHERAL 0
-#define BLE_PAIRS 0
-#define BLE_HID 1
-#define PERIPHERAL_COUNT 1
-#define CENTRAL_COUNT 0
-#endif
 
 
 /* HARDWARE DEFINITION*/
@@ -90,5 +47,34 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define DIODE_DIRECTION COL2ROW
 
 #define DEBOUNCETIME 20
+
+
+#if KEYBOARD_SIDE == LEFT
+#define KEYMAP( \
+      k00, k01, k02, k03, k04, k05, k06, \
+      k10, k11, k12, k13, k14, k15, k16, \
+      k20, k21, k22, k23, k24, k25, k26, \
+      k30, k31, k32, k33, k34, k35,  k36 \
+) \
+{ \
+    { k00, k01, k02, k03, k04, k05, k06 }, \
+    { k10, k11, k12, k13, k14, k15, k16 }, \
+    { k20, k21, k22, k23, k24, k25, k26 }, \
+    { k30, k31, k32, k33, k34, k35, k36 } \
+} 
+#else
+#define KEYMAP( \
+      k00, k01, k02, k03, k04, k05, k06, \
+      k10, k11, k12, k13, k14, k15, k16, \
+      k20, k21, k22, k23, k24, k25, k26, \
+      k30, k31, k32, k33, k34, k35,  k36 \
+) \
+{ \
+    { k06, k05, k04, k03, k02, k01, k00 }, \
+    { k16, k15, k14, k13, k12, k11, k10 }, \
+    { k26, k25, k24, k23, k22, k21, k20 }, \
+    { k36, k35, k34, k33, k32, k31, k30 } \
+}
+#endif
 
 #endif /* KEYBOARD_CONFIG_H */

@@ -17,65 +17,22 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-#include "avr_mapping.h"
+
 #ifndef KEYBOARD_CONFIG_H
 #define KEYBOARD_CONFIG_H
+#include "avr_mapping.h"
 
-#define COL2ROW       0
-#define ROW2COL       1
-
-#define LEFT 0
-#define RIGHT 1
-#define MASTER 2
-
+//#define KEYBOARD_SIDE LEFT
 #define KEYBOARD_SIDE RIGHT
+// CHANGE THIS FOR THE KEYBOARD TO MATCH WHAT IS BEING FLASHED. OPTIONS: LEFT  RIGHT  MASTER
 
-#if   KEYBOARD_SIDE == RIGHT
-#define DEVICE_NAME                         "Minidox_R"                          /**< Name of device. Will be included in the advertising data. */
-#elif KEYBOARD_SIDE == LEFT
-#define DEVICE_NAME                         "Minidox_L"                          /**< Name of device. Will be included in the advertising data. */
-#else
-#define DEVICE_NAME                         "Minidox"                          /**< Name of device. Will be included in the advertising data. */
-#endif
+#define DEVICE_NAME_R                         "Minidox_R"                          /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME_L                         "Minidox_L"                          /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME_M                         "Minidox"                          /**< Name of device. Will be included in the advertising data. */
 
-#define DEVICE_MODEL                        "Minidox_V1"                          /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_MODEL                          "Minidox_V1"                          /**< Name of device. Will be included in the advertising data. */
 
-#define MANUFACTURER_NAME                   "ThatCanadian"                      /**< Manufacturer. Will be passed to Device Information Service. */
-
-// Set max power. Accepted values are: -40, -30, -20, -16, -12, -8, -4, 0, 4
-#define DEVICE_POWER 0
-#define PNP_ID_VENDOR_ID_SOURCE             0x02                                       /**< Vendor ID Source. */
-#define PNP_ID_VENDOR_ID                    0x1915                                     /**< Vendor ID. */
-#define PNP_ID_PRODUCT_ID                   0xEEEE                                     /**< Product ID. */
-#define PNP_ID_PRODUCT_VERSION              0x0001                                     /**< Product Version. */
-
-
-#define DEBUG_SERIAL 1  
-
-#if KEYBOARD_SIDE == LEFT
-#define BLE_HID 1
-#define BLE_CENTRAL 1
-#define BLE_PERIPHERAL 0
-#define BLE_PAIRS 1
-#define PERIPHERAL_COUNT 1
-#define CENTRAL_COUNT 1
-#endif
-#if KEYBOARD_SIDE == RIGHT
-#define BLE_HID 0
-#define BLE_CENTRAL 0
-#define BLE_PERIPHERAL 1
-#define BLE_PAIRS 1
-#define PERIPHERAL_COUNT 1
-#define CENTRAL_COUNT 0
-#endif
-#if KEYBOARD_SIDE == MASTER
-#define BLE_CENTRAL 0
-#define BLE_PERIPHERAL 0
-#define BLE_PAIRS 0
-#define BLE_HID 1
-#define PERIPHERAL_COUNT 1
-#define CENTRAL_COUNT 0
-#endif
+#define MANUFACTURER_NAME                     "ThatCanadian"                      /**< Manufacturer. Will be passed to Device Information Service. */
 
 
 /* HARDWARE DEFINITION*/
@@ -95,6 +52,34 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define DIODE_DIRECTION COL2ROW
 
 #define DEBOUNCETIME 20
+
+
+
+    #if KEYBOARD_SIDE == LEFT
+        #define KEYMAP( \
+            K00,   K01,   K02,   K03,   K04,       \
+            K10,   K11,   K12,   K13,   K14,       \
+            K20,   K21,   K22,   K23,   K24,       \
+        K30,   K31,   K32,   K33,   K34     \
+        ) { \
+            { K00,   K01,   K02,   K03,   K04   }, \
+            { K10,   K11,   K12,   K13,   K14   }, \
+            { K20,   K21,   K22,   K23,   K24   }, \
+            { K30,   K31,   K32,   K33,   K34   }  \
+        }
+    #else
+        #define KEYMAP( \
+            K04,   K03,   K02,   K01,   K00,       \
+            K14,   K13,   K12,   K11,   K10,       \
+            K24,   K23,   K22,   K21,   K20,       \
+            K34,   K33,   K32,   K31,   K30     \
+        ) { \
+            { K00,   K01,   K02,   K03,   K04   }, \
+            { K10,   K11,   K12,   K13,   K14   }, \
+            { K20,   K21,   K22,   K23,   K24   }, \
+            { K30,   K31,   K32,   K33,   K34   }  \
+        }
+    #endif
 
 #endif /* KEYBOARD_CONFIG_H */
 

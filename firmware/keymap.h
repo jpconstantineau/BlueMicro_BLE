@@ -24,104 +24,68 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define KEYMAP_H
 
 
-    #if KEYBOARD_SIDE == LEFT
-        #define KEYMAP( \
-            K00,   K01,   K02,   K03,   K04,       \
-            K10,   K11,   K12,   K13,   K14,       \
-            K20,   K21,   K22,   K23,   K24,       \
-        K30,   K31,   K32,   K33,   K34     \
-        ) { \
-            { K00,   K01,   K02,   K03,   K04   }, \
-            { K10,   K11,   K12,   K13,   K14   }, \
-            { K20,   K21,   K22,   K23,   K24   }, \
-            { K30,   K31,   K32,   K33,   K34   }  \
-        }
-    #else
-        #define KEYMAP( \
-            K04,   K03,   K02,   K01,   K00,       \
-            K14,   K13,   K12,   K11,   K10,       \
-            K24,   K23,   K22,   K21,   K20,       \
-            K34,   K33,   K32,   K31,   K30     \
-        ) { \
-            { K00,   K01,   K02,   K03,   K04   }, \
-            { K10,   K11,   K12,   K13,   K14   }, \
-            { K20,   K21,   K22,   K23,   K24   }, \
-            { K30,   K31,   K32,   K33,   K34   }  \
-        }
-    #endif
 
-
-    #define _QWERTY 0
-    #define _L1  1
-    #define _L2  2
-    #define _L3  3
+#define _QWERTY 0
+#define _L1  1
+#define _L2  2
+#define _L3  3
 
     #if KEYBOARD_SIDE == LEFT
 
-        const uint8_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+const uint8_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
-        [_QWERTY] = KEYMAP(
-            KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,   
-            KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    
-            KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    
-            KC_NO, KC_NO,   KC_LCTRL, LAYER_1,    KC_LSHIFT ),
-
-
-        [_L1]  = KEYMAP(
-            KC_1,    KC_2,     KC_3,    KC_4,    KC_5,   
-            KC_ESC,  _______,  _______, _______, _______,    
-            KC_CAPS, KC_GRAVE, _______, _______, _______,    
-            KC_NO,   KC_NO,    KC_LCTRL, LAYER_1,    KC_LSHIFT ),
+[_QWERTY] = KEYMAP(
+    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,
+    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_RSFT,
+    KC_Z,    KC_X,    KC_C,    KC_V,    KC_BSPC, KC_SPC,  KC_B,    KC_N,    KC_M,    KC_ENT ),
 
 
-        [_L2] = KEYMAP(
-            KC_1,    KC_2,    KC_3,    KC_4,    KC_5,   
-            KC_TAB,    KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT,    
-            KC_LCTL, KC_GRV,  KC_LGUI, KC_LALT, _______,    
-            KC_NO, KC_NO,   KC_LCTRL, LAYER_1,    KC_LSHIFT ),
+[_L1]  = KEYMAP(
+    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,
+    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_RSFT,
+    KC_Z,    KC_X,    KC_C,    KC_V,    KC_BSPC, KC_SPC,  KC_B,    KC_N,    KC_M,    KC_ENT ),
 
 
-        [_L3] = KEYMAP(
-            KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   
-            KC_F11,  KC_F12,  _______, _______, _______,    
-            _______, _______, _______, _______, _______,    
-            KC_NO, KC_NO,   KC_LCTRL, LAYER_1,    KC_LSHIFT )
-        };
+[_L2] = KEYMAP(
+    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,
+    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_RSFT,
+    KC_Z,    KC_X,    KC_C,    KC_V,    KC_BSPC, KC_SPC,  KC_B,    KC_N,    KC_M,    KC_ENT ),
 
 
+[_L3] = KEYMAP(
+    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,
+    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_RSFT,
+    KC_Z,    KC_X,    KC_C,    KC_V,    KC_BSPC, KC_SPC,  KC_B,    KC_N,    KC_M,    KC_ENT )
+};
 
-    #else
-
-        const uint8_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-
-        [_QWERTY] = KEYMAP(
-            KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,   
-            KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN,    
-            KC_N,    KC_M,    KC_C,    KC_V,    KC_ENTER,    
-            KC_SPC, LAYER_2, LAYER_3, KC_NO, KC_NO ),
-
-
-        [_L1]  = KEYMAP(
-            KC_6,    KC_7,    KC_8,    KC_9,    KC_0,   
-            _______, _______, _______, _______, _______,    
-            _______, _______, _______, _______,  _______,   
-            KC_SPC, LAYER_2, LAYER_3, KC_NO, KC_NO ),
+ #else
+const uint8_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+[_QWERTY] = KEYMAP(
+    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,
+    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_RSFT,
+    KC_Z,    KC_X,    KC_C,    KC_V,    KC_BSPC, KC_SPC,  KC_B,    KC_N,    KC_M,    KC_ENT ),
 
 
-        [_L2] = KEYMAP(
-            KC_6,    KC_7,    KC_8,    KC_9,    KC_0,   
-            _______, _______, _______, _______, _______,    
-            _______, _______, _______, _______,  _______,    
-            KC_SPC, LAYER_2, LAYER_3, KC_NO, KC_NO ),
+[_L1]  = KEYMAP(
+    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,
+    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_RSFT,
+    KC_Z,    KC_X,    KC_C,    KC_V,    KC_BSPC, KC_SPC,  KC_B,    KC_N,    KC_M,    KC_ENT ),
 
 
-        [_L3] = KEYMAP(
-            KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,   
-            _______, _______, _______, _______,  _______,    
-            _______, _______, _______, _______,  _______,    
-            KC_SPC, LAYER_2, LAYER_3, KC_NO, KC_NO )
-        };
-    #endif   
+[_L2] = KEYMAP(
+    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,
+    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_RSFT,
+    KC_Z,    KC_X,    KC_C,    KC_V,    KC_BSPC, KC_SPC,  KC_B,    KC_N,    KC_M,    KC_ENT ),
+
+
+[_L3] = KEYMAP(
+    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,
+    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_RSFT,
+    KC_Z,    KC_X,    KC_C,    KC_V,    KC_BSPC, KC_SPC,  KC_B,    KC_N,    KC_M,    KC_ENT )
+};
+
+
+  #endif  
 
 #endif
 

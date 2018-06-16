@@ -17,78 +17,28 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-#ifndef KEYBOARD_CONFIG_H
-#define KEYBOARD_CONFIG_H
 
-#define COL2ROW       0
-#define ROW2COL       1
+#ifndef BLUETOOTH_CONFIG_H
+#define BLUETOOTH_CONFIG_H
 
-#define LEFT 0
-#define RIGHT 1
-#define MASTER 2
 
-#define KEYBOARD_SIDE MASTER
-
-#if   KEYBOARD_SIDE == RIGHT
-#define DEVICE_NAME                         "GherkinBLE_R"                          /**< Name of device. Will be included in the advertising data. */
-#elif KEYBOARD_SIDE == LEFT
-#define DEVICE_NAME                         "GherkinBLE_L"                          /**< Name of device. Will be included in the advertising data. */
-#else
-#define DEVICE_NAME                         "GherkinBLE"                          /**< Name of device. Will be included in the advertising data. */
-#endif
-
-#define DEVICE_MODEL                        "GherkinBLE_V1"                          /**< Name of device. Will be included in the advertising data. */
-
-#define MANUFACTURER_NAME                   "JPConstantineau.com"                      /**< Manufacturer. Will be passed to Device Information Service. */
+// NEW BLE KEYBOARD LINK BLE SERVICE & CHARACTERISTICS  -- randomly generated UUID. DO NOT CHANGE. 
+#define UUID128_SVC_KEYBOARD_LINK             0xf9ed59d396fa4752a7dfb16d7b9e0443           // SERVICE TO BE RUN ON SLAVES. "CLIENT" TO RUN ON MASTER
+#define UUID128_CHR_KEYBOARD_MODS             0xb9cbcb3efd7b4496be68a98214834ae4           // 1 Byte for Modifiers 
+#define UUID128_CHR_KEYBOARD_LAYERS           0xccccc76aa03d43f993ec2fc6d82a7902           // 1 Byte for Active Layer
+#define UUID128_CHR_KEYBOARD_LAYER_REQUEST    0xae31cd09b0734df5b5bd20baaf18239c           // 1 Byte for request from Master to Slaves to change layer 
+#define UUID128_CHR_KEYBOARD_BUFFER           0x220f9018372a46da81d3cd196a57d5ab           // 6 Bytes for passing HID BUFFER from Slave to Master
+#define UUID128_COUNT 5
 
 // Set max power. Accepted values are: -40, -30, -20, -16, -12, -8, -4, 0, 4
-#define DEVICE_POWER 0
+#define DEVICE_POWER                        0                                          // Use 0.  This uses less power and allows for a longer battery life.
+
+// These can be modified.  Not sure of what values are allowed.
 #define PNP_ID_VENDOR_ID_SOURCE             0x02                                       /**< Vendor ID Source. */
 #define PNP_ID_VENDOR_ID                    0x1915                                     /**< Vendor ID. */
 #define PNP_ID_PRODUCT_ID                   0xEEEE                                     /**< Product ID. */
 #define PNP_ID_PRODUCT_VERSION              0x0001                                     /**< Product Version. */
 
 
-#define DEBUG_SERIAL 1
 
-#if KEYBOARD_SIDE == LEFT
-#define BLE_HID 1
-#define BLE_CENTRAL 1
-#define BLE_PERIPHERAL 0
-#define BLE_PAIRS 1
-#define PERIPHERAL_COUNT 1
-#define CENTRAL_COUNT 1
-#endif
-#if KEYBOARD_SIDE == RIGHT
-#define BLE_HID 0
-#define BLE_CENTRAL 0
-#define BLE_PERIPHERAL 1
-#define BLE_PAIRS 1
-#define PERIPHERAL_COUNT 1
-#define CENTRAL_COUNT 0
-#endif
-#if KEYBOARD_SIDE == MASTER
-#define BLE_CENTRAL 0
-#define BLE_PERIPHERAL 0
-#define BLE_PAIRS 0
-#define BLE_HID 1
-#define PERIPHERAL_COUNT 1
-#define CENTRAL_COUNT 0
-#endif
-
-
-/* HARDWARE DEFINITION*/
-/* key matrix size */
-#define MATRIX_ROWS 5
-#define MATRIX_COLS 6
-
-#define MATRIX_ROW_PINS {2, 12, 14, 13, 11 }
-#define MATRIX_COL_PINS {15, 30, 29, 28, 27,26 }
-#define UNUSED_PINS {}
-
-/* COL2ROW or ROW2COL */
-#define DIODE_DIRECTION COL2ROW
-
-#define DEBOUNCETIME 20
-
-#endif /* KEYBOARD_CONFIG_H */
+#endif /* BLUETOOTH_CONFIG_H */

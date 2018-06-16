@@ -1,5 +1,5 @@
 /*
-Copyright 2018 <Pierre Constantineau, Julian Komaromy>
+Copyright 2018 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -17,42 +17,41 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-#include <array>
-#include <utility>
-#include <cstdint>
-#include "hid_keycodes.h"
+
+
+#ifndef FIRMWARE_CONFIG_H
+#define FIRMWARE_CONFIG_H
+
+#include "avr_mapping.h"
 #include "keyboard_config.h"
-#include "keymap.h"
+
+#if KEYBOARD_SIDE == LEFT
+#define BLE_HID 1
+#define BLE_CENTRAL 1
+#define BLE_PERIPHERAL 0
+#define BLE_PAIRS 1
+#define PERIPHERAL_COUNT 1
+#define CENTRAL_COUNT 1
+#define DEVICE_NAME DEVICE_NAME_L
+#endif
+#if KEYBOARD_SIDE == RIGHT
+#define BLE_HID 0
+#define BLE_CENTRAL 0
+#define BLE_PERIPHERAL 1
+#define BLE_PAIRS 1
+#define PERIPHERAL_COUNT 1
+#define CENTRAL_COUNT 0
+#define DEVICE_NAME DEVICE_NAME_R
+#endif
+#if KEYBOARD_SIDE == MASTER
+#define BLE_CENTRAL 0
+#define BLE_PERIPHERAL 0
+#define BLE_PAIRS 0
+#define BLE_HID 1
+#define PERIPHERAL_COUNT 1
+#define CENTRAL_COUNT 0
+#define DEVICE_NAME DEVICE_NAME_M
+#endif
 
 
-class Key {
-    public:
-        Key();
- 
-        static bool scanMatrix(const int& currentState,unsigned long millis, const int& row, const int& col);
-        static void updateRemoteMods(uint8_t data0);
-        static void updateRemoteReport(uint8_t data1, uint8_t data2,uint8_t data3, uint8_t data4, uint8_t data5,uint8_t data6);
-        static void updateRemoteLayer(uint8_t data0);
-        static std::array<uint8_t, 8> getReport();
-        static bool layerChanged;
-        static uint8_t localLayer;
-
-                 static std::array<uint8_t, 8> currentReport;
-
-    private:
-        static void resetReport();
-        static bool updateLayer();
-        static bool updateModifiers();
-        static void copyRemoteReport();
-        static void resetRemoteReport();
-        static std::array<uint8_t, 8> remoteReport;
-        static  uint8_t matrix[2][MATRIX_ROWS][MATRIX_COLS];
-        static unsigned long timestamps[MATRIX_ROWS][MATRIX_COLS]; 
-
-        static uint8_t remoteLayer;
-        static uint8_t currentMod;
-        static uint8_t remoteMod;
-        static uint8_t bufferposition;
-
-};
-
+#endif /* FIRMWARE_CONFIG_H */

@@ -17,8 +17,6 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-
-
 /*
 These keycodes are based on Universal Serial Bus HID Usage Tables Document 
 Version 1.12
@@ -28,24 +26,6 @@ http://www.usb.org/developers/hidpage/Hut1_12v2.pdf
 
 #ifndef HID_KEYCODES_H
 #define HID_KEYCODES_H
-
-#define LAYER_0      0xF0
-#define LAYER_1      0xF1
-#define LAYER_2      0xF2
-#define LAYER_3      0xF3
-#define LAYER_4      0xF4
-#define LAYER_5      0xF5
-#define LAYER_6      0xF6
-#define LAYER_7      0xF7
-#define LAYER_8      0xF8
-#define LAYER_9      0xF9
-#define LAYER_A      0xFA
-#define LAYER_B      0xFB
-#define LAYER_C      0xFC
-#define LAYER_D      0xFD
-#define LAYER_E      0xFE
-#define LAYER_F      0xFF
-
 
 /*
  * Short names for ease of definition of keymap
@@ -384,7 +364,22 @@ enum hid_keyboard_keypad_usage {
   
 };
 
-
+#define LAYER_0      0xF0
+#define LAYER_1      0xF1
+#define LAYER_2      0xF2
+#define LAYER_3      0xF3
+#define LAYER_4      0xF4
+#define LAYER_5      0xF5
+#define LAYER_6      0xF6
+#define LAYER_7      0xF7
+#define LAYER_8      0xF8
+#define LAYER_9      0xF9
+#define LAYER_A      0xFA
+#define LAYER_B      0xFB
+#define LAYER_C      0xFC
+#define LAYER_D      0xFD
+#define LAYER_E      0xFE
+#define LAYER_F      0xFF
 
 
 
