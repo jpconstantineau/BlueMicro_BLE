@@ -72,13 +72,7 @@ Key::Key() {    // Constructor
     //timestamps[row][col] = last timestamp
 }
 
-/**************************************************************************************************************************/
-// Called by callback function when remote data is received
-/**************************************************************************************************************************/
-void Key::updateRemoteMods(uint8_t data)
-{
-  remoteMod= data;
-}
+
 
 /**************************************************************************************************************************/
 // Called by callback function when remote data is received
@@ -91,14 +85,16 @@ void Key::updateRemoteLayer(uint8_t data)
 /**************************************************************************************************************************/
 // Called by callback function when remote data is received
 /**************************************************************************************************************************/
-void Key::updateRemoteReport(uint8_t data1, uint8_t data2,uint8_t data3, uint8_t data4, uint8_t data5,uint8_t data6)
+void Key::updateRemoteReport(uint8_t data0, uint8_t data1, uint8_t data2,uint8_t data3, uint8_t data4, uint8_t data5,uint8_t data6)
 {
-  remoteReport[0]= data1;
-  remoteReport[1]= data2;
-  remoteReport[2]= data3;
-  remoteReport[3]= data4;
-  remoteReport[4]= data5;
-  remoteReport[5]= data6;
+  remoteMod=data0;
+  remoteReport[0]= data0;
+  remoteReport[1]= data1;
+  remoteReport[2]= data2;
+  remoteReport[3]= data3;
+  remoteReport[4]= data4;
+  remoteReport[5]= data5;
+  remoteReport[6]= data6;
 }
 
 
@@ -111,6 +107,7 @@ void Key::resetRemoteReport()
   remoteReport[3]= 0;
   remoteReport[4]= 0;
   remoteReport[5]= 0;
+  remoteReport[6]= 0;
 }
 
 
@@ -132,21 +129,17 @@ void Key::resetReport() {
 void Key::copyRemoteReport()
  {
      #if BLE_PERIPHERAL == 1  // PERIPHERAL MUST BE HANDLED DIFFERENTLY THAN CENTRAL - OTHERWISE, THE REPORTS WILL JUST KEEP BOUNCING FROM ONE BOARD TO THE OTHER 
-     currentReport[0] = 0;
-     currentReport[1] = 0;
-     currentReport[2] = 0;
-     currentReport[3] = 0;
-     currentReport[4] = 0;
-     currentReport[5] = 0;
-     currentReport[6] = 0;
+        resetReport();
      #else
-     currentReport[0] = remoteReport[0];
-     currentReport[1] = remoteReport[1];
-     currentReport[2] = remoteReport[2];
-     currentReport[3] = remoteReport[3];
-     currentReport[4] = remoteReport[4];
-     currentReport[5] = remoteReport[5];
-     currentReport[6] = remoteReport[6];
+       currentMod = remoteMod;
+//       currentReport[0] = remoteReport[0];
+       bufferposition = 1;
+       if (remoteReport[1]>0){currentReport[bufferposition] = remoteReport[1]; bufferposition++; }
+       if (remoteReport[2]>0){currentReport[bufferposition] = remoteReport[2]; bufferposition++; }
+       if (remoteReport[3]>0){currentReport[bufferposition] = remoteReport[3]; bufferposition++; }
+       if (remoteReport[4]>0){currentReport[bufferposition] = remoteReport[4]; bufferposition++; }
+       if (remoteReport[5]>0){currentReport[bufferposition] = remoteReport[5]; bufferposition++; }
+       if (remoteReport[6]>0){currentReport[bufferposition] = remoteReport[6]; bufferposition++; }
      #endif
 }
  
@@ -194,7 +187,6 @@ bool Key::updateLayer()
 /**************************************************************************************************************************/
  bool Key::updateModifiers()
  {
-  // todo - use different logic for peripherals vs central.
     uint8_t layer = localLayer;                     
    bool val = false;                                // indicates "changed" mods
    if (localLayer < remoteLayer)                    // Compares local Layer to Remote Layer requests and selects larger one.
@@ -223,7 +215,7 @@ bool Key::updateLayer()
 
 /**************************************************************************************************************************/
  
- std::array<uint8_t, 8> Key::getReport()
+ bool Key::getReport()
  {
   uint8_t layer = localLayer;
   resetReport();
@@ -244,7 +236,8 @@ if (localLayer < remoteLayer)
       
                 switch(keycode){ 
             case KC_A ... KC_EXSEL: // key pressed
-                 currentReport[++bufferposition] = keycode;
+                 currentReport[bufferposition] = keycode;
+                 bufferposition++;
                  break;
            }
           if (bufferposition>6){bufferposition=1;} // lots of keys being pressed - looping around buffer
@@ -252,16 +245,22 @@ if (localLayer < remoteLayer)
     }
     currentReport[0] = currentMod;
     currentReport[7] = layer;
-  //zzzzresetRemoteReport();
-  return currentReport;
+
+    if((currentReport[0] != 0) | (currentReport[1] != 0)| (currentReport[2] != 0)| (currentReport[3] != 0)| (currentReport[4] != 0)| (currentReport[5] != 0)| (currentReport[6] != 0))
+    {reportEmpty = false;}
+    else
+    {reportEmpty = true;}
+    
+  return reportEmpty;
 }
 
 /**************************************************************************************************************************/
  
 
-std::array<uint8_t, 8> Key::currentReport = {0, 0, 0 ,0, 0, 0, 0, 0};
-std::array<uint8_t, 8> Key::remoteReport = {0, 0, 0 ,0, 0, 0, 0, 0};
-bool Key::layerChanged = false;
+uint8_t Key::currentReport[8] = {0, 0, 0 ,0, 0, 0, 0, 0}; 
+uint8_t Key::remoteReport[8]  = {0, 0, 0 ,0, 0, 0, 0, 0};
+bool    Key::layerChanged = false;
+bool    Key::reportEmpty = true;
 uint8_t Key::localLayer = 0;
 uint8_t Key::remoteLayer = 0;
 uint8_t Key::remoteMod = 0;

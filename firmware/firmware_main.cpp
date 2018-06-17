@@ -30,8 +30,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
   BLEDis bledis;                                                                    // Device Information Service
 
 #if BLE_PERIPHERAL == 1                                                             // PERIPHERAL IS THE SLAVE BOARD
-  BLEService KBLinkService = BLEService(UUID128_SVC_KEYBOARD_LINK);                 // Keyboard Link Service - Slave/Server Side           
-  BLECharacteristic KBLinkChar_Mods          = BLECharacteristic(UUID128_CHR_KEYBOARD_MODS);        
+  BLEService KBLinkService = BLEService(UUID128_SVC_KEYBOARD_LINK);                 // Keyboard Link Service - Slave/Server Side                 
   BLECharacteristic KBLinkChar_Layers        = BLECharacteristic(UUID128_CHR_KEYBOARD_LAYERS);
   BLECharacteristic KBLinkChar_Layer_Request = BLECharacteristic(UUID128_CHR_KEYBOARD_LAYER_REQUEST);      
   BLECharacteristic KBLinkChar_Buffer        = BLECharacteristic(UUID128_CHR_KEYBOARD_BUFFER); 
@@ -43,8 +42,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 // ToDo: provision for multiple master/slave links
 #if BLE_CENTRAL == 1                                                                // CENTRAL IS THE MASTER BOARD
-  BLEClientService KBLinkClientService = BLEClientService(UUID128_SVC_KEYBOARD_LINK);     // Keyboard Link Service Client - Master/Client Side
-  BLEClientCharacteristic KBLinkClientChar_Mods          = BLEClientCharacteristic(UUID128_CHR_KEYBOARD_MODS);   
+  BLEClientService KBLinkClientService = BLEClientService(UUID128_SVC_KEYBOARD_LINK);     // Keyboard Link Service Client - Master/Client Side  
   BLEClientCharacteristic KBLinkClientChar_Layers        = BLEClientCharacteristic(UUID128_CHR_KEYBOARD_LAYERS);
   BLEClientCharacteristic KBLinkClientChar_Layer_Request = BLEClientCharacteristic(UUID128_CHR_KEYBOARD_LAYER_REQUEST);
   BLEClientCharacteristic KBLinkClientChar_Buffer        = BLEClientCharacteristic(UUID128_CHR_KEYBOARD_BUFFER); 
@@ -57,7 +55,7 @@ byte rows[] MATRIX_ROW_PINS;        // Contains the GPIO Pin Numbers defined in 
 byte columns[] MATRIX_COL_PINS;     // Contains the GPIO Pin Numbers defined in keyboard_config.h  
 
 Key keys;
-uint8_t Linkdata[6] = {0 ,0,0,0,0,0};
+uint8_t Linkdata[7] = {0 ,0,0,0,0,0,0};
 
 bool isReportedReleased = true;
 
@@ -85,14 +83,6 @@ void setup() {
 #if BLE_PERIPHERAL == 1
   // Configure Keyboard Link Service
   KBLinkService.begin();
-  KBLinkChar_Mods.setProperties(CHR_PROPS_NOTIFY + CHR_PROPS_READ);
-  KBLinkChar_Mods.setPermission(SECMODE_OPEN, SECMODE_NO_ACCESS);
-  KBLinkChar_Mods.setFixedLen(1);
-  KBLinkChar_Mods.setUserDescriptor("Keyboard HID Modifiers");
-  KBLinkChar_Mods.setCccdWriteCallback(cccd_callback);
-  KBLinkChar_Mods.begin();
-  KBLinkChar_Mods.write8(0);  // initialize with no mods
-  
   
   KBLinkChar_Layers.setProperties(CHR_PROPS_NOTIFY+ CHR_PROPS_READ);
   KBLinkChar_Layers.setPermission(SECMODE_OPEN, SECMODE_NO_ACCESS);
@@ -112,11 +102,11 @@ void setup() {
     
   KBLinkChar_Buffer.setProperties(CHR_PROPS_NOTIFY+ CHR_PROPS_READ);
   KBLinkChar_Buffer.setPermission(SECMODE_OPEN, SECMODE_NO_ACCESS);
-  KBLinkChar_Buffer.setFixedLen(6);
+  KBLinkChar_Buffer.setFixedLen(7);
   KBLinkChar_Buffer.setUserDescriptor("Keyboard HID Buffer");
   KBLinkChar_Buffer.setCccdWriteCallback(cccd_callback);
   KBLinkChar_Buffer.begin();
-  KBLinkChar_Buffer.write(Linkdata, 6);  // initialize with empty buffer
+  KBLinkChar_Buffer.write(Linkdata, 7);  // initialize with empty buffer
 
  #endif
  
@@ -139,8 +129,6 @@ void setup() {
  #if BLE_CENTRAL == 1 
 
   KBLinkClientService.begin();
-  KBLinkClientChar_Mods.begin();
-  KBLinkClientChar_Mods.setNotifyCallback(notify_callback);
 
   KBLinkClientChar_Layers.begin();
   KBLinkClientChar_Layers.setNotifyCallback(notify_callback);
@@ -149,7 +137,6 @@ void setup() {
   KBLinkClientChar_Buffer.setNotifyCallback(notify_callback);
 
   KBLinkClientChar_Layer_Request.begin();
- // KBLinkClientChar_Layer_Request.setNotifyCallback(notify_callback);
   
   Bluefruit.setConnectCallback(prph_connect_callback);
   Bluefruit.setDisconnectCallback(prph_disconnect_callback);  
@@ -205,7 +192,6 @@ void startAdv(void)
   
   #if BLE_PERIPHERAL ==1
    Bluefruit.Advertising.addUuid(UUID128_SVC_KEYBOARD_LINK);
-   Bluefruit.Advertising.addUuid(UUID128_CHR_KEYBOARD_MODS);
    Bluefruit.Advertising.addUuid(UUID128_CHR_KEYBOARD_LAYERS);
    Bluefruit.Advertising.addUuid(UUID128_CHR_KEYBOARD_LAYER_REQUEST);
    Bluefruit.Advertising.addUuid(UUID128_CHR_KEYBOARD_BUFFER); 
@@ -243,19 +229,14 @@ void notify_callback(BLEClientCharacteristic* chr, uint8_t* data, uint16_t len)
   LOG_LV1("CB NOT","notify_callback: Length %i data[0] %i" ,len, data[0]);
   if (len>0)  // check if there really is data...
   {
-    if (chr->uuid == KBLinkClientChar_Mods.uuid){
-      LOG_LV1("CB NOT","notify_callback: Mods Data");
-          Key::updateRemoteMods(data[0]);  // Mods is only a single uint8  
-      }
-    
-    if (chr->uuid == KBLinkClientChar_Layers.uuid){
+     if (chr->uuid == KBLinkClientChar_Layers.uuid){
       LOG_LV1("CB NOT","notify_callback: Layers Data");
           Key::updateRemoteLayer(data[0]);  // Layer is only a single uint8
       }
 
     if (chr->uuid == KBLinkClientChar_Buffer.uuid){
       LOG_LV1("CB NOT","notify_callback: Buffer Data");
-          Key::updateRemoteReport(data[0],data[1],data[2], data[3],data[4], data[5]);
+          Key::updateRemoteReport(data[0],data[1],data[2], data[3],data[4], data[5], data[6]);
       }
       
   }
@@ -278,13 +259,6 @@ void cccd_callback(BLECharacteristic& chr, uint16_t cccd_value)
             LOG_LV1("CBCCCD","Layers 'Notify' disabled");
         }
     }
-        if (chr.uuid == KBLinkChar_Mods.uuid) {
-          if (chr.notifyEnabled()) {
-            LOG_LV1("CBCCCD","Mods 'Notify' enabled");
-          } else {
-            LOG_LV1("CBCCCD","Mods 'Notify' disabled");
-          }
-      }
       if (chr.uuid == KBLinkChar_Layer_Request.uuid) {
           if (chr.notifyEnabled()) {
             LOG_LV1("CBCCCD","KBLinkChar_Layer_Request 'Notify' enabled");
@@ -360,9 +334,6 @@ void cent_connect_callback(uint16_t conn_handle)
   LOG_LV1("CENTRL","Connected to %i %s",conn_handle,peer_name );
   if (KBLinkClientService.discover(conn_handle)) // validating that KBLink service is available to this connection
   {
-    if (KBLinkClientChar_Mods.discover()) {
-          KBLinkClientChar_Mods.enableNotify();
-      }
     if (KBLinkClientChar_Layers.discover()) {
           KBLinkClientChar_Layers.enableNotify();      
       }
@@ -386,40 +357,6 @@ void cent_disconnect_callback(uint16_t conn_handle, uint8_t reason)
   (void) reason;
   LOG_LV1("CENTRL","Disconnected"  );
 }
-#endif
-/****************************************************************************************************
-void cent_bleuart_rx_callback(BLEClientUart& cent_uart)
-    {
-      uint8_t str[20+1] = { 0 };
-      cent_uart.read(str, 20);
-      LOG_LV1("CB_CEN","cent_bleuart_rx_callback:  %i %i %i %i %i %i %i %i %i %i" ,millis(),str[0], str[1],str[2],str[3], str[4],str[5], str[6],str[7],str[8], str[9] );
-      if (str[0] == 0)
-      {
-        Key::updateRemoteReport(str[1],str[2],str[3],str[4],str[5],str[6],str[7],str[8],str[9]);        
-      }
-      if (str[0] == 1)
-      {
-        Key::updateRemoteLayer(str[1]);        
-      }
-      
-    }
-/****************************************************************************************************
-#if BLE_PERIPHERAL == 1
-void prph_bleuart_rx_callback(void)
-    {
-        // Forward data from Mobile to our peripheral
-        uint8_t  str[20+1] = { 0 };
-//        bleuart.read(str, 20);
-        LOG_LV1("CB_PER","prph_bleuart_rx_callback:  %i %i %i %i %i %i %i %i %i %i" ,millis(),str[0], str[1],str[2],str[3], str[4],str[5], str[6],str[7],str[8], str[9] );
-        if (str[0] == 0)
-        {
-          Key::updateRemoteReport(str[1],str[2],str[3],str[4],str[5],str[6],str[7],str[8],str[9]);        
-        }
-        if (str[0] == 1)
-        {
-          Key::updateRemoteLayer(str[1]);        
-        }
-      }
 #endif
 
 /**************************************************************************************************************************/
@@ -445,39 +382,36 @@ void scanMatrix() {
 // Communication with computer and other boards
 /**************************************************************************************************************************/
 void sendKeyPresses() {
-std::array<uint8_t, 8> data;
 uint8_t keycode[6];
 uint8_t layer = 0;
 uint8_t mods = 0;
   
-    data = Key::getReport();                                            // get state data
+        Key::getReport();                                            // get state data - Data is in Key::currentReport
 
-        mods = data[0];                                                 // modifiers
-        keycode[0] = data[1];                                           // Buffer 
-        keycode[1] = data[2];                                           // Buffer 
-        keycode[2] = data[3];                                           // Buffer 
-        keycode[3] = data[4];                                           // Buffer 
-        keycode[4] = data[5];                                           // Buffer 
-        keycode[5] = data[6];                                           // Buffer 
-        layer = data[7];                                                // Layer
+        mods = Key::currentReport[0];                                                 // modifiers
+        keycode[0] = Key::currentReport[1];                                           // Buffer 
+        keycode[1] = Key::currentReport[2];                                           // Buffer 
+        keycode[2] = Key::currentReport[3];                                           // Buffer 
+        keycode[3] = Key::currentReport[4];                                           // Buffer 
+        keycode[4] = Key::currentReport[5];                                           // Buffer 
+        keycode[5] = Key::currentReport[6];                                           // Buffer 
+        layer = Key::currentReport[7];                                                // Layer
  
          
-   if ((data[0] != 0) | (data[1] != 0)| (data[2] != 0)| (data[3] != 0)| (data[4] != 0)| (data[5] != 0)| (data[6] != 0))  //any key presses anywhere?
+   if (!(Key::reportEmpty))  //any key presses anywhere?
    {                                                                              // Note that HID standard only has a buffer of 6 keys (plus modifiers)
         #if BLE_HID == 1  
         blehid.keyboardReport(mods,  keycode); 
 
         #endif
         #if BLE_PERIPHERAL ==1  
-         KBLinkChar_Buffer.notify(keycode,6);
-         KBLinkChar_Mods.notify8(mods);
-         // bleuart.write(str, 10);
+          KBLinkChar_Buffer.notify(Key::currentReport,7);
         #endif
         #if BLE_CENTRAL ==1
          ; // Only send layer to slaves - send nothing here
         #endif 
         isReportedReleased = false;
-        LOG_LV1("MXSCAN","SEND: %i %i %i %i %i %i %i %i %i %i" ,millis(),data[0], data[1],data[2],data[3], data[4],data[5], data[6],data[7] );        
+        LOG_LV1("MXSCAN","SEND: %i %i %i %i %i %i %i %i %i %i" ,millis(),Key::currentReport[0], Key::currentReport[1],Key::currentReport[2],Key::currentReport[3], Key::currentReport[4],Key::currentReport[5], Key::currentReport[6],Key::currentReport[7] );        
     }
    else                                                                  //NO key presses anywhere
    {
@@ -485,17 +419,15 @@ uint8_t mods = 0;
       #if BLE_HID == 1
         blehid.keyRelease();                                             // HID uses the standard blehid service
       #endif
-      #if BLE_PERIPHERAL ==1
-      
-       KBLinkChar_Buffer.notify(keycode,6);                              // Peripheral->central uses the subscribe/notify mechanism
-       KBLinkChar_Mods.notify8(mods);
+      #if BLE_PERIPHERAL ==1     
+        KBLinkChar_Buffer.notify(Key::currentReport,7);                              // Peripheral->central uses the subscribe/notify mechanism
       #endif
         #if BLE_CENTRAL ==1
           // Only send layer to slaves
           ;                                                              // Central does not need to send the buffer to the Peripheral.
         #endif
       isReportedReleased = true;                                         // Update flag so that we don't re-issue the message if we don't need to.
-      LOG_LV1("MXSCAN","RELEASED: %i %i %i %i %i %i %i %i %i %i" ,millis(),data[0], data[1],data[2],data[3], data[4],data[5], data[6],data[7] ); 
+      LOG_LV1("MXSCAN","RELEASED: %i %i %i %i %i %i %i %i %i %i" ,millis(),Key::currentReport[0], Key::currentReport[1],Key::currentReport[2],Key::currentReport[3], Key::currentReport[4],Key::currentReport[5], Key::currentReport[6],Key::currentReport[7] ); 
     }
    }
     

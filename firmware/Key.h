@@ -17,7 +17,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-#include <array>
+//#include <array>
 #include <utility>
 #include <cstdint>
 #include "hid_keycodes.h"
@@ -30,14 +30,13 @@ class Key {
         Key();
  
         static bool scanMatrix(const int& currentState,unsigned long millis, const int& row, const int& col);
-        static void updateRemoteMods(uint8_t data0);
-        static void updateRemoteReport(uint8_t data1, uint8_t data2,uint8_t data3, uint8_t data4, uint8_t data5,uint8_t data6);
+        static void updateRemoteReport(uint8_t data0 , uint8_t data1, uint8_t data2,uint8_t data3, uint8_t data4, uint8_t data5,uint8_t data6);
         static void updateRemoteLayer(uint8_t data0);
-        static std::array<uint8_t, 8> getReport();
+        static bool getReport();
         static bool layerChanged;
+        static bool reportEmpty;
         static uint8_t localLayer;
-
-                 static std::array<uint8_t, 8> currentReport;
+        static uint8_t currentReport[8];
 
     private:
         static void resetReport();
@@ -45,7 +44,8 @@ class Key {
         static bool updateModifiers();
         static void copyRemoteReport();
         static void resetRemoteReport();
-        static std::array<uint8_t, 8> remoteReport;
+        
+        static uint8_t remoteReport[8];
         static  uint8_t matrix[2][MATRIX_ROWS][MATRIX_COLS];
         static unsigned long timestamps[MATRIX_ROWS][MATRIX_COLS]; 
 
