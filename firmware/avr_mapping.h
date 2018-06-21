@@ -19,8 +19,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 
 /*
-
-These defines map the AVR-based ports of the Arduino Pro Micro to the NRF52832 GPIO pins.
+These defines map the AVR-based ports of the Arduino Pro to the NRF52832 GPIO pins.
+This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
 */
 
 #ifndef AVR_MAPPING_H
@@ -46,4 +46,17 @@ These defines map the AVR-based ports of the Arduino Pro Micro to the NRF52832 G
 #define B2      13  //mosi
 #define B6      11
 
-#endif /* HID_KEYCODES_H */
+
+/*
+Common Defines.
+*/
+// ToDo: Move these defines to a more logical location.
+
+#define COL2ROW       0
+#define ROW2COL       1
+
+#define LEFT 0
+#define RIGHT 1
+#define MASTER 2
+
+#endif /* AVR_MAPPING_H */

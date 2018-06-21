@@ -25,50 +25,91 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 
 
-#define KEYMAP( \
-	 K00,   K01,   K02,   K03,   K04,   K05,   K10,   K11,   K12,   K13 , \
-	 K14,   K15,   K20,   K21,   K22,   K23,   K24,   K25,   K30,   K31 , \
-	 K32,   K33,   K34,   K35,   K40,   K41,   K42,   K43,   K44,   K45   \
-) { \
-	{ K00,   K01,   K02,   K03,   K04,   K05 }, \
-	{ K10,   K11,   K12,   K13,   K14,   K15 }, \
-	{ K20,   K21,   K22,   K23,   K24,   K25 }, \
-	{ K30,   K31,   K32,   K33,   K34,   K35 }, \
-	{ K40,   K41,   K42,   K43,   K44,   K45 }  \
-}
-
-
-
 #define _QWERTY 0
 #define _L1  1
 #define _L2  2
 #define _L3  3
 
+    #if KEYBOARD_SIDE == LEFT
 
 const uint8_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
-[_QWERTY] = KEYMAP(
-    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,
-    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_RSFT,
-    KC_Z,    KC_X,    KC_C,    KC_V,    KC_BSPC, KC_SPC,  KC_B,    KC_N,    KC_M,    KC_ENT ),
+  [_QWERTY] = KEYMAP(
 
+     KC_ESC , KC_1  , KC_2  , KC_3  , KC_4  , KC_5  ,                
+     KC_TAB , KC_Q  , KC_W  , KC_E  , KC_R  , KC_T  ,
+     KC_LSFT, KC_A  , KC_S  , KC_D  , KC_F  , KC_G  ,
+     KC_LCTL, KC_Z  , KC_X  , KC_C  , KC_V  , KC_B  ,KC_HOME,
+                              KC_LGUI,LAYER_1,KC_ENT 
+  ),
 
 [_L1]  = KEYMAP(
-    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,
-    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_RSFT,
-    KC_Z,    KC_X,    KC_C,    KC_V,    KC_BSPC, KC_SPC,  KC_B,    KC_N,    KC_M,    KC_ENT ),
+     KC_F12 , KC_F1  , KC_F2  , KC_F3  , KC_F4  , KC_F5  ,                
+     KC_TAB , KC_Q  , KC_W  , KC_E  , KC_R  , KC_T  ,
+     KC_LSFT, KC_A  , KC_S  , KC_D  , KC_F  , KC_G  ,
+     KC_LCTL, KC_Z  , KC_X  , KC_C  , KC_V  , KC_B  ,KC_HOME,
+                              KC_LGUI,LAYER_1,KC_ENT 
+       ),
 
 
 [_L2] = KEYMAP(
-    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,
-    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_RSFT,
-    KC_Z,    KC_X,    KC_C,    KC_V,    KC_BSPC, KC_SPC,  KC_B,    KC_N,    KC_M,    KC_ENT ),
+     KC_F12 , KC_F1  , KC_F2  , KC_F3  , KC_F4  , KC_F5  ,                
+     KC_TAB , KC_Q  , KC_W  , KC_E  , KC_R  , KC_T  ,
+     KC_LSFT, KC_A  , KC_S  , KC_D  , KC_F  , KC_G  ,
+     KC_LCTL, KC_Z  , KC_X  , KC_C  , KC_V  , KC_B  ,KC_HOME,
+                              KC_LGUI,LAYER_1,KC_ENT 
+        ),
 
 
 [_L3] = KEYMAP(
-    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,
-    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_RSFT,
-    KC_Z,    KC_X,    KC_C,    KC_V,    KC_BSPC, KC_SPC,  KC_B,    KC_N,    KC_M,    KC_ENT )
+     KC_F12 , KC_F1  , KC_F2  , KC_F3  , KC_F4  , KC_F5  ,                
+     KC_TAB , KC_Q  , KC_W  , KC_E  , KC_R  , KC_T  ,
+     KC_LSFT, KC_A  , KC_S  , KC_D  , KC_F  , KC_G  ,
+     KC_LCTL, KC_Z  , KC_X  , KC_C  , KC_V  , KC_B  ,KC_HOME,
+                              KC_LGUI,LAYER_1,KC_ENT  
+       )
 };
 
+ #else
+const uint8_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+[_QWERTY] = KEYMAP(
+             KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSPC,
+             KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_DEL,
+             KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
+    KC_END,  KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSHIFT,
+    KC_SPC,  LAYER_2, KC_LALT 
+    ),
+
+
+[_L1]  = KEYMAP(
+             KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,
+             KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_DEL,
+             KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
+    KC_END,  KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
+    KC_SPC,  LAYER_2, KC_LALT 
+    ),
+
+
+[_L2] = KEYMAP(
+             KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,
+             KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_DEL,
+             KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
+    KC_END,  KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
+    KC_SPC,  LAYER_2, KC_LALT 
+    ),
+
+
+[_L3] = KEYMAP(
+             KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,
+             KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_DEL,
+             KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
+    KC_END,  KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
+    KC_SPC,  LAYER_2, KC_LALT 
+    )
+};
+
+
+  #endif  
+
 #endif
+
