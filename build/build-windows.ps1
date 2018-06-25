@@ -196,19 +196,19 @@ if ($BoardParam -eq "ask") {
 
     Write-Host
     $SelectedKeyboard = Read-Host -Prompt "Keyboard name (eg ErgoTravel) [all]"
-    if ([string]::IsNullOrWhiteSpace($SelectedKeyboard)) {
+    if ([string]::IsNullOrEmpty($SelectedKeyboard)) {
         $SelectedKeyboard = "all"
     }
 
     if ($SelectedKeyboard -ne "all") {
         $SelectedKeymap = Read-Host -Prompt "Keymap name (eg default) [all]"
-        if ([string]::IsNullOrWhiteSpace($SelectedKeymap)) {
+        if ([string]::IsNullOrEmpty($SelectedKeymap)) {
             $SelectedKeymap = "all"
         }
 
         if ($SelectedKeymap -ne "all") {
             $SelectedTarget = Read-Host -Prompt "Target name (eg left / right / master) [all]"
-            if ([string]::IsNullOrWhiteSpace($SelectedTarget)) {
+            if ([string]::IsNullOrEmpty($SelectedTarget)) {
                 $SelectedTarget = "all"
             }
         }
