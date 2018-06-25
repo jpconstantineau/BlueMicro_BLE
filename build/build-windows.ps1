@@ -186,6 +186,10 @@ Write-Verbose ("Windows Version: " + [System.Environment]::OSVersion.Version)
 Write-Verbose ("Powershell Version: " + $PSVersionTable.PSVersion)
 
 if ($BoardParam -eq "ask") {
+	Write-Host
+	Write-Host "This script can be run with parameters"
+	Write-Host "./build-windows.ps1 <keyboard>:<keymap>:<target> -verbose -continueOnError"
+
     $SelectedKeyboard = "all"
     $SelectedKeymap = "all"
     $SelectedTarget = "all"
@@ -263,7 +267,6 @@ Write-Verbose "Arduino: $ArduinoDir"
 Write-Verbose "Arduino Data: $ArduinoDataDir"
 Write-Verbose "Blue Micro Repo: $BlueMicroDir"
 Write-Verbose "Output: $OutputDir"
-Write-Verbose 
 
 Write-Host 
 Write-Host "Compiling"
