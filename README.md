@@ -29,6 +29,30 @@ Depending on whether your hardware has on-board serial or not, you will need a s
 - Compile the firmware
 - Flash the firmware by serial.  Depending if the hardware uses the DTR line to automatically  reset the chip, you may have to manually press reset just before the flashing command gets called.  If it doesn't work, make sure that the the lines are crossed (TX -> RX and RX <- TX).
 
+## Building from Windows PowerShell script
+
+Has been tested on Windows 7 and 10.
+
+**Quick and easy**
+
+- Double cick the build-windows-shortcut in the build folder
+- Follow on screen instructions
+
+**Command line with parameters**
+
+- Press the windows key, type "powershell", right click "Windows PowerShell", select "Run as Administrator", enter the command "Set-ExecutionPolicy Bypass" and select Yes
+- Run PowerShell and navigate to the build directory
+- Run ./build-windows keyboard:keymap:target
+- You can replace either keyboard, keymap or target with "all" as a wildcard
+- Optional switches are -verbose and -continueOnError
+
+Examples
+
+- ./build-windows all
+- ./build-windows ErgoTravel
+- ./build-windows gherkin:default
+- ./build-windows iris:default:left
+
 # Need to flash the bootloader?
 
 Follow the instructions on the Flashing the Bootloader page for the [Adafruit nRF52 Feather](https://learn.adafruit.com/bluefruit-nrf52-feather-learning-guide/flashing-the-bootloader).  You will need a j-link and connect it to the SWD lines of the hardware.
