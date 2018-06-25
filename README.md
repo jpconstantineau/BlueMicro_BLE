@@ -29,9 +29,9 @@ Depending on whether your hardware has on-board serial or not, you will need a s
 - Compile the firmware
 - Flash the firmware by serial.  Depending if the hardware uses the DTR line to automatically  reset the chip, you may have to manually press reset just before the flashing command gets called.  If it doesn't work, make sure that the the lines are crossed (TX -> RX and RX <- TX).
 
-## Building from windows script
+## Building from Windows PowerShell script
 
-Requires Powershell 2.0 or greater and has been tested on Windows 7 - 10.
+Has been tested on Windows 7 and 10.
 
 **Quick and easy**
 
