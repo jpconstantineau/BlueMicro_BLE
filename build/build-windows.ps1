@@ -1,7 +1,7 @@
 ﻿# Arduino BlueMicro build script for Windows
 
 param(
-    [string]$BoardParam="all",
+    [string]$BoardParam="ask",
     [switch]$Verbose=$false,
     [switch]$ContinueOnError=$false
 )
@@ -185,27 +185,47 @@ Write-Verbose
 Write-Verbose ("Windows Version: " + [System.Environment]::OSVersion.Version)
 Write-Verbose ("Powershell Version: " + $PSVersionTable.PSVersion)
 
-Write-Host
-Write-Host "Building: $BoardParam"
-
-$BoardParamSplit = $BoardParam.Split(":")
-$SelectedKeyboard = $BoardParamSplit[0];
-if ($BoardParamSplit.Count -ge 2) {
-    $SelectedKeymap = $BoardParamSplit[1];
-} else {
+if ($BoardParam -eq "ask") {
+    $SelectedKeyboard = "all"
     $SelectedKeymap = "all"
-}
-if ($BoardParamSplit.Count -ge 3) {
-    $SelectedTarget = $BoardParamSplit[2];
-} else {
     $SelectedTarget = "all"
+
+    Write-Host
+    $SelectedKeyboard = Read-Host -Prompt "Keyboard name (eg ErgoTravel) [all]"
+    if ([string]::IsNullOrWhiteSpace($SelectedKeyboard)) {
+        $SelectedKeyboard = "all"
+    }
+
+    if ($SelectedKeyboard -ne "all") {
+        $SelectedKeymap = Read-Host -Prompt "Keymap name (eg default) [all]"
+        if ([string]::IsNullOrWhiteSpace($SelectedKeymap)) {
+            $SelectedKeymap = "all"
+        }
+
+        if ($SelectedKeymap -ne "all") {
+            $SelectedTarget = Read-Host -Prompt "Target name (eg left / right / master) [all]"
+            if ([string]::IsNullOrWhiteSpace($SelectedTarget)) {
+                $SelectedTarget = "all"
+            }
+        }
+    }
+} else {
+    $BoardParamSplit = $BoardParam.Split(":")
+    $SelectedKeyboard = $BoardParamSplit[0];
+    if ($BoardParamSplit.Count -ge 2) {
+        $SelectedKeymap = $BoardParamSplit[1];
+    } else {
+        $SelectedKeymap = "all"
+    }
+    if ($BoardParamSplit.Count -ge 3) {
+        $SelectedTarget = $BoardParamSplit[2];
+    } else {
+        $SelectedTarget = "all"
+    }
 }
 
-Write-Verbose
-Write-Verbose "Keyboard: $SelectedKeyboard"
-Write-Verbose "Keymap: $SelectedKeymap"
-Write-Verbose "Target: $SelectedTarget"
-
+Write-Host
+Write-Host "Building: $SelectedKeyboard`:$SelectedKeymap`:$SelectedTarget"
 Write-Host 
 Write-Host "Checking file locations"
 Write-Host -----------------------------------
@@ -298,7 +318,7 @@ Get-ChildItem $KeyboardsDir | ?{ $_.PSIsContainer } | Foreach-Object {
 }
 
 if($SuccessfulBuilds -eq 0 -And $FailedBuilds -eq 0) {
-    Write-Host -ForegroundColor yellow "Did not find anything to build for $BoardParam"
+    Write-Host -ForegroundColor yellow "Did not find anything to build for $SelectedKeyboard`:$SelectedKeymap`:$SelectedTarget"
 }
 
 Write-Host

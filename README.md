@@ -48,6 +48,7 @@ Requires Powershell 2.0 or greater and has been tested on Windows 7 - 10.
 
 Examples
 
+- ./build-windows all
 - ./build-windows ErgoTravel
 - ./build-windows gherkin:default
 - ./build-windows iris:default:left
