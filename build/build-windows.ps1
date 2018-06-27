@@ -103,6 +103,9 @@ Function Compile-Board($keyboard, $target, $keymap) {
     Copy-Item $keymapFile "$SourceDir\keymap.h" -Force
     Copy-Item $configFile "$SourceDir\keyboard_config.h" -Force
 
+	# Need to sleep between compile calls else the arduino-builder does not recognise changes
+	Start-Sleep -s 2
+	
     # Run compile
     $cmdCompile = 
         '& "$BuilderExe" -compile -logger=machine -warnings "none" -ide-version "10805" -debug-level 1 ' + 
@@ -331,6 +334,6 @@ Write-Host
 Write-Host "Binaries can be found in $OutputDir"
 Write-Host
 
-if ($FailedBuilds -ne 0) {
+if ($FailedBuilds -ne 0 -Or $SuccessfulBuilds -eq 0) {
     exit 1
 }
