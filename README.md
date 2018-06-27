@@ -74,7 +74,7 @@ The Arduino IDE must be installed in the /Application directory. Tested on macOS
 - Double cick the build-macos script in the build folder
 - Follow on screen instructions
 
-**Terminal script with parameters***
+**Terminal script with parameters**
 
 - Run ./build-macos keyboard:keymap:target
 - You can replace either keyboard, keymap or target with "all" as a wildcard
