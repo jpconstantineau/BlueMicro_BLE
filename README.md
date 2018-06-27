@@ -20,6 +20,18 @@ Follow the instructions on the Arduino BSP Setup page for the [Adafruit nRF52 Fe
 
 Depending on whether your hardware has on-board serial or not, you will need a serial USB adapter.  Note that the hardware is +3.3V.  As such, a standard +5V serial adapter may damage the nRF52 processor.
 
+**macOS installation**
+
+While following the above Adafruit article, to install nrfutil on macOS High Sierra the following commands may be required for part 2 "Third Party Tool Installation".
+
+`curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py`
+`sudo python get-pip.py`
+`sudo pip install pip==9.0.3`
+`sudo pip install tornado nosem`
+`sudo pip install nrfutil==0.5.3 --ignore-installed six`
+
+This will install python pip and downgrade it to version 9 (nrfutil fails with "No module named pip.req" when using the latest version). Next install the tornado and nosem packages and finally the version of nrfutil that can be used with Adafruits library (DFU via Serial).
+
 # Building the Firmware for your Keyboard
 
 - Clone the Repository
@@ -49,9 +61,31 @@ Has been tested on Windows 7 and 10.
 Examples
 
 - ./build-windows all
-- ./build-windows ErgoTravel
-- ./build-windows gherkin:default
+- ./build-windows ErgoTravel -verbose
+- ./build-windows gherkin:default -continueOnError
 - ./build-windows iris:default:left
+
+## Building from macOS shell script
+
+The Arduino IDE must be installed in the /Application directory. Tested on macOS High Sierra.
+
+**Quick and easy**
+
+- Double cick the build-macos script in the build folder
+- Follow on screen instructions
+
+**Terminal script with parameters***
+
+- Run ./build-macos keyboard:keymap:target
+- You can replace either keyboard, keymap or target with "all" as a wildcard
+- Optional switches are -v for verbose output and -c for continue on build error
+
+Examples
+
+- ./build-macos all
+- ./build-macos -v ErgoTravel 
+- ./build-macos -c gherkin:default
+- ./build-macos iris:default:left
 
 # Need to flash the bootloader?
 
