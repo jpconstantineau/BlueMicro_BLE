@@ -71,10 +71,10 @@ The Arduino IDE must be installed in the /Application directory. Tested on macOS
 
 **Quick and easy**
 
-- Right click the build-macos script in the build folder and choose open
-- Choose open from the unidentified developer warning 
+After opening this way once you can simply double click to execute
+
+- Right click the build-macos script in the build folder and choose open, then press open on the developer warning
 - Follow on screen instructions
-- After opening this way once you can simply double click to execute
 
 **Terminal script with parameters**
 
