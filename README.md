@@ -24,11 +24,11 @@ Depending on whether your hardware has on-board serial or not, you will need a s
 
 While following the above Adafruit article, to install nrfutil on macOS High Sierra the following commands may be required for part 2 "Third Party Tool Installation".
 
-`curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py`
-`sudo python get-pip.py`
-`sudo pip install pip==9.0.3`
-`sudo pip install tornado nosem`
-`sudo pip install nrfutil==0.5.3 --ignore-installed six`
+- `curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py`
+- `sudo python get-pip.py`
+- `sudo pip install pip==9.0.3`
+- `sudo pip install tornado nosem`
+- `sudo pip install nrfutil==0.5.3 --ignore-installed six`
 
 This will install python pip and downgrade it to version 9 (nrfutil fails with "No module named pip.req" when using the latest version). Next install the tornado and nosem packages and finally the version of nrfutil that can be used with Adafruits library (DFU via Serial).
 
@@ -71,7 +71,9 @@ The Arduino IDE must be installed in the /Application directory. Tested on macOS
 
 **Quick and easy**
 
-- Double cick the build-macos script in the build folder
+After opening this way once you can simply double click to execute
+
+- Right click the build-macos script in the build folder and choose open, then press open on the developer warning
 - Follow on screen instructions
 
 **Terminal script with parameters**
