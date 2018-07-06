@@ -147,7 +147,7 @@ void setup() {
   Bluefruit.Scanner.filterUuid(BLEUART_UUID_SERVICE, UUID128_SVC_KEYBOARD_LINK);  // looks specifically for these 2 services (A OR B) - reduces load
   Bluefruit.Scanner.setInterval(160, 80);                                         // in unit of 0.625 ms  Interval = 100ms, Window = 50 ms
   Bluefruit.Scanner.useActiveScan(false);                                         // If true, will fetch scan response data
-  Bluefruit.Scanner.start(0);                                                     // 0 = Don't stop scanning after 0 seconds
+  Bluefruit.Scanner.start(30);                                                     // 0 = Don't stop scanning after 0 seconds
 
   Bluefruit.Central.setConnectCallback(cent_connect_callback);
   Bluefruit.Central.setDisconnectCallback(cent_disconnect_callback);
@@ -363,6 +363,7 @@ void cent_disconnect_callback(uint16_t conn_handle, uint8_t reason)
 // Keyboard Scanning
 /**************************************************************************************************************************/
 void scanMatrix() {
+  uint32_t pindata = 0;
   for(int j = 0; j < MATRIX_ROWS; ++j) {                              
     //set the current row as OUPUT and LOW
     pinMode(rows[j], OUTPUT);                                         
@@ -370,8 +371,11 @@ void scanMatrix() {
     //loops thru all of the columns
     for (int i = 0; i < MATRIX_COLS; ++i) {
       pinMode(columns[i], INPUT_PULLUP);                              // 'enables' the column High Value on the diode; becomes "LOW" when pressed
+    }
       delay(1);                                                       // need for the GPIO lines to settle down electrically before reading.
-      Key::scanMatrix(digitalRead(columns[i]), millis(), j, i);       // This function processes the logic values and does the debouncing
+      pindata = NRF_GPIO->IN;                                         // read all pins at once
+     for (int i = 0; i < MATRIX_COLS; ++i) {
+      Key::scanMatrix((pindata>>(columns[i]))&1, millis(), j, i);       // This function processes the logic values and does the debouncing
       pinMode(columns[i], INPUT);                                     //'disables' the column that just got looped thru
      }
     pinMode(rows[j], INPUT);                                          //'disables' the row that was just scanned
@@ -458,9 +462,38 @@ uint8_t mods = 0;
 /**************************************************************************************************************************/
 void loop() {
   // put your main code here, to run repeatedly:
+  #if MATRIX_SCAN == 1
   scanMatrix();
+  #endif
+
+  #if SEND_KEYS == 1
   sendKeyPresses();    // how often does this really run?
-  waitForEvent();  // Request CPU to enter low-power mode until an event/interrupt occurs
+  #endif
+
+ //  //
+
+// Option 1: 6.7-6.8 mA
+ //sd_power_mode_set(NRF_POWER_MODE_LOWPWR);
+ //   waitForEvent();
+
+// Option 2: 6.8 mA
+//    waitForEvent();  // Request CPU to enter low-power mode until an event/interrupt occurs
+
+// Option 3: 6.9-7.0 mA
+// sd_app_evt_wait();
+
+// option 4: 7.0 mA
+//  __WFE();
+
+// Option 5: 993-1001 uA
+//    sd_power_mode_set(NRF_POWER_MODE_LOWPWR);
+//    __WFI();
+
+// Option 6: 990-1000 uA
+ //  __WFI();
+
+// option 7: 631-640 uA
+delay(25);
 }
 
 /**************************************************************************************************************************/

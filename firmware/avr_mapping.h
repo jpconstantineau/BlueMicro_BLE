@@ -55,8 +55,9 @@ Common Defines.
 #define COL2ROW       0
 #define ROW2COL       1
 
-#define LEFT 0
-#define RIGHT 1
-#define MASTER 2
+#define TEST 0
+#define LEFT 1
+#define RIGHT 2
+#define MASTER 3
 
 #endif /* AVR_MAPPING_H */

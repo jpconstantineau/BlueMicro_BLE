@@ -22,28 +22,31 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define KEYBOARD_CONFIG_H
 #include "avr_mapping.h"
 
-#define KEYBOARD_SIDE LEFT
+//#define KEYBOARD_SIDE LEFT
 //#define KEYBOARD_SIDE RIGHT
+#define KEYBOARD_SIDE TEST
 // CHANGE THIS FOR THE KEYBOARD TO MATCH WHAT IS BEING FLASHED. OPTIONS: LEFT  RIGHT  MASTER
 
-#define DEVICE_NAME_R                         "IrisBLE_R"                          /**< Name of device. Will be included in the advertising data. */
-#define DEVICE_NAME_L                         "IrisBLE_L"                          /**< Name of device. Will be included in the advertising data. */
-#define DEVICE_NAME_M                         "IrisBLE"                          /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME_R                         "Minidox_R"                          /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME_L                         "Minidox_L"                          /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME_M                         "Minidox"                          /**< Name of device. Will be included in the advertising data. */
 
-#define DEVICE_MODEL                        "IrisBLE_V1"                          /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_MODEL                          "Minidox_V1"                          /**< Name of device. Will be included in the advertising data. */
 
-#define MANUFACTURER_NAME                   "Keebio"                      /**< Manufacturer. Will be passed to Device Information Service. */
+#define MANUFACTURER_NAME                     "ThatCanadian"                      /**< Manufacturer. Will be passed to Device Information Service. */
 
 
 /* HARDWARE DEFINITION*/
 /* key matrix size */
-#define MATRIX_ROWS 5
-#define MATRIX_COLS 6
+#define MATRIX_ROWS 4
+#define MATRIX_COLS 5
 
-// Iris on Arduino
-#define MATRIX_ROW_PINS { D7, E6, B4, D2, D4 }
-#define MATRIX_COL_PINS { F6, F7, B1, B3, B2, B6 }
+// Minidox on Arduino
+//#define MATRIX_ROW_PINS { B2, B6, B4, B5 }
+//#define MATRIX_COL_PINS { F4, D3, D2, D1, D4 } 
 
+#define MATRIX_ROW_PINS { B2, B6, B4, B5 }
+#define MATRIX_COL_PINS { F4, D3, D2, D1, D4 }
 #define UNUSED_PINS {}
 
 /* COL2ROW or ROW2COL */
@@ -51,39 +54,33 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 #define DEBOUNCETIME 20
 
-#endif /* KEYBOARD_CONFIG_H */
 
 
     #if KEYBOARD_SIDE == LEFT
-
-#define KEYMAP( \
-   K00,   K01,   K02,   K03,   K04,   K05,   \
-   K10,   K11,   K12,   K13 ,  K14,   K15,   \
-   K20,   K21,   K22,   K23,   K24,   K25,   \
-   K30,   K31 ,  K32,   K33,   K34,   K35,   K42,  \
-                               K43,   K44,   K45   \
-) { \
-  { K00,   K01,   K02,   K03,   K04,   K05 }, \
-  { K10,   K11,   K12,   K13,   K14,   K15 }, \
-  { K20,   K21,   K22,   K23,   K24,   K25 }, \
-  { K30,   K31,   K32,   K33,   K34,   K35 }, \
-  { KC_NO, KC_NO, K42,   K43,   K44,   K45 }  \
-}
-
+        #define KEYMAP( \
+            K00,   K01,   K02,   K03,   K04,       \
+            K10,   K11,   K12,   K13,   K14,       \
+            K20,   K21,   K22,   K23,   K24,       \
+        K30,   K31,   K32,   K33,   K34     \
+        ) { \
+            { K00,   K01,   K02,   K03,   K04   }, \
+            { K10,   K11,   K12,   K13,   K14   }, \
+            { K20,   K21,   K22,   K23,   K24   }, \
+            { K30,   K31,   K32,   K33,   K34   }  \
+        }
     #else
-
-#define KEYMAP( \
-       K00,   K01,   K02,   K03,   K04,   K05,   \
-       K10,   K11,   K12,   K13 ,  K14,   K15,   \
-       K20,   K21,   K22,   K23,   K24,   K25,   \
-  T01, K30,   K31 ,  K32,   K33,   K34,   K35,   \
-       K40,   K41,   K42  \
-) { \
-  { K05,   K04,   K03,   K02,   K01,   K00 }, \
-  { K15,   K14,   K13,   K12,   K11,   K10 }, \
-  { K25,   K24,   K23,   K22,   K21,   K20 }, \
-  { K35,   K34,   K33,   K32,   K31,   K30 }, \
-  { KC_NO, KC_NO, T01,   K42,   K41,   K40 }  \
-}
-
+        #define KEYMAP( \
+            K04,   K03,   K02,   K01,   K00,       \
+            K14,   K13,   K12,   K11,   K10,       \
+            K24,   K23,   K22,   K21,   K20,       \
+            K34,   K33,   K32,   K31,   K30     \
+        ) { \
+            { K00,   K01,   K02,   K03,   K04   }, \
+            { K10,   K11,   K12,   K13,   K14   }, \
+            { K20,   K21,   K22,   K23,   K24   }, \
+            { K30,   K31,   K32,   K33,   K34   }  \
+        }
     #endif
+
+#endif /* KEYBOARD_CONFIG_H */
+

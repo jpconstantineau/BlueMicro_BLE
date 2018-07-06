@@ -32,6 +32,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define BLE_PAIRS 1
 #define PERIPHERAL_COUNT 1
 #define CENTRAL_COUNT 1
+#define MATRIX_SCAN 1
+#define SEND_KEYS 1
 #define DEVICE_NAME DEVICE_NAME_L
 #endif
 #if KEYBOARD_SIDE == RIGHT
@@ -41,6 +43,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define BLE_PAIRS 1
 #define PERIPHERAL_COUNT 1
 #define CENTRAL_COUNT 0
+#define MATRIX_SCAN 1
+#define SEND_KEYS 1
 #define DEVICE_NAME DEVICE_NAME_R
 #endif
 #if KEYBOARD_SIDE == MASTER
@@ -50,8 +54,20 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define BLE_HID 1
 #define PERIPHERAL_COUNT 1
 #define CENTRAL_COUNT 0
+#define MATRIX_SCAN 1
+#define SEND_KEYS 1
 #define DEVICE_NAME DEVICE_NAME_M
 #endif
-
+#if KEYBOARD_SIDE == TEST
+#define BLE_CENTRAL 1  /// adding central adds 5 mA - this is due to the scanner.
+#define BLE_PERIPHERAL 0 /// adding peripheral adds 0 mA
+#define BLE_PAIRS 0  /// NOT SURE WHAT THIS ACTIVATES
+#define BLE_HID 1 //1 // 
+#define PERIPHERAL_COUNT 1 //1
+#define CENTRAL_COUNT 0
+#define MATRIX_SCAN 1 // 1 // adding matrix scanning adds 0.2-0.4 mA
+#define SEND_KEYS 1 // 1 //
+#define DEVICE_NAME DEVICE_NAME_M
+#endif
 
 #endif /* FIRMWARE_CONFIG_H */

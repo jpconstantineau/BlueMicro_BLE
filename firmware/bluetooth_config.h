@@ -32,6 +32,20 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 // Set max power. Accepted values are: -40, -30, -20, -16, -12, -8, -4, 0, 4
 #define DEVICE_POWER                        0                                          // Use 0.  This uses less power and allows for a longer battery life.
 
+/*
+  Power     mA      
+  -40   3.2-3.6mA     -95dbm
+  -30
+  -20
+  -16
+  -12
+  -8
+  -4    3.2-3.7       -64dbm
+  0     3.1-3.8       -60dbm
+  4     3.1-3.9       -53dbm
+
+*/
+
 // These can be modified.  Not sure of what values are allowed.
 #define PNP_ID_VENDOR_ID_SOURCE             0x02                                       /**< Vendor ID Source. */
 #define PNP_ID_VENDOR_ID                    0x1915                                     /**< Vendor ID. */
