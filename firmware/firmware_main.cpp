@@ -361,6 +361,7 @@ void cent_disconnect_callback(uint16_t conn_handle, uint8_t reason)
 
 /**************************************************************************************************************************/
 // Keyboard Scanning
+// ToDo: DIODE_DIRECTION COL2ROW and ROW2COL code
 /**************************************************************************************************************************/
 void scanMatrix() {
   uint32_t pindata = 0;
