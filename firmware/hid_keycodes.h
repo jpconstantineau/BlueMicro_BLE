@@ -259,9 +259,9 @@ enum hid_keyboard_keypad_usage {
     KC_COPY,
     KC_PASTE,
     KC_FIND,
-    KC__MUTE,
-    KC__VOLUP,          /* 0x80 */
-    KC__VOLDOWN,
+    KC_MUTE,
+    KC_VOLUP,          /* 0x80 */
+    KC_VOLDOWN,
     KC_LOCKING_CAPS,    /* locking Caps Lock */
     KC_LOCKING_NUM,     /* locking Num Lock */
     KC_LOCKING_SCROLL,  /* locking Scroll Lock */

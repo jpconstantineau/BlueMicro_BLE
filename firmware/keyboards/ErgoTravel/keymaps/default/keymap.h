@@ -122,7 +122,7 @@ const uint8_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 KC_RBRC,  KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,      KC_BSPACE,  \
   KC_B,   KC_H,    KC_J,    KC_K,    KC_L,    KC_SCOLON, KC_QUOTE,   \
   KC_C,   KC_N,    KC_M,    KC_COMMA,KC_DOT,  KC_SLSH,   KC_ENT,  \
-  KC_SPC, LAYER_2, LAYER_2, KC_LEFT, KC_UP,   KC_DOWN,   KC_RIGHT \
+  KC_SPC, KC_SPC, LAYER_2, KC_LEFT, KC_UP,   KC_DOWN,   KC_RIGHT \
 ),
 
 /* Layer 1
@@ -137,10 +137,10 @@ KC_RBRC,  KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,      KC_BSPACE,  \
  * `-----------------------------------------------------------------------------------'
  */
 [_L1] =  KEYMAP( \
-  KC_A,   KC_6,    KC_7,    KC_8,    KC_9,    KC_0,      KC_DEL,  \
+  KC_A,   KC_6,    KC_7,    KC_8,    KC_9,    KC_F10,      KC_DEL,  \
   KC_B,   KC_F6,    KC_F7,    KC_F8,    KC_F9,    KC_F10, KC_QUOTE,   \
   KC_C,   KC_N,    KC_M,    KC_COMMA,KC_DOT,  KC_SLSH,   KC_ENT,  \
-  KC_NO, LAYER_1,   LAYER_1, KC_LEFT, KC_UP,   KC_DOWN,   KC_RIGHT \
+  KC_SPC, KC_SPC,   LAYER_1, KC_LEFT, KC_UP,   KC_DOWN,   KC_RIGHT \
 ),
 
 /* Layer 2
@@ -155,10 +155,10 @@ KC_RBRC,  KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,      KC_BSPACE,  \
  * `-----------------------------------------------------------------------------------'
  */
 [_L2] = KEYMAP( \
-  KC_A,   KC_F6,    KC_F7,    KC_F8,    KC_F9,    KC_0,      KC_INS,  \
+  KC_A,   KC_F6,    KC_F7,    KC_F8,    KC_F9,    KC_F10,   KC_INS,  \
   KC_B,   KC_F6,    KC_F7,    KC_F8,    KC_F9,    KC_F10, KC_QUOTE,   \
   KC_C,   KC_N,    KC_M,    KC_COMMA,KC_DOT,  KC_SLSH,   KC_ENT,  \
-  KC_NO, LAYER_1,   LAYER_1, KC_LEFT, KC_UP,   KC_DOWN,   KC_RIGHT \
+  KC_SPC, KC_SPC,   LAYER_1, KC_LEFT, KC_UP,   KC_DOWN,   KC_RIGHT \
 ),
 
 /* Layer 3
@@ -176,7 +176,7 @@ KC_RBRC,  KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,      KC_BSPACE,  \
   KC_A,   KC_6,    KC_7,    KC_8,    KC_9,    KC_9,      KC_DEL,  \
   KC_B,   KC_F6,    KC_F7,    KC_F8,    KC_F9,    KC_F10, KC_QUOTE,   \
   KC_C,   KC_N,    KC_M,    KC_COMMA,KC_DOT,  KC_SLSH,   KC_ENT,  \
-  KC_NO, LAYER_1,   LAYER_1, KC_LEFT, KC_UP,   KC_DOWN,   KC_RIGHT \
+  KC_SPC, KC_SPC,   LAYER_1, KC_LEFT, KC_UP,   KC_DOWN,   KC_RIGHT \
 )
 };
 
