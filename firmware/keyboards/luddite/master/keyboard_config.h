@@ -42,7 +42,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define MANUFACTURER_NAME                   "di0id"                      /**< Manufacturer. Will be passed to Device Information Service. */
 
 // Set max power. Accepted values are: -40, -30, -20, -16, -12, -8, -4, 0, 4
-#define DEVICE_POWER 0
+#define DEVICE_POWER 4
 #define PNP_ID_VENDOR_ID_SOURCE             0x02                                       /**< Vendor ID Source. */
 #define PNP_ID_VENDOR_ID                    0x1915                                     /**< Vendor ID. */
 #define PNP_ID_PRODUCT_ID                   0xEEEE                                     /**< Product ID. */
