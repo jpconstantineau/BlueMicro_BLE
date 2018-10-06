@@ -26,8 +26,6 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
     #define _QWERTY 0
     #define _L1  1
-    #define _L2  2
-    #define _L3  3
 
     #if KEYBOARD_SIDE == LEFT
 
@@ -41,58 +39,28 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 
         [_L1]  = KEYMAP(
-            KC_Q,KC_1,    KC_2,     KC_3,    KC_4,    KC_5,
-            KC_Q,KC_ESC,  _______,  _______, _______, _______,
-            KC_Q,KC_CAPS, KC_GRAVE, _______, _______, _______,
-            KC_NO,KC_NO,   KC_NO,    KC_LCTRL, LAYER_1,    KC_LSHIFT ),
-
-
-        [_L2] = KEYMAP(
-            KC_Q,KC_1,    KC_2,    KC_3,    KC_4,    KC_5,
-            KC_Q,KC_TAB,    KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT,
-            KC_Q,KC_LCTL, KC_GRV,  KC_LGUI, KC_LALT, _______,
-            KC_NO,KC_NO, KC_NO,   KC_LCTRL, LAYER_1,    KC_LSHIFT ),
-
-
-        [_L3] = KEYMAP(
-            KC_Q,KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,
-            KC_Q,KC_F11,  KC_F12,  _______, _______, _______,
-            _______, _______, _______, _______, _______, _______,    
-            KC_NO, KC_NO, KC_NO,   KC_LCTRL, LAYER_1,    KC_LSHIFT )
-        };
-
-
+            KC_GRV,    KC_1,    KC_2,     KC_3,    KC_4,    KC_5,
+            KC_CAPS,   KC_F1,   KC_F2,    KC_F3,   KC_F4,   KC_F5,
+            KC_LSHIFT, KC_F6,   KC_F7,    KC_F8,   KC_F9,   KC_F10,
+            KC_NO,     KC_NO,   KC_NO,    LAYER_0, KC_LCTRL,KC_LGUI )
+          };
 
     #else
 
         const uint8_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
         [_QWERTY] = KEYMAP(
-            KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,
-            KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN,
-            KC_N,    KC_M,    KC_COMMA,    KC_DOT,    KC_ENTER,
-            KC_SPC , LAYER_2, LAYER_3, KC_NO, KC_NO ),
+            KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,   KC_BSPC,
+            KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN,KC_ENTER,
+            KC_N,    KC_M,    KC_COMMA,KC_DOT,  KC_SLSH,KC_RALT,
+            KC_RSFT, KC_SPC,  LAYER_1, KC_NO,   KC_NO,   KC_NO ),
 
 
         [_L1]  = KEYMAP(
-            KC_6,    KC_7,    KC_8,    KC_9,    KC_0,
-            _______, _______, _______, KC_UP, _______,
-            _______, _______, KC_LEFT, KC_DOWN,  KC_RGHT,
-            KC_BSPC, LAYER_2, LAYER_3, KC_NO, KC_NO ),
-
-
-        [_L2] = KEYMAP(
-            KC_6,    KC_7,    KC_8,    KC_9,    KC_0,
-            _______, _______, _______, _______, _______,
-            _______, _______, _______, _______,  _______,
-            KC_BSPC, LAYER_2, LAYER_3, KC_NO, KC_NO ),
-
-
-        [_L3] = KEYMAP(
-            KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,
-            _______, _______, _______, _______,  _______,
-            _______, _______, _______, _______,  _______,
-            KC_BSPC, LAYER_2, LAYER_3, KC_NO, KC_NO )
+            KC_6,    KC_7,    KC_8,    KC_9,   KC_0,    KC_MINS,
+            KC_LBRC, KC_RBRC, KC_BSLS, KC_UP,  KC_QUOT, KC_EQL,
+            KC_F11,  KC_F12,  KC_LEFT, KC_DOWN,KC_RGHT, _______,
+            KC_RSFT, KC_APP,  LAYER_0, KC_NO,  KC_NO,   KC_NO )
         };
     #endif
 
