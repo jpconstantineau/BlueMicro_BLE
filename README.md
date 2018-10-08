@@ -89,6 +89,14 @@ Examples
 - ./build-macos -c gherkin:default
 - ./build-macos iris:default:left
 
+## Building from Linux
+
+Follow the instructions [here](https://learn.adafruit.com/bluefruit-nrf52-feather-learning-guide/arduino-bsp-setup), then 
+find your arduino avr installation (should be somewhere in /usr/share/arduino/hardware/) and replace the arduinoAvrPath
+variable in build-linux with yours.
+
+Usage is the same as detailed in the windows and mac sections.
+
 # Need to flash the bootloader?
 
 Follow the instructions on the Flashing the Bootloader page for the [Adafruit nRF52 Feather](https://learn.adafruit.com/bluefruit-nrf52-feather-learning-guide/flashing-the-bootloader).  You will need a j-link and connect it to the SWD lines of the hardware.
