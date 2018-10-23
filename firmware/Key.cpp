@@ -22,7 +22,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include <utility>
 #include <cstdint>
 #include "hid_keycodes.h"
-#include "keyboard_config.h"
+#include "firmware_config.h"
 
 // ToDo: There seems to be lots of redundency in data.
 // ToDo: consider interrupts or GPIOTE
@@ -268,4 +268,3 @@ uint8_t Key::currentMod = 0;
 uint8_t Key::matrix[2][MATRIX_ROWS][MATRIX_COLS]  = {0};
 unsigned long Key::timestamps[MATRIX_ROWS][MATRIX_COLS]  = {0};
 uint8_t Key::bufferposition = 0;
-

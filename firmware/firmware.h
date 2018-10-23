@@ -29,6 +29,8 @@ void setupMatrix(void);
 void scanMatrix(void);
 void startAdv(void);
 void sendKeyPresses(void);
+void monitoringloop(void);
+void keyscan_timer_callback(TimerHandle_t xTimerID);
 
 #if BLE_PERIPHERAL == 1
     void cccd_callback(BLECharacteristic& chr, uint16_t cccd_value)  ;
@@ -44,5 +46,18 @@ void sendKeyPresses(void);
     void cent_connect_callback(uint16_t conn_handle);
     void cent_disconnect_callback(uint16_t conn_handle, uint8_t reason);
 #endif
+
+
+enum states_monitor_modes {
+  STATE_BOOT_INITIALIZE = 0x00,
+  STATE_BOOT_MODE,
+  STATE_BOOT_CLEAR_BONDS,
+  STATE_BOOT_SERIAL_DFU,
+  STATE_BOOT_WIRELESS_DFU,
+  STATE_MONITOR_MODE,
+  STATE_BOOT_UNKNOWN,
+  };
+
+
 
 #endif /* FIRMWARE_H */
