@@ -451,11 +451,19 @@ void scanMatrix() {
   uint32_t pindata = 0;
   for(int j = 0; j < MATRIX_ROWS; ++j) {                             
     //set the current row as OUPUT and LOW
-    pinMode(rows[j], OUTPUT);                                         
+    pinMode(rows[j], OUTPUT);
+    #if DIODE_DIRECTION == COL2ROW                                         
     digitalWrite(rows[j], LOW);                                       // 'enables' a specific row to be "low" 
+    #else
+    digitalWrite(rows[j], HIGH);                                       // 'enables' a specific row to be "HIGH"
+    #endif
     //loops thru all of the columns
     for (int i = 0; i < MATRIX_COLS; ++i) {
-      pinMode(columns[i], INPUT_PULLUP);                              // 'enables' the column High Value on the diode; becomes "LOW" when pressed
+          #if DIODE_DIRECTION == COL2ROW                                         
+          pinMode(columns[i], INPUT_PULLUP);                              // 'enables' the column High Value on the diode; becomes "LOW" when pressed 
+          #else
+          pinMode(columns[i], INPUT_PULLDOWN);                              // 'enables' the column High Value on the diode; becomes "LOW" when pressed
+          #endif
     }
      // delay(1);                                                       // need for the GPIO lines to settle down electrically before reading.
      nrf_delay_us(1);

@@ -43,7 +43,11 @@ Key::Key() {    // Constructor
  bool Key::scanMatrix(const int& currentState,unsigned long currentMillis, const int& row, const int& col)
  {
   // 
+  #if DIODE_DIRECTION == COL2ROW
   if (currentState == 0 ) //if key pressed
+  #else
+  if (currentState == 1 ) //if key pressed
+  #endif
   {
     if (timestamps[row][col] > 0) //if key was previously pressed
     {
