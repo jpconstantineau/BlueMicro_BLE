@@ -20,10 +20,13 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 //#include <array>
 #include <utility>
 #include <cstdint>
+
 #include "hid_keycodes.h"
 #include "keyboard_config.h"
 #include "keymap.h"
 
+#ifndef KEY_H
+#define KEY_H
 
 class Key {
     public:
@@ -55,4 +58,4 @@ class Key {
         static uint8_t bufferposition;
 
 };
-
+#endif /* KEY_H */

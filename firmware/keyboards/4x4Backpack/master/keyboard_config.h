@@ -17,47 +17,46 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
+#ifndef KEYBOARD_CONFIG_H
+#define KEYBOARD_CONFIG_H
+#include "avr_mapping.h"
 
-#ifndef FIRMWARE_H
-#define FIRMWARE_H
-
-#include "firmware_config.h"
-#include "bluetooth_config.h"
-#include "Key.h"
-
-void setupMatrix(void);
-void scanMatrix(void);
-void startAdv(void);
-void sendKeyPresses(void);
-void monitoringloop(void);
-void keyscan_timer_callback(TimerHandle_t xTimerID);
-
-#if BLE_PERIPHERAL == 1
-    void cccd_callback(BLECharacteristic& chr, uint16_t cccd_value)  ;
-    void layer_request_callback (BLECharacteristic& chr, uint8_t* data, uint16_t len, uint16_t offset);
-#endif
+#define KEYBOARD_SIDE MASTER
 
 
-#if BLE_CENTRAL == 1
-    void notify_callback(BLEClientCharacteristic* chr, uint8_t* data, uint16_t len);
-    void scan_callback(ble_gap_evt_adv_report_t* report);
-    void prph_connect_callback(uint16_t conn_handle);
-    void prph_disconnect_callback(uint16_t conn_handle, uint8_t reason);
-    void cent_connect_callback(uint16_t conn_handle);
-    void cent_disconnect_callback(uint16_t conn_handle, uint8_t reason);
-#endif
+#define DEVICE_NAME_R                         "4x4Numpad_R"                         /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME_L                         "4x4Numpad_L"                         /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME_M                         "4x4Numpad"                           /**< Name of device. Will be included in the advertising data. */
+
+#define DEVICE_MODEL                        "4x4Numpad_V1"                          /**< Name of device. Will be included in the advertising data. */
+
+#define MANUFACTURER_NAME                   "keyboards.jpconstantineau.com"         /**< Manufacturer. Will be passed to Device Information Service. */
 
 
-enum states_monitor_modes {
-  STATE_BOOT_INITIALIZE = 0x00,
-  STATE_BOOT_MODE,
-  STATE_BOOT_CLEAR_BONDS,
-  STATE_BOOT_SERIAL_DFU,
-  STATE_BOOT_WIRELESS_DFU,
-  STATE_MONITOR_MODE,
-  STATE_BOOT_UNKNOWN,
-  };
+/* HARDWARE DEFINITION*/
+/* key matrix size */
+#define MATRIX_ROWS 4
+#define MATRIX_COLS 4
+
+#define MATRIX_ROW_PINS {25, 26, 27, 28}
+#define MATRIX_COL_PINS {29, 30, 2, 3}
+#define UNUSED_PINS {}
+
+/* COL2ROW or ROW2COL */
+#define DIODE_DIRECTION COL2ROW
+
+#define KEYMAP( \
+	 K00,   K01,   K02,   K03,      \
+	 K10,   K11,   K12,   K13,     \
+	 K20,   K21,   K22,   K23,     \
+	 K30,   K31,   K32,   K33 \
+) { \
+	{ K00,   K01,   K02,   K03,   }, \
+	{ K10,   K11,   K12,   K13,   }, \
+	{ K20,   K21,   K22,   K23,   }, \
+	{ K30,   K31,   K32,   K33    } \
+}
 
 
 
-#endif /* FIRMWARE_H */
+#endif /* KEYBOARD_CONFIG_H */
