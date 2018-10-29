@@ -23,7 +23,6 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "avr_mapping.h"
 
 #define KEYBOARD_SIDE RIGHT
-//#define KEYBOARD_SIDE TEST
 // CHANGE THIS FOR THE KEYBOARD TO MATCH WHAT IS BEING FLASHED. OPTIONS: LEFT  RIGHT  MASTER
 
 #define DEVICE_NAME_R                         "Airgodox_R"                          /**< Name of device. Will be included in the advertising data. */
@@ -45,13 +44,10 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define UNUSED_PINS {}
 
 /* COL2ROW or ROW2COL */
-#define DIODE_DIRECTION ROW2COL
+#define DIODE_DIRECTION COL2ROW
 
 #define DEBOUNCETIME 20
 
-
-
-    #if KEYBOARD_SIDE == LEFT
         #define KEYMAP( \
             K00,   K01,   K02,   K03,   K04,   K05,       \
             K10,   K11,   K12,   K13,   K14,   K15,       \
@@ -63,18 +59,5 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
             { K20,   K21,   K22,   K23,   K24,   K25   }, \
             { K30,   K31,   K32,   K33,   K34,   K35   }  \
         }
-    #else
-        #define KEYMAP( \
-            K05,   K04,   K03,   K02,   K01,   K00,       \
-            K15,   K14,   K13,   K12,   K11,   K10,       \
-            K25,   K24,   K23,   K22,   K21,   K20,       \
-            K35,   K34,   K33,   K32,   K31,   K30     \
-        ) { \
-            { K00,   K01,   K02,   K03,   K04,   K05   }, \
-            { K10,   K11,   K12,   K13,   K14,   K15   }, \
-            { K20,   K21,   K22,   K23,   K24,   K25   }, \
-            { K30,   K31,   K32,   K33,   K34,   K35   }  \
-        }
-    #endif
 
 #endif /* KEYBOARD_CONFIG_H */
