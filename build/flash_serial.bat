@@ -1,0 +1,3 @@
+echo nrfjprog.exe -f NRF52 --recover
+nrfjprog.exe --program C:\Users\pierre\AppData\Local\Arduino15\packages\adafruit\hardware\nrf52\0.8.6/bin/bootloader/feather52/5.1.0/dual/feather52_bootloader_5.1.0_s132_dual.hex -f nrf52 --chiperase    --reset 
+C:\Users\pierre\AppData\Local\Arduino15\packages\adafruit\hardware\nrf52\0.8.6/tools/nrfutil-0.5.2/binaries/win32/nrfutil.exe --verbose dfu serial -pkg C:\GIT\BlueMicro_BLE\output\4x4Backpack\4x4Backpack-numpad-master.zip -p com6 -b 115200 
