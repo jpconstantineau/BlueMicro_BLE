@@ -51,9 +51,9 @@ Key::Key() {    // Constructor
   {
     if (timestamps[row][col] > 0) //if key was previously pressed
     {
-     if((currentMillis - timestamps[row][col] )>=DEBOUNCETIME)
+     if((currentMillis - timestamps[row][col]) >= DEBOUNCETIME)
      {
-        matrix[1][row][col] = 1;
+        matrix[row][col] = 1;
      }
      else // not enough debounce time
      {
@@ -67,13 +67,10 @@ Key::Key() {    // Constructor
   }
   else // key not pressed
   {
-     matrix[1][row][col] = 0;
+     matrix[row][col] = 0;
      timestamps[row][col] = 0;
   }
-    //matrix[0][row][col] = last pressed state
-    matrix[0][row][col] = currentState;
-    //matrix[1][row][col] = Active
-    //timestamps[row][col] = last timestamp
+    matrix[row][col] = currentState;
 }
 
 
@@ -160,7 +157,7 @@ bool Key::updateLayer()
   for(int row = 0; row < MATRIX_ROWS; ++row) {
     for (int col = 0; col < MATRIX_COLS; ++col) {
       uint8_t keycode =  keymaps[layer][row][col]; // get the key...
-      if (matrix[1][row][col] != 1){keycode =0;}  
+      if (matrix[row][col] != 1){keycode =0;}  
         switch(keycode){ 
             case LAYER_0:   localLayer = 0;  break;
             case LAYER_1:   localLayer = 1;  break;
@@ -200,7 +197,7 @@ bool Key::updateLayer()
    for(int row = 0; row < MATRIX_ROWS; ++row) {
     for (int col = 0; col < MATRIX_COLS; ++col) {
       uint8_t keycode =  keymaps[layer][row][col]; // get the key...
-      if (matrix[1][row][col] != 1){keycode =0;}     
+      if (matrix[row][col] != 1){keycode =0;}     
             switch(keycode){ 
             case KC_LCTRL:  currentMod  = currentMod  | 1; val = true; break;
             case KC_LSHIFT: currentMod  = currentMod  | 2; val = true; break;
@@ -236,7 +233,7 @@ if (localLayer < remoteLayer)
    for(int row = 0; row < MATRIX_ROWS; ++row) {
     for (int col = 0; col < MATRIX_COLS; ++col) {
       uint8_t keycode =  keymaps[layer][row][col]; // get the key...
-      if (matrix[1][row][col] != 1){keycode =0;}
+      if (matrix[row][col] != 1){keycode =0;}
       
                 switch(keycode){ 
             case KC_A ... KC_EXSEL: // key pressed
@@ -269,6 +266,6 @@ uint8_t Key::localLayer = 0;
 uint8_t Key::remoteLayer = 0;
 uint8_t Key::remoteMod = 0;
 uint8_t Key::currentMod = 0;
-uint8_t Key::matrix[2][MATRIX_ROWS][MATRIX_COLS]  = {0};
+uint8_t Key::matrix[MATRIX_ROWS][MATRIX_COLS]  = {0};
 unsigned long Key::timestamps[MATRIX_ROWS][MATRIX_COLS]  = {0};
 uint8_t Key::bufferposition = 0;

@@ -49,7 +49,7 @@ class Key {
         static void resetRemoteReport();
         
         static uint8_t remoteReport[8];
-        static  uint8_t matrix[2][MATRIX_ROWS][MATRIX_COLS];
+        static uint8_t matrix[MATRIX_ROWS][MATRIX_COLS];
         static unsigned long timestamps[MATRIX_ROWS][MATRIX_COLS]; 
 
         static uint8_t remoteLayer;
