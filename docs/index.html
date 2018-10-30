@@ -37,11 +37,11 @@
               <li class="nav-item">
                 <a class="nav-link" href="#">
                   <span data-feather="bluetooth"></span>
-                  BlueTooth Firmware
+                  Bluetooth Firmware
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="features.md">
                   <span data-feather="layers"></span>
                   Features
                 </a>
@@ -103,7 +103,9 @@
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h1 class="h2">Introduction</h1>
+            <div id="page-content-wrapper" name="page-content-wrapper">
+                    <h1 class="h2">Introduction</h1>
+            </div>          
           </div>
 
           
@@ -128,6 +130,25 @@
     <script>
       feather.replace()
     </script>
+    <script>
+        $(".sidebar-sticky ul li a").click(function(event){
+                var clickd = $(event.target);
+                // update contents
+                contents_file=(clickd.attr("href").substr(1));
+                $("#page-content-wrapper").empty();
+                $("#page-content-wrapper").load(contents_file, function(e){
+                    
+                    $(document).trigger("ready");
+                    $(document).ready();
+                });
 
+
+                // toggle active
+                $(.sidebar-sticky ul li .active).removeClass("active");
+                clickd.parent().addClass("active");
+
+           }
+        );
+    </script>
   </body>
 </html>
