@@ -48,7 +48,7 @@ To be able to be used as processor for a Custom Keyboard, the NRF52832 module mu
 | 5x5 Backpack         | 40percent.club 5x5    | 95mm x 95mm            | E73-2G4M04S1B | Any configuration from 5x5 to 5x15 |
 
 
-## Keyboards 
+## Keyboards - Using Breakout Boards
 
 The list of keyboards that can use the NRF52832 processor is countless.  However, when implemented with modules and breakout boards, compatibility most often comes down to the electrical connection and the physical dimensions available.
 For example, the BlueMicro hardware (V1.x and V2.x) has an electrical connection that's compatible with the Pro Micro, but its physical dimensions is about twice as long; limiting its use to keyboards with sufficient room in line with the Pro Micro board.
@@ -58,6 +58,25 @@ Other boards uses the Teensy electrical connection to interface the ATMega32U4 t
 Finally, since the main goal of switching to a nrf52832 processor is to convert a keyboard from wired to wireless, physical space for a battery is the next consideration for compatibility with a specific keyboard.
 
 
+## Keyboards - Using directly in the Keyboard
+
+It's possible to design a keyboard to use the NRF52832 or a NRF52832 module directly on the Keyboard PCB.  This allows the most flexibility in using the available GPIOs and adding any other functionality that cannot be implemented on a breakout board due to the limited space available.
+
+One such example is the [Blue Ortho](https://imgur.com/a/p3ZXnPM#wDFujG6).
 
 
+## What about Nordic Semiconductor's...
 
+### NRF52840
+
+This is a relatively new chip that supports on-chip USB.  There is more Flash (1Mb), more RAM (256kb), more GPIOs (48 instead of 32), can run with 5V, and also has a USB 2.0 controller.  It's not clear if wired HID functionality will be available.  There are very few modules currently available.  Adafruit is currently working on developping the NRF52840.  Until they release their hardware and updated NRF52 libraries to support this chip, we will not be able to use the BlueMicro firmware with the NRF52840.
+
+
+### NRF52810
+
+This chip is very similar to the NRF52832 but has less features, flash space and ram. There are fewer modules available with the NRF52810 than with the NRF52832; often at higher prices due to their limited availability.  The NRF52 Adafruit library does not support this chip.  As such, it's recommended to go directly to the NRF52832.
+
+
+### NRF51822
+
+The NRF51822 is an older device that uses a 32-bit ARM Cortex M0 CPU core.  Adafruit does have a NRF51 feather, however, it does not support the NRF52 libraries.  The NRF51 based Bluefruit boards run as modules that you connect to via an external MCU sending AT style commands over SPI or UART. 
