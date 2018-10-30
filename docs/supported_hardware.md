@@ -1,15 +1,15 @@
 # Supported Hardware
 
-## Target CPU
+## Target CPU: Nordic Semiconductor NRF52832
 
-Nordic Semiconductor NRF52832
+With the nRF52832, you run all of your keyboard firmware code directly on the nRF52832 and no external MCU is used or required for Bluetooth functionality!
 
 For more information on the NRF52832, see the [detailed 553 pages product specification](http://infocenter.nordicsemi.com/pdf/nRF52832_PS_v1.4.pdf)
 
-The BlueMicro firmware uses the (Adafruit nrf52 feather)[https://learn.adafruit.com/bluefruit-nrf52-feather-learning-guide/introduction] bootloader, libraries and allows the following features:
+The BlueMicro firmware uses the (Adafruit nrf52 feather)[https://learn.adafruit.com/bluefruit-nrf52-feather-learning-guide/introduction] bootloader, libraries and allows for the following features:
 
 | Feature        | Details           | Comments  |
-| ------------- |:-------------:| -----:|
+| ------------- |:------------- |:----- |
 | 2.4 GHz transceiver  | -96 dBm sensitivity in Bluetooth® low energy mode |  |
 |               |  -20 to +4 dBm TX power, configurable in 4 dB steps      |    |
 |              | 5.3 mA peak current in TX (0 dBm)     |     |
@@ -23,6 +23,30 @@ The BlueMicro firmware uses the (Adafruit nrf52 feather)[https://learn.adafruit.
 | RESET Lines  | 3 GPIO used for RESET, Device Firmware Update (DFU) and Factory Reset |  |
 | UART  | 2 GPIO pre-configured for RX/TX serial lines | allows flashing using serial adapter |
 | PWM  | 3x 4-channel pulse width modulator (PWM) unit with EasyDMA | Will enable backlight LEDs  |
+
+## Available Modules
+
+There are several modules available that uses the NRF52832 SoC.
+For example, the reference design for the BlueMicro Hardware, the [Adafruit NRF52](https://learn.adafruit.com/bluefruit-nrf52-feather-learning-guide/downloads), uses the MDBT42Q module from Raytac.  Over the last few years, many modules have been made available, in various form factors and available at different price points.
+
+Some of these modules have FCC Certifications while others don't.
+
+
+## Available Breakout Boards
+
+To be able to be used as processor for a Custom Keyboard, the NRF52832 module must be installed on a breakout board that's compatible to be inserted in the custom keyboard in question.
+
+| Breakout Board       | Electrical Connection | Physical Dimensions    | Module        | Compatible with |
+| Adafruit NRF52       | Adafruit Feather      | 23mm x 51mm            | MDBT42Q       | Handwired       |
+| BlueMicro V1.x, V2.x | Arduino Pro Micro     | 22mm x 68mm            | E73-2G4M04S1B | Many Custom boards using the Pro Micro but with sufficient length |
+| BLE Phage            | Arduino Pro Micro     | 18mm? x 33mm?          | MDBT42Q       | Most custom boards using the Pro Micro |
+| 4x4 Backpack         | 40percent.club 4x4    | 76mm x 76mm            | E73-2G4M04S1B | Any configuration from 4x4 to 4x16 |
+| 5x5 Backpack         | 40percent.club 5x5    | 95mm x 95mm            | E73-2G4M04S1B | Any configuration from 5x5 to 5x15 |
+
+## Keyboards 
+
+The list of keyboards that can use the NRF52832 processor is countless.  However, when implemented with modules and breakout boards, compatibility most often comes down to the Electrical connection and the Physical dimensions available.
+For example, the BlueMicro hardware (V1.x and V2.x) has an electrical connection that's compatible with the Pro Micro, but its physical dimensions is about twice as long; limiting its use to keyboards with sufficient room in line with the Pro Micro board.
 
 
 
