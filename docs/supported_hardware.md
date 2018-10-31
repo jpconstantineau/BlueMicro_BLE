@@ -6,7 +6,7 @@ With the nRF52832, you run all of your keyboard firmware code directly on the nR
 
 For more information on the NRF52832, see the [detailed 553 pages product specification](http://infocenter.nordicsemi.com/pdf/nRF52832_PS_v1.4.pdf)
 
-The BlueMicro firmware uses the (Adafruit nrf52 feather)[https://learn.adafruit.com/bluefruit-nrf52-feather-learning-guide/introduction] bootloader, libraries and allows for the following features:
+The BlueMicro firmware uses the [Adafruit nrf52 feather](https://learn.adafruit.com/bluefruit-nrf52-feather-learning-guide/introduction) bootloader, libraries and allows for the following features:
 
 | Feature              | Details                                           | Comments  |
 | -------------------- |:------------------------------------------------- |:----- |
