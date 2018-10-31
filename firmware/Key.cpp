@@ -178,7 +178,7 @@ bool Key::updateLayer()
 
             if (keyValue >= 0xF0 && keyValue <= 0xFF)
             {
-                localLayer = keycode;
+                localLayer = keyValue;
                 layerMode = keycode & 0x00FF;
             }
         }
