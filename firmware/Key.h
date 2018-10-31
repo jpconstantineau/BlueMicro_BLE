@@ -39,6 +39,7 @@ class Key {
         static bool layerChanged;
         static bool reportEmpty;
         static uint8_t localLayer;
+        static uint8_t layerMode;
         static uint8_t currentReport[8];
 
     private:
