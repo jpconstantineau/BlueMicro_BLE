@@ -143,6 +143,8 @@ void Key::copyRemoteReport()
 
 void Key::updateMatrix()
 {
+    pressedKeys.clear();
+
     for(int row = 0; row < MATRIX_ROWS; ++row) {
         for (int col = 0; col < MATRIX_COLS; ++col) {
 
