@@ -72,7 +72,6 @@ bool Key::scanMatrix(const int& currentState,unsigned long currentMillis, const 
 }
 
 
-
 /**************************************************************************************************************************/
 // Called by callback function when remote data is received
 /**************************************************************************************************************************/
@@ -142,47 +141,66 @@ void Key::copyRemoteReport()
 #endif
 }
 
-/**************************************************************************************************************************/
-// Scan for layer changes - must do this first.
-/**************************************************************************************************************************/
-
-bool Key::updateLayer()
+void Key::updateMatrix()
 {
-    // toggle
-    if (layerMode == 1) 
-    {
-        ; // do nothing, local layer stays the same 
-    }
-    // momentary
-    else if (layerMode == 0) 
-    {
-        localLayer = 0; // switch local layer back to default 0
-    }
-
-    uint8_t layer = localLayer;         // Layer selection is done on the local layer
-    uint8_t prevlayer = localLayer;     // remember last layer
-
     for(int row = 0; row < MATRIX_ROWS; ++row) {
         for (int col = 0; col < MATRIX_COLS; ++col) {
 
-            uint16_t keycode =  keymaps[layer][row][col]; // get the keycode 
-
-            // set the keycode to 0 if key isn't being pressed
-            if (matrix[row][col] != 1) 
+            // if the key is being pressed
+            if (matrix[row][col] != 0) 
             {
-                keycode = 0;
-            }  
-
-            // actual value of key is the first byte of the keycode
-            uint8_t keyValue = static_cast<uint8_t>((keycode & 0xFF00) >> 8);
-
-            //if the first byte is in the range for a layer
-            if (keyValue >= LAYER_0 && keyValue <= LAYER_F)
-            {
-                //layer offset
-                localLayer = keyValue - 0xF0;
-                layerMode = static_cast<uint8_t>(keycode & 0x00FF);
+                pressedKeys.push_back(keymaps[localLayer][row][col]);
             }
+        }
+    }
+}
+
+/**************************************************************************************************************************/
+// Scan for layer changes - must do this first.
+/**************************************************************************************************************************/
+bool Key::updateLayer()
+{
+    /*
+     * Change the local layer based on the layer selection mode
+     *
+     * MOMENTARY (MO): 0x00 
+     * Switch the layer back to the default one
+     *
+     * TOGGLE (TG): 0x01
+     * Nothing needs to be done as layer stays the same
+     */
+    if (layerMode == 0) 
+    {
+        localLayer = 0; 
+    }
+
+    // Select the layer which the selection is done on
+    // this isthe larger of local and remote layers
+    uint8_t selectionLayer = localLayer; 
+
+    if (localLayer < remoteLayer)
+    {
+        selectionLayer = remoteLayer;
+    }
+
+    uint8_t prevlayer = localLayer;     // remember last layer
+
+    // read through the matrix and select all of the 
+    // currently pressed keys 
+    updateMatrix();
+
+    // iterate through all of the currently pressed keys, if 
+    // a layer key is pressed, change the layer accordingly
+    for (auto keycode : pressedKeys)
+    {
+        // the first byte is the actual HID keycode of the key
+        uint8_t keyValue = static_cast<uint8_t>((keycode & 0xFF00) >> 8);
+
+        if (keyValue >= LAYER_0 && keyValue <= LAYER_F)
+        {
+            // layer offset
+            localLayer = keyValue - 0xF0;
+            layerMode = static_cast<uint8_t>(keycode & 0x00FF);
         }
     }
 
@@ -196,35 +214,23 @@ bool Key::updateLayer()
 /**************************************************************************************************************************/
 bool Key::updateModifiers()
 {
-    uint8_t layer = localLayer;                     
-    bool val = false;                                // indicates "changed" mods
+    bool changed = false;                                // indicates "changed" mods
 
-    if (localLayer < remoteLayer)                    // Compares local Layer to Remote Layer requests and selects larger one.
+    for (auto keycode : pressedKeys)
     {
-        layer = remoteLayer;
-    }
-
-    for(int row = 0; row < MATRIX_ROWS; ++row) {
-        for (int col = 0; col < MATRIX_COLS; ++col) {
-            uint8_t keycode =  keymaps[layer][row][col]; // get the key...
-
-            if (matrix[row][col] != 1) {
-                keycode = 0;
-            }     
-
-            switch(keycode) { 
-                case KC_LCTRL:  currentMod  = currentMod  | 1; val = true; break;
-                case KC_LSHIFT: currentMod  = currentMod  | 2; val = true; break;
-                case KC_LALT:   currentMod  = currentMod  | 4; val = true; break;
-                case KC_LGUI:   currentMod  = currentMod  | 8; val = true; break;
-                case KC_RCTRL:  currentMod  = currentMod  | 16;  val = true; break;
-                case KC_RSHIFT: currentMod  = currentMod  | 32;  val = true; break;
-                case KC_RALT:   currentMod  = currentMod  | 64;  val = true; break;
-                case KC_RGUI:   currentMod  = currentMod  | 128;  val = true; break;
-            }
+        switch (keycode) { 
+            case KC_LCTRL:  currentMod = currentMod  | 1;   changed = true; break;
+            case KC_LSHIFT: currentMod = currentMod  | 2;   changed = true; break;
+            case KC_LALT:   currentMod = currentMod  | 4;   changed = true; break;
+            case KC_LGUI:   currentMod = currentMod  | 8;   changed = true; break;
+            case KC_RCTRL:  currentMod = currentMod  | 16;  changed = true; break;
+            case KC_RSHIFT: currentMod = currentMod  | 32;  changed = true; break;
+            case KC_RALT:   currentMod = currentMod  | 64;  changed = true; break;
+            case KC_RGUI:   currentMod = currentMod  | 128; changed = true; break;
         }
     }
-    return val;
+
+    return changed;
 }
 
 
@@ -232,34 +238,27 @@ bool Key::updateModifiers()
 
 bool Key::getReport()
 {
-    uint8_t layer = localLayer;
     resetReport();
     copyRemoteReport();
     updateLayer();
     updateModifiers();
 
-    if (localLayer < remoteLayer)
+    for (auto keycode : pressedKeys) 
     {
-        layer = remoteLayer;
-    }
+        if (keycode >= KC_A && keycode <= KC_EXSEL)
+        {
+            currentReport[bufferposition] = keycode;
+            ++bufferposition;
+        }
 
-
-    for(int row = 0; row < MATRIX_ROWS; ++row) {
-        for (int col = 0; col < MATRIX_COLS; ++col) {
-            uint8_t keycode =  keymaps[layer][row][col]; // get the key...
-            if (matrix[row][col] != 1){keycode =0;}
-
-            switch(keycode){ 
-                case KC_A ... KC_EXSEL: // key pressed
-                    currentReport[bufferposition] = keycode;
-                    bufferposition++;
-                    break;
-            }
-            if (bufferposition>6){bufferposition=1;} // lots of keys being pressed - looping around buffer
+        if (bufferposition == 7)
+        {
+            bufferposition = 1;
         }
     }
+
     currentReport[0] = currentMod;
-    currentReport[7] = layer;
+    currentReport[7] = localLayer;
 
     if((currentReport[0] != 0) | (currentReport[1] != 0)| (currentReport[2] != 0)| (currentReport[3] != 0)| (currentReport[4] != 0)| (currentReport[5] != 0)| (currentReport[6] != 0))
     {reportEmpty = false;}
@@ -284,3 +283,4 @@ uint8_t Key::matrix[MATRIX_ROWS][MATRIX_COLS]  = {0};
 unsigned long Key::timestamps[MATRIX_ROWS][MATRIX_COLS]  = {0};
 uint8_t Key::bufferposition = 0;
 uint8_t Key::layerMode = 0;
+std::vector<uint16_t> Key::pressedKeys {};

@@ -20,6 +20,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 //#include <array>
 #include <utility>
 #include <cstdint>
+#include <vector>
 
 #include "hid_keycodes.h"
 #include "keyboard_config.h"
@@ -41,9 +42,11 @@ class Key {
         static uint8_t localLayer;
         static uint8_t layerMode;
         static uint8_t currentReport[8];
+        static std::vector<uint16_t> pressedKeys; 
 
     private:
         static void resetReport();
+        static void updateMatrix();
         static bool updateLayer();
         static bool updateModifiers();
         static void copyRemoteReport();
