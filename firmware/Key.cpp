@@ -69,7 +69,6 @@ bool Key::scanMatrix(const int& currentState,unsigned long currentMillis, const 
             matrix[row][col] = 0;
             timestamps[row][col] = 0;
         }
-    matrix[row][col] = currentState;
 }
 
 
@@ -174,12 +173,14 @@ bool Key::updateLayer()
                 keycode = 0;
             }  
 
-            uint8_t keyValue = keycode & 0xFF00;
+            // actual value of key is the first byte of the keycode
+            uint8_t keyValue = static_cast<uint8_t>((keycode & 0xFF00) >> 8);
 
+            //if the first byte is in the range for a layer
             if (keyValue >= 0xF0 && keyValue <= 0xFF)
             {
                 localLayer = keyValue;
-                layerMode = keycode & 0x00FF;
+                layerMode = static_cast<uint8_t>(keycode & 0x00FF);
             }
         }
     }
