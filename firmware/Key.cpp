@@ -177,9 +177,10 @@ bool Key::updateLayer()
             uint8_t keyValue = static_cast<uint8_t>((keycode & 0xFF00) >> 8);
 
             //if the first byte is in the range for a layer
-            if (keyValue >= 0xF0 && keyValue <= 0xFF)
+            if (keyValue >= LAYER_0 && keyValue <= LAYER_F)
             {
-                localLayer = keyValue;
+                //layer offset
+                localLayer = keyValue - 0xF0;
                 layerMode = static_cast<uint8_t>(keycode & 0x00FF);
             }
         }
