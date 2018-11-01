@@ -46,23 +46,10 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW
 
-#define DEBOUNCETIME 20
 
 
-#if KEYBOARD_SIDE == LEFT
-#define KEYMAP( \
-      k00, k01, k02, k03, k04, k05, k06, \
-      k10, k11, k12, k13, k14, k15, k16, \
-      k20, k21, k22, k23, k24, k25, k26, \
-      k30, k31, k32, k33, k34, k35,  k36 \
-) \
-{ \
-    { k00, k01, k02, k03, k04, k05, k06 }, \
-    { k10, k11, k12, k13, k14, k15, k16 }, \
-    { k20, k21, k22, k23, k24, k25, k26 }, \
-    { k30, k31, k32, k33, k34, k35, k36 } \
-} 
-#else
+
+#if KEYBOARD_SIDE == RIGHT
 #define KEYMAP( \
       k00, k01, k02, k03, k04, k05, k06, \
       k10, k11, k12, k13, k14, k15, k16, \
@@ -75,6 +62,20 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
     { k26, k25, k24, k23, k22, k21, k20 }, \
     { k36, k35, k34, k33, k32, k31, k30 } \
 }
+#else
+#define KEYMAP( \
+      k00, k01, k02, k03, k04, k05, k06, \
+      k10, k11, k12, k13, k14, k15, k16, \
+      k20, k21, k22, k23, k24, k25, k26, \
+      k30, k31, k32, k33, k34, k35,  k36 \
+) \
+{ \
+    { k00, k01, k02, k03, k04, k05, k06 }, \
+    { k10, k11, k12, k13, k14, k15, k16 }, \
+    { k20, k21, k22, k23, k24, k25, k26 }, \
+    { k30, k31, k32, k33, k34, k35, k36 } \
+} 
+
 #endif
 
 #endif /* KEYBOARD_CONFIG_H */

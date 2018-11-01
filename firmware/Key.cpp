@@ -70,7 +70,7 @@ Key::Key() {    // Constructor
      matrix[row][col] = 0;
      timestamps[row][col] = 0;
   }
-    matrix[row][col] = currentState;
+   // matrix[row][col] = currentState; // BUG: current state should not collide with keypresses
 }
 
 
