@@ -20,10 +20,14 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 //#include <array>
 #include <utility>
 #include <cstdint>
+#include <vector>
+
 #include "hid_keycodes.h"
 #include "keyboard_config.h"
 #include "keymap.h"
 
+#ifndef KEY_H
+#define KEY_H
 
 class Key {
     public:
@@ -36,17 +40,20 @@ class Key {
         static bool layerChanged;
         static bool reportEmpty;
         static uint8_t localLayer;
+        static uint8_t layerMode;
         static uint8_t currentReport[8];
+        static std::vector<uint16_t> pressedKeys; 
 
     private:
         static void resetReport();
+        static void updateMatrix();
         static bool updateLayer();
         static bool updateModifiers();
         static void copyRemoteReport();
         static void resetRemoteReport();
         
         static uint8_t remoteReport[8];
-        static  uint8_t matrix[2][MATRIX_ROWS][MATRIX_COLS];
+        static uint8_t matrix[MATRIX_ROWS][MATRIX_COLS];
         static unsigned long timestamps[MATRIX_ROWS][MATRIX_COLS]; 
 
         static uint8_t remoteLayer;
@@ -55,4 +62,4 @@ class Key {
         static uint8_t bufferposition;
 
 };
-
+#endif /* KEY_H */

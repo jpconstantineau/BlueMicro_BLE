@@ -17,47 +17,34 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
+#include <stdint.h>
+#include "hid_keycodes.h"
+#include "keyboard_config.h"
+#ifndef KEYMAP_H
+#define KEYMAP_H
 
-#ifndef FIRMWARE_H
-#define FIRMWARE_H
 
-#include "firmware_config.h"
-#include "bluetooth_config.h"
-#include "Key.h"
 
-void setupMatrix(void);
-void scanMatrix(void);
-void startAdv(void);
-void sendKeyPresses(void);
-void monitoringloop(void);
-void keyscan_timer_callback(TimerHandle_t xTimerID);
 
-#if BLE_PERIPHERAL == 1
-    void cccd_callback(BLECharacteristic& chr, uint16_t cccd_value)  ;
-    void layer_request_callback (BLECharacteristic& chr, uint8_t* data, uint16_t len, uint16_t offset);
+#define _QWERTY 0
+#define _L1  1
+
+
+
+const uint8_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+
+[_QWERTY] = KEYMAP(
+    KC_7,    KC_8,    KC_9,    KC_KP_SLASH,    
+    KC_4,    KC_5,    KC_6,    KC_KP_ASTERISK,  
+    KC_1,    KC_2,    KC_3,    KC_KP_MINUS,    
+    LAYER_1, KC_0,    KC_DOT,  KC_KP_PLUS),
+
+
+[_L1]  = KEYMAP(
+    KC_HOME,    KC_UP,    KC_PGUP,    KC_ESCAPE,    
+    KC_LEFT,    KC_NO,    KC_RIGHT,    KC_DELETE,  
+    KC_END,    KC_DOWN,    KC_PGDN,    KC_KP_ENTER,    
+    LAYER_1, KC_INS,    KC_DEL,  KC_KP_ENTER),
+};
+
 #endif
-
-
-#if BLE_CENTRAL == 1
-    void notify_callback(BLEClientCharacteristic* chr, uint8_t* data, uint16_t len);
-    void scan_callback(ble_gap_evt_adv_report_t* report);
-    void prph_connect_callback(uint16_t conn_handle);
-    void prph_disconnect_callback(uint16_t conn_handle, uint8_t reason);
-    void cent_connect_callback(uint16_t conn_handle);
-    void cent_disconnect_callback(uint16_t conn_handle, uint8_t reason);
-#endif
-
-
-enum states_monitor_modes {
-  STATE_BOOT_INITIALIZE = 0x00,
-  STATE_BOOT_MODE,
-  STATE_BOOT_CLEAR_BONDS,
-  STATE_BOOT_SERIAL_DFU,
-  STATE_BOOT_WIRELESS_DFU,
-  STATE_MONITOR_MODE,
-  STATE_BOOT_UNKNOWN,
-  };
-
-
-
-#endif /* FIRMWARE_H */

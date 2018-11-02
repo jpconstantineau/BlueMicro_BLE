@@ -1,0 +1,1 @@
+nrfjprog.exe --program C:\Users\pierre\AppData\Local\Arduino15\packages\adafruit\hardware\nrf52\0.8.6/bin/bootloader/feather52/5.1.0/dual/feather52_bootloader_5.1.0_s132_dual.hex -f nrf52 --chiperase --reset 
