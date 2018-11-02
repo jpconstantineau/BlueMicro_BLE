@@ -139,7 +139,7 @@ void Key::copyRemoteReport()
 #endif
 }
 
-void Key::updateMatrix()
+void Key::updateMatrix(uint8_t layer)
 {
     pressedKeys.clear();
 
@@ -149,7 +149,7 @@ void Key::updateMatrix()
             // if the key is being pressed
             if (matrix[row][col] != 0) 
             {
-                pressedKeys.push_back(keymaps[localLayer][row][col]);
+                pressedKeys.push_back(keymaps[layer][row][col]);
             }
         }
     }
@@ -160,6 +160,8 @@ void Key::updateMatrix()
 /**************************************************************************************************************************/
 bool Key::updateLayer()
 {
+    uint8_t prevlayer = localLayer;     // remember last layer
+
     /*
      * Change the local layer based on the layer selection mode
      *
@@ -183,11 +185,9 @@ bool Key::updateLayer()
         selectionLayer = remoteLayer;
     }
 
-    uint8_t prevlayer = localLayer;     // remember last layer
-
     // read through the matrix and select all of the 
     // currently pressed keys 
-    updateMatrix();
+    updateMatrix(selectionLayer);
 
     // iterate through all of the currently pressed keys, if 
     // a layer key is pressed, change the layer accordingly
