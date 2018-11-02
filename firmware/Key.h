@@ -46,7 +46,7 @@ class Key {
 
     private:
         static void resetReport();
-        static void updateMatrix();
+        static void updateMatrix(uint8_t layer);
         static bool updateLayer();
         static bool updateModifiers();
         static void copyRemoteReport();
