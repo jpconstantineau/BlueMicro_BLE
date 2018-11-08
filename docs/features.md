@@ -39,7 +39,7 @@ TODO
 | Auto Shift        | Key Timing | Yes  |
 |                   | Required   |            |
 |                   |            |            |
-| Backlight LEDs    | Future     | Yes  |
+| Backlight LEDs    | Tested     | Yes  |
 |                   |            |            |
 | Boot Magic        | Boot Mode  | Yes  |
 |                   |            |            |
