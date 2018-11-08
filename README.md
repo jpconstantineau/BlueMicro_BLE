@@ -17,6 +17,8 @@ A Keyboard Firmware for nRF52832 Boards with a pinout compatible with the Arduin
 
 Maintainer: [/u/jpconstantineau](https://github.com/jpconstantineau)  
 
+For the Help Pages go [here](https://jpconstantineau.github.io/BlueMicro_BLE/)
+
 # Preparing your build and flashing environment
 
 Follow the instructions on the Arduino BSP Setup page for the [Adafruit nRF52 Feather](https://learn.adafruit.com/bluefruit-nrf52-feather-learning-guide/arduino-bsp-setup).  The BlueMicro_BLE firmware uses the same libraries and bootloader.
