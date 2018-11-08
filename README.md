@@ -107,7 +107,6 @@ Contact /u/jpconstantineau on reddit.
 https://github.com/adafruit/Adafruit_nRF52_Arduino
 
 # Credits
-====
 
 The firmware uses the same Arduino Core as the [Adafruit nRF52 Feather Boards](https://github.com/adafruit/Adafruit_nRF52_Arduino)
 
