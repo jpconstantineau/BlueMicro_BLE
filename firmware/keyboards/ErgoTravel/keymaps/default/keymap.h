@@ -29,6 +29,16 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define _L2  2
 #define _L3  3
 
+#if KEYBOARD_SIDE == MASTER
+const uint8_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+[_QWERTY] = KEYMAP( \
+  KC_1,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,  KC_Y,  \
+  KC_2,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,  KC_H,   \
+  KC_3,  KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,  KC_N,  \
+  KC_4,  KC_5, KC_6, KC_7, KC_8,    KC_9,    KC_0 \
+)
+};
+#endif
 #if KEYBOARD_SIDE == LEFT
 
 const uint8_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {

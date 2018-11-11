@@ -46,6 +46,8 @@ This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
 #define B2      13  //mosi
 #define B6      11
 
+#define BLUEMICRO 0
+#define BLUEMACRO 1
 
 /*
 Common Defines.
