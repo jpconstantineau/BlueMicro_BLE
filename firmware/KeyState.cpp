@@ -7,7 +7,7 @@ void KeyState::press(unsigned long currentMillis)
 
     // if the time between now and the last change is larger than
     // the time limit for a double tap, then set the state to pressed
-    if (timeElapsed > DOUBLETAP_TIME)
+    if (timeElapsed > DOUBLETAP_TIME_LIMIT)
     {
         state = State::PRESSED; 
     }
@@ -21,7 +21,7 @@ void KeyState::press(unsigned long currentMillis)
         {
             state = State::DT_DOUBLETAPPED;
         }
-        else 
+        else if (timeElapsed > TIME_TILL_HOLD) 
         {
             state = State::MT_HELD;
         }
@@ -44,7 +44,7 @@ void KeyState::clear(unsigned long currentMillis)
     }
     else 
     {
-        if (timeElapsed > DOUBLETAP_TIME && (state == State::MT_TAPPED || state == State::RELEASED))
+        if (timeElapsed > DOUBLETAP_TIME_LIMIT && (state == State::MT_TAPPED || state == State::RELEASED))
         {
             state = State::DT_TAPPED;
         }

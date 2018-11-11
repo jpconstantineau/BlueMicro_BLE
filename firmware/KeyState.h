@@ -1,4 +1,5 @@
-#define DOUBLETAP_TIME 500
+#define DOUBLETAP_TIME_LIMIT 500
+#define TIME_TILL_HOLD 200
 
 class KeyState 
 {

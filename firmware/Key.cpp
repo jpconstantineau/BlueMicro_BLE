@@ -16,7 +16,10 @@
 
 */
 #include "Key.h"
-#include <array> #include <utility> #include <cstdint>
+#include <array> 
+#include <utility> 
+#include <KeyState.h>
+#include <cstdint>
 #include "hid_keycodes.h"
 #include "firmware_config.h"
 
@@ -34,7 +37,6 @@ Key::Key() {    // Constructor
 
 /**************************************************************************************************************************/
 // KEY SCANNING - THIS ROUTINE ONLY TAKES CARE OF THE DEBOUNCING LOGIC FOR EACH KEY
-// TODO: debouncing on key release
 /**************************************************************************************************************************/
 bool Key::scanMatrix(const int& currentState,unsigned long currentMillis, const int& row, const int& col)
 {
@@ -49,7 +51,7 @@ bool Key::scanMatrix(const int& currentState,unsigned long currentMillis, const 
             {
                 if((currentMillis - timestamps[row][col]) >= DEBOUNCETIME)
                 {
-                    matrix[row][col] = 1;
+                    matrix[row][col].press(currentMillis);
                 }
                 else // not enough debounce time
                 {
@@ -64,7 +66,7 @@ bool Key::scanMatrix(const int& currentState,unsigned long currentMillis, const 
         }
         else // key not pressed
         {
-            matrix[row][col] = 0;
+            matrix[row][col].clear(currentMillis);
             timestamps[row][col] = 0;
         }
 }
@@ -144,13 +146,17 @@ void Key::updateMatrix(uint8_t layer)
     pressedKeys.clear();
 
     for(int row = 0; row < MATRIX_ROWS; ++row) {
-        for (int col = 0; col < MATRIX_COLS; ++col) {
 
+        int col = 0;
+        for (const auto& state : matrix[row]) 
+        {
             // if the key is being pressed
-            if (matrix[row][col] != 0) 
+            if (state != State::RELEASED) 
             {
-                pressedKeys.push_back(keymaps[layer][row][col]);
+                pressedKeys.push_back(std::make_pair(keymaps[layer][row][col], state));
             }
+
+            ++col;
         }
     }
 }
@@ -191,16 +197,19 @@ bool Key::updateLayer()
 
     // iterate through all of the currently pressed keys, if 
     // a layer key is pressed, change the layer accordingly
-    for (auto keycode : pressedKeys)
+    for (auto keycodeStatePair : pressedKeys)
     {
-        // the first byte is the actual HID keycode of the key
-        uint8_t keyValue = static_cast<uint8_t>((keycode & 0xFF00) >> 8);
-
-        if (keyValue >= LAYER_0 && keyValue <= LAYER_F)
+        if (keycodeStatePair.second == State::PRESSED)
         {
-            // layer offset
-            localLayer = keyValue - 0xF0;
-            layerMode = static_cast<uint8_t>(keycode & 0x00FF);
+            // the first byte is the actual HID keycode of the key
+            uint8_t keyValue = static_cast<uint8_t>((keycode.first & 0xFF00) >> 8);
+
+            if (keyValue >= LAYER_0 && keyValue <= LAYER_F)
+            {
+                // layer offset
+                localLayer = keyValue - 0xF0;
+                layerMode = static_cast<uint8_t>(keycode.first & 0x00FF);
+            }
         }
     }
 
@@ -279,8 +288,8 @@ uint8_t Key::localLayer = 0;
 uint8_t Key::remoteLayer = 0;
 uint8_t Key::remoteMod = 0;
 uint8_t Key::currentMod = 0;
-uint8_t Key::matrix[MATRIX_ROWS][MATRIX_COLS]  = {0};
+KeyState Key::matrix[MATRIX_ROWS][MATRIX_COLS] {};
 unsigned long Key::timestamps[MATRIX_ROWS][MATRIX_COLS]  = {0};
 uint8_t Key::bufferposition = 0;
 uint8_t Key::layerMode = 0;
-std::vector<uint16_t> Key::pressedKeys {};
+std::vector<std::pair<uint16_t,State>> Key::pressedKeys {};
