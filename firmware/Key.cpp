@@ -169,11 +169,7 @@ bool Key::updateLayer()
     uint8_t prevlayer = localLayer;     // remember last layer
 
     /*
-     * Change the local layer based on the layer selection mode
-     *
-     * MOMENTARY (MO): 0x00 
-     * Switch the layer back to the default one
-     *
+     * Change the local layer based on the layer selection mode * * MOMENTARY (MO): 0x00 * Switch the layer back to the default one *
      * TOGGLE (TG): 0x01
      * Nothing needs to be done as layer stays the same
      */

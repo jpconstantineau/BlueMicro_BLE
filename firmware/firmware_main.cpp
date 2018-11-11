@@ -69,6 +69,44 @@ SoftwareTimer keyscanTimer;
 
 
 /**************************************************************************************************************************/
+
+#if BACKLIGHT_PWM_ON == 1  //setup PWM module
+int16_t pwmval = DEFAULT_PWM_VALUE;
+static int16_t buf[] = {(1 << 15) | DEFAULT_PWM_VALUE}; // Inverse polarity (bit 15), 1500us duty cycle
+
+
+void startPWM(void)
+{
+  // Configure BACKLIGHT_LED_PIN as output, and set it to 0
+  NRF_GPIO->DIRSET = (1 << BACKLIGHT_LED_PIN);
+  NRF_GPIO->OUTCLR = (1 << BACKLIGHT_LED_PIN);
+  
+  
+  NRF_PWM0->PRESCALER   = PWM_PRESCALER_PRESCALER_DIV_8; // 1 us
+  NRF_PWM0->PSEL.OUT[0] = BACKLIGHT_LED_PIN;
+  NRF_PWM0->MODE        = (PWM_MODE_UPDOWN_Up << PWM_MODE_UPDOWN_Pos);
+  NRF_PWM0->DECODER     = (PWM_DECODER_LOAD_Common     << PWM_DECODER_LOAD_Pos) | 
+                          (PWM_DECODER_MODE_RefreshCount   << PWM_DECODER_MODE_Pos);
+  NRF_PWM0->LOOP        = (PWM_LOOP_CNT_Disabled       << PWM_LOOP_CNT_Pos);
+  NRF_PWM0->COUNTERTOP  = 10000; // 5ms period = 200 Hz PWM frequency
+  
+  
+  NRF_PWM0->SEQ[0].CNT = ((sizeof(buf) / sizeof(uint16_t)) << PWM_SEQ_CNT_CNT_Pos);
+  NRF_PWM0->SEQ[0].ENDDELAY = 0;
+  NRF_PWM0->SEQ[0].PTR = (uint32_t)&buf[0];
+  NRF_PWM0->SEQ[0].REFRESH = 0;
+  NRF_PWM0->SHORTS = 0;//(PWM_SHORTS_LOOPSDONE_SEQSTART0_Enabled << PWM_SHORTS_LOOPSDONE_SEQSTART0_Pos);//0;
+  
+  NRF_PWM0->ENABLE = 1;
+  NRF_PWM0->TASKS_SEQSTART[0] = 1; 
+  
+  }
+
+#endif
+
+
+
+/**************************************************************************************************************************/
 #if BLE_LIPO_MONITORING == 1
 int readVBAT(void) {
   int raw;
@@ -113,6 +151,10 @@ uint8_t mvToPercent(float mvolts) {
 }
 
 #endif
+
+
+
+
 
 /**************************************************************************************************************************/
 // put your setup code here, to run once:
@@ -237,7 +279,9 @@ void setup() {
   Bluefruit.Central.setDisconnectCallback(cent_disconnect_callback);
 
 #endif
-  
+#if BACKLIGHT_PWM_ON == 1 //setup PWM module
+startPWM();
+#endif
   // Set up keyboard matrix and start advertising
   setupMatrix();
   startAdv(); 
@@ -481,8 +525,8 @@ void scanMatrix() {
           pinMode(columns[i], INPUT_PULLDOWN);                              // 'enables' the column High Value on the diode; becomes "LOW" when pressed
           #endif
     }
-     // delay(1);                                                       // need for the GPIO lines to settle down electrically before reading.
-     nrf_delay_us(1);
+      delay(1);                                                       // need for the GPIO lines to settle down electrically before reading.
+     //nrf_delay_us(1);
       pindata = NRF_GPIO->IN;                                         // read all pins at once
      for (int i = 0; i < MATRIX_COLS; ++i) {
       Key::scanMatrix((pindata>>(columns[i]))&1, millis(), j, i);       // This function processes the logic values and does the debouncing
@@ -573,7 +617,26 @@ uint8_t mods = 0;
 void loop() {
   // put your main code here, to run repeatedly:
 
+#if BACKLIGHT_PWM_ON == 1
 
+
+if (!(Key::reportEmpty))
+{
+    pwmval = DEFAULT_PWM_VALUE;
+
+}else
+{
+  if (pwmval > 19) {pwmval = pwmval-10 ;} else {pwmval = 0 ;}
+}
+
+
+buf[0] = (1 << 15) | pwmval; // Inverse polarity (bit 15), 1500us duty cycle
+
+
+  NRF_PWM0->SEQ[0].PTR = (uint32_t)&buf[0];
+  NRF_PWM0->TASKS_SEQSTART[0] = 1;
+
+#endif
 
   if (monitoring_state == STATE_BOOT_MODE)
   {

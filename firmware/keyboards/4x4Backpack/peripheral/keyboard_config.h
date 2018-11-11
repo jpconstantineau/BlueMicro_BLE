@@ -17,66 +17,46 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-
 #ifndef KEYBOARD_CONFIG_H
 #define KEYBOARD_CONFIG_H
 #include "avr_mapping.h"
 
-//#define KEYBOARD_SIDE LEFT
 #define KEYBOARD_SIDE RIGHT
-// CHANGE THIS FOR THE KEYBOARD TO MATCH WHAT IS BEING FLASHED. OPTIONS: LEFT  RIGHT  MASTER
 
-#define DEVICE_NAME_R                         "ErgoTravelBLE_R"                          /**< Name of device. Will be included in the advertising data. */
-#define DEVICE_NAME_L                        "ErgoTravelBLE_L"                          /**< Name of device. Will be included in the advertising data. */
-#define DEVICE_NAME_M                         "ErgoTravelBLE"                          /**< Name of device. Will be included in the advertising data. */
 
-#define DEVICE_MODEL                        "ErgoTravelBLE_V1"                          /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME_R                         "4x4Numpad_R"                         /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME_L                         "4x4Numpad_L"                         /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME_M                         "4x4Numpad"                           /**< Name of device. Will be included in the advertising data. */
 
-#define MANUFACTURER_NAME                   "JPConstantineau.com"                      /**< Manufacturer. Will be passed to Device Information Service. */
+#define DEVICE_MODEL                        "4x4Numpad_V1"                          /**< Name of device. Will be included in the advertising data. */
+
+#define MANUFACTURER_NAME                   "keyboards.jpconstantineau.com"         /**< Manufacturer. Will be passed to Device Information Service. */
 
 
 /* HARDWARE DEFINITION*/
 /* key matrix size */
 #define MATRIX_ROWS 4
-#define MATRIX_COLS 7
+#define MATRIX_COLS 4
 
-#define MATRIX_ROW_PINS {C6, D7, E6, B4 }
-#define MATRIX_COL_PINS {F5, F6, F7, B1, B3, B2, B6 }
+#define MATRIX_ROW_PINS {25, 26, 27, 28}
+#define MATRIX_COL_PINS {29, 30, 2, 3}
 #define UNUSED_PINS {}
 
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW
 
-
-
-
-#if KEYBOARD_SIDE == RIGHT
 #define KEYMAP( \
-      k00, k01, k02, k03, k04, k05, k06, \
-      k10, k11, k12, k13, k14, k15, k16, \
-      k20, k21, k22, k23, k24, k25, k26, \
-      k30, k31, k32, k33, k34, k35,  k36 \
-) \
-{ \
-    { k06, k05, k04, k03, k02, k01, k00 }, \
-    { k16, k15, k14, k13, k12, k11, k10 }, \
-    { k26, k25, k24, k23, k22, k21, k20 }, \
-    { k36, k35, k34, k33, k32, k31, k30 } \
+	 K00,   K01,   K02,   K03,      \
+	 K10,   K11,   K12,   K13,     \
+	 K20,   K21,   K22,   K23,     \
+	 K30,   K31,   K32,   K33 \
+) { \
+	{ K00,   K01,   K02,   K03,   }, \
+	{ K10,   K11,   K12,   K13,   }, \
+	{ K20,   K21,   K22,   K23,   }, \
+	{ K30,   K31,   K32,   K33    } \
 }
-#else
-#define KEYMAP( \
-      k00, k01, k02, k03, k04, k05, k06, \
-      k10, k11, k12, k13, k14, k15, k16, \
-      k20, k21, k22, k23, k24, k25, k26, \
-      k30, k31, k32, k33, k34, k35,  k36 \
-) \
-{ \
-    { k00, k01, k02, k03, k04, k05, k06 }, \
-    { k10, k11, k12, k13, k14, k15, k16 }, \
-    { k20, k21, k22, k23, k24, k25, k26 }, \
-    { k30, k31, k32, k33, k34, k35, k36 } \
-} 
 
-#endif
+
 
 #endif /* KEYBOARD_CONFIG_H */

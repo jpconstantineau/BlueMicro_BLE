@@ -4,6 +4,9 @@ A Keyboard Firmware for nRF52832 Boards with a pinout compatible with the Arduin
 
 ![BlueMicro](https://i.imgur.com/0SJpnoA.jpg)
 
+![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE%20-%20Push)
+
+
 **Compabible Hardware**  
 
 * BlueMicro V1.0  (Serial TX/RX routed through D2 and D3; Designed for the ErgoTravel only)
@@ -13,6 +16,8 @@ A Keyboard Firmware for nRF52832 Boards with a pinout compatible with the Arduin
 * Adafruit nRF52 Feather (Software compatible - not Pinout compabible)
 
 Maintainer: [/u/jpconstantineau](https://github.com/jpconstantineau)  
+
+For the Help Pages go [here](https://jpconstantineau.github.io/BlueMicro_BLE/)
 
 # Preparing your build and flashing environment
 
@@ -107,7 +112,6 @@ Contact /u/jpconstantineau on reddit.
 https://github.com/adafruit/Adafruit_nRF52_Arduino
 
 # Credits
-====
 
 The firmware uses the same Arduino Core as the [Adafruit nRF52 Feather Boards](https://github.com/adafruit/Adafruit_nRF52_Arduino)
 

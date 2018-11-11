@@ -1,0 +1,164 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="data:image/x-icon;base64,AAABAAEAEBAAAAAAAABoBQAAFgAAACgAAAAQAAAAIAAAAAEACAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAADzVwEA01UhAO6OXwDzUgcA+JZ6APjUxAD4n4IA81ECAOjo6AD35dcA81cCAPRXGwD4oX0A+c+6APNpMwDLn40A/fHnAPX19QD27+0A+unlANTBugD88+oA81MnAPJJAQD++PUA+dPAAP3p3QDzSQEA/e/lAPNLDADHk34A8kAKAL2vrAD96+AA+JhuAP7x6AD5qoYA81IBAP328wDzUhoA+a2GAPNVAQDyWAEA81gBAPJJAgD//v4A9GQqAPz08QD839EA8k8CAPWVZwDtWhUA7l4SAO1RBQD97uEAx2g6APenfwD+7uEA/efcAPJVAgD97eQA70gOAP7t5AD4zrcA/ePXAPiWbQD96d8A8kQJAOp1PgDXnooA9G0zAPnw7QD08vAA+rmgALd8ZwD4zrgA9GIpAPJKAQD5qIYA7V0fAORnNQDzUwEA2djYAPNWAQD87eYA81kBAPjOuQD+8OYA9fT0APBNAgDxNgkA/ezhAPVuMgD5sY8A4WcuAPmwkgD4lG0A81kCAMaUgADHlIAA////APJFCQDwUAMA8WMYAO/UywDtTwYA9X1LAPmxkADySyIAyJJ+ALWqpwDyVCoA0F0rAM1vQwDBmokA/uvdAOmFXwDxTgEA+KqDAPvj2wDzTgEAxV00APRlLAD25d4Awb28APF6RAD97OMA81QBAPFFAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAZGRkZGRkEQgIEWRkZGRkZGRkZGRIRXFwN0p8ZGRkZGRkZGQSUDsdKBs7AW5kZGRkZGRkdCoKQyMkGyt5UmRkZGRkR2kDB2VXPE4sNSBkZGRkZAUXa11aNhYVOHVyZGRkZGQNfwtABiFBW0YpYmRkZGRkS1MpJzAtfnolVR5kZGRkZD8ACk0EZEmACmFtZGRkZGRWU01gQhg6XywrY2RkZGRkGXgiHG9zbBB2MQ9kZGRkZFRZalwfOQwaDmYUZGRkZGRkfSkpZRA+TFFeWGRkZGRkZHdnAD0JLiU0aGRkZGRkZGRkZDJPRDMCe2RkZGRkZGRkZGRkJhMvZGRkZGRkZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=" rel="icon" type="image/x-icon" />
+
+    <title>BlueMicro_BLE: A BLE Keyboard firmware for the NRF52832</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="styles/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="styles/dashboard.css" rel="stylesheet">
+  </head>
+
+  <body>
+    <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">BlueMicro_BLE</a>
+
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+          <div class="sidebar-sticky">
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a class="nav-link active" href="#">
+                  <span data-feather="home"></span>
+                  Introduction<span class="sr-only">(current)</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#bluetooth_firmware.html">
+                  <span data-feather="bluetooth"></span>
+                  Bluetooth Firmware
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#features.html">
+                  <span data-feather="layers"></span>
+                  Features
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#design_goals.html">
+                  <span data-feather="compass"></span>
+                  Design Goals
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#supported_hardware.html">
+                  <span data-feather="cpu"></span>
+                  Supported Hardware
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#contributing.html">
+                  <span data-feather="users"></span>
+                  Contributing
+                </a>
+              </li>
+            </ul>
+
+            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+              <span>How To</span>
+              <a class="d-flex align-items-center text-muted" href="#">
+                <span data-feather="plus-circle"></span>
+              </a>
+            </h6>
+            <ul class="nav flex-column mb-2">
+              <li class="nav-item">
+                <a class="nav-link" href="#installing_tools.html">
+                  <span data-feather="settings"></span>
+                  Installing Tools
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#configuring_tools.html">
+                  <span data-feather="layout"></span>
+                  Configuring Tools
+                </a>
+              </li>
+              <li class="nav-item">
+                    <a class="nav-link" href="#adding_keyboard.html">
+                      <span data-feather="edit"></span>
+                      Adding a new Keyboard
+                    </a>
+                  </li>
+              <li class="nav-item">
+                    <a class="nav-link" href="#configuring_firmware.html">
+                      <span data-feather="sliders"></span>
+                      Configuring your Firmware
+                    </a>
+                  </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#building_firmware.html">
+                  <span data-feather="package"></span>
+                  Building Firmware
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#flashing_firmware.html">
+                  <span data-feather="zap"></span>
+                  Flashing Firmware
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <div id="page-content-wrapper" name="page-content-wrapper">
+                    <h1 class="h2">Introduction</h1>
+            </div>          
+          </div>
+        
+        </main>
+      </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script
+        src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+    <script>
+      feather.replace()
+    </script>
+    <script>
+        $(".sidebar-sticky ul li a").click(function(event){
+                var clickd = $(event.target);
+                // update contents
+                contents_file=(clickd.attr("href").substr(1));
+                $("#page-content-wrapper").empty();
+                $("#page-content-wrapper").load(contents_file, function(e){
+                    
+                    $(document).trigger("ready");
+                    $(document).ready();
+                });
+
+
+                // toggle active
+                $(".sidebar-sticky ul li .active").removeClass("active");
+                clickd.parent().addClass("active");
+
+           }
+        );
+    </script>
+  </body>
+</html>

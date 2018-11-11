@@ -87,6 +87,10 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 /* key matrix pins */
 #define MATRIX_ROW_PINS {D3, D2, D1, D0, D4, C6, D7, E6}
 #define MATRIX_COL_PINS {F4, F5, F6, F7, B1, B3, B2, B6}
+#define BACKLIGHT_LED_PIN B5 
+
+#define BACKLIGHT_PWM_ON 1                                                                                                         
+
 #define UNUSED_PINS {}
 
 /* COL2ROW or ROW2COL */
