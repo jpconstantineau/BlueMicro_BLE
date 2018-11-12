@@ -18,7 +18,6 @@
 #include "Key.h"
 #include <array> 
 #include <utility> 
-#include <KeyState.h>
 #include <cstdint>
 #include "hid_keycodes.h"
 #include "firmware_config.h"
@@ -141,19 +140,22 @@ void Key::copyRemoteReport()
 #endif
 }
 
+/*
+ * TODO: handle multiple activation methods
+ */
 void Key::updateMatrix(uint8_t layer)
 {
-    pressedKeys.clear();
+    activeKeys.clear();
 
     for(int row = 0; row < MATRIX_ROWS; ++row) {
 
         int col = 0;
-        for (const auto& state : matrix[row]) 
+        for (auto state : matrix[row]) 
         {
             // if the key is being pressed
-            if (state != State::RELEASED) 
+            if (state.getState() != KeyState::State::RELEASED) 
             {
-                pressedKeys.push_back(std::make_pair(keymaps[layer][row][col], state));
+                activeKeys.push_back(keymaps[layer][row][col]);
             }
 
             ++col;
@@ -193,19 +195,21 @@ bool Key::updateLayer()
 
     // iterate through all of the currently pressed keys, if 
     // a layer key is pressed, change the layer accordingly
-    for (auto keycodeStatePair : pressedKeys)
+    for (auto keycode : activeKeys)
     {
-        if (keycodeStatePair.second == State::PRESSED)
-        {
-            // the first byte is the actual HID keycode of the key
-            uint8_t keyValue = static_cast<uint8_t>((keycode.first & 0xFF00) >> 8);
+        // the first byte is the actual HID keycode of the key
+        uint8_t keyValue = static_cast<uint8_t>(keycode & 0x000000FF);
 
-            if (keyValue >= LAYER_0 && keyValue <= LAYER_F)
-            {
-                // layer offset
-                localLayer = keyValue - 0xF0;
-                layerMode = static_cast<uint8_t>(keycode.first & 0x00FF);
-            }
+        if (keyValue >= LAYER_0 && keyValue <= LAYER_F)
+        {
+            // layer offset
+            localLayer = keyValue - 0xF0;
+
+            /*
+             * TODO 
+             * implement different layer switching modes and 
+             * check for it here
+             */
         }
     }
 
@@ -221,18 +225,26 @@ bool Key::updateModifiers()
 {
     bool changed = false;                                // indicates "changed" mods
 
-    for (auto keycode : pressedKeys)
+    for (auto keycode : activeKeys)
     {
-        switch (keycode) { 
-            case KC_LCTRL:  currentMod = currentMod  | 1;   changed = true; break;
-            case KC_LSHIFT: currentMod = currentMod  | 2;   changed = true; break;
-            case KC_LALT:   currentMod = currentMod  | 4;   changed = true; break;
-            case KC_LGUI:   currentMod = currentMod  | 8;   changed = true; break;
-            case KC_RCTRL:  currentMod = currentMod  | 16;  changed = true; break;
-            case KC_RSHIFT: currentMod = currentMod  | 32;  changed = true; break;
-            case KC_RALT:   currentMod = currentMod  | 64;  changed = true; break;
-            case KC_RGUI:   currentMod = currentMod  | 128; changed = true; break;
+        //seperate the keycode into the hid keycode and the additional modifiers
+        auto extraModifiers = static_cast<uint8_t>((keycode & 0x0000FF00) >> 8);
+        auto hidKeycode = static_cast<uint8_t>(keycode & 0x000000FF);
+
+        //check if the hid keycode contains a modifier
+        switch (hidKeycode) { 
+            case KC_LCTRL:  currentMod |= 1;   changed = true; break;
+            case KC_LSHIFT: currentMod |= 2;   changed = true; break;
+            case KC_LALT:   currentMod |= 4;   changed = true; break;
+            case KC_LGUI:   currentMod |= 8;   changed = true; break;
+            case KC_RCTRL:  currentMod |= 16;  changed = true; break;
+            case KC_RSHIFT: currentMod |= 32;  changed = true; break;
+            case KC_RALT:   currentMod |= 64;  changed = true; break;
+            case KC_RGUI:   currentMod |= 128; changed = true; break;
         }
+
+        //add all of the extra modifiers into the current modifier 
+        currentMod |= extraModifiers;
     }
 
     return changed;
@@ -248,7 +260,7 @@ bool Key::getReport()
     updateLayer();
     updateModifiers();
 
-    for (auto keycode : pressedKeys) 
+    for (auto keycode : activeKeys) 
     {
         if (keycode >= KC_A && keycode <= KC_EXSEL)
         {
@@ -288,4 +300,4 @@ KeyState Key::matrix[MATRIX_ROWS][MATRIX_COLS] {};
 unsigned long Key::timestamps[MATRIX_ROWS][MATRIX_COLS]  = {0};
 uint8_t Key::bufferposition = 0;
 uint8_t Key::layerMode = 0;
-std::vector<std::pair<uint16_t,State>> Key::pressedKeys {};
+std::vector<uint32_t> Key::activeKeys {};

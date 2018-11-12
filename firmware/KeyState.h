@@ -1,6 +1,8 @@
 #define DOUBLETAP_TIME_LIMIT 500
 #define TIME_TILL_HOLD 200
 
+#ifndef KEY_STATE
+#define KEY_STATE
 class KeyState 
 {
     public:
@@ -26,3 +28,4 @@ class KeyState
         unsigned long lastChanged;
 };
 
+#endif
