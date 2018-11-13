@@ -1,33 +1,32 @@
 #include "KeyState.h"
 
+KeyState::KeyState() {
+    state = State::RELEASED;
+    lastChanged = 0;
+}
+
 void KeyState::press(unsigned long currentMillis)
 {
     // the time between now and the last change
     unsigned long timeElapsed = currentMillis - lastChanged;
 
-    // if the time between now and the last change is larger than
-    // the time limit for a double tap, then set the state to pressed
-    if (timeElapsed > DOUBLETAP_TIME_LIMIT)
+    /*
+     * without doubletaps
+     * if the state is pressed and a certain amount of time has passed
+     * since the state has been changed, the key is held
+     * if the previous state isn't pressed, then set it to 
+     * pressed now and update the change time
+     */
+    if (state == State::PRESSED && timeElapsed > TIME_TILL_HOLD) 
     {
-        state = State::PRESSED; 
+        state = State::MT_HELD;
+        lastChanged = currentMillis;
     }
-    else 
+    else if (state != State::PRESSED) 
     {
-        // if the time between now and the last change is smaller than
-        // the time limit for a double tap and the current state is either
-        // a tap or a release, then set the state to doubletapped
-        // otherwise, set the state to held
-        if (state == State::RELEASED || state == State::MT_TAPPED)
-        {
-            state = State::DT_DOUBLETAPPED;
-        }
-        else if (timeElapsed > TIME_TILL_HOLD) 
-        {
-            state = State::MT_HELD;
-        }
+        state = State::PRESSED;
+        lastChanged = currentMillis;
     }
-
-    lastChanged = currentMillis;
 }
 
 void KeyState::clear(unsigned long currentMillis)
@@ -42,16 +41,10 @@ void KeyState::clear(unsigned long currentMillis)
         state = State::MT_TAPPED;
         lastChanged = currentMillis;
     }
-    else 
+    else if (state != State::RELEASED) 
     {
-        if (timeElapsed > DOUBLETAP_TIME_LIMIT && (state == State::MT_TAPPED || state == State::RELEASED))
-        {
-            state = State::DT_TAPPED;
-        }
-        else 
-        {
-            state = State::RELEASED;
-        }
+        state = State::RELEASED;
+        lastChanged = currentMillis;
     }
 }
 

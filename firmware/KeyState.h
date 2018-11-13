@@ -6,6 +6,8 @@
 class KeyState 
 {
     public:
+        KeyState();
+
         void press(unsigned long currentMillis);
         void clear(unsigned long currentMillis);
 

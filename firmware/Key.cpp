@@ -152,8 +152,8 @@ void Key::updateMatrix(uint8_t layer)
         int col = 0;
         for (auto state : matrix[row]) 
         {
-            // if the key is being pressed
-            if (state.getState() != KeyState::State::RELEASED) 
+            //everything activates on press
+            if (state.getState() == KeyState::State::PRESSED) 
             {
                 activeKeys.push_back(keymaps[layer][row][col]);
             }
@@ -262,9 +262,11 @@ bool Key::getReport()
 
     for (auto keycode : activeKeys) 
     {
-        if (keycode >= KC_A && keycode <= KC_EXSEL)
+        auto hidKeycode = static_cast<uint8_t>(keycode & 0x000000FF);
+
+        if (hidKeycode >= KC_A && hidKeycode <= KC_EXSEL)
         {
-            currentReport[bufferposition] = keycode;
+            currentReport[bufferposition] = hidKeycode;
             ++bufferposition;
         }
 
