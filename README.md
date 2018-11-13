@@ -4,7 +4,9 @@ A Keyboard Firmware for nRF52832 Boards with a pinout compatible with the Arduin
 
 ![BlueMicro](https://i.imgur.com/0SJpnoA.jpg)
 
-![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE%20-%20Push)
+Master Build Status: ![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE%20-%20Push)
+
+Develop Build Status: ![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE-develop)
 
 
 **Compabible Hardware**  
