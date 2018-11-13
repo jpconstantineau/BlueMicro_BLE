@@ -42,7 +42,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
             KC_GRV,    KC_1,    KC_2,     KC_3,    KC_4,    KC_5,
             KC_CAPS,   KC_F1,   KC_F2,    KC_F3,   KC_F4,   KC_F5,
             KC_LSHIFT, KC_F6,   KC_F7,    KC_F8,   KC_F9,   KC_F10,
-            KC_NO,     KC_NO,   KC_NO,    TG(LAYER_0), KC_LCTRL,KC_LGUI )
+            KC_NO,     KC_NO,   KC_NO,    LAYER_0, KC_LCTRL,KC_LGUI )
           };
 
     #else
