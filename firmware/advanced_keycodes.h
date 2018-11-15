@@ -14,4 +14,11 @@
 
 #define MOD(M, KC) ((uint32_t) KC | (uint32_t) M)
 
+#define MD_PRESS 0
+#define MD_MT_TAP (1 << 16)
+#define MD_MT_HOLD (2 << 16)
+#define MD_DT_TAP (4 << 16)
+#define MD_DT_DOUBLETAP (8 << 16)
+
+#define MD(M, KC) ((uint32_t) M | (uint32_t) KC)
 #endif

@@ -1,5 +1,6 @@
-#define DOUBLETAP_TIME_LIMIT 500
-#define TIME_TILL_HOLD 200
+#define DOUBLETAP_TIME_LIMIT 700
+#define TIME_TILL_HOLD 600
+#define MT_TAP_DURATION 80
 
 #ifndef KEY_STATE
 #define KEY_STATE
@@ -26,6 +27,7 @@ class KeyState
         State getState() const;
 
     private:
+        bool canDoubletap;
         State state;
         unsigned long lastChanged;
 };

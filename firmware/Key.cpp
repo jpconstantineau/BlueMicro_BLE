@@ -1,5 +1,5 @@
 /*
-   Copyright 2018 <Pierre Constantineau, Julian Komaromy>
+   copyright 2018 <pierre constantineau, julian komaromy>
 3-Clause BSD License 
    Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
@@ -140,9 +140,6 @@ void Key::copyRemoteReport()
 #endif
 }
 
-/*
- * TODO: handle multiple activation methods
- */
 void Key::updateMatrix(uint8_t layer)
 {
     activeKeys.clear();
@@ -152,10 +149,28 @@ void Key::updateMatrix(uint8_t layer)
         int col = 0;
         for (auto state : matrix[row]) 
         {
-            //everything activates on press
-            if (state.getState() == KeyState::State::PRESSED) 
+            auto modifierFlags = static_cast<uint8_t>((keymaps[layer][0][row][col] & 0x00FF0000) >> 16);
+
+            //default activation is on press
+            if (keymaps[layer][0][row][col] != KC_NO && state.getState() == KeyState::State::PRESSED) 
             {
-                activeKeys.push_back(keymaps[layer][row][col]);
+                activeKeys.push_back(keymaps[layer][0][row][col]);
+            }
+            else if ((modifierFlags & 1) == 1 && state.getState() == KeyState::State::MT_TAPPED)
+            {
+                activeKeys.push_back(keymaps[layer][1][row][col]);
+            }
+            else if ((modifierFlags & 2) == 2 && state.getState() == KeyState::State::MT_HELD)
+            {
+                activeKeys.push_back(keymaps[layer][2][row][col]);
+            }
+            else if ((modifierFlags & 4) == 4 && state.getState() == KeyState::State::DT_TAPPED)
+            {
+                activeKeys.push_back(keymaps[layer][3][row][col]);
+            }
+            else if ((modifierFlags & 8) == 8 && state.getState() == KeyState::State::DT_DOUBLETAPPED)
+            {
+                activeKeys.push_back(keymaps[layer][4][row][col]);
             }
 
             ++col;

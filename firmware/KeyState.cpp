@@ -3,6 +3,7 @@
 KeyState::KeyState() {
     state = State::RELEASED;
     lastChanged = 0;
+    canDoubletap = false;
 }
 
 void KeyState::press(unsigned long currentMillis)
@@ -11,7 +12,6 @@ void KeyState::press(unsigned long currentMillis)
     unsigned long timeElapsed = currentMillis - lastChanged;
 
     /*
-     * without doubletaps
      * if the state is pressed and a certain amount of time has passed
      * since the state has been changed, the key is held
      * if the previous state isn't pressed, then set it to 
@@ -22,10 +22,16 @@ void KeyState::press(unsigned long currentMillis)
         state = State::MT_HELD;
         lastChanged = currentMillis;
     }
+    else if ((state == State::RELEASED || state == State::MT_TAPPED) && canDoubletap) {
+        state = State::DT_DOUBLETAPPED;
+        lastChanged = currentMillis;
+        canDoubletap = false;
+    }
     else if (state != State::PRESSED) 
     {
         state = State::PRESSED;
         lastChanged = currentMillis;
+        canDoubletap = true;
     }
 }
 
@@ -41,10 +47,22 @@ void KeyState::clear(unsigned long currentMillis)
         state = State::MT_TAPPED;
         lastChanged = currentMillis;
     }
+    else if (timeElapsed > DOUBLETAP_TIME_LIMIT && canDoubletap) {
+        state = State::DT_TAPPED;
+        lastChanged = currentMillis;
+        canDoubletap = false;
+    }
     else if (state != State::RELEASED) 
     {
-        state = State::RELEASED;
-        lastChanged = currentMillis;
+        if (state == State::MT_TAPPED && timeElapsed < MT_TAP_DURATION) 
+        {
+            //do nothing, wait until tapped state has stayed long enough to be released
+        }
+        else 
+        {
+            state = State::RELEASED;
+            lastChanged = currentMillis;
+        }
     }
 }
 
