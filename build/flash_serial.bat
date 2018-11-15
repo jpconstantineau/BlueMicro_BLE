@@ -25,7 +25,8 @@ if exist ..\output\%~1\%~1-%~2-%~3.zip (
 
 :flash
    	echo Flashing %~1-%~2-%~3 over serial port %~4
-	%localappdata%\Arduino15\packages\adafruit\hardware\nrf52\0.8.6/tools/nrfutil-0.5.2/binaries/win32/nrfutil.exe --verbose dfu serial -pkg ..\output\%~1\%~1-%~2-%~3.zip -p %~4 -b 115200 
+	%localappdata%\Arduino15\packages\adafruit\hardware\nrf52\0.9.0\tools\adafruit-nrfutil\win32\adafruit-nrfutil.exe --verbose dfu serial -pkg ..\output\%~1\%~1-%~2-%~3.zip -p %~4 -b 115200 --singlebank
+
 
 :usage
 	@echo Usage: flash_serial keyboard keymap target serial-port
