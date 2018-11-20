@@ -283,6 +283,7 @@ void setup() {
 startPWM();
 #endif
   // Set up keyboard matrix and start advertising
+  setupKeymap();
   setupMatrix();
   startAdv(); 
 };

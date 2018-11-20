@@ -7,8 +7,7 @@ Redistribution and use in source and binary forms, with or without modification,
 
 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
 
-2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-
+2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.  
 3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR 
@@ -20,10 +19,13 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 //#include <array>
 #include <utility>
 #include <cstdint>
+#include <vector>
 
 #include "hid_keycodes.h"
 #include "keyboard_config.h"
+#include "firmware_config.h"
 #include "keymap.h"
+#include "KeyState.h"
 
 #ifndef KEY_H
 #define KEY_H
@@ -39,17 +41,20 @@ class Key {
         static bool layerChanged;
         static bool reportEmpty;
         static uint8_t localLayer;
+        static uint8_t layerMode;
         static uint8_t currentReport[8];
+        static std::vector<uint32_t> activeKeys; 
 
     private:
         static void resetReport();
+        static void updateMatrix(uint8_t layer);
         static bool updateLayer();
         static bool updateModifiers();
         static void copyRemoteReport();
         static void resetRemoteReport();
         
         static uint8_t remoteReport[8];
-        static uint8_t matrix[MATRIX_ROWS][MATRIX_COLS];
+        static KeyState matrix[MATRIX_ROWS][MATRIX_COLS];
         static unsigned long timestamps[MATRIX_ROWS][MATRIX_COLS]; 
 
         static uint8_t remoteLayer;

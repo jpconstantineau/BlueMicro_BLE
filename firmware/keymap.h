@@ -47,7 +47,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define _L2  2
 
 
-const uint8_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+const uint32_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [_QWERTY] = KEYMAP(    
 

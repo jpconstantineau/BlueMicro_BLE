@@ -15,58 +15,17 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-#include <stdint.h>
-#include "hid_keycodes.h"
-#include "keyboard_config.h"
-#include "advanced_keycodes.h"
-
-#ifndef KEYMAP_H
-#define KEYMAP_H
-
-#define KC_CAP_D MOD(MOD_LSHIFT, KC_D)
-#define _QWERTY 0
-#define _L1  1
-#define _PRESS 0
-#define _MT_TAP 1
-#define _MT_HOLD 2
-#define _DT_TAP 3
-#define _DT_DOUBLETAP 4
+#include "keymap.h"
 
 #if KEYBOARD_SIDE == LEFT
-
-const uint32_t keymaps[][5][MATRIX_ROWS][MATRIX_COLS] = {
+uint32_t keymaps[][5][MATRIX_ROWS][MATRIX_COLS] = {
     [_QWERTY] = {
         [_PRESS] = KEYMAP(
             KC_ESC,    KC_Q,    KC_W,    KC_E,     KC_R,     KC_T,
             KC_TAB,    KC_A,    KC_S,    KC_CAP_D, KC_F,    KC_G,
             KC_LSHIFT, MD(MD_DT_TAP, KC_Z), MD(MD_DT_DOUBLETAP, KC_X),MD(MD_MT_TAP, KC_C),MD(MD_MT_HOLD, KC_V),     KC_B,
-            KC_NO,     KC_NO,   KC_NO,   LAYER_1,  KC_LCTRL, KC_LGUI),
-        [_MT_TAP] = {
-            [0] = {},
-            [1] = {},
-            [2] = {KC_NO, KC_NO, KC_NO, KC_D, KC_NO, KC_NO},
-            [3] = {}
-        },
-        [_MT_HOLD] = {
-            [0] = {},
-            [1] = {},
-            [2] = {KC_NO, KC_NO, KC_NO, KC_NO, KC_F, KC_NO},
-            [3] = {}
-        },
-        [_DT_TAP] = {
-            [0] = {},
-            [1] = {},
-            [2] = {KC_NO, KC_A, KC_NO, KC_NO, KC_NO, KC_NO},
-            [3] = {}
-        },
-        [_DT_DOUBLETAP] = {
-            [0] = {},
-            [1] = {},
-            [2] = {KC_NO, KC_NO, KC_S, KC_NO, KC_NO, KC_NO},
-            [3] = {}
-        }
+            KC_NO,     KC_NO,   KC_NO,   LAYER_1,  KC_LCTRL, KC_LGUI)
     },
-
     [_L1] = {
         [MD_PRESS] = KEYMAP(
             KC_GRV,    KC_1,    KC_2,     KC_3,    KC_4,     KC_5,
@@ -76,9 +35,16 @@ const uint32_t keymaps[][5][MATRIX_ROWS][MATRIX_COLS] = {
     }
 };
 
-#else
+void setupKeymap() 
+{
+    keymaps[_QWERTY][_MT_TAP][2][3] = KC_Y;
+    keymaps[_QWERTY][_MT_HOLD][2][4] = KC_A;
+    keymaps[_QWERTY][_DT_TAP][2][1] = KC_G;
+    keymaps[_QWERTY][_MT_TAP][2][2] = KC_U;
+}
 
-const uint32_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+#else
+uint32_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_QWERTY] = {
         [MD_PRESS] = KEYMAP(
@@ -96,5 +62,8 @@ const uint32_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
             KC_RSFT, KC_APP,  LAYER_0, KC_NO,  KC_NO,   KC_NO )
     }
 };
+ 
+void setupKeymap() {}
+
 #endif /* KEYBOARD_SIDE */
-#endif /* KEYMAP_H */
+
