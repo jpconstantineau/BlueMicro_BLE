@@ -16,12 +16,6 @@
 
 */
 #include "Key.h"
-#include <array> 
-#include <utility> 
-#include <cstdint>
-#include "hid_keycodes.h"
-#include "firmware_config.h"
-
 // ToDo: There seems to be lots of redundency in data.
 // ToDo: consider interrupts or GPIOTE
 // ToDo: there must be a better way to debounce
@@ -30,7 +24,11 @@
 // ToDo: Action Keycodes - Reset/DFU commands
 
 Key::Key() {    // Constructor
-    ;
+    for (int row = 0; row < MATRIX_ROWS; ++row) {
+        for (int col = 0; col < MATRIX_COLS; ++col) {
+            matrix[row][col] = KeyState(keymaps[_QWERTY][_PRESS][row][col]);
+        }
+    }
 }
 
 
@@ -313,8 +311,8 @@ uint8_t Key::localLayer = 0;
 uint8_t Key::remoteLayer = 0;
 uint8_t Key::remoteMod = 0;
 uint8_t Key::currentMod = 0;
-KeyState Key::matrix[MATRIX_ROWS][MATRIX_COLS] {};
 unsigned long Key::timestamps[MATRIX_ROWS][MATRIX_COLS]  = {0};
 uint8_t Key::bufferposition = 0;
 uint8_t Key::layerMode = 0;
 std::vector<uint32_t> Key::activeKeys {};
+KeyState Key::matrix[MATRIX_ROWS][MATRIX_COLS];

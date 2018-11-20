@@ -23,6 +23,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 #include "hid_keycodes.h"
 #include "keyboard_config.h"
+#include "firmware_config.h"
 #include "keymap.h"
 #include "KeyState.h"
 
