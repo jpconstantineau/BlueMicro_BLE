@@ -12,7 +12,7 @@
 #define MOD_RALT (64 << 8)
 #define MOD_RGUI (128 << 8)
 
-#define MOD(M, KC) ((uint32_t) KC | (uint32_t) M)
+#define MOD(M, KC) ((uint16_t) KC | (uint16_t) M)
 
 #define MD_PRESS 0
 #define MD_MT_TAP (1 << 16)
