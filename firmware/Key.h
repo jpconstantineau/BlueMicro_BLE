@@ -5,8 +5,8 @@
 #ifndef KEY_H
 #define KEY_H
 
-using ActArray = std::array<std::array<uint8_t, 5>, 2>;
-using DurArray = std::array<std::array<uint16_t, 5>, 2>;
+using ActArray = std::array<std::array<uint16_t, 5>, 2>;
+using DurArray = std::array<std::array<uint8_t, 5>, 2>;
 
 class Key {
     public:
