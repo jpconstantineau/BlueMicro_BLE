@@ -61,6 +61,5 @@ class KeyScanner {
         static std::vector<uint16_t> toggleBuffer; 
         static std::vector<uint16_t> leaderBuffer; 
         static std::vector<uint16_t> oneshotBuffer; 
-
 };
 #endif /* KEYSCANNER_H */

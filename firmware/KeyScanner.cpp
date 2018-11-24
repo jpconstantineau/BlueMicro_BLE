@@ -151,6 +151,11 @@ void KeyScanner::copyRemoteReport()
     }
 }*/
 
+/*
+ * loop through the entire matrix, checking for 
+ * activated keys and adding the activated ones
+ * into a buffer
+ */
 void KeyScanner::updateMatrix(uint8_t layer)
 {
     activeKeys.clear();
@@ -162,16 +167,17 @@ void KeyScanner::updateMatrix(uint8_t layer)
             //pair of activation/duration
             auto activation = key.getPair(layer);
 
-            if (activation.first != 0)
+            if (activation.first != 0) 
             {
                 activeKeys.push_back(activation.first);
 
                 /*
-                 * toggle
+                 * define behavior of
+                 * toggle and oneshot keys 
+                 * respectively
                  */
                 if (activation.second == 1) 
                 {
-                    //if activation is alread in the toggleBuffer, remove it, otherwise, add it
                     auto it = std::find(toggleBuffer.begin(), toggleBuffer.end(), activation.first);
 
                     if (it != toggleBuffer.end())
@@ -182,10 +188,9 @@ void KeyScanner::updateMatrix(uint8_t layer)
                     {
                         toggleBuffer.push_back(activation.first);
                     }
+
+
                 }
-                /*
-                 * oneshot
-                 */
                 else if (activation.second == 2)
                 {
                     oneshotBuffer.push_back(activation.first);
@@ -199,8 +204,8 @@ void KeyScanner::updateMatrix(uint8_t layer)
     }
 
     /*
-     * add the contents of the toggleBuffer 
-     * into the main buffer and empty the 
+     * empty the toggle 
+     * buffer into the main buffer and empty the 
      * oneshot buffer if a non-oneshot
      * key has been pressed
      */

@@ -10,8 +10,7 @@ KeyState::KeyState() {
 
 void KeyState::addMethod(uint8_t method)
 {
-    if (method == 1 || method == 2)
-    {
+    if (method == 1 || method == 2) {
         checkMT = true;
     }
     else if (method == 3 || method == 4) 
@@ -36,8 +35,7 @@ void KeyState::press(unsigned long currentMillis)
         state = State::MT_HELD;
         lastChanged = currentMillis;
     }
-    //else if ((state == State::RELEASED || state == State::MT_TAPPED) && canDoubletap) 
-    else if (state == State::RELEASED || state == State::MT_TAPPED)
+    else if ((state == State::RELEASED || state == State::MT_TAPPED))
     {
         if (canDoubletap && checkDT) 
         {
@@ -52,12 +50,6 @@ void KeyState::press(unsigned long currentMillis)
             
         lastChanged = currentMillis;
     }
-    //else if (state != State::PRESSED && state != State::MT_HELD) 
-    /*{
-        state = State::PRESSED;
-        lastChanged = currentMillis;
-        canDoubletap = true;
-    }*/
 }
 
 void KeyState::clear(unsigned long currentMillis)

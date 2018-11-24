@@ -13,15 +13,16 @@ class Key {
         void press(unsigned long currentMillis);
         void clear(unsigned long currentMillis);
 
-        void addActivation(const uint8_t layer, const uint8_t method, const uint16_t activation);
+        void addActivation(const uint8_t layer, const uint8_t method, const uint32_t activation);
 
-        uint16_t getActivation(uint8_t layer) const; 
-        uint8_t getDuration(uint8_t layer, uint8_t method) const;
-        std::pair<uint16_t, uint8_t> getPair(uint8_t layer) const;
+        //uint16_t getActivation(uint8_t layer) const; 
+        //uint8_t getDuration(uint8_t layer, uint8_t method) const;
+        std::pair<uint16_t, uint8_t> getPair(uint8_t layer);
 
-        Key(uint16_t activation);
+        Key(uint32_t activation);
 
     private:
+        uint8_t lastMethod;
         KeyState state;
 
         ActArray activations;

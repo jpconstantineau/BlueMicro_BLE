@@ -1,20 +1,23 @@
 #include "Key.h"
 
 //should be called with the keycode of the default layer
-Key::Key(uint16_t activation) 
+Key::Key(uint32_t activation) 
 {
-    activations[0][0] = activation; 
-
-    //TODO: add duration
+    activations[0][0] = static_cast<uint16_t>(activation & 0x0000FFFF); 
+    durations[0][0] = static_cast<uint8_t>((activation & 0x00FF0000) >> 16);
 }
 
 //should be called with 
-void Key::addActivation(const uint8_t layer, const uint8_t method, const uint16_t activation) 
+void Key::addActivation(const uint8_t layer, const uint8_t method, const uint32_t activation) 
 {
-    activations[layer][method] = activation;
-    state.addMethod(method);
+    activations[layer][method] = static_cast<uint16_t>(activation & 0x0000FFFF);
+    durations[layer][method] = static_cast<uint8_t>((activation & 0x00FF0000) >> 16);
 
-    //TODO: add duration
+    /*
+     * tell the state to make sure to look for the added
+     * activation
+     */
+    state.addMethod(method);
 }
 
 void Key::press(const unsigned long currentMillis) 
@@ -27,6 +30,7 @@ void Key::clear(const unsigned long currentMillis)
     state.clear(currentMillis);
 }
 
+/*
 uint16_t Key::getActivation(uint8_t layer) const 
 {
     switch(state.getState()) 
@@ -55,8 +59,8 @@ uint8_t Key::getDuration(uint8_t layer, uint8_t method) const
 {
     return durations[layer][method];
 }
-
-std::pair<uint16_t, uint8_t> Key::getPair(uint8_t layer) const
+*/
+std::pair<uint16_t, uint8_t> Key::getPair(uint8_t layer)
 {
     uint8_t method;
 
@@ -78,9 +82,21 @@ std::pair<uint16_t, uint8_t> Key::getPair(uint8_t layer) const
             method = 4;
             break;
         default:
+            lastMethod = 5;
             return std::make_pair(0, 0);
     }
 
-    return std::make_pair(activations[layer][method], durations[layer][method]);
+    /*
+     * TODO: layer changes aren't included here 
+     */
+    if (lastMethod == 0 || method != lastMethod)
+    {
+        lastMethod = method;
+        return std::make_pair(activations[layer][method], durations[layer][method]);
+    }
+    else 
+    {
+        return std::make_pair(0, 0);
+    }
 }
 
