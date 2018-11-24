@@ -526,8 +526,13 @@ void scanMatrix() {
           pinMode(columns[i], INPUT_PULLDOWN);                              // 'enables' the column High Value on the diode; becomes "LOW" when pressed
           #endif
     }
-      delay(1);                                                       // need for the GPIO lines to settle down electrically before reading.
-     //nrf_delay_us(1);
+      delay(1);   
+      // need for the GPIO lines to settle down electrically before reading.
+      #ifdef NRFX_H__  // Added to support BSP 0.9.0
+         nrfx_coredep_delay_us(1);
+      #else            // Added to support BSP 0.8.6
+        nrf_delay_us(1);
+      #endif
       pindata = NRF_GPIO->IN;                                         // read all pins at once
      for (int i = 0; i < MATRIX_COLS; ++i) {
       Key::scanMatrix((pindata>>(columns[i]))&1, millis(), j, i);       // This function processes the logic values and does the debouncing

@@ -15,24 +15,26 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-#include <stdint.h>
-#include "hid_keycodes.h"
-#include "keyboard_config.h"
-#include "advanced_keycodes.h"
+#include "keymap.h"
 
-#ifndef KEYMAP_H
-#define KEYMAP_H
+uint32_t keymaps[][5][MATRIX_ROWS][MATRIX_COLS] = {
 
-#define KC_CAP_D MOD(MOD_LSHIFT, KC_D)
-#define _QWERTY 0
-#define _L1  1
-#define _PRESS 0
-#define _MT_TAP 1
-#define _MT_HOLD 2
-#define _DT_TAP 3
-#define _DT_DOUBLETAP 4
+    [_QWERTY] = {
+        [_PRESS] = KEYMAP(
+    KC_7,    KC_8,    KC_9,    KC_KP_SLASH,    
+    KC_4,    KC_5,    KC_6,    KC_KP_ASTERISK,  
+    KC_1,    KC_2,    KC_3,    KC_KP_MINUS,    
+    LAYER_1, KC_0,    KC_DOT,  KC_KP_PLUS),
+    },
 
-extern uint32_t keymaps[][5][MATRIX_ROWS][MATRIX_COLS];
-void setupKeymap();
+    [_L1] = {
+        [_PRESS] = KEYMAP(
+    KC_HOME,    KC_UP,    KC_PGUP,    KC_ESCAPE,    
+    KC_LEFT,    KC_NO,    KC_RIGHT,    KC_DELETE,  
+    KC_END,    KC_DOWN,    KC_PGDN,    KC_KP_ENTER,    
+    LAYER_1, KC_INS,    KC_DEL,  KC_KP_ENTER)
+    }
+};
+ 
+void setupKeymap() {}
 
-#endif /* KEYMAP_H */
