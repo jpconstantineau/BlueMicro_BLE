@@ -20,19 +20,23 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #if KEYBOARD_SIDE == LEFT
 
 /*
- * default initialize with the QWERTY layer
+ * initiialize the default layer (QWERTY/Press) with the following
+ * keymap
  */
 std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
     {{
         {KC_ESC,    KC_Q,    KC_W,    KC_E,     KC_R,     KC_T},
-        {KC_TAB,    KC_A,    KC_S,    KC_CAP_D, KC_F,     KC_G},
+        {KC_A,      KC_NO,    KC_S,    KC_CAP_D, KC_F,     KC_G},
         {KC_LSHIFT, KC_Z,    KC_X,    KC_C,     KC_V,     KC_B},
         {KC_NO,     KC_NO,   KC_NO,   LAYER_1,  KC_LCTRL, KC_LGUI}
     }};
 
+/*
+ * add extra layers or single keys to this function 
+ */
 void setupKeymap() 
 {
-    uint16_t layer1[MATRIX_ROWS][MATRIX_COLS] =
+    uint32_t layer1[MATRIX_ROWS][MATRIX_COLS] =
         KEYMAP(
             KC_GRV,    KC_1,    KC_2,     KC_3,    KC_4,     KC_5,
             KC_CAPS,   KC_F1,   KC_F2,    KC_F3,   KC_F4,    KC_F5,
@@ -51,10 +55,11 @@ void setupKeymap()
     }
 
     /* 
-     * add special activations with the 
+     * add special, single activations with the 
      * layer, activation method and activation
      */
     matrix[2][3].addActivation(_QWERTY, _MT_TAP, KC_Y);
+    matrix[1][1].addActivation(_QWERTY, _MT_TAP, TG(KC_LSHIFT));
 }
 
 #else
