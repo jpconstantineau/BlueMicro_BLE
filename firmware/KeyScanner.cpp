@@ -134,35 +134,18 @@ void KeyScanner::copyRemoteReport()
 #endif
 }
 
-/*void KeyScanner::updateMatrix(uint8_t layer)
-{
-    activeKeys.clear();
-
-    for(int row = 0; row < MATRIX_ROWS; ++row) {
-        for (auto key : matrix[row]) 
-        {
-            auto activation = key.getActivation(layer);
-
-            if (activation != 0)
-            {
-                activeKeys.push_back(activation);
-            }
-        }
-    }
-}*/
-
 /*
  * loop through the entire matrix, checking for 
  * activated keys and adding the activated ones
  * into a buffer
  */
-void KeyScanner::updateMatrix(uint8_t layer)
+void KeyScanner::updateBuffer(uint8_t layer)
 {
     activeKeys.clear();
     bool emptyOneshot = false;
 
     for(int row = 0; row < MATRIX_ROWS; ++row) {
-        for (auto key : matrix[row]) 
+        for (auto& key : matrix[row]) 
         {
             //pair of activation/duration
             auto activation = key.getPair(layer);
@@ -197,6 +180,9 @@ void KeyScanner::updateMatrix(uint8_t layer)
                 }
                 else 
                 {
+                    /*
+                     * TODO: when should oneshot buffer be emptied?
+                     */
                     emptyOneshot = true;
                 }
             }
@@ -231,16 +217,6 @@ bool KeyScanner::updateLayer()
 {
     uint8_t prevlayer = localLayer;     // remember last layer
 
-    /*
-     * Change the local layer based on the layer selection mode * * MOMENTARY (MO): 0x00 * Switch the layer back to the default one *
-     * TOGGLE (TG): 0x01
-     * Nothing needs to be done as layer stays the same
-     */
-    if (layerMode == 0) 
-    {
-        localLayer = 0; 
-    }
-
     // Select the layer which the selection is done on
     // this isthe larger of local and remote layers
     uint8_t selectionLayer = localLayer; 
@@ -252,10 +228,15 @@ bool KeyScanner::updateLayer()
 
     // read through the matrix and select all of the 
     // currently pressed keys 
-    updateMatrix(selectionLayer);
+    updateBuffer(selectionLayer);
 
-    // iterate through all of the currently pressed keys, if 
-    // a layer key is pressed, change the layer accordingly
+    /* 
+     * iterate through all of the currently pressed keys, if 
+     * a layer key is pressed, change the layer accordingly
+     * if no other layers are set in the buffer, the default
+     * layer should be chosen
+     */
+    localLayer = LAYER_0 - 0xF0;
     for (auto keycode : activeKeys)
     {
         // the first byte is the actual HID keycode of the key
@@ -263,14 +244,8 @@ bool KeyScanner::updateLayer()
 
         if (keyValue >= LAYER_0 && keyValue <= LAYER_F)
         {
-            // layer offset
+            // calculate layer offset
             localLayer = keyValue - 0xF0;
-
-            /*
-             * TODO 
-             * implement different layer switching modes and 
-             * check for it here
-             */
         }
     }
 

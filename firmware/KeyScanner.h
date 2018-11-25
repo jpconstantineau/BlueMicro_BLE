@@ -42,7 +42,7 @@ class KeyScanner {
 
     private:
         static void resetReport();
-        static void updateMatrix(uint8_t layer);
+        static void updateBuffer(uint8_t layer);
         static bool updateLayer();
         static bool updateModifiers();
         static void copyRemoteReport();
