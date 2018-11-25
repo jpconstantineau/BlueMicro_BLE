@@ -15,8 +15,6 @@ class Key {
 
         void addActivation(const uint8_t layer, const uint8_t method, const uint32_t activation);
 
-        //uint16_t getActivation(uint8_t layer) const; 
-        //uint8_t getDuration(uint8_t layer, uint8_t method) const;
         std::pair<uint16_t, uint8_t> getPair(uint8_t layer);
 
         Key(uint32_t activation);
