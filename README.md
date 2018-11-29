@@ -41,7 +41,7 @@ A Keyboard Firmware for nRF52832 Boards with a pinout compatible with the Arduin
 * [5x5 Backpack](https://github.com/jpconstantineau/NRF52-Board/tree/master/5x5_backpack/5x5_backpack)
 
 * BLE Phage       (Compatible with even more Keyboards due to its small size - Serial USB and PoLi Charger on board)
-* BLE Phage Basic (Compatible with even more Keyboards due to its small size - Serial TX/RX are routed separately)
+* [BLE Phage Basic](https://southpawdesign.net/products/blue-phage-basic?variant=8958741545020) (Compatible with even more Keyboards due to its small size - Serial TX/RX are routed separately)
 
 
 Maintainer: [/u/jpconstantineau](https://github.com/jpconstantineau)  
