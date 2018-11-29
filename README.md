@@ -33,10 +33,10 @@ A Keyboard Firmware for nRF52832 Boards with a pinout compatible with the Arduin
 * [Adafruit nRF52 Feather](https://www.adafruit.com/product/3406) (Software compatible - not Pinout compabible)
 * [BlueMicro V1.0](https://github.com/jpconstantineau/NRF52-Board/tree/master/EByte_E73)  (Serial TX/RX routed through D2 and D3; Designed for the ErgoTravel only)
 * [BlueMicro V1.1](https://github.com/jpconstantineau/NRF52-Board/tree/master/EByte_E73)  (Compatible with more Keyboards - Serial TX/RX are routed separately) 
-* [BlueMicro V2.0b](https://github.com/jpconstantineau/NRF52-Board/tree/master/EByte_E73_Batt)
-* [BlueMicro V2.0c](https://github.com/jpconstantineau/NRF52-Board/tree/master/EByte_E73_Batt_ErgoTravel)
-* [BlueNano V1.0](https://github.com/jpconstantineau/NRF52-Board/tree/master/NRF52832-base/NRF52832%20Base)
-* [BlueNano V2.0](https://github.com/jpconstantineau/NRF52-Board/tree/master/NRF52832-base/NRF52832%20Lipo)
+* [BlueMicro V2.0b](https://github.com/jpconstantineau/NRF52-Board/tree/master/EByte_E73_Batt) (Compatible with more Keyboards - Serial TX/RX are routed separately, LiPo Charger on board) 
+* [BlueMicro V2.0c](https://github.com/jpconstantineau/NRF52-Board/tree/master/EByte_E73_Batt_ErgoTravel) Serial TX/RX routed through D2 and D3; Designed for the ErgoTravel. LiPo Charger on Board with battery connection connected to RAW pin.
+* [BlueNano V1.0](https://github.com/jpconstantineau/NRF52-Board/tree/master/NRF52832-base/NRF52832%20Base) Compatible with even more Keyboards due to its small size 3.3v regulator on board.
+* [BlueNano V2.0](https://github.com/jpconstantineau/NRF52-Board/tree/master/NRF52832-base/NRF52832%20Lipo) Compatible with even more Keyboards due to its small size - Serial USB and PoLi Charger on board. Lots of 0402 components and 2 QFN packages to solder.
 * [4x4 Backpack](https://github.com/jpconstantineau/NRF52-Board/tree/master/4x4_backpack/4x4_backpack)
 * [5x5 Backpack](https://github.com/jpconstantineau/NRF52-Board/tree/master/5x5_backpack/5x5_backpack)
 
