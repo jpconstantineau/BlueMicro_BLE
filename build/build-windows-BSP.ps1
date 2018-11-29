@@ -65,7 +65,7 @@ Function Locate-Arduino-Data-Dir {
 Function Check-Adafruit-Nrf52-Package {
     Write-Host -NoNewline "Adafruit nRF52 Package... "
 
-    if(!(Test-Path -Path "$ArduinoDataDir\packages\adafruit\hardware\nrf52")) {
+    if(!(Test-Path -Path "C:\Users\pierre\Documents\Arduino\hardware\Adafruit\Adafruit_nRF52_Arduino")) {
         Write-Host -ForegroundColor Red "Failed"
         Write-Host
         Write-Host -ForegroundColor Yellow "Could not find Adafruit nRF52 Package"
@@ -95,12 +95,15 @@ Function Compile-Board($keyboard, $target, $keymap) {
     #New-Item -Path "$SourceDir\keymap.h" -ItemType HardLink -Value "$KeyboardsDir\$keyboard\keymaps\$keymap\keymap.h" -Force >$null
 
     $keymapFile = "$KeyboardsDir\$keyboard\keymaps\$keymap\keymap.h"
+    $keymapcppFile = "$KeyboardsDir\$keyboard\keymaps\$keymap\keymap.cpp"
     $configFile = "$KeyboardsDir\$keyboard\$target\keyboard_config.h"
 
     Write-Verbose "Copying keymap and target source files"
     Write-Verbose $keymapFile
+    Write-Verbose $keymapcppFile
     Write-Verbose $configFile
     Copy-Item $keymapFile "$SourceDir\keymap.h" -Force
+    Copy-Item $keymapcppFile "$SourceDir\keymap.cpp" -Force
     Copy-Item $configFile "$SourceDir\keyboard_config.h" -Force
 
 	# Need to sleep between compile calls else the arduino-builder does not recognise changes
@@ -109,10 +112,10 @@ Function Compile-Board($keyboard, $target, $keymap) {
     # Run compile
     $cmdCompile = 
         '& "$BuilderExe" -compile -logger=machine -warnings "none" -verbose -ide-version "10807" -debug-level 1 ' + 
-        '-hardware "$ArduinoDir\hardware" -hardware "$ArduinoDataDir\packages" ' + 
+        '-hardware "$ArduinoDir\hardware" -hardware "$ArduinoDataDir\packages" -hardware C:\Users\pierre\Documents\Arduino\hardware ' + 
         '-tools "$ArduinoDir\tools-builder" -tools "$ArduinoDir\hardware\tools\avr" -tools "$ArduinoDataDir\packages" ' +
         '-built-in-libraries "$ArduinoDir\libraries"' +
-        '-fqbn "adafruit:nrf52:feather52832:softdevice=s132v6,debug=l0" ' +
+        '-fqbn "Adafruit:Adafruit_nRF52_Arduino:feather52832:softdevice=s132v6,debug=l0" ' +
         '-build-path "$BuildDir" -build-cache "$BuildCacheDir" '
         #'-prefs "build.warn_data_percentage=75" -prefs "runtime.tools.nrfjprog.path=$ArduinoDataDir\packages\adafruit\tools\nrfjprog\9.4.0" -prefs "runtime.tools.gcc-arm-none-eabi.path=$ArduinoDataDir\packages\adafruit\tools\gcc-arm-none-eabi\5_2-2015q4" '
 

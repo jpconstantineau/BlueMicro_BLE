@@ -9,7 +9,7 @@ if exist ..\output\%~1\%~1-%~2-%~3.zip (
 	goto flash
 ) else (
 	@echo Compiled zip package not found: running build script first.
-	powershell ./build-windows.ps1 %~1 %~2 %~3
+	powershell ./build-windows-BSP.ps1 %~1 %~2 %~3
 
 	if exist ..\output\%~1\%~1-%~2-%~3.zip (
 		goto flash
@@ -25,7 +25,7 @@ if exist ..\output\%~1\%~1-%~2-%~3.zip (
 
 :flash
    	echo Flashing %~1-%~2-%~3 over serial port %~4
-	%localappdata%\Arduino15\packages\adafruit\hardware\nrf52\0.9.0\tools\adafruit-nrfutil\win32\adafruit-nrfutil.exe --verbose dfu serial -pkg ..\output\%~1\%~1-%~2-%~3.zip -p %~4 -b 115200 --singlebank
+	C:\Users\pierre\Documents\Arduino\hardware\Adafruit\Adafruit_nRF52_Arduino\tools\adafruit-nrfutil\win32\adafruit-nrfutil.exe --verbose dfu serial -pkg ..\output\%~1\%~1-%~2-%~3.zip -p %~4 -b 115200 --singlebank
 
 
 :usage

@@ -42,13 +42,13 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define MANUFACTURER_NAME                   "Keebio"                      /**< Manufacturer. Will be passed to Device Information Service. */
 
 // Set max power. Accepted values are: -40, -30, -20, -16, -12, -8, -4, 0, 4
-#define DEVICE_POWER 0
-#define PNP_ID_VENDOR_ID_SOURCE             0x02                                       /**< Vendor ID Source. */
-#define PNP_ID_VENDOR_ID                    0x1915                                     /**< Vendor ID. */
-#define PNP_ID_PRODUCT_ID                   0xEEEE                                     /**< Product ID. */
-#define PNP_ID_PRODUCT_VERSION              0x0001                                     /**< Product Version. */
+//#define DEVICE_POWER 0
+//#define PNP_ID_VENDOR_ID_SOURCE             0x02                                       /**< Vendor ID Source. */
+//#define PNP_ID_VENDOR_ID                    0x1915                                     /**< Vendor ID. */
+//#define PNP_ID_PRODUCT_ID                   0xEEEE                                     /**< Product ID. */
+//#define PNP_ID_PRODUCT_VERSION              0x0001                                     /**< Product Version. */
 
-
+/*
 #define DEBUG_SERIAL 0
 
 #if KEYBOARD_SIDE == LEFT
@@ -75,7 +75,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define PERIPHERAL_COUNT 1
 #define CENTRAL_COUNT 0
 #endif
-
+*/
 
 /* HARDWARE DEFINITION*/
 /* key matrix size */
@@ -91,5 +91,19 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define DIODE_DIRECTION COL2ROW
 
 #define DEBOUNCETIME 15
+
+
+#define KEYMAP( \
+    A1, A2, A3, A4,\
+    B1, B2, B3, B4,\
+    C1, C2, C3, C4,\
+    D1, D2, D3, D4 \
+    ) { \
+        {A1, A2, A3, A4}, \
+        {B1, B2, B3, B4}, \
+        {C1, C2, C3, C4}, \
+        {D1, D2, D3, D4} \
+    }
+
 
 #endif /* KEYBOARD_CONFIG_H */
