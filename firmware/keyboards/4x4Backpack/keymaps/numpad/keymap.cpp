@@ -21,7 +21,7 @@ uint32_t keymaps[][5][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_QWERTY] = {
         [_PRESS] = KEYMAP(
-    KC_7,    KC_8,    KC_9,    KC_KP_SLASH,    
+    LAYER_1,    KC_8,    KC_9,    KC_KP_SLASH,    
     KC_4,    KC_5,    KC_6,    KC_KP_ASTERISK,  
     KC_1,    KC_2,    KC_3,    KC_KP_MINUS,    
     LAYER_1, KC_0,    KC_DOT,  KC_KP_PLUS),

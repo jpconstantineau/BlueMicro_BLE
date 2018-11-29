@@ -72,7 +72,7 @@ SoftwareTimer keyscanTimer;
 
 #if BACKLIGHT_PWM_ON == 1  //setup PWM module
 int16_t pwmval = DEFAULT_PWM_VALUE;
-static int16_t buf[] = {(1 << 15) | DEFAULT_PWM_VALUE}; // Inverse polarity (bit 15), 1500us duty cycle
+static int16_t buf[] = {(int16_t)(1 << 15) | (int16_t) DEFAULT_PWM_VALUE}; // Inverse polarity (bit 15), 1500us duty cycle
 
 
 void startPWM(void)

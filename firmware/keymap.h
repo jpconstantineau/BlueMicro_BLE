@@ -20,63 +20,26 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include <stdint.h>
 #include "hid_keycodes.h"
 #include "keyboard_config.h"
+#include "advanced_keycodes.h"
+
 #ifndef KEYMAP_H
 #define KEYMAP_H
 
-#define KEYMAP( \
-    K00, K01, K02, K03, K04, K05, K06, K07, K10, K11, K12, K13, K14, K15, \
-    K16, K17, K20, K21, K22, K23, K24, K25, K26, K27, K30, K31, K32, K33, \
-    K34, K35, K36, K37, K40, K41, K42, K43, K44, K45, K46, K47, K50, \
-    K51, K52, K53, K54, K55, K56, K57, K60, K61, K62, K63, K64, \
-    K65, K66, K67,                K70,                K71, K72, K73, K74\
-) { \
-    { K00, K01, K02, K03, K04, K05, K06, K07 }, \
-    { K10, K11, K12, K13, K14, K15, K16, K17 }, \
-    { K20, K21, K22, K23, K24, K25, K26, K27 }, \
-    { K30, K31, K32, K33, K34, K35, K36, K37 }, \
-    { K40, K41, K42, K43, K44, K45, K46, K47 }, \
-    { K50, K51, K52, K53, K54, K55, K56, K57 }, \
-    { K60, K61, K62, K63, K64, K65, K66, K67 }, \
-    { K70, K71, K72, K73, K74 } \
-}
-
-
+#define KC_CAP_D MOD(MOD_LSHIFT, KC_D)
 
 #define _QWERTY 0
 #define _L1  1
 #define _L2  2
+#define _L3  3
 
+#define _PRESS 0
+#define _MT_TAP 1
+#define _MT_HOLD 2
+#define _DT_TAP 3
+#define _DT_DOUBLETAP 4
 
-const uint32_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+extern uint32_t keymaps[][5][MATRIX_ROWS][MATRIX_COLS];
+void setupKeymap();
 
-[_QWERTY] = KEYMAP(    
+#endif /* KEYMAP_H */
 
-        KC_ESC, KC_1,   KC_2,   KC_3,   KC_4,   KC_5,   KC_6,   KC_7,   KC_8,   KC_9,   KC_0,   KC_MINS,KC_EQL, KC_BSPC, \
-        KC_TAB,KC_Q,   KC_W,   KC_E,   KC_R,   KC_T,   KC_Y,   KC_U,   KC_I,   KC_O,   KC_P,   KC_LBRC,KC_RBRC,KC_BSLS, \
-        LAYER_2,KC_A,   KC_S,   KC_D,   KC_F,   KC_G,   KC_H,   KC_J,   KC_K,   KC_L,   KC_SCLN,KC_QUOT,KC_ENT,  \
-        KC_LSFT,KC_Z,   KC_X,   KC_C,   KC_V,   KC_B,   KC_N,   KC_M,   KC_COMM,KC_DOT, KC_SLSH,KC_RSFT, \
-        KC_LCTL,KC_LGUI,KC_LALT,          KC_SPC,                     KC_RALT, KC_APP,KC_RCTL,LAYER_1),
-
-
-
-
-[_L1]  = KEYMAP(
-        KC_GRV, KC_F1,  KC_F2,  KC_F3,  KC_F4,  KC_F5,  KC_F6,  KC_F7,  KC_F8,  KC_F9,  KC_F10, KC_F11, KC_F12, KC_DEL, \
-        KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_PSCR,KC_SLCK,KC_PAUS, KC_UP, KC_TRNS,KC_BSPC, \
-        KC_TRNS,KC_VOLDOWN,KC_VOLUP,KC_MUTE,KC_TRNS,KC_TRNS,KC_PAST,KC_PSLS,KC_HOME,KC_PGUP,KC_LEFT,KC_RGHT,KC_PENT, \
-        KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_PPLS,KC_PMNS,KC_END, KC_PGDN,KC_DOWN,KC_TRNS,KC_TRNS, \
-        KC_TRNS,KC_TRNS,KC_TRNS,          KC_TRNS,                      KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS),
-
-
-
-[_L2] = KEYMAP(
-        KC_CAPS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS, \
-        KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS, \
-        KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS, \
-        KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_UP, \
-        KC_TRNS,KC_TRNS,KC_TRNS,          KC_TRNS,                    KC_TRNS,KC_LEFT,KC_DOWN,KC_RIGHT),
-
- 
-};
-
-#endif
