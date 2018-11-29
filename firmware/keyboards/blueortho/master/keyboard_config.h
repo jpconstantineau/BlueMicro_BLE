@@ -19,14 +19,14 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 #ifndef KEYBOARD_CONFIG_H
 #define KEYBOARD_CONFIG_H
-
+/*
 #define COL2ROW       1
 #define ROW2COL       0
 
 #define LEFT 0
 #define RIGHT 1
 #define MASTER 2
-
+*/
 #define KEYBOARD_SIDE MASTER
 
 #if   KEYBOARD_SIDE == RIGHT
@@ -42,13 +42,13 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define MANUFACTURER_NAME                   "SouthpawDesign"                      /**< Manufacturer. Will be passed to Device Information Service. */
 
 // Set max power. Accepted values are: -40, -30, -20, -16, -12, -8, -4, 0, 4
-#define DEVICE_POWER 0
-#define PNP_ID_VENDOR_ID_SOURCE             0x02                                       /**< Vendor ID Source. */
-#define PNP_ID_VENDOR_ID                    0x1915                                     /**< Vendor ID. */
-#define PNP_ID_PRODUCT_ID                   0xEEEE                                     /**< Product ID. */
-#define PNP_ID_PRODUCT_VERSION              0x0001                                     /**< Product Version. */
+///#define DEVICE_POWER 0
+//#define PNP_ID_VENDOR_ID_SOURCE             0x02                                       /**< Vendor ID Source. */
+//#define PNP_ID_VENDOR_ID                    0x1915                                     /**< Vendor ID. */
+//#define PNP_ID_PRODUCT_ID                   0xEEEE                                     /**< Product ID. */
+//#define PNP_ID_PRODUCT_VERSION              0x0001                                     /**< Product Version. */
 
-
+/*
 #define DEBUG_SERIAL 0
 
 #if KEYBOARD_SIDE == LEFT
@@ -75,7 +75,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define PERIPHERAL_COUNT 1
 #define CENTRAL_COUNT 0
 #endif
-
+*/
 
 /* HARDWARE DEFINITION*/
 /* key matrix size */
@@ -91,5 +91,20 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define DIODE_DIRECTION COL2ROW
 
 #define DEBOUNCETIME 15
+
+
+#define KEYMAP( \
+    A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, \
+    B1, B2, B3, B4, B5, B6, B7, B8, B9, B10, B11, B12, \
+    C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, \
+    D1, D2, D3, D4, D5, D6, D7, D8, D9, D10, D11, D12 \
+    ) { \
+        {A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12}, \
+        {B1, B2, B3, B4, B5, B6, B7, B8, B9, B10, B11, B12}, \
+        {C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12}, \
+        {D1, D2, D3, D4, D5, D6, D7, D8, D9, D10, D11, D12} \
+    }
+
+
 
 #endif /* KEYBOARD_CONFIG_H */

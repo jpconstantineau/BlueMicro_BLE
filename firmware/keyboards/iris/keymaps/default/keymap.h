@@ -20,96 +20,25 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include <stdint.h>
 #include "hid_keycodes.h"
 #include "keyboard_config.h"
+#include "advanced_keycodes.h"
+
 #ifndef KEYMAP_H
 #define KEYMAP_H
 
-
+#define KC_CAP_D MOD(MOD_LSHIFT, KC_D)
 
 #define _QWERTY 0
 #define _L1  1
 #define _L2  2
 #define _L3  3
 
-    #if KEYBOARD_SIDE == LEFT
+#define _PRESS 0
+#define _MT_TAP 1
+#define _MT_HOLD 2
+#define _DT_TAP 3
+#define _DT_DOUBLETAP 4
 
-const uint8_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+extern uint32_t keymaps[][5][MATRIX_ROWS][MATRIX_COLS];
+void setupKeymap();
 
-  [_QWERTY] = KEYMAP(
-
-     KC_ESC , KC_1  , KC_2  , KC_3  , KC_4  , KC_5  ,                
-     KC_TAB , KC_Q  , KC_W  , KC_E  , KC_R  , KC_T  ,
-     KC_LSFT, KC_A  , KC_S  , KC_D  , KC_F  , KC_G  ,
-     KC_LCTL, KC_Z  , KC_X  , KC_C  , KC_V  , KC_B  ,KC_HOME,
-                              KC_LGUI,LAYER_1,KC_ENT 
-  ),
-
-[_L1]  = KEYMAP(
-     KC_F12 , KC_F1  , KC_F2  , KC_F3  , KC_F4  , KC_F5  ,                
-     KC_TAB , KC_Q  , KC_W  , KC_E  , KC_R  , KC_T  ,
-     KC_LSFT, KC_A  , KC_S  , KC_D  , KC_F  , KC_G  ,
-     KC_LCTL, KC_Z  , KC_X  , KC_C  , KC_V  , KC_B  ,KC_HOME,
-                              KC_LGUI,LAYER_1,KC_ENT 
-       ),
-
-
-[_L2] = KEYMAP(
-     KC_F12 , KC_F1  , KC_F2  , KC_F3  , KC_F4  , KC_F5  ,                
-     KC_TAB , KC_Q  , KC_W  , KC_E  , KC_R  , KC_T  ,
-     KC_LSFT, KC_A  , KC_S  , KC_D  , KC_F  , KC_G  ,
-     KC_LCTL, KC_Z  , KC_X  , KC_C  , KC_V  , KC_B  ,KC_HOME,
-                              KC_LGUI,LAYER_1,KC_ENT 
-        ),
-
-
-[_L3] = KEYMAP(
-     KC_F12 , KC_F1  , KC_F2  , KC_F3  , KC_F4  , KC_F5  ,                
-     KC_TAB , KC_Q  , KC_W  , KC_E  , KC_R  , KC_T  ,
-     KC_LSFT, KC_A  , KC_S  , KC_D  , KC_F  , KC_G  ,
-     KC_LCTL, KC_Z  , KC_X  , KC_C  , KC_V  , KC_B  ,KC_HOME,
-                              KC_LGUI,LAYER_1,KC_ENT  
-       )
-};
-
- #else
-const uint8_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-[_QWERTY] = KEYMAP(
-             KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSPC,
-             KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_DEL,
-             KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
-    KC_END,  KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSHIFT,
-    KC_SPC,  LAYER_2, KC_LALT 
-    ),
-
-
-[_L1]  = KEYMAP(
-             KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,
-             KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_DEL,
-             KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
-    KC_END,  KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
-    KC_SPC,  LAYER_2, KC_LALT 
-    ),
-
-
-[_L2] = KEYMAP(
-             KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,
-             KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_DEL,
-             KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
-    KC_END,  KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
-    KC_SPC,  LAYER_2, KC_LALT 
-    ),
-
-
-[_L3] = KEYMAP(
-             KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,
-             KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_DEL,
-             KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
-    KC_END,  KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
-    KC_SPC,  LAYER_2, KC_LALT 
-    )
-};
-
-
-  #endif  
-
-#endif
-
+#endif /* KEYMAP_H */
