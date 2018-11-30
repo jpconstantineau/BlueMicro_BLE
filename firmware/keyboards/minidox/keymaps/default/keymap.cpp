@@ -19,77 +19,106 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 
     #if KEYBOARD_SIDE == LEFT
-uint32_t keymaps[][5][MATRIX_ROWS][MATRIX_COLS] = {
-
-    [_QWERTY] = {
-        [MD_PRESS] = KEYMAP(
+ 
+std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
+    {KEYMAP(
             KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,   
             KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    
             KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    
-            KC_NO, KC_NO,   KC_LCTRL, LAYER_1,    KC_LSHIFT ),
-    },
+            KC_NO, KC_NO,   KC_LCTRL, LAYER_1,    KC_LSHIFT ) };
 
-    [_L1] = {
-         KEYMAP(
+ 
+void setupKeymap() {
+
+
+    uint32_t layer1[MATRIX_ROWS][MATRIX_COLS] =
+            KEYMAP(
             KC_1,    KC_2,     KC_3,    KC_4,    KC_5,   
             KC_ESC,  _______,  _______, _______, _______,    
             KC_CAPS, KC_GRAVE, _______, _______, _______,    
-            KC_NO,   KC_NO,    KC_LCTRL, LAYER_1,    KC_LSHIFT ),
-    },
-        [_L2] = {
+            KC_NO,   KC_NO,    KC_LCTRL, LAYER_1,    KC_LSHIFT );
+
+
+    uint32_t layer2[MATRIX_ROWS][MATRIX_COLS] =
          KEYMAP(
             KC_1,    KC_2,    KC_3,    KC_4,    KC_5,   
             KC_TAB,    KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT,    
             KC_LCTL, KC_GRV,  KC_LGUI, KC_LALT, _______,    
-            KC_NO, KC_NO,   KC_LCTRL, LAYER_1,    KC_LSHIFT ),
-    },
-        [_L3] = {
+            KC_NO, KC_NO,   KC_LCTRL, LAYER_1,    KC_LSHIFT );
+
+
+    uint32_t layer3[MATRIX_ROWS][MATRIX_COLS] =
          KEYMAP(
             KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   
             KC_F11,  KC_F12,  _______, _______, _______,    
             _______, _______, _______, _______, _______,    
-            KC_NO, KC_NO,   KC_LCTRL, LAYER_1,    KC_LSHIFT )
+            KC_NO, KC_NO,   KC_LCTRL, LAYER_1,    KC_LSHIFT );
+
+    /*
+     * add the other layers
+     */
+    for (int row = 0; row < MATRIX_ROWS; ++row)
+    {
+        for (int col = 0; col < MATRIX_COLS; ++col)
+        {
+            matrix[row][col].addActivation(_L1, _PRESS, layer1[row][col]);
+            matrix[row][col].addActivation(_L2, _PRESS, layer2[row][col]);
+            matrix[row][col].addActivation(_L3, _PRESS, layer3[row][col]);
+        }
     }
-};
- 
-void setupKeymap() {}
+
+}
 
     #else
-
-    uint32_t keymaps[][5][MATRIX_ROWS][MATRIX_COLS] = {
-
-    [_QWERTY] = {
-        [MD_PRESS] = KEYMAP(
+ 
+std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
+    {KEYMAP(
             KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,   
             KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN,    
             KC_N,    KC_M,    KC_COMMA,    KC_DOT,    KC_ENTER,    
-            KC_SPC , LAYER_2, LAYER_3, KC_NO, KC_NO ),
-    },
+            KC_SPC , LAYER_2, LAYER_3, KC_NO, KC_NO ) };
 
-    [_L1] = {
-         KEYMAP(
+ 
+void setupKeymap() {
+
+
+    uint32_t layer1[MATRIX_ROWS][MATRIX_COLS] =
+            KEYMAP(
             KC_6,    KC_7,    KC_8,    KC_9,    KC_0,   
             _______, _______, _______, KC_UP, _______,    
             _______, _______, KC_LEFT, KC_DOWN,  KC_RGHT,   
-            KC_BSPC, LAYER_2, LAYER_3, KC_NO, KC_NO ),
-    },
-        [_L2] = {
+            KC_BSPC, LAYER_2, LAYER_3, KC_NO, KC_NO );
+
+
+    uint32_t layer2[MATRIX_ROWS][MATRIX_COLS] =
          KEYMAP(
             KC_6,    KC_7,    KC_8,    KC_9,    KC_0,   
             _______, _______, _______, _______, _______,    
             _______, _______, _______, _______,  _______,    
-            KC_BSPC, LAYER_2, LAYER_3, KC_NO, KC_NO ),
-    },
-        [_L3] = {
+            KC_BSPC, LAYER_2, LAYER_3, KC_NO, KC_NO );
+
+
+    uint32_t layer3[MATRIX_ROWS][MATRIX_COLS] =
          KEYMAP(
             KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,   
             _______, _______, _______, _______,  _______,    
             _______, _______, _______, _______,  _______,    
-            KC_BSPC, LAYER_2, LAYER_3, KC_NO, KC_NO )
+            KC_BSPC, LAYER_2, LAYER_3, KC_NO, KC_NO );
+
+    /*
+     * add the other layers
+     */
+    for (int row = 0; row < MATRIX_ROWS; ++row)
+    {
+        for (int col = 0; col < MATRIX_COLS; ++col)
+        {
+            matrix[row][col].addActivation(_L1, _PRESS, layer1[row][col]);
+            matrix[row][col].addActivation(_L2, _PRESS, layer2[row][col]);
+            matrix[row][col].addActivation(_L3, _PRESS, layer3[row][col]);
+        }
     }
-};
- 
-void setupKeymap() {}
+
+}
 
     
     #endif   
