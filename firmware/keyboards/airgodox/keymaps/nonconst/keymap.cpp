@@ -68,5 +68,44 @@ void setupKeymap()
  * TODO: configure right side
  */
 
+std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
+    {{
+        {KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,   KC_BSPC,},
+        {KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN,KC_ENTER,},
+        {KC_N,    KC_M,    KC_COMMA,KC_DOT,  KC_SLSH,KC_RALT,},
+        {KC_RSFT, KC_SPC,  LAYER_1, KC_NO,   KC_NO,   KC_NO}
+    }};
+
+
+
+void setupKeymap() 
+{
+    uint32_t layer1[MATRIX_ROWS][MATRIX_COLS] =
+        KEYMAP(
+           KC_6,    KC_7,    KC_8,    KC_9,   KC_0,    KC_MINS,
+            KC_LBRC, KC_RBRC, KC_BSLS, KC_UP,  KC_QUOT, KC_EQL,
+             KC_F11,  KC_F12,  KC_LEFT, KC_DOWN,KC_RGHT, _______,
+            KC_RSFT, KC_APP,  LAYER_0, KC_NO,  KC_NO,   KC_NO );
+
+    /*
+     * add the other layers
+     */
+    for (int row = 0; row < MATRIX_ROWS; ++row)
+    {
+        for (int col = 0; col < MATRIX_COLS; ++col)
+        {
+            matrix[row][col].addActivation(_L1, _PRESS, layer1[row][col]);
+        }
+    }
+
+    /* 
+     * add special, single activations with the 
+     * layer, activation method and activation
+     */
+    matrix[2][3].addActivation(_QWERTY, _MT_TAP, KC_Y);
+    matrix[1][1].addActivation(_QWERTY, _MT_TAP, TG(KC_LSHIFT));
+}
+
+
 #endif /* KEYBOARD_SIDE */
 
