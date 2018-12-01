@@ -17,18 +17,31 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 #include "keymap.h"
 
-#if KEYBOARD_SIDE == LEFT
+/*void addLayers(const std::vector<std::tuple<uint8_t, uint8_t, layer_t>>& layers) {
+    for (int row = 0; row < MATRIX_ROWS; ++row)
+    { 
+        for (int col = 0; col < MATRIX_COLS; ++col)
+        {
+            for (const auto& t : layers) 
+            {
+                matrix[row][col].addActivation(std::get<0>(t), std::get<1>(t), 
+                        std::get<2>(t)[row][col]);
+            }
+        }
+    }
+}*/
 
+#if KEYBOARD_SIDE == LEFT
 /*
  * initiialize the default layer (QWERTY/PRESS) with the following
  * keymap
  */
-std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
+main_layer_t matrix
     {{
         {KC_ESC,    KC_Q,    KC_W,    KC_E,     KC_R,     KC_T},
         {KC_TAB,      KC_NO,    KC_S,    KC_CAP_D, KC_F,     KC_G},
         {KC_LSHIFT, TG(KC_LSHIFT),    KC_X,    KC_C,     KC_V,     KC_B},
-        {KC_NO,     KC_NO,   KC_NO,   LAYER_1,  KC_LCTRL, KC_LGUI}
+        {KC_NO,     KC_NO,   KC_NO,   TG(LAYER_1),  KC_LCTRL, KC_LGUI}
     }};
 
 /*
@@ -36,23 +49,18 @@ std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
  */
 void setupKeymap() 
 {
-    uint32_t layer1[MATRIX_ROWS][MATRIX_COLS] =
+    layer_t layer1 {
         KEYMAP(
             KC_GRV,    KC_1,    KC_2,     KC_3,    KC_4,     KC_5,
             KC_CAPS,   KC_F1,   KC_F2,    KC_F3,   KC_F4,    KC_F5,
             KC_LSHIFT, KC_F6,   KC_F7,    KC_F8,   KC_F9,    KC_F10,
-            KC_NO,     KC_NO,   KC_NO,    LAYER_1, KC_LCTRL, KC_LGUI);
+            KC_NO,     KC_NO,   KC_NO,    TG(LAYER_1), KC_LCTRL, KC_LGUI)
+    };
 
     /*
      * add the other layers
      */
-    for (int row = 0; row < MATRIX_ROWS; ++row)
-    {
-        for (int col = 0; col < MATRIX_COLS; ++col)
-        {
-            matrix[row][col].addActivation(_L1, _PRESS, layer1[row][col]);
-        }
-    }
+    addLayers({{_L1, _PRESS, layer1}});
 
     /* 
      * add special, single activations with the 

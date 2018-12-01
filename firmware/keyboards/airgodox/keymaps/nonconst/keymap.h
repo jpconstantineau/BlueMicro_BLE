@@ -21,6 +21,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "advanced_keycodes.h"
 #include "Key.h"
 #include <array>
+#include <vector>
+#include <tuple>
 
 #ifndef KEYMAP_H
 #define KEYMAP_H
@@ -36,7 +38,27 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define _DT_TAP 3
 #define _DT_DOUBLETAP 4
 
-void setupKeymap();
+using layer_t = std::array<std::array<uint32_t, MATRIX_COLS>, MATRIX_ROWS>;
+using main_layer_t = std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS>;
+
 extern std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix;
+
+inline void addLayers(const std::vector<std::tuple<uint8_t, uint8_t, layer_t>>& layers) 
+{
+    for (int row = 0; row < MATRIX_ROWS; ++row)
+    { 
+        for (int col = 0; col < MATRIX_COLS; ++col)
+        {
+            for (const auto& t : layers) 
+            {
+                matrix[row][col].addActivation(std::get<0>(t), std::get<1>(t), 
+                        std::get<2>(t)[row][col]);
+            }
+        }
+    }
+}
+
+
+void setupKeymap();
 
 #endif /* KEYMAP_H */
