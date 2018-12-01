@@ -60,7 +60,7 @@ byte columns[] MATRIX_COL_PINS;     // Contains the GPIO Pin Numbers defined in 
 
 const uint8_t boot_mode_commands [BOOT_MODE_COMMANDS_COUNT][2] BOOT_MODE_COMMANDS;
 
-Key keys;
+KeyScanner keys;
 uint8_t Linkdata[7] = {0 ,0,0,0,0,0,0};
 
 bool isReportedReleased = true;
@@ -283,6 +283,7 @@ void setup() {
 startPWM();
 #endif
   // Set up keyboard matrix and start advertising
+  setupKeymap();
   setupMatrix();
   startAdv(); 
 };
@@ -359,12 +360,12 @@ void notify_callback(BLEClientCharacteristic* chr, uint8_t* data, uint16_t len)
   {
      if (chr->uuid == KBLinkClientChar_Layers.uuid){
       LOG_LV1("CB NOT","notify_callback: Layers Data");
-          Key::updateRemoteLayer(data[0]);  // Layer is only a single uint8
+          KeyScanner::updateRemoteLayer(data[0]);  // Layer is only a single uint8
       }
 
     if (chr->uuid == KBLinkClientChar_Buffer.uuid){
       LOG_LV1("CB NOT","notify_callback: Buffer Data");
-          Key::updateRemoteReport(data[0],data[1],data[2], data[3],data[4], data[5], data[6]);
+          KeyScanner::updateRemoteReport(data[0],data[1],data[2], data[3],data[4], data[5], data[6]);
       }
       
   }
@@ -413,7 +414,7 @@ LOG_LV1("CB_CHR","layer_request_callback: len %i offset %i  data %i" ,len, offse
       if (len>0)
       {
         // update state
-        Key::updateRemoteLayer(data[offset]);
+        KeyScanner::updateRemoteLayer(data[offset]);
       }  
 }
 #endif
@@ -529,7 +530,7 @@ void scanMatrix() {
      //nrf_delay_us(1);
       pindata = NRF_GPIO->IN;                                         // read all pins at once
      for (int i = 0; i < MATRIX_COLS; ++i) {
-      Key::scanMatrix((pindata>>(columns[i]))&1, millis(), j, i);       // This function processes the logic values and does the debouncing
+      KeyScanner::scanMatrix((pindata>>(columns[i]))&1, millis(), j, i);       // This function processes the logic values and does the debouncing
       pinMode(columns[i], INPUT);                                     //'disables' the column that just got looped thru
      }
     pinMode(rows[j], INPUT);                                          //'disables' the row that was just scanned
@@ -544,32 +545,32 @@ uint8_t keycode[6];
 uint8_t layer = 0;
 uint8_t mods = 0;
   
-        Key::getReport();                                            // get state data - Data is in Key::currentReport
+        KeyScanner::getReport();                                            // get state data - Data is in KeyScanner::currentReport
 
-        mods = Key::currentReport[0];                                                 // modifiers
-        keycode[0] = Key::currentReport[1];                                           // Buffer 
-        keycode[1] = Key::currentReport[2];                                           // Buffer 
-        keycode[2] = Key::currentReport[3];                                           // Buffer 
-        keycode[3] = Key::currentReport[4];                                           // Buffer 
-        keycode[4] = Key::currentReport[5];                                           // Buffer 
-        keycode[5] = Key::currentReport[6];                                           // Buffer 
-        layer = Key::currentReport[7];                                                // Layer
+        mods = KeyScanner::currentReport[0];                                                 // modifiers
+        keycode[0] = KeyScanner::currentReport[1];                                           // Buffer 
+        keycode[1] = KeyScanner::currentReport[2];                                           // Buffer 
+        keycode[2] = KeyScanner::currentReport[3];                                           // Buffer 
+        keycode[3] = KeyScanner::currentReport[4];                                           // Buffer 
+        keycode[4] = KeyScanner::currentReport[5];                                           // Buffer 
+        keycode[5] = KeyScanner::currentReport[6];                                           // Buffer 
+        layer = KeyScanner::currentReport[7];                                                // Layer
  
          
-   if (!(Key::reportEmpty))  //any key presses anywhere?
+   if (!(KeyScanner::reportEmpty))  //any key presses anywhere?
    {                                                                              // Note that HID standard only has a buffer of 6 keys (plus modifiers)
         #if BLE_HID == 1  
         blehid.keyboardReport(mods,  keycode); 
 
         #endif
         #if BLE_PERIPHERAL ==1  
-          KBLinkChar_Buffer.notify(Key::currentReport,7);
+          KBLinkChar_Buffer.notify(KeyScanner::currentReport,7);
         #endif
         #if BLE_CENTRAL ==1
          ; // Only send layer to slaves - send nothing here
         #endif 
         isReportedReleased = false;
-        LOG_LV1("MXSCAN","SEND: %i %i %i %i %i %i %i %i %i %i" ,millis(),Key::currentReport[0], Key::currentReport[1],Key::currentReport[2],Key::currentReport[3], Key::currentReport[4],Key::currentReport[5], Key::currentReport[6],Key::currentReport[7] );        
+        LOG_LV1("MXSCAN","SEND: %i %i %i %i %i %i %i %i %i %i" ,millis(),KeyScanner::currentReport[0], KeyScanner::currentReport[1],KeyScanner::currentReport[2],KeyScanner::currentReport[3], KeyScanner::currentReport[4],KeyScanner::currentReport[5], KeyScanner::currentReport[6],KeyScanner::currentReport[7] );        
     }
    else                                                                  //NO key presses anywhere
    {
@@ -578,35 +579,35 @@ uint8_t mods = 0;
         blehid.keyRelease();                                             // HID uses the standard blehid service
       #endif
       #if BLE_PERIPHERAL ==1     
-        KBLinkChar_Buffer.notify(Key::currentReport,7);                              // Peripheral->central uses the subscribe/notify mechanism
+        KBLinkChar_Buffer.notify(KeyScanner::currentReport,7);                              // Peripheral->central uses the subscribe/notify mechanism
       #endif
         #if BLE_CENTRAL ==1
           // Only send layer to slaves
           ;                                                              // Central does not need to send the buffer to the Peripheral.
         #endif
       isReportedReleased = true;                                         // Update flag so that we don't re-issue the message if we don't need to.
-      LOG_LV1("MXSCAN","RELEASED: %i %i %i %i %i %i %i %i %i %i" ,millis(),Key::currentReport[0], Key::currentReport[1],Key::currentReport[2],Key::currentReport[3], Key::currentReport[4],Key::currentReport[5], Key::currentReport[6],Key::currentReport[7] ); 
+      LOG_LV1("MXSCAN","RELEASED: %i %i %i %i %i %i %i %i %i %i" ,millis(),KeyScanner::currentReport[0], KeyScanner::currentReport[1],KeyScanner::currentReport[2],KeyScanner::currentReport[3], KeyScanner::currentReport[4],KeyScanner::currentReport[5], KeyScanner::currentReport[6],KeyScanner::currentReport[7] ); 
     }
    }
     
     
   #if BLE_PERIPHERAL ==1   | BLE_CENTRAL ==1                            /**************************************************/
-    if(Key::layerChanged)                                               //layer comms
+    if(KeyScanner::layerChanged)                                               //layer comms
     {   
         #if BLE_PERIPHERAL ==1  
-          KBLinkChar_Layers.notify8(Key::localLayer);                   // Peripheral->central uses the subscribe/notify mechanism
+          KBLinkChar_Layers.notify8(KeyScanner::localLayer);                   // Peripheral->central uses the subscribe/notify mechanism
         #endif
         
         #if BLE_CENTRAL ==1
-        LOG_LV1("MXSCAN","Sending Layer %i  %i" ,millis(),Key::localLayer );
+        LOG_LV1("MXSCAN","Sending Layer %i  %i" ,millis(),KeyScanner::localLayer );
         if (KBLinkClientChar_Layer_Request.discover()) {
-          uint16_t msg = KBLinkClientChar_Layer_Request.write8_resp(Key::localLayer);       // Central->Peripheral uses the write mechanism
+          uint16_t msg = KBLinkClientChar_Layer_Request.write8_resp(KeyScanner::localLayer);       // Central->Peripheral uses the write mechanism
           LOG_LV1("MXSCAN","Sending Layer results  %i" ,msg);
         }
         #endif 
         
-        LOG_LV1("MXSCAN","Layer %i  %i" ,millis(),Key::localLayer );
-        Key::layerChanged = false;                                      // mark layer as "not changed" since last update
+        LOG_LV1("MXSCAN","Layer %i  %i" ,millis(),KeyScanner::localLayer );
+        KeyScanner::layerChanged = false;                                      // mark layer as "not changed" since last update
     } 
   #endif                                                                /**************************************************/
 }
@@ -620,7 +621,7 @@ void loop() {
 #if BACKLIGHT_PWM_ON == 1
 
 
-if (!(Key::reportEmpty))
+if (!(KeyScanner::reportEmpty))
 {
     pwmval = DEFAULT_PWM_VALUE;
 
@@ -640,12 +641,12 @@ buf[0] = (1 << 15) | pwmval; // Inverse polarity (bit 15), 1500us duty cycle
 
   if (monitoring_state == STATE_BOOT_MODE)
   {
-      Key::getReport();                                            // get state data - Data is in Key::currentReport
-      if (!(Key::reportEmpty))
+      KeyScanner::getReport();                                            // get state data - Data is in KeyScanner::currentReport
+      if (!(KeyScanner::reportEmpty))
       {
         for (int i = 0; i < BOOT_MODE_COMMANDS_COUNT; ++i)          // loop through BOOT_MODE_COMMANDS and compare with the first key being pressed - assuming only 1 key will be pressed when in boot mode.
         {
-          if(Key::currentReport[1] == boot_mode_commands[i][0])
+          if(KeyScanner::currentReport[1] == boot_mode_commands[i][0])
           {
             monitoring_state = boot_mode_commands[i][1];
           }

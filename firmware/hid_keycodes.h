@@ -309,8 +309,7 @@ enum hid_keyboard_keypad_usage {
     KC_DECIMAL_SEPARATOR,
     KC_CURRENCY_UNIT,
     KC_CURRENCY_SUB_UNIT,
-    KC_KP_LPAREN,
-    KC_KP_RPAREN,
+    KC_KP_LPAREN, KC_KP_RPAREN,
     KC_KP_LCBRACKET,    /* { */
     KC_KP_RCBRACKET,    /* } */
     KC_KP_TAB,
