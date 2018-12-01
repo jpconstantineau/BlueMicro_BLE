@@ -60,7 +60,7 @@ void setupKeymap()
     /*
      * add the other layers
      */
-    addLayers({{_L1, _PRESS, layer1}});
+    addLayers({std::make_tuple(_L1, _PRESS, layer1)});
 
     /* 
      * add special, single activations with the 
