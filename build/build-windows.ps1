@@ -95,12 +95,15 @@ Function Compile-Board($keyboard, $target, $keymap) {
     #New-Item -Path "$SourceDir\keymap.h" -ItemType HardLink -Value "$KeyboardsDir\$keyboard\keymaps\$keymap\keymap.h" -Force >$null
 
     $keymapFile = "$KeyboardsDir\$keyboard\keymaps\$keymap\keymap.h"
+    $keymapcppFile = "$KeyboardsDir\$keyboard\keymaps\$keymap\keymap.cpp"
     $configFile = "$KeyboardsDir\$keyboard\$target\keyboard_config.h"
 
     Write-Verbose "Copying keymap and target source files"
     Write-Verbose $keymapFile
+    Write-Verbose $keymapcppFile
     Write-Verbose $configFile
     Copy-Item $keymapFile "$SourceDir\keymap.h" -Force
+    Copy-Item $keymapcppFile "$SourceDir\keymap.cpp" -Force
     Copy-Item $configFile "$SourceDir\keyboard_config.h" -Force
 
 	# Need to sleep between compile calls else the arduino-builder does not recognise changes
