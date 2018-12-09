@@ -23,7 +23,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 #include "firmware_config.h"
 #include "bluetooth_config.h"
-#include "Key.h"
+#include "KeyScanner.h"
+#include "keymap.h"
 
 void setupMatrix(void);
 void scanMatrix(void);

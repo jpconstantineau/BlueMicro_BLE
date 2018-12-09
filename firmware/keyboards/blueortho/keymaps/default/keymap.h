@@ -21,6 +21,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "hid_keycodes.h"
 #include "keyboard_config.h"
 #include "advanced_keycodes.h"
+#include "Key.h"
+#include <array>
 
 #ifndef KEYMAP_H
 #define KEYMAP_H
@@ -37,8 +39,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define _DT_TAP 3
 #define _DT_DOUBLETAP 4
 
-extern uint32_t keymaps[][5][MATRIX_ROWS][MATRIX_COLS];
 void setupKeymap();
+extern std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix;
 
 
 #endif

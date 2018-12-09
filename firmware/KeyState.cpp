@@ -4,41 +4,18 @@ KeyState::KeyState() {
     state = State::RELEASED;
     lastChanged = 0;
     canDoubletap = false;
+    checkDT = false;
+    checkMT = false;
 }
 
-KeyState::KeyState(uint32_t keycode) 
+void KeyState::addMethod(uint8_t method)
 {
-    state = State::RELEASED;
-    lastChanged = 0;
-    canDoubletap = false;
-
-    auto modifier = keycode & 0x00FF0000;
-
-    /*checkMethods = {true, false, false, false, false};
-    if (modifier == MD_MT_TAP) {
-        checkMethods[1] = true;
-    }
-    if (modifier == MD_MT_HOLD) {
-        checkMethods[2] = true;
-    }
-    if (modifier == MD_DT_TAP) {
-        checkMethods[3] = true;
-    }
-    if (modifier == MD_DT_DOUBLETAP) {
-        checkMethods[4] = true;
-    }*/
-
-    if (modifier == MD_MT_TAP || modifier == MD_MT_HOLD) {
+    if (method == 1 || method == 2) {
         checkMT = true;
     }
-    else {
-        checkMT = false;
-    }
-    if (modifier == MD_DT_TAP || modifier == MD_DT_DOUBLETAP) {
+    else if (method == 3 || method == 4) 
+    {
         checkDT = true;
-    }
-    else {
-        checkDT = false;
     }
 }
 
@@ -58,8 +35,7 @@ void KeyState::press(unsigned long currentMillis)
         state = State::MT_HELD;
         lastChanged = currentMillis;
     }
-    //else if ((state == State::RELEASED || state == State::MT_TAPPED) && canDoubletap) 
-    else if (state == State::RELEASED || state == State::MT_TAPPED)
+    else if ((state == State::RELEASED || state == State::MT_TAPPED))
     {
         if (canDoubletap && checkDT) 
         {
@@ -74,12 +50,6 @@ void KeyState::press(unsigned long currentMillis)
             
         lastChanged = currentMillis;
     }
-    //else if (state != State::PRESSED && state != State::MT_HELD) 
-    /*{
-        state = State::PRESSED;
-        lastChanged = currentMillis;
-        canDoubletap = true;
-    }*/
 }
 
 void KeyState::clear(unsigned long currentMillis)

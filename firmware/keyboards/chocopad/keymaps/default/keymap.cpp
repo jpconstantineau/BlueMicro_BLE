@@ -16,35 +16,45 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 */
 #include "keymap.h"
+ 
 
+std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
+    {{
+        {KC_ESC,   KC_P7,    KC_P8,    KC_P9,},
+        {KC_TAB,   KC_P4,    KC_P5,    KC_P6,},
+        {LAYER_2,   KC_P1,    KC_P2,    KC_P3,},
+        {LAYER_1,  KC_P0,    KC_P0,    KC_DOT}
+    }};
 
-uint32_t keymaps[][5][MATRIX_ROWS][MATRIX_COLS] = {
+ 
+void setupKeymap() {
 
-    [_QWERTY] = {
-        [MD_PRESS] = KEYMAP(
-  KC_ESC,   KC_P7,    KC_P8,    KC_P9,
-  KC_TAB,   KC_P4,    KC_P5,    KC_P6,
-  LAYER_2,   KC_P1,    KC_P2,    KC_P3,
-  LAYER_1,  KC_P0,    KC_P0,    KC_DOT  ),
-    },
-    [_L1] = {
-         KEYMAP(
+    uint32_t layer1[MATRIX_ROWS][MATRIX_COLS] =
+        KEYMAP(
   KC_PGUP,  KC_HOME,  KC_UP,    KC_END ,
   KC_PGDN,  KC_LEFT,  KC_DOWN,  KC_RGHT,
   KC_ENT, _______, KC_INS,  KC_DEL,
-   _______, _______,  KC_LBRACKET,KC_RBRACKET),
-    },
-        [_L2] = {
-         KEYMAP(
+   _______, _______,  KC_LBRACKET,KC_RBRACKET);
+
+    uint32_t layer2[MATRIX_ROWS][MATRIX_COLS] =
+        KEYMAP(
   KC_ESC,   KC_F1,    KC_F2,    KC_F3,
   KC_TAB,   KC_F4,    KC_F5,    KC_F6,
   _______,   KC_F7,    KC_F8,    KC_F9,   
-  KC_ENT,  KC_F10,    KC_F11,    KC_F12  ),
+  KC_ENT,  KC_F10,    KC_F11,    KC_F12  );
+
+    /*
+     * add the other layers
+     */
+    for (int row = 0; row < MATRIX_ROWS; ++row)
+    {
+        for (int col = 0; col < MATRIX_COLS; ++col)
+        {
+            matrix[row][col].addActivation(_L1, _PRESS, layer1[row][col]);
+            matrix[row][col].addActivation(_L2, _PRESS, layer2[row][col]);
+        }
     }
-};
- 
 
-void setupKeymap() {}
-
+}
 
 

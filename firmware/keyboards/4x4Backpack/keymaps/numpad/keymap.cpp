@@ -17,24 +17,34 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 #include "keymap.h"
 
-uint32_t keymaps[][5][MATRIX_ROWS][MATRIX_COLS] = {
+std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
+    {{
+        {KC_7,    KC_8,    KC_9,    KC_KP_SLASH,},
+        {KC_4,    KC_5,    KC_6,    KC_KP_ASTERISK,},
+        {KC_1,    KC_2,    KC_3,    KC_KP_MINUS,},
+        {LAYER_1, KC_0,    KC_DOT,  KC_KP_PLUS}
+    }};
 
-    [_QWERTY] = {
-        [_PRESS] = KEYMAP(
-    LAYER_1,    KC_8,    KC_9,    KC_KP_SLASH,    
-    KC_4,    KC_5,    KC_6,    KC_KP_ASTERISK,  
-    KC_1,    KC_2,    KC_3,    KC_KP_MINUS,    
-    LAYER_1, KC_0,    KC_DOT,  KC_KP_PLUS),
-    },
+ 
+void setupKeymap() {
 
-    [_L1] = {
-        [_PRESS] = KEYMAP(
+    uint32_t layer1[MATRIX_ROWS][MATRIX_COLS] =
+        KEYMAP(
     KC_HOME,    KC_UP,    KC_PGUP,    KC_ESCAPE,    
     KC_LEFT,    KC_NO,    KC_RIGHT,    KC_DELETE,  
     KC_END,    KC_DOWN,    KC_PGDN,    KC_KP_ENTER,    
-    LAYER_1, KC_INS,    KC_DEL,  KC_KP_ENTER)
+    LAYER_1, KC_INS,    KC_DEL,  KC_KP_ENTER);
+
+    /*
+     * add the other layers
+     */
+    for (int row = 0; row < MATRIX_ROWS; ++row)
+    {
+        for (int col = 0; col < MATRIX_COLS; ++col)
+        {
+            matrix[row][col].addActivation(_L1, _PRESS, layer1[row][col]);
+        }
     }
-};
- 
-void setupKeymap() {}
+
+}
 

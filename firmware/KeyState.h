@@ -11,10 +11,11 @@ class KeyState
 {
     public:
         KeyState();
-        KeyState(uint32_t keycode);
-
+        
         void press(unsigned long currentMillis);
         void clear(unsigned long currentMillis);
+
+        void addMethod(uint8_t method);
 
         enum class State
         {
@@ -33,6 +34,7 @@ class KeyState
     private:
         bool canDoubletap;
         bool checkMT, checkDT;
+
         //std::array<5, bool> checkMethods;
 
         State state;
