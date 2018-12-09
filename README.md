@@ -16,13 +16,6 @@
 
 A Keyboard Firmware for nRF52832 Boards with a pinout compatible with the Arduino Pro Micro
 
-![BlueMicro](/docs/images/BlueMicro_Hardware.jpg)
-
-Top Row: 5x5Backpack, 4x4Backpack
-
-Bottom Row: BlueMicro V2.0,  BlueMicro V1.0, BlueNano V2.0, BlueNano V1.0, Pro Micro (For Reference)
-
-
 
 
 ## Build Status
@@ -32,6 +25,13 @@ Bottom Row: BlueMicro V2.0,  BlueMicro V1.0, BlueNano V2.0, BlueNano V1.0, Pro M
 | Develop |![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE-develop)   | ![Adafruit Library for releases](https://img.shields.io/github/release/adafruit/Adafruit_nRF52_Arduino.svg)   |
 
 **Compabible Hardware**  
+
+![BlueMicro](/docs/images/BlueMicro_Hardware.jpg)
+
+Top Row: 5x5Backpack, 4x4Backpack
+
+Bottom Row: BlueMicro V2.0,  BlueMicro V1.0, BlueNano V2.0, BlueNano V1.0, Pro Micro (For Reference)
+
 
 
 * [Adafruit nRF52 Feather](https://www.adafruit.com/product/3406) (Software compatible - not Pinout compabible)
