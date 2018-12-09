@@ -16,7 +16,11 @@
 
 A Keyboard Firmware for nRF52832 Boards with a pinout compatible with the Arduino Pro Micro
 
-![BlueMicro](https://i.imgur.com/0SJpnoA.jpg)
+![BlueMicro](/docs/images/BlueMicro_Hardware.jpg)
+
+Top Row: 5x5Backpack, 4x4Backpack
+
+Bottom Row: BlueMicro V2.0,  BlueMicro V1.0, BlueNano V2.0, BlueNano V1.0, Pro Micro (For Reference)
 
 
 
