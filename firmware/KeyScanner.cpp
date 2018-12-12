@@ -158,6 +158,9 @@ void KeyScanner::updateBuffer(uint8_t layer)
                  * define behavior of
                  * toggle and oneshot keys 
                  * respectively
+                 *
+                 * empty oneshot when a keycode that's before
+                 * the modifiers is pressed
                  */
                 if (activation.second == 1) 
                 {
@@ -178,11 +181,8 @@ void KeyScanner::updateBuffer(uint8_t layer)
                 {
                     oneshotBuffer.push_back(activation.first);
                 }
-                else 
+                else if (activation.first < 0xE0) 
                 {
-                    /*
-                     * TODO: when should oneshot buffer be emptied?
-                     */
                     emptyOneshot = true;
                 }
             }

@@ -15,5 +15,6 @@
 #define MOD_RGUI (128 << 8)
 
 #define TG(KC) ((1 << 16) | KC)
+#define OS(KC) ((2 << 16) | KC)
 
 #endif
