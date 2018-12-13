@@ -61,7 +61,7 @@ byte columns[] MATRIX_COL_PINS;     // Contains the GPIO Pin Numbers defined in 
 const uint8_t boot_mode_commands [BOOT_MODE_COMMANDS_COUNT][2] BOOT_MODE_COMMANDS;
 
 KeyScanner keys;
-uint8_t Linkdata[7] = {0 ,0,0,0,0,0,0};
+uint8_t Linkdata[7] = {0,0,0,0,0,0,0};
 
 bool isReportedReleased = true;
 uint8_t monitoring_state = 0;
@@ -175,7 +175,8 @@ void setup() {
         NVIC_SystemReset();
       } // end of NFC switch code.
 
-      
+      //sd_power_dcdc_mode_set(NRF_POWER_DCDC_ENABLE );  // Not sure if this does anything 
+      //sd_power_dcdc_mode_set(NRF_POWER_DCDC_DISABLE ); // Not sure if this does anything
 
   Serial.begin(115200);
 
@@ -489,14 +490,13 @@ void cent_disconnect_callback(uint16_t conn_handle, uint8_t reason)
 #endif
 
 //********************************************************************************************//
-//* High Priority Task - runs key scanning - called every ms (timing not guaranteed)         *//
+//* High Priority Task - runs key scanning - called every few ms (timing not guaranteed)         *//
 // WORK IN PROGRESS
 //********************************************************************************************//
 void keyscan_timer_callback(TimerHandle_t xTimerID)
 {
   // freeRTOS timer ID, ignored if not used
   (void) xTimerID;
-
 
   #if MATRIX_SCAN == 1
   scanMatrix();
@@ -664,29 +664,6 @@ buf[0] = (1 << 15) | pwmval; // Inverse polarity (bit 15), 1500us duty cycle
   sendKeyPresses();    // how often does this really run?
   #endif
 
- //  //
-
-// Option 1: 6.7-6.8 mA
- //sd_power_mode_set(NRF_POWER_MODE_LOWPWR);
- //   waitForEvent();
-
-// Option 2: 6.8 mA
-//    waitForEvent();  // Request CPU to enter low-power mode until an event/interrupt occurs
-
-// Option 3: 6.9-7.0 mA
-// sd_app_evt_wait();
-
-// option 4: 7.0 mA
-//  __WFE();
-
-// Option 5: 993-1001 uA
-//    sd_power_mode_set(NRF_POWER_MODE_LOWPWR);
-//    __WFI();
-
-// Option 6: 990-1000 uA
- //  __WFI();
-
-// option 7: 631-640 uA
 delay(HIDREPORTINGINTERVAL);
 }
 
@@ -703,7 +680,8 @@ uint8_t vbat_per =0;
         monitoring_state = STATE_BOOT_MODE;
       break;    
     case STATE_BOOT_MODE:
-      if (millis()>10000) {monitoring_state = STATE_MONITOR_MODE;}
+      if (millis()>BOOT_MODE_DELAY) {monitoring_state = STATE_MONITOR_MODE;}
+      delay(2); // adds a deley to minimize power consumption during boot mode. 
       break;    
     case STATE_BOOT_CLEAR_BONDS:
            Bluefruit.clearBonds();
@@ -727,7 +705,7 @@ uint8_t vbat_per =0;
                 // VBAT voltage divider is 2M + 0.806M, which needs to be added back
                 // float vbat_mv = (float)vbat_raw * VBAT_MV_PER_LSB * VBAT_DIVIDER_COMP;   // commented out since we don't use/display floating point value anywhere.
                 #endif
-                delay(30000);                                             // wait 30 seconds before a new battery update. 
+                delay(30000);                                             // wait 30 seconds before a new battery update.  Needed to minimize power consumption.
       break;    
     case STATE_BOOT_UNKNOWN:
       break;
@@ -745,4 +723,5 @@ void rtos_idle_callback(void)
 {
   // Don't call any other FreeRTOS blocking API()
   // Perform background task(s) here
+sd_app_evt_wait();  // puts the nrf52 to sleep when there is nothing to do.  You need this to reduce power consumption.
 }
