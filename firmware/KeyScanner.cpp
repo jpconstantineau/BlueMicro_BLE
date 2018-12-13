@@ -45,6 +45,7 @@ bool KeyScanner::scanMatrix(const int& currentState,unsigned long currentMillis,
                 if((currentMillis - timestamps[row][col]) >= DEBOUNCETIME)
                 {
                     matrix[row][col].press(currentMillis);
+                    lastPressed = currentMillis;
                 }
                 else // not enough debounce time
                 {
@@ -323,6 +324,10 @@ bool KeyScanner::getReport()
     return reportEmpty;
 }
 
+unsigned long KeyScanner::getLastPressed() 
+{
+    return lastPressed;
+}
 /**************************************************************************************************************************/
 
 
@@ -335,6 +340,7 @@ uint8_t KeyScanner::remoteLayer = 0;
 uint8_t KeyScanner::remoteMod = 0;
 uint8_t KeyScanner::currentMod = 0;
 unsigned long KeyScanner::timestamps[MATRIX_ROWS][MATRIX_COLS]  = {0};
+unsigned long KeyScanner::lastPressed = 0;
 uint8_t KeyScanner::bufferposition = 0;
 uint8_t KeyScanner::layerMode = 0;
 std::vector<uint16_t> KeyScanner::activeKeys {};
