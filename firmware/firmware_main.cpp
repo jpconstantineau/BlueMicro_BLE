@@ -64,9 +64,11 @@ KeyScanner keys;
 uint8_t Linkdata[7] = {0,0,0,0,0,0,0};
 
 bool isReportedReleased = true;
-uint8_t monitoring_state = 0;
+uint8_t monitoring_state = STATE_BOOT_INITIALIZE;
 SoftwareTimer keyscanTimer;
 
+uint8_t power_state = STATE_POWER_RECONNECTING;
+volatile uint8_t ble_state = STATE_BLE_DISCONNECTED;
 
 /**************************************************************************************************************************/
 
@@ -175,10 +177,13 @@ void setup() {
         NVIC_SystemReset();
       } // end of NFC switch code.
 
-      //sd_power_dcdc_mode_set(NRF_POWER_DCDC_ENABLE );  // Not sure if this does anything 
-      //sd_power_dcdc_mode_set(NRF_POWER_DCDC_DISABLE ); // Not sure if this does anything
+      sd_power_dcdc_mode_set(NRF_POWER_DCDC_ENABLE );  // DCDC enables has 100uA lower sleeping current than disabled. (375uA) now getting 462-463uA
+      //sd_power_dcdc_mode_set(NRF_POWER_DCDC_DISABLE ); // (476uA while sleeping)
 
-  Serial.begin(115200);
+      //sd_power_mode_set(NRF_POWER_MODE_CONSTLAT); // SLEEP MODE = 462uA
+      //sd_power_mode_set(NRF_POWER_MODE_LOWPWR);// SLEEP MODE = 463uA
+
+  //Serial.begin(115200);
 
   LOG_LV1("BLEMIC","Starting %s" ,DEVICE_NAME);
 
@@ -189,6 +194,7 @@ void setup() {
 
   
   Bluefruit.begin(PERIPHERAL_COUNT,CENTRAL_COUNT);                            // Defined in firmware_config.h
+  Bluefruit.autoConnLed(false);
   Bluefruit.setTxPower(DEVICE_POWER);                                         // Defined in bluetooth_config.h
   Bluefruit.setName(DEVICE_NAME);                                             // Defined in keyboard_config.h
   Bluefruit.configUuid128Count(UUID128_COUNT);                                // Defined in bluetooth_config.h
@@ -441,6 +447,7 @@ void prph_connect_callback(uint16_t conn_handle)
   char peer_name[32] = { 0 };
   Bluefruit.Gap.getPeerName(conn_handle, peer_name, sizeof(peer_name));
   LOG_LV1("PRPH","Connected to %i %s",conn_handle,peer_name  );
+  ble_state = STATE_BLE_CONNECTED;
 }
 
 /**************************************************************************************************************************/
@@ -451,6 +458,7 @@ void prph_disconnect_callback(uint16_t conn_handle, uint8_t reason)
   (void) conn_handle;
   (void) reason;
   LOG_LV1("PRPH","Disconnected"  );
+  ble_state = STATE_BLE_DISCONNECTED;
 }
 
 
@@ -528,11 +536,11 @@ void scanMatrix() {
     }
       delay(1);   
       // need for the GPIO lines to settle down electrically before reading.
-      #ifdef NRFX_H__  // Added to support BSP 0.9.0
+   /*  #ifdef NRFX_H__  // Added to support BSP 0.9.0
          nrfx_coredep_delay_us(1);
       #else            // Added to support BSP 0.8.6
         nrf_delay_us(1);
-      #endif
+      #endif*/
       pindata = NRF_GPIO->IN;                                         // read all pins at once
      for (int i = 0; i < MATRIX_COLS; ++i) {
       KeyScanner::scanMatrix((pindata>>(columns[i]))&1, millis(), j, i);       // This function processes the logic values and does the debouncing
@@ -540,6 +548,82 @@ void scanMatrix() {
      }
     pinMode(rows[j], INPUT);                                          //'disables' the row that was just scanned
    }                                                                  // done scanning the matrix
+}
+
+void pinModeSense( uint32_t ulPin, uint32_t ulMode )
+{
+  if (ulPin >= PINS_COUNT) {
+    return;
+  }
+
+  ulPin = g_ADigitalPinMap[ulPin];
+
+  //NRF_GPIO_Type * port = nrf_gpio_pin_port_decode(&ulPin);
+
+  // Set pin mode according to chapter '22.6.3 I/O Pin Configuration'
+  switch ( ulMode )
+  {
+    case INPUT:
+      // Set pin to input mode
+      NRF_GPIO->PIN_CNF[ulPin] = ((uint32_t)GPIO_PIN_CNF_DIR_Input        << GPIO_PIN_CNF_DIR_Pos)
+                           | ((uint32_t)GPIO_PIN_CNF_INPUT_Connect    << GPIO_PIN_CNF_INPUT_Pos)
+                           | ((uint32_t)GPIO_PIN_CNF_PULL_Disabled    << GPIO_PIN_CNF_PULL_Pos)
+                           | ((uint32_t)GPIO_PIN_CNF_DRIVE_S0S1       << GPIO_PIN_CNF_DRIVE_Pos)
+                           | ((uint32_t)GPIO_PIN_CNF_SENSE_Disabled   << GPIO_PIN_CNF_SENSE_Pos);
+    break;
+
+    case INPUT_PULLUP:
+      // Set pin to input mode with pull-up resistor enabled
+      NRF_GPIO->PIN_CNF[ulPin] = ((uint32_t)GPIO_PIN_CNF_DIR_Input        << GPIO_PIN_CNF_DIR_Pos)
+                           | ((uint32_t)GPIO_PIN_CNF_INPUT_Connect    << GPIO_PIN_CNF_INPUT_Pos)
+                           | ((uint32_t)GPIO_PIN_CNF_PULL_Pullup      << GPIO_PIN_CNF_PULL_Pos)
+                           | ((uint32_t)GPIO_PIN_CNF_DRIVE_S0S1       << GPIO_PIN_CNF_DRIVE_Pos)
+                           | ((uint32_t)GPIO_PIN_CNF_SENSE_Low   << GPIO_PIN_CNF_SENSE_Pos);
+    break;
+
+    case INPUT_PULLDOWN:
+      // Set pin to input mode with pull-down resistor enabled
+      NRF_GPIO->PIN_CNF[ulPin] = ((uint32_t)GPIO_PIN_CNF_DIR_Input        << GPIO_PIN_CNF_DIR_Pos)
+                           | ((uint32_t)GPIO_PIN_CNF_INPUT_Connect    << GPIO_PIN_CNF_INPUT_Pos)
+                           | ((uint32_t)GPIO_PIN_CNF_PULL_Pulldown    << GPIO_PIN_CNF_PULL_Pos)
+                           | ((uint32_t)GPIO_PIN_CNF_DRIVE_S0S1       << GPIO_PIN_CNF_DRIVE_Pos)
+                           | ((uint32_t)GPIO_PIN_CNF_SENSE_High   << GPIO_PIN_CNF_SENSE_Pos);
+    break;
+
+    case OUTPUT:
+      // Set pin to output mode
+      NRF_GPIO->PIN_CNF[ulPin] = ((uint32_t)GPIO_PIN_CNF_DIR_Output       << GPIO_PIN_CNF_DIR_Pos)
+                           | ((uint32_t)GPIO_PIN_CNF_INPUT_Disconnect << GPIO_PIN_CNF_INPUT_Pos)
+                           | ((uint32_t)GPIO_PIN_CNF_PULL_Disabled    << GPIO_PIN_CNF_PULL_Pos)
+                           | ((uint32_t)GPIO_PIN_CNF_DRIVE_S0S1       << GPIO_PIN_CNF_DRIVE_Pos)
+                           | ((uint32_t)GPIO_PIN_CNF_SENSE_Disabled   << GPIO_PIN_CNF_SENSE_Pos);
+    break;
+
+    default:
+      // do nothing
+    break ;
+  }
+}
+
+void setupWakeUp() {
+  uint32_t pindata = 0;
+  for(int j = 0; j < MATRIX_ROWS; ++j) {                             
+    //set the current row as OUPUT and LOW
+    pinMode(rows[j], OUTPUT);
+    #if DIODE_DIRECTION == COL2ROW                                         
+    digitalWrite(rows[j], LOW);                                       // 'enables' a specific row to be "low" 
+    #else
+    digitalWrite(rows[j], HIGH);                                       // 'enables' a specific row to be "HIGH"
+    #endif
+  }
+    //loops thru all of the columns
+    for (int i = 0; i < MATRIX_COLS; ++i) {
+          #if DIODE_DIRECTION == COL2ROW                                         
+          pinModeSense(columns[i], INPUT_PULLUP);                              // 'enables' the column High Value on the diode; becomes "LOW" when pressed 
+          #else
+          pinModeSense(columns[i], INPUT_PULLDOWN);                              // 'enables' the column High Value on the diode; becomes "LOW" when pressed
+          #endif
+    }
 }
 
 /**************************************************************************************************************************/
@@ -623,10 +707,140 @@ uint8_t mods = 0;
 void loop() {
   // put your main code here, to run repeatedly:
 
+unsigned long timesincelastkeypress = millis() - KeyScanner::getLastPressed();
+
+switch(ble_state)
+  {
+    case STATE_BLE_CONNECTED:
+        switch (power_state)
+        {
+              case STATE_POWER_TYPING: 
+                  if (timesincelastkeypress>NOTTYPING_DELAY)
+                  {
+                        power_state = STATE_POWER_NOTTYPING;
+                       // Bluefruit.setConnInterval(10+HIDREPORTINGINTERVAL-1, 10+HIDREPORTINGINTERVAL+2);
+                        //keyscanTimer.setPeriod(KEYSCANNINGTIMER*2);
+                      //  Bluefruit.setTxPower(DEVICE_POWER);
+                  }
+                  break;
+              case STATE_POWER_NOTTYPING: 
+                  if (timesincelastkeypress>STANDBY_DELAY)
+                  {
+                        power_state = STATE_POWER_STANDBY;
+                        //Bluefruit.setConnInterval(20+HIDREPORTINGINTERVAL-1, 20+HIDREPORTINGINTERVAL+2);
+                        //keyscanTimer.setPeriod(KEYSCANNINGTIMER*4);
+                        //Bluefruit.setTxPower(DEVICE_POWER);
+                  }
+                  else if (timesincelastkeypress<NOTTYPING_DELAY)
+                  {
+                        power_state = STATE_POWER_TYPING;
+                       // Bluefruit.setConnInterval(HIDREPORTINGINTERVAL-1, HIDREPORTINGINTERVAL+2);
+                        ///keyscanTimer.setPeriod(KEYSCANNINGTIMER);
+                        //Bluefruit.setTxPower(DEVICE_POWER);
+                  }
+                  break;
+              case STATE_POWER_STANDBY:
+                  if (timesincelastkeypress<NOTTYPING_DELAY)
+                  {
+                        power_state = STATE_POWER_TYPING;
+                        //Bluefruit.setConnInterval(HIDREPORTINGINTERVAL-1, HIDREPORTINGINTERVAL+2);
+                        //keyscanTimer.setPeriod(KEYSCANNINGTIMER);
+                        //Bluefruit.setTxPower(DEVICE_POWER);
+                  } 
+                  break;
+              case STATE_POWER_RECONNECTING:  // move to STATE_POWER_TYPING
+                  power_state = STATE_POWER_TYPING;
+                  //Bluefruit.setConnInterval(HIDREPORTINGINTERVAL-1, HIDREPORTINGINTERVAL+2);
+                  //keyscanTimer.setPeriod(KEYSCANNINGTIMER);
+                  //Bluefruit.setTxPower(DEVICE_POWER);
+                  break;
+              case STATE_POWER_BROADCASTING:  // move to STATE_POWER_TYPING
+                  power_state = STATE_POWER_TYPING;
+                  //Bluefruit.setConnInterval(HIDREPORTINGINTERVAL-1, HIDREPORTINGINTERVAL+2);
+                  //keyscanTimer.setPeriod(KEYSCANNINGTIMER);
+                  //Bluefruit.setTxPower(DEVICE_POWER);
+                  break;
+              case STATE_POWER_SLEEPING:      // move to STATE_POWER_TYPING (this shouldn't happen but here just in case)
+                  power_state = STATE_POWER_TYPING;
+                  //Bluefruit.setConnInterval(HIDREPORTINGINTERVAL-1, HIDREPORTINGINTERVAL+2);
+                  //keyscanTimer.setPeriod(KEYSCANNINGTIMER);
+                  //Bluefruit.setTxPower(DEVICE_POWER);
+                  Bluefruit.Advertising.start(0);
+                  // turn on BLE
+                  break;
+        }
+    break;
+    case STATE_BLE_DISCONNECTED:
+        switch (power_state)
+        {
+              case STATE_POWER_TYPING:      // move to STATE_POWER_RECONNECTING
+                  power_state = STATE_POWER_RECONNECTING;
+                 // Bluefruit.setConnInterval(HIDREPORTINGINTERVAL-1, HIDREPORTINGINTERVAL+2);
+                 // keyscanTimer.setPeriod(KEYSCANNINGTIMER*2);
+                  //Bluefruit.setTxPower(DEVICE_POWER);
+                  break;
+              case STATE_POWER_NOTTYPING:   // move to STATE_POWER_RECONNECTING
+                  power_state = STATE_POWER_RECONNECTING;
+                  //Bluefruit.setConnInterval(HIDREPORTINGINTERVAL-1, HIDREPORTINGINTERVAL+2);
+                 // keyscanTimer.setPeriod(KEYSCANNINGTIMER*2);
+                  //Bluefruit.setTxPower(DEVICE_POWER);
+                  break;
+              case STATE_POWER_STANDBY:     // move to STATE_POWER_BROADCASTING
+                  power_state = STATE_POWER_BROADCASTING;
+                  //Bluefruit.setConnInterval(20+HIDREPORTINGINTERVAL-1, 20+HIDREPORTINGINTERVAL+2);
+                  //keyscanTimer.setPeriod(KEYSCANNINGTIMER*4);
+                  //Bluefruit.setTxPower(DEVICE_POWER);
+                  break;
+              case STATE_POWER_RECONNECTING: 
+                  if (timesincelastkeypress>BROADCASTING_DELAY)
+                  {
+                    power_state = STATE_POWER_BROADCASTING;
+                    //Bluefruit.setConnInterval(20+HIDREPORTINGINTERVAL-1, 20+HIDREPORTINGINTERVAL+2);
+                    //keyscanTimer.setPeriod(KEYSCANNINGTIMER*4);
+                    //Bluefruit.setTxPower(DEVICE_POWER);
+                  }
+                  break;
+              case STATE_POWER_BROADCASTING: 
+                  if (timesincelastkeypress>SLEEPING_DELAY)
+                  {
+                    power_state = STATE_POWER_SLEEPING;
+                    //Bluefruit.setConnInterval(40+HIDREPORTINGINTERVAL-1, 40+HIDREPORTINGINTERVAL+2);
+                    //keyscanTimer.setPeriod(KEYSCANNINGTIMER*4);
+                    // turn off BLE
+                   //Bluefruit.setTxPower(-40);
+                   //Bluefruit.Advertising.stop();
+                   //nrf_gpio_cfg_sense_input(25, NRF_GPIO_PIN_PULLDOWN, NRF_GPIO_PIN_SENSE_HIGH);
+                    setupWakeUp();
+                    sd_power_system_off();
+                  } else if (timesincelastkeypress<BROADCASTING_DELAY)
+                  {
+                      power_state = STATE_POWER_RECONNECTING;
+                     // Bluefruit.setConnInterval(HIDREPORTINGINTERVAL-1, HIDREPORTINGINTERVAL+2);
+                     // keyscanTimer.setPeriod(KEYSCANNINGTIMER*2);
+                      //Bluefruit.setTxPower(DEVICE_POWER);
+                  }
+                  break;
+              case STATE_POWER_SLEEPING: 
+                  if (timesincelastkeypress<BROADCASTING_DELAY)
+                  {
+                      power_state = STATE_POWER_RECONNECTING;
+                     // Bluefruit.setConnInterval(HIDREPORTINGINTERVAL-1, HIDREPORTINGINTERVAL+2);
+                      //keyscanTimer.setPeriod(KEYSCANNINGTIMER*2);
+                      // turn on BLEd  afruitBluefruit::setTxPower
+                      //Bluefruit.setTxPower(DEVICE_POWER);
+                      //Bluefruit.Advertising.start(0);
+                  }
+                  break;
+        }
+    break;
+    
+  }
+
+
 #if BACKLIGHT_PWM_ON == 1
 
 
-if (!(KeyScanner::reportEmpty))
+if (timesincelastkeypress<1000)
 {
     pwmval = DEFAULT_PWM_VALUE;
 
@@ -681,7 +895,7 @@ uint8_t vbat_per =0;
       break;    
     case STATE_BOOT_MODE:
       if (millis()>BOOT_MODE_DELAY) {monitoring_state = STATE_MONITOR_MODE;}
-      delay(2); // adds a deley to minimize power consumption during boot mode. 
+      delay(25); // adds a delay to minimize power consumption during boot mode. 
       break;    
     case STATE_BOOT_CLEAR_BONDS:
            Bluefruit.clearBonds();
