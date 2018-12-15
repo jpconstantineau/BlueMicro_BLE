@@ -31,7 +31,8 @@ void scanMatrix(void);
 void startAdv(void);
 void sendKeyPresses(void);
 void monitoringloop(void);
-void keyscan_timer_callback(TimerHandle_t xTimerID);
+void keyscanningloop(void);
+//void keyscan_timer_callback(TimerHandle_t xTimerID);
 
 void pinModeSense( uint32_t ulPin, uint32_t ulMode );
 void setupWakeUp(void);
@@ -51,19 +52,6 @@ void setupWakeUp(void);
     void cent_disconnect_callback(uint16_t conn_handle, uint8_t reason);
 #endif
 
-enum states_ble_status {
-  STATE_BLE_CONNECTED = 0x00,
-  STATE_BLE_DISCONNECTED,
-};
-
-enum states_power_mode {
-  STATE_POWER_TYPING = 0x00,
-  STATE_POWER_NOTTYPING,
-  STATE_POWER_STANDBY,
-  STATE_POWER_RECONNECTING,
-  STATE_POWER_BROADCASTING,
-  STATE_POWER_SLEEPING,
-};
 
 enum states_monitor_modes {
   STATE_BOOT_INITIALIZE = 0x00,
@@ -76,9 +64,7 @@ enum states_monitor_modes {
   };
 
 
-#define NOTTYPING_DELAY 15000
-#define STANDBY_DELAY   30000
-#define BROADCASTING_DELAY  15000
-#define SLEEPING_DELAY 60000
+
+#define SLEEPING_DELAY 30000
 
 #endif /* FIRMWARE_H */

@@ -65,10 +65,9 @@ uint8_t Linkdata[7] = {0,0,0,0,0,0,0};
 
 bool isReportedReleased = true;
 uint8_t monitoring_state = STATE_BOOT_INITIALIZE;
-SoftwareTimer keyscanTimer;
+//SoftwareTimer keyscanTimer;
 
-uint8_t power_state = STATE_POWER_RECONNECTING;
-volatile uint8_t ble_state = STATE_BLE_DISCONNECTED;
+
 
 /**************************************************************************************************************************/
 
@@ -187,14 +186,15 @@ void setup() {
 
   LOG_LV1("BLEMIC","Starting %s" ,DEVICE_NAME);
 
-  Scheduler.startLoop(monitoringloop);                                        // Starting secong loop task
+  Scheduler.startLoop(monitoringloop);                                        // Starting second loop task
+  Scheduler.startLoop(keyscanningloop);                                        // Starting third loop task
 
-  keyscanTimer.begin(KEYSCANNINGTIMER, keyscan_timer_callback); // runs the keyscan every KEYSCANNINGTIMER milliseconds.
-  keyscanTimer.start(); // Start the timer
+  //keyscanTimer.begin(KEYSCANNINGTIMER, keyscan_timer_callback); // runs the keyscan every KEYSCANNINGTIMER milliseconds.
+  //keyscanTimer.start(); // Start the timer
 
   
   Bluefruit.begin(PERIPHERAL_COUNT,CENTRAL_COUNT);                            // Defined in firmware_config.h
-  Bluefruit.autoConnLed(false);
+  Bluefruit.autoConnLed(false);                                               // make sure the BlueFruit connection LED is not toggled.
   Bluefruit.setTxPower(DEVICE_POWER);                                         // Defined in bluetooth_config.h
   Bluefruit.setName(DEVICE_NAME);                                             // Defined in keyboard_config.h
   Bluefruit.configUuid128Count(UUID128_COUNT);                                // Defined in bluetooth_config.h
@@ -447,7 +447,6 @@ void prph_connect_callback(uint16_t conn_handle)
   char peer_name[32] = { 0 };
   Bluefruit.Gap.getPeerName(conn_handle, peer_name, sizeof(peer_name));
   LOG_LV1("PRPH","Connected to %i %s",conn_handle,peer_name  );
-  ble_state = STATE_BLE_CONNECTED;
 }
 
 /**************************************************************************************************************************/
@@ -458,7 +457,6 @@ void prph_disconnect_callback(uint16_t conn_handle, uint8_t reason)
   (void) conn_handle;
   (void) reason;
   LOG_LV1("PRPH","Disconnected"  );
-  ble_state = STATE_BLE_DISCONNECTED;
 }
 
 
@@ -499,18 +497,16 @@ void cent_disconnect_callback(uint16_t conn_handle, uint8_t reason)
 
 //********************************************************************************************//
 //* High Priority Task - runs key scanning - called every few ms (timing not guaranteed)         *//
-// WORK IN PROGRESS
+// WORK IN PROGRESS - moved to a task
 //********************************************************************************************//
-void keyscan_timer_callback(TimerHandle_t xTimerID)
+/*void keyscan_timer_callback(TimerHandle_t xTimerID)
 {
   // freeRTOS timer ID, ignored if not used
   (void) xTimerID;
 
-  #if MATRIX_SCAN == 1
-  scanMatrix();
-  #endif
+
   
-}
+}*/
 
 /**************************************************************************************************************************/
 // Keyboard Scanning
@@ -534,9 +530,9 @@ void scanMatrix() {
           pinMode(columns[i], INPUT_PULLDOWN);                              // 'enables' the column High Value on the diode; becomes "LOW" when pressed
           #endif
     }
-      delay(1);   
+      delay(1);   // using the FreeRTOS delay function reduced power consumption from 1.5mA down to 0.9mA
       // need for the GPIO lines to settle down electrically before reading.
-   /*  #ifdef NRFX_H__  // Added to support BSP 0.9.0
+     /*#ifdef NRFX_H__  // Added to support BSP 0.9.0
          nrfx_coredep_delay_us(1);
       #else            // Added to support BSP 0.8.6
         nrf_delay_us(1);
@@ -549,7 +545,10 @@ void scanMatrix() {
     pinMode(rows[j], INPUT);                                          //'disables' the row that was just scanned
    }                                                                  // done scanning the matrix
 }
-
+/**************************************************************************************************************************/
+// Change Pin Mode - including Sense
+// ToDo: Move to adafruit library?
+/**************************************************************************************************************************/
 void pinModeSense( uint32_t ulPin, uint32_t ulMode )
 {
   if (ulPin >= PINS_COUNT) {
@@ -604,7 +603,10 @@ void pinModeSense( uint32_t ulPin, uint32_t ulMode )
     break ;
   }
 }
-
+/**************************************************************************************************************************/
+// Prepare sense pins for waking up from complete shutdown
+// ToDo: 
+/**************************************************************************************************************************/
 void setupWakeUp() {
   uint32_t pindata = 0;
   for(int j = 0; j < MATRIX_ROWS; ++j) {                             
@@ -616,14 +618,14 @@ void setupWakeUp() {
     digitalWrite(rows[j], HIGH);                                       // 'enables' a specific row to be "HIGH"
     #endif
   }
-    //loops thru all of the columns
-    for (int i = 0; i < MATRIX_COLS; ++i) {
-          #if DIODE_DIRECTION == COL2ROW                                         
-          pinModeSense(columns[i], INPUT_PULLUP);                              // 'enables' the column High Value on the diode; becomes "LOW" when pressed 
-          #else
-          pinModeSense(columns[i], INPUT_PULLDOWN);                              // 'enables' the column High Value on the diode; becomes "LOW" when pressed
-          #endif
-    }
+  //loops thru all of the columns
+  for (int i = 0; i < MATRIX_COLS; ++i) {
+      #if DIODE_DIRECTION == COL2ROW                                         
+        pinModeSense(columns[i], INPUT_PULLUP);                              // 'enables' the column High Value on the diode; becomes "LOW" when pressed 
+      #else
+        pinModeSense(columns[i], INPUT_PULLDOWN);                              // 'enables' the column High Value on the diode; becomes "LOW" when pressed
+      #endif
+  }
 }
 
 /**************************************************************************************************************************/
@@ -709,132 +711,13 @@ void loop() {
 
 unsigned long timesincelastkeypress = millis() - KeyScanner::getLastPressed();
 
-switch(ble_state)
+// shutdown when unconnected and no keypresses for SLEEPING_DELAY ms
+  if ((timesincelastkeypress>SLEEPING_DELAY)&&(!Bluefruit.connected()))
   {
-    case STATE_BLE_CONNECTED:
-        switch (power_state)
-        {
-              case STATE_POWER_TYPING: 
-                  if (timesincelastkeypress>NOTTYPING_DELAY)
-                  {
-                        power_state = STATE_POWER_NOTTYPING;
-                       // Bluefruit.setConnInterval(10+HIDREPORTINGINTERVAL-1, 10+HIDREPORTINGINTERVAL+2);
-                        //keyscanTimer.setPeriod(KEYSCANNINGTIMER*2);
-                      //  Bluefruit.setTxPower(DEVICE_POWER);
-                  }
-                  break;
-              case STATE_POWER_NOTTYPING: 
-                  if (timesincelastkeypress>STANDBY_DELAY)
-                  {
-                        power_state = STATE_POWER_STANDBY;
-                        //Bluefruit.setConnInterval(20+HIDREPORTINGINTERVAL-1, 20+HIDREPORTINGINTERVAL+2);
-                        //keyscanTimer.setPeriod(KEYSCANNINGTIMER*4);
-                        //Bluefruit.setTxPower(DEVICE_POWER);
-                  }
-                  else if (timesincelastkeypress<NOTTYPING_DELAY)
-                  {
-                        power_state = STATE_POWER_TYPING;
-                       // Bluefruit.setConnInterval(HIDREPORTINGINTERVAL-1, HIDREPORTINGINTERVAL+2);
-                        ///keyscanTimer.setPeriod(KEYSCANNINGTIMER);
-                        //Bluefruit.setTxPower(DEVICE_POWER);
-                  }
-                  break;
-              case STATE_POWER_STANDBY:
-                  if (timesincelastkeypress<NOTTYPING_DELAY)
-                  {
-                        power_state = STATE_POWER_TYPING;
-                        //Bluefruit.setConnInterval(HIDREPORTINGINTERVAL-1, HIDREPORTINGINTERVAL+2);
-                        //keyscanTimer.setPeriod(KEYSCANNINGTIMER);
-                        //Bluefruit.setTxPower(DEVICE_POWER);
-                  } 
-                  break;
-              case STATE_POWER_RECONNECTING:  // move to STATE_POWER_TYPING
-                  power_state = STATE_POWER_TYPING;
-                  //Bluefruit.setConnInterval(HIDREPORTINGINTERVAL-1, HIDREPORTINGINTERVAL+2);
-                  //keyscanTimer.setPeriod(KEYSCANNINGTIMER);
-                  //Bluefruit.setTxPower(DEVICE_POWER);
-                  break;
-              case STATE_POWER_BROADCASTING:  // move to STATE_POWER_TYPING
-                  power_state = STATE_POWER_TYPING;
-                  //Bluefruit.setConnInterval(HIDREPORTINGINTERVAL-1, HIDREPORTINGINTERVAL+2);
-                  //keyscanTimer.setPeriod(KEYSCANNINGTIMER);
-                  //Bluefruit.setTxPower(DEVICE_POWER);
-                  break;
-              case STATE_POWER_SLEEPING:      // move to STATE_POWER_TYPING (this shouldn't happen but here just in case)
-                  power_state = STATE_POWER_TYPING;
-                  //Bluefruit.setConnInterval(HIDREPORTINGINTERVAL-1, HIDREPORTINGINTERVAL+2);
-                  //keyscanTimer.setPeriod(KEYSCANNINGTIMER);
-                  //Bluefruit.setTxPower(DEVICE_POWER);
-                  Bluefruit.Advertising.start(0);
-                  // turn on BLE
-                  break;
-        }
-    break;
-    case STATE_BLE_DISCONNECTED:
-        switch (power_state)
-        {
-              case STATE_POWER_TYPING:      // move to STATE_POWER_RECONNECTING
-                  power_state = STATE_POWER_RECONNECTING;
-                 // Bluefruit.setConnInterval(HIDREPORTINGINTERVAL-1, HIDREPORTINGINTERVAL+2);
-                 // keyscanTimer.setPeriod(KEYSCANNINGTIMER*2);
-                  //Bluefruit.setTxPower(DEVICE_POWER);
-                  break;
-              case STATE_POWER_NOTTYPING:   // move to STATE_POWER_RECONNECTING
-                  power_state = STATE_POWER_RECONNECTING;
-                  //Bluefruit.setConnInterval(HIDREPORTINGINTERVAL-1, HIDREPORTINGINTERVAL+2);
-                 // keyscanTimer.setPeriod(KEYSCANNINGTIMER*2);
-                  //Bluefruit.setTxPower(DEVICE_POWER);
-                  break;
-              case STATE_POWER_STANDBY:     // move to STATE_POWER_BROADCASTING
-                  power_state = STATE_POWER_BROADCASTING;
-                  //Bluefruit.setConnInterval(20+HIDREPORTINGINTERVAL-1, 20+HIDREPORTINGINTERVAL+2);
-                  //keyscanTimer.setPeriod(KEYSCANNINGTIMER*4);
-                  //Bluefruit.setTxPower(DEVICE_POWER);
-                  break;
-              case STATE_POWER_RECONNECTING: 
-                  if (timesincelastkeypress>BROADCASTING_DELAY)
-                  {
-                    power_state = STATE_POWER_BROADCASTING;
-                    //Bluefruit.setConnInterval(20+HIDREPORTINGINTERVAL-1, 20+HIDREPORTINGINTERVAL+2);
-                    //keyscanTimer.setPeriod(KEYSCANNINGTIMER*4);
-                    //Bluefruit.setTxPower(DEVICE_POWER);
-                  }
-                  break;
-              case STATE_POWER_BROADCASTING: 
-                  if (timesincelastkeypress>SLEEPING_DELAY)
-                  {
-                    power_state = STATE_POWER_SLEEPING;
-                    //Bluefruit.setConnInterval(40+HIDREPORTINGINTERVAL-1, 40+HIDREPORTINGINTERVAL+2);
-                    //keyscanTimer.setPeriod(KEYSCANNINGTIMER*4);
-                    // turn off BLE
-                   //Bluefruit.setTxPower(-40);
-                   //Bluefruit.Advertising.stop();
-                   //nrf_gpio_cfg_sense_input(25, NRF_GPIO_PIN_PULLDOWN, NRF_GPIO_PIN_SENSE_HIGH);
-                    setupWakeUp();
-                    sd_power_system_off();
-                  } else if (timesincelastkeypress<BROADCASTING_DELAY)
-                  {
-                      power_state = STATE_POWER_RECONNECTING;
-                     // Bluefruit.setConnInterval(HIDREPORTINGINTERVAL-1, HIDREPORTINGINTERVAL+2);
-                     // keyscanTimer.setPeriod(KEYSCANNINGTIMER*2);
-                      //Bluefruit.setTxPower(DEVICE_POWER);
-                  }
-                  break;
-              case STATE_POWER_SLEEPING: 
-                  if (timesincelastkeypress<BROADCASTING_DELAY)
-                  {
-                      power_state = STATE_POWER_RECONNECTING;
-                     // Bluefruit.setConnInterval(HIDREPORTINGINTERVAL-1, HIDREPORTINGINTERVAL+2);
-                      //keyscanTimer.setPeriod(KEYSCANNINGTIMER*2);
-                      // turn on BLEd  afruitBluefruit::setTxPower
-                      //Bluefruit.setTxPower(DEVICE_POWER);
-                      //Bluefruit.Advertising.start(0);
-                  }
-                  break;
-        }
-    break;
-    
-  }
+    setupWakeUp();
+    sd_power_system_off();
+  } 
+
 
 
 #if BACKLIGHT_PWM_ON == 1
@@ -849,10 +732,8 @@ if (timesincelastkeypress<1000)
   if (pwmval > 19) {pwmval = pwmval-10 ;} else {pwmval = 0 ;}
 }
 
-
-buf[0] = (1 << 15) | pwmval; // Inverse polarity (bit 15), 1500us duty cycle
-
-
+  // send PWM config to PWM NRF52 device
+  buf[0] = (1 << 15) | pwmval; // Inverse polarity (bit 15), 1500us duty cycle
   NRF_PWM0->SEQ[0].PTR = (uint32_t)&buf[0];
   NRF_PWM0->TASKS_SEQSTART[0] = 1;
 
@@ -874,13 +755,22 @@ buf[0] = (1 << 15) | pwmval; // Inverse polarity (bit 15), 1500us duty cycle
   } 
   
   
+delay(HIDREPORTINGINTERVAL*4);
+}
+/**************************************************************************************************************************/
+// put your main scanning code here, to run repeatedly:
+/**************************************************************************************************************************/
+void keyscanningloop ()
+{
+  #if MATRIX_SCAN == 1
+  scanMatrix();
+  #endif
   #if SEND_KEYS == 1
   sendKeyPresses();    // how often does this really run?
   #endif
 
 delay(HIDREPORTINGINTERVAL);
 }
-
 //********************************************************************************************//
 //* Battery Monitoring Task - runs infrequently - except in boot mode                        *//
 //********************************************************************************************//
@@ -937,5 +827,5 @@ void rtos_idle_callback(void)
 {
   // Don't call any other FreeRTOS blocking API()
   // Perform background task(s) here
-sd_app_evt_wait();  // puts the nrf52 to sleep when there is nothing to do.  You need this to reduce power consumption.
+  sd_app_evt_wait();  // puts the nrf52 to sleep when there is nothing to do.  You need this to reduce power consumption. (removing this will increase current to 8mA)
 }
