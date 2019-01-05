@@ -1,4 +1,5 @@
 #include "KeyState.h"
+#include "hid_keycodes.h"
 #include <array>
 #include <utility>
 
