@@ -33,16 +33,16 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define DEVICE_POWER                        0                                          // Use 0.  This uses less power and allows for a longer battery life.
 
 /*
-  Power     mA      
-  -40   3.2-3.6mA     -95dbm
+  Power     mA    dbm  
+  -40   
   -30
   -20
   -16
   -12
   -8
-  -4    3.2-3.7       -64dbm
-  0     3.1-3.8       -60dbm
-  4     3.1-3.9       -53dbm
+  -4    
+  0     
+  4     
 
 */
 

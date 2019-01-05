@@ -48,13 +48,13 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define SEND_KEYS 1
 #define DEVICE_NAME DEVICE_NAME_M
 #elif KEYBOARD_SIDE == TEST
-#define BLE_CENTRAL 1  /// adding central adds 5 mA - this is due to the scanner.
-#define BLE_PERIPHERAL 0 /// adding peripheral adds 0 mA
+#define BLE_CENTRAL 0  /// 
+#define BLE_PERIPHERAL 0 /// 
 #define BLE_PAIRS 0  /// NOT SURE WHAT THIS ACTIVATES
-#define BLE_HID 1 //1 // 
-#define PERIPHERAL_COUNT 1 //1
+#define BLE_HID 1 //1 //  
+#define PERIPHERAL_COUNT 1 //1  
 #define CENTRAL_COUNT 0
-#define MATRIX_SCAN 1 // 1 // adding matrix scanning adds 0.2-0.4 mA
+#define MATRIX_SCAN 1 // 1 
 #define SEND_KEYS 1 // 1 //
 #define DEVICE_NAME DEVICE_NAME_M
 #endif
@@ -94,8 +94,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define BOOT_MODE_COMMANDS_COUNT 4
 #endif
 
-#ifndef KEYSCANNINGTIMER 
-#define KEYSCANNINGTIMER 5
+#ifndef BOOT_MODE_DELAY
+#define BOOT_MODE_DELAY  10000
 #endif
 
 #ifndef DEBOUNCETIME 
@@ -103,7 +103,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #endif
 
 #ifndef HIDREPORTINGINTERVAL
-#define HIDREPORTINGINTERVAL 25
+#define HIDREPORTINGINTERVAL 1
 #endif
 
 // Battery Service definitions.

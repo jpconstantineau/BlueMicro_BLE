@@ -31,7 +31,11 @@ void scanMatrix(void);
 void startAdv(void);
 void sendKeyPresses(void);
 void monitoringloop(void);
-void keyscan_timer_callback(TimerHandle_t xTimerID);
+void keyscanningloop(void);
+//void keyscan_timer_callback(TimerHandle_t xTimerID);
+
+void pinModeSense( uint32_t ulPin, uint32_t ulMode );
+void setupWakeUp(void);
 
 #if BLE_PERIPHERAL == 1
     void cccd_callback(BLECharacteristic& chr, uint16_t cccd_value)  ;
@@ -60,5 +64,7 @@ enum states_monitor_modes {
   };
 
 
+
+#define SLEEPING_DELAY 30000
 
 #endif /* FIRMWARE_H */
