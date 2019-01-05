@@ -34,6 +34,7 @@ class KeyScanner {
         static void updateRemoteReport(uint8_t data0 , uint8_t data1, uint8_t data2,uint8_t data3, uint8_t data4, uint8_t data5,uint8_t data6);
         static void updateRemoteLayer(uint8_t data0);
         static bool getReport();
+        static unsigned long getLastPressed();
         static bool layerChanged;
         static bool reportEmpty;
         static uint8_t localLayer;
@@ -50,6 +51,7 @@ class KeyScanner {
         
         static uint8_t remoteReport[8];
         static unsigned long timestamps[MATRIX_ROWS][MATRIX_COLS]; 
+        static unsigned long lastPressed;
 
         static uint8_t remoteLayer;
         static uint8_t currentMod;

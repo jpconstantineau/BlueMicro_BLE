@@ -13,7 +13,30 @@ Key::Key(uint32_t activation)
 //should be called with 
 void Key::addActivation(const uint8_t layer, const uint8_t method, const uint32_t activation) 
 {
-    activations[layer][method] = static_cast<uint16_t>(activation & 0x0000FFFF);
+    auto keycode = static_cast<uint16_t>(activation & 0x0000FFFF);
+
+    /*
+     * if the activation is transparent,
+     * look for the first non transparent activation
+     * in the layers below
+     */
+    uint8_t tempLayer = layer;
+    while (keycode == KC_TRNS) 
+    {
+        /*
+         * if the default layer has been reached
+         * and that's transparent as well, the key
+         * doesn't do anything
+         */
+        if (tempLayer == 0) {
+            keycode = KC_NO;
+            break;
+        }
+
+        keycode = activations[--tempLayer][method];
+    }
+
+    activations[layer][method] = keycode;
     durations[layer][method] = static_cast<uint8_t>((activation & 0x00FF0000) >> 16);
 
     /*
