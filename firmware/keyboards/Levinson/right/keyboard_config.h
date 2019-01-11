@@ -22,17 +22,18 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define KEYBOARD_CONFIG_H
 #include "avr_mapping.h"
 
+//#define KEYBOARD_SIDE MASTER
 //#define KEYBOARD_SIDE LEFT
 #define KEYBOARD_SIDE RIGHT
 // CHANGE THIS FOR THE KEYBOARD TO MATCH WHAT IS BEING FLASHED. OPTIONS: LEFT  RIGHT  MASTER
 
-#define DEVICE_NAME_R                         "LevinsonBLE_R"                          /**< Name of device. Will be included in the advertising data. */
-#define DEVICE_NAME_L                         "LevinsonBLE_L"                          /**< Name of device. Will be included in the advertising data. */
-#define DEVICE_NAME_M                         "LevinsonBLE"                          /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME_R       "LevinsonBLE_R"   /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME_L       "LevinsonBLE_L"   /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME_M       "LevinsonBLE"     /**< Name of device. Will be included in the advertising data. */
 
-#define DEVICE_MODEL                        "LevinsonBLE_V1"                          /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_MODEL        "LevinsonBLE_V2"  /**< Name of device. Will be included in the advertising data. */
 
-#define MANUFACTURER_NAME                   "Keebio"                      /**< Manufacturer. Will be passed to Device Information Service. */
+#define MANUFACTURER_NAME   "Keebio"          /**< Manufacturer. Will be passed to Device Information Service. */
 
 
 /* HARDWARE DEFINITION*/
@@ -40,7 +41,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define MATRIX_ROWS 4
 #define MATRIX_COLS 6
 
-// Iris on Arduino
+// Levinson on Arduino
 #define MATRIX_ROW_PINS { D4, D7, E6, B4 }
 #define MATRIX_COL_PINS { F6, F7, B1, B3, B2, B6 }
 
@@ -49,37 +50,38 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW
 
+#define PERIPHERAL_COUNT 2 // more than 1 doesn't work yet... 
 #define DEBOUNCETIME 15
 
 #endif /* KEYBOARD_CONFIG_H */
 
 
-    #if KEYBOARD_SIDE == LEFT
+#if KEYBOARD_SIDE == LEFT
 
-    #define KEYMAP( \
-       K00,   K01,   K02,   K03,   K04,   K05,   \
-       K10,   K11,   K12,   K13 ,  K14,   K15,   \
-       K20,   K21,   K22,   K23,   K24,   K25,   \
-       K30,   K31 ,  K32,   K33,   K34,   K35    \
-    ) { \
-      { K00,   K01,   K02,   K03,   K04,   K05 }, \
-      { K10,   K11,   K12,   K13,   K14,   K15 }, \
-      { K20,   K21,   K22,   K23,   K24,   K25 }, \
-      { K30,   K31,   K32,   K33,   K34,   K35 }  \
-    }
+  #define KEYMAP( \
+     K00,   K01,   K02,   K03,   K04,   K05,   \
+     K10,   K11,   K12,   K13 ,  K14,   K15,   \
+     K20,   K21,   K22,   K23,   K24,   K25,   \
+     K30,   K31 ,  K32,   K33,   K34,   K35    \
+  ) { \
+    { K00,   K01,   K02,   K03,   K04,   K05 }, \
+    { K10,   K11,   K12,   K13,   K14,   K15 }, \
+    { K20,   K21,   K22,   K23,   K24,   K25 }, \
+    { K30,   K31,   K32,   K33,   K34,   K35 }  \
+  }
 
-        #else
+#else
 
-    #define KEYMAP( \
-           K00,   K01,   K02,   K03,   K04,   K05,   \
-           K10,   K11,   K12,   K13 ,  K14,   K15,   \
-           K20,   K21,   K22,   K23,   K24,   K25,   \
-           K30,   K31 ,  K32,   K33,   K34,   K35   \
-    ) { \
-      { K05,   K04,   K03,   K02,   K01,   K00 }, \
-      { K15,   K14,   K13,   K12,   K11,   K10 }, \
-      { K25,   K24,   K23,   K22,   K21,   K20 }, \
-      { K35,   K34,   K33,   K32,   K31,   K30 } \
-    }
+  #define KEYMAP( \
+     K00,   K01,   K02,   K03,   K04,   K05,   \
+     K10,   K11,   K12,   K13 ,  K14,   K15,   \
+     K20,   K21,   K22,   K23,   K24,   K25,   \
+     K30,   K31 ,  K32,   K33,   K34,   K35   \
+  ) { \
+    { K05,   K04,   K03,   K02,   K01,   K00 }, \
+    { K15,   K14,   K13,   K12,   K11,   K10 }, \
+    { K25,   K24,   K23,   K22,   K21,   K20 }, \
+    { K35,   K34,   K33,   K32,   K31,   K30 } \
+  }
 
-        #endif
+#endif
