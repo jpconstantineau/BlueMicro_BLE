@@ -36,6 +36,7 @@ void keyscanningloop(void);
 
 void pinModeSense( uint32_t ulPin, uint32_t ulMode );
 void setupWakeUp(void);
+void set_keyboard_led(uint8_t led_bitmap);
 
 #if BLE_PERIPHERAL == 1
     void cccd_callback(BLECharacteristic& chr, uint16_t cccd_value)  ;
@@ -66,5 +67,7 @@ enum states_monitor_modes {
 
 
 #define SLEEPING_DELAY 30000
+#define SLEEPING_DELAY_CONNECTED 120000
+#define SLEEP_ACTIVE 1
 
 #endif /* FIRMWARE_H */

@@ -41,7 +41,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define MATRIX_COLS 6
 
 // Iris on Arduino
-#define MATRIX_ROW_PINS { D7, E6, B4, 8, D4 }
+//#define MATRIX_ROW_PINS { D7, E6, B4, D2, D4 }  //use this for BlueMicro V2.0b or V1.1
+#define MATRIX_ROW_PINS { D7, E6, B4, 8, D4 }  //use this for BlueMicro V2.0c or V1.0
 #define MATRIX_COL_PINS { F6, F7, B1, B3, B2, B6 }
 
 #define UNUSED_PINS {}

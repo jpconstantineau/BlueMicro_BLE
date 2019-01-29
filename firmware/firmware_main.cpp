@@ -176,8 +176,8 @@ void setup() {
         NVIC_SystemReset();
       } // end of NFC switch code.
 
-      sd_power_dcdc_mode_set(NRF_POWER_DCDC_ENABLE );  // DCDC enables has 100uA lower sleeping current than disabled. (375uA) now getting 462-463uA
-      //sd_power_dcdc_mode_set(NRF_POWER_DCDC_DISABLE ); // (476uA while sleeping)
+    //  sd_power_dcdc_mode_set(NRF_POWER_DCDC_ENABLE );  // DCDC enables has 100uA lower sleeping current than disabled. (375uA) now getting 462-463uA  Enabling this seems to prevent pairing keys to be stored properly = cannot reconnect when KB is reset.
+      //sd_power_dcdc_mode_set(NRF_POWER_DCDC_DISABLE ); // (476uA while sleeping)1
 
       //sd_power_mode_set(NRF_POWER_MODE_CONSTLAT); // SLEEP MODE = 462uA
       //sd_power_mode_set(NRF_POWER_MODE_LOWPWR);// SLEEP MODE = 463uA
@@ -252,6 +252,8 @@ void setup() {
    */
 #if BLE_HID == 1
   blehid.begin();
+  // Set callback for set LED from central
+  blehid.setKeyboardLedCallback(set_keyboard_led);
 #endif
 
   /* Set connection interval (min, max) to your perferred value.
@@ -280,7 +282,7 @@ void setup() {
   Bluefruit.Scanner.filterUuid(BLEUART_UUID_SERVICE, UUID128_SVC_KEYBOARD_LINK);  // looks specifically for these 2 services (A OR B) - reduces load
   Bluefruit.Scanner.setInterval(160, 80);                                         // in unit of 0.625 ms  Interval = 100ms, Window = 50 ms
   Bluefruit.Scanner.useActiveScan(false);                                         // If true, will fetch scan response data
-  Bluefruit.Scanner.start(30);                                                     // 0 = Don't stop scanning after 0 seconds
+  Bluefruit.Scanner.start(0);                                                     // 0 = Don't stop scanning after 0 seconds
 
   Bluefruit.Central.setConnectCallback(cent_connect_callback);
   Bluefruit.Central.setDisconnectCallback(cent_disconnect_callback);
@@ -319,9 +321,11 @@ void startAdv(void)
   // Advertising packet
   Bluefruit.Advertising.addFlags(BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE);
   Bluefruit.Advertising.addTxPower();
+
+    #if BLE_HID == 1
   Bluefruit.Advertising.addAppearance(BLE_APPEARANCE_HID_KEYBOARD);
 
-  #if BLE_HID == 1
+
   // Include BLE HID service
   Bluefruit.Advertising.addService(blehid);
   #endif
@@ -492,6 +496,9 @@ void cent_disconnect_callback(uint16_t conn_handle, uint8_t reason)
   (void) conn_handle;
   (void) reason;
   LOG_LV1("CENTRL","Disconnected"  );
+  // if the half disconnects, we need to make sure that the received buffer is set to empty.
+            KeyScanner::updateRemoteLayer(0);  // Layer is only a single uint8
+           KeyScanner::updateRemoteReport(0,0,0, 0,0, 0, 0);
 }
 #endif
 
@@ -713,14 +720,32 @@ void loop() {
 
 unsigned long timesincelastkeypress = millis() - KeyScanner::getLastPressed();
 
+#if SLEEP_ACTIVE == 1
+
 // shutdown when unconnected and no keypresses for SLEEPING_DELAY ms
   if ((timesincelastkeypress>SLEEPING_DELAY)&&(!Bluefruit.connected()))
   {
+    LOG_LV2("SLEEP","Not Connected Sleep %i", timesincelastkeypress);
     setupWakeUp();
     sd_power_system_off();
   } 
 
+// shutdown when unconnected and no keypresses for SLEEPING_DELAY_CONNECTED ms
+  if ((timesincelastkeypress>SLEEPING_DELAY_CONNECTED)&&(Bluefruit.connected()))
+  {
+    LOG_LV2("SLEEP","Connected Sleep %i", timesincelastkeypress);
+    setupWakeUp();
+    sd_power_system_off();
+  } 
+#endif
 
+#if BLE_CENTRAL == 1  
+  if ((timesincelastkeypress<10)&&(!Bluefruit.Central.connected()&&(!Bluefruit.Scanner.isRunning())))
+  {
+  Bluefruit.Scanner.start(0);                                                     // 0 = Don't stop scanning after 0 seconds  ();
+  }
+
+#endif
 
 #if BACKLIGHT_PWM_ON == 1
 
@@ -790,8 +815,19 @@ uint8_t vbat_per =0;
       delay(25); // adds a delay to minimize power consumption during boot mode. 
       break;    
     case STATE_BOOT_CLEAR_BONDS:
-           Bluefruit.clearBonds();
-           Bluefruit.Central.clearBonds();
+  Serial.println();
+  Serial.println("----- Before -----\n");
+  bond_print_list(BLE_GAP_ROLE_PERIPH);
+  bond_print_list(BLE_GAP_ROLE_CENTRAL);
+
+  Bluefruit.clearBonds();
+  Bluefruit.Central.clearBonds();
+
+  Serial.println();
+  Serial.println("----- After  -----\n");
+  
+  bond_print_list(BLE_GAP_ROLE_PERIPH);
+  bond_print_list(BLE_GAP_ROLE_CENTRAL);
       break;    
     case STATE_BOOT_SERIAL_DFU:
         enterSerialDfu();
@@ -830,4 +866,24 @@ void rtos_idle_callback(void)
   // Don't call any other FreeRTOS blocking API()
   // Perform background task(s) here
   sd_app_evt_wait();  // puts the nrf52 to sleep when there is nothing to do.  You need this to reduce power consumption. (removing this will increase current to 8mA)
+}
+
+/**
+ * Callback invoked when received Set LED from central.
+ * Must be set previously with setKeyboardLedCallback()
+ *
+ * The LED bit map is as follows: (also defined by KEYBOARD_LED_* )
+ *    Kana (4) | Compose (3) | ScrollLock (2) | CapsLock (1) | Numlock (0)
+ */
+void set_keyboard_led(uint8_t led_bitmap)
+{
+  // light up Red Led if any bits is set
+  if ( led_bitmap )
+  {
+    ledOn( LED_RED );
+  }
+  else
+  {
+    ledOff( LED_RED );
+  }
 }

@@ -18,37 +18,265 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "keymap.h"
 
 
-uint32_t keymaps[][5][MATRIX_ROWS][MATRIX_COLS] = {
 
-    [_QWERTY] = {
-        [MD_PRESS] = KEYMAP(    
 
-        KC_ESC, KC_1,   KC_2,   KC_3,   KC_4,   KC_5,   KC_6,   KC_7,   KC_8,   KC_9,   KC_0,   KC_MINS,KC_EQL, KC_BSPC, \
-        KC_TAB,KC_Q,   KC_W,   KC_E,   KC_R,   KC_T,   KC_Y,   KC_U,   KC_I,   KC_O,   KC_P,   KC_LBRC,KC_RBRC,KC_BSLS, \
-        LAYER_2,KC_A,   KC_S,   KC_D,   KC_F,   KC_G,   KC_H,   KC_J,   KC_K,   KC_L,   KC_SCLN,KC_QUOT,KC_ENT,  \
-        KC_LSFT,KC_Z,   KC_X,   KC_C,   KC_V,   KC_B,   KC_N,   KC_M,   KC_COMM,KC_DOT, KC_SLSH,KC_RSFT, \
-        KC_LCTL,KC_LGUI,KC_LALT,          KC_SPC,                     KC_RALT, KC_APP,KC_RCTL,LAYER_1),
-    },
 
-    [_L1] = {
-         KEYMAP(
-        KC_GRV, KC_F1,  KC_F2,  KC_F3,  KC_F4,  KC_F5,  KC_F6,  KC_F7,  KC_F8,  KC_F9,  KC_F10, KC_F11, KC_F12, KC_DEL, \
-        KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_PSCR,KC_SLCK,KC_PAUS, KC_UP, KC_TRNS,KC_BSPC, \
-        KC_TRNS,KC_VOLDOWN,KC_VOLUP,KC_MUTE,KC_TRNS,KC_TRNS,KC_PAST,KC_PSLS,KC_HOME,KC_PGUP,KC_LEFT,KC_RGHT,KC_PENT, \
-        KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_PPLS,KC_PMNS,KC_END, KC_PGDN,KC_DOWN,KC_TRNS,KC_TRNS, \
-        KC_TRNS,KC_TRNS,KC_TRNS,          KC_TRNS,                      KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS),
-    },
-        [_L2] = {
-         KEYMAP(
-        KC_CAPS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS, \
-        KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS, \
-        KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS, \
-        KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_UP, \
-        KC_TRNS,KC_TRNS,KC_TRNS,          KC_TRNS,                    KC_TRNS,KC_LEFT,KC_DOWN,KC_RIGHT),
-    }
-};
+
+
+#if KEYBOARD_SIDE == MASTER
+
  
-void setupKeymap() {}
+std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
+    {KEYMAP(
+        KC_1,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,  KC_Y, 
+        KC_2,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,  KC_H,
+        KC_3,  KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,  KC_N,
+        KC_4,  KC_5, KC_6, KC_7, KC_8,    KC_9,    KC_0 
+    )};
+
+ 
+void setupKeymap() {
+
+    uint32_t layer1[MATRIX_ROWS][MATRIX_COLS] =
+        KEYMAP( \
+  KC_1,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,  KC_Y,  \
+  KC_2,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,  KC_H,   \
+  KC_3,  KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,  KC_N,  \
+  KC_4,  KC_5, KC_6, KC_7, KC_8,    KC_9,    KC_0 \
+);
+
+    uint32_t layer2[MATRIX_ROWS][MATRIX_COLS] =
+        KEYMAP( \
+  KC_1,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,  KC_Y,  \
+  KC_2,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,  KC_H,   \
+  KC_3,  KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,  KC_N,  \
+  KC_4,  KC_5, KC_6, KC_7, KC_8,    KC_9,    KC_0 \
+);
+
+    /*
+     * add the other layers
+     */
+    for (int row = 0; row < MATRIX_ROWS; ++row)
+    {
+        for (int col = 0; col < MATRIX_COLS; ++col)
+        {
+            matrix[row][col].addActivation(_L1, _PRESS, layer1[row][col]);
+            matrix[row][col].addActivation(_L2, _PRESS, layer2[row][col]);
+        }
+    }
+
+}
+
+#endif
+
+
+
+
+#if KEYBOARD_SIDE == LEFT
+
+/* Qwerty
+ * ,-----------------------------------------------------------------------------------.
+ * | Esc  |   Q  |   W  |   E  |   R  |   T  |   Y  |   U  |   I  |   O  |   P  | Bksp |
+ * |------+------+------+------+------+-------------+------+------+------+------+------|
+ * | Tab  |   A  |   S  |   D  |   F  |   G  |   H  |   J  |   K  |   L  |   ;  |  "   |
+ * |------+------+------+------+------+------|------+------+------+------+------+------|
+ * | Shift|   Z  |   X  |   C  |   V  |   B  |   N  |   M  |   ,  |   .  |   /  |Enter |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * | Ctrl | GUI  | Alt  | L(3) | L(1) |    Space    | L(2) | Left | Down |  Up  |Right |
+ * `-----------------------------------------------------------------------------------'
+ */
+
+std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
+    {KEYMAP(
+        KC_ESC,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,  KC_LBRC, 
+        KC_TAB,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,  KC_A,
+        KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,  KC_SPC,
+        KC_LCTL, KC_LGUI, KC_LALT, LAYER_3, LAYER_1, KC_SPC,_______
+    )};
+
+ 
+void setupKeymap() {
+
+/* Layer 1
+ * ,-----------------------------------------------------------------------------------.
+ * |   `  |   1  |   2  |   3  |   4  |   5  |   6  |   7  |   8  |   9  |   0  | Del  |
+ * |------+------+------+------+------+-------------+------+------+------+------+------|
+ * | Tab  |      |      |      |      |      |      |   _  |   +  |      |   \  |  |   |
+ * |------+------+------+------+------+------|------+------+------+------+------+------|
+ * | Shift|      |      |      |      |      |      |      |      |      |      |Enter |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * | Ctrl | GUI  | Alt  | L(3) | L(1) |    Space    | L(2) | Left | Down |  Up  |Right |
+ * `-----------------------------------------------------------------------------------'
+ */
+    uint32_t layer1[MATRIX_ROWS][MATRIX_COLS] =
+        KEYMAP( \
+  KC_GRAVE,KC_1,    KC_2,    KC_3,    KC_4,    KC_5,KC_MINUS,  \
+  KC_TAB  ,_______,_______,_______,_______,_______,_______,   \
+  KC_LSFT ,_______,_______,_______,_______,_______,  KC_SPC,  \
+  KC_LCTL , KC_LGUI, KC_LALT, LAYER_3, LAYER_1, KC_SPC,_______ \
+);
+
+    /* Layer 2
+ * ,-----------------------------------------------------------------------------------.
+ * |   `  |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |   F7 |   F8 |   F9 |  F10 | Ins  |
+ * |------+------+------+------+------+-------------+------+------+------+------+------|
+ * | Del  |  F11 |  F12 |      |      |      |      |   -  |   =  |   [  |   ]  |  \   |
+ * |------+------+------+------+------+------|------+------+------+------+------+------|
+ * |      |      |      |      |      |      |      |      |      |      |      |Enter |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * | Ctrl | GUI  | Alt  | L(3) | L(1) |    Space    | L(2) | Left | Down |  Up  |Right |
+ * `-----------------------------------------------------------------------------------'
+ */
+    uint32_t layer2[MATRIX_ROWS][MATRIX_COLS] =
+        KEYMAP( \
+  KC_GRAVE,KC_F1,    KC_F2,    KC_F3,    KC_F4,    KC_F5,KC_MINUS,  \
+  KC_TAB  ,KC_F11,KC_F12,_______,_______,_______,_______,   \
+  KC_LSFT ,_______,_______,_______,_______,_______,  KC_SPC,  \
+  KC_LCTL , KC_LGUI, KC_LALT, LAYER_3, LAYER_1, KC_SPC,_______ \
+);
+
+    /* Layer 3
+ * ,-----------------------------------------------------------------------------------.
+ * |   `  |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |   F7 |   F8 |   F9 |  F10 | Del  |
+ * |------+------+------+------+------+-------------+------+------+------+------+------|
+ * | Del  |  F11 |  F12 |      |      |      |      |   -  |   =  |   [  |   ]  |  \   |
+ * |------+------+------+------+------+------|------+------+------+------+------+------|
+ * |      |      |      |      |      |      |      |      |      |      |      |Enter |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * | Ctrl | GUI  | Alt  | L(3) | L(1) |    Space    | L(2) | Left | Down |  Up  |Right |
+ * `-----------------------------------------------------------------------------------'
+ */
+    uint32_t layer3[MATRIX_ROWS][MATRIX_COLS] =
+        KEYMAP( \
+  KC_GRAVE,KC_1,    KC_2,    KC_3,    KC_4,    KC_5,KC_MINUS,  \
+  KC_ESC,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,  KC_A,   \
+  KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,  KC_SPC,  \
+  KC_LCTL , KC_LGUI, KC_LALT, LAYER_3, LAYER_1, KC_SPC,_______ \
+);
+
+    /*
+     * add the other layers
+     */
+    for (int row = 0; row < MATRIX_ROWS; ++row)
+    {
+        for (int col = 0; col < MATRIX_COLS; ++col)
+        {
+            matrix[row][col].addActivation(_L1, _PRESS, layer1[row][col]);
+            matrix[row][col].addActivation(_L2, _PRESS, layer2[row][col]);
+            matrix[row][col].addActivation(_L3, _PRESS, layer3[row][col]);
+        }
+    }
+
+}
+
+
+#endif
+
+
+
+#if KEYBOARD_SIDE == RIGHT
+
+/* Qwerty
+ * ,-----------------------------------------------------------------------------------.
+ * | Esc  |   Q  |   W  |   E  |   R  |   T  |   Y  |   U  |   I  |   O  |   P  | Bksp |
+ * |------+------+------+------+------+-------------+------+------+------+------+------|
+ * | Tab  |   A  |   S  |   D  |   F  |   G  |   H  |   J  |   K  |   L  |   ;  |  "   |
+ * |------+------+------+------+------+------|------+------+------+------+------+------|
+ * | Shift|   Z  |   X  |   C  |   V  |   B  |   N  |   M  |   ,  |   .  |   /  |Enter |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * | Ctrl | GUI  | Alt  | L(3) | L(1) |    Space    | L(2) | Left | Down |  Up  |Right |
+ * `-----------------------------------------------------------------------------------'
+ */
+
+std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
+    {KEYMAP(
+        KC_RBRC,  KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,      KC_BSPACE, 
+        KC_B,   KC_H,    KC_J,    KC_K,    KC_L,    KC_SCOLON, KC_QUOTE,
+        KC_C,   KC_N,    KC_M,    KC_COMMA,KC_DOT,  KC_SLSH,   KC_ENT,
+        KC_SPC, KC_SPC, LAYER_2, KC_LEFT, KC_UP,   KC_DOWN,   KC_RIGHT
+    )};
+
+ 
+
+void setupKeymap() {
+
+/* Layer 1
+ * ,-----------------------------------------------------------------------------------.
+ * |   `  |   1  |   2  |   3  |   4  |   5  |   6  |   7  |   8  |   9  |   0  | Del  |
+ * |------+------+------+------+------+-------------+------+------+------+------+------|
+ * | Tab  |      |      |      |      |      |      |   _  |   +  |      |   \  |  |   |
+ * |------+------+------+------+------+------|------+------+------+------+------+------|
+ * | Shift|      |      |      |      |      |      |      |      |      |      |Enter |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * | Ctrl | GUI  | Alt  | L(3) | L(1) |    Space    | L(2) | Left | Down |  Up  |Right |
+ * `-----------------------------------------------------------------------------------'
+ */
+    uint32_t layer1[MATRIX_ROWS][MATRIX_COLS] =
+        KEYMAP( \
+  KC_A,   KC_6,    KC_7,    KC_8,    KC_9,    KC_F10,      KC_DEL,  \
+  KC_B,   KC_F6,    KC_F7,    KC_F8,    KC_F9,    KC_F10, KC_QUOTE,   \
+  KC_C,   KC_N,    KC_M,    KC_COMMA,KC_DOT,  KC_SLSH,   KC_ENT,  \
+  KC_SPC, KC_SPC,   LAYER_1, KC_LEFT, KC_UP,   KC_DOWN,   KC_RIGHT \
+);
+
+    /* Layer 2
+ * ,-----------------------------------------------------------------------------------.
+ * |   `  |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |   F7 |   F8 |   F9 |  F10 | Ins  |
+ * |------+------+------+------+------+-------------+------+------+------+------+------|
+ * | Del  |  F11 |  F12 |      |      |      |      |   -  |   =  |   [  |   ]  |  \   |
+ * |------+------+------+------+------+------|------+------+------+------+------+------|
+ * |      |      |      |      |      |      |      |      |      |      |      |Enter |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * | Ctrl | GUI  | Alt  | L(3) | L(1) |    Space    | L(2) | Left | Down |  Up  |Right |
+ * `-----------------------------------------------------------------------------------'
+ */
+    uint32_t layer2[MATRIX_ROWS][MATRIX_COLS] =
+        KEYMAP( \
+  KC_A,   KC_F6,    KC_F7,    KC_F8,    KC_F9,    KC_F10,   KC_INS,  \
+  KC_B,   KC_F6,    KC_F7,    KC_F8,    KC_F9,    KC_F10, KC_QUOTE,   \
+  KC_C,   KC_N,    KC_M,    KC_COMMA,KC_DOT,  KC_SLSH,   KC_ENT,  \
+  KC_SPC, KC_SPC,   LAYER_1, KC_LEFT, KC_UP,   KC_DOWN,   KC_RIGHT \
+);
+
+    /* Layer 3
+ * ,-----------------------------------------------------------------------------------.
+ * |   `  |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |   F7 |   F8 |   F9 |  F10 | Del  |
+ * |------+------+------+------+------+-------------+------+------+------+------+------|
+ * | Del  |  F11 |  F12 |      |      |      |      |   -  |   =  |   [  |   ]  |  \   |
+ * |------+------+------+------+------+------|------+------+------+------+------+------|
+ * |      |      |      |      |      |      |      |      |      |      |      |Enter |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * | Ctrl | GUI  | Alt  | L(3) | L(1) |    Space    | L(2) | Left | Down |  Up  |Right |
+ * `-----------------------------------------------------------------------------------'
+ */
+    uint32_t layer3[MATRIX_ROWS][MATRIX_COLS] =
+        KEYMAP( \
+  KC_A,   KC_6,    KC_7,    KC_8,    KC_9,    KC_9,      KC_DEL,  \
+  KC_B,   KC_F6,    KC_F7,    KC_F8,    KC_F9,    KC_F10, KC_QUOTE,   \
+  KC_C,   KC_N,    KC_M,    KC_COMMA,KC_DOT,  KC_SLSH,   KC_ENT,  \
+  KC_SPC, KC_SPC,   LAYER_1, KC_LEFT, KC_UP,   KC_DOWN,   KC_RIGHT \
+);
+
+    /*
+     * add the other layers
+     */
+    for (int row = 0; row < MATRIX_ROWS; ++row)
+    {
+        for (int col = 0; col < MATRIX_COLS; ++col)
+        {
+            matrix[row][col].addActivation(_L1, _PRESS, layer1[row][col]);
+            matrix[row][col].addActivation(_L2, _PRESS, layer2[row][col]);
+            matrix[row][col].addActivation(_L3, _PRESS, layer3[row][col]);
+        }
+    }
+
+}
+
+
+
+
+
+#endif
 
 
 
