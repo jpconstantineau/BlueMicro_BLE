@@ -48,7 +48,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
     * Once you have completed installing the required libraries, you should be able to compile and flash the firmware.
     * 
     * Board: Adafruit nRF52 Feather
-    * Bootloader: S132 V6.1.1 r0
+    * Bootloader: 0.2.6 (S132 V6.1.1)
     * Programmer: Bootloader DFU for BlueFruit nRF52
     * 
     * Note that for serial DFU (Device Firmware Upgrade) you may need to manually press the "reset" button if the serial reset circuitry using the DTR line is not used.  
@@ -62,7 +62,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
      * The cheapest Genuine Segger J-link is the J-Link EDU Mini.
      * There are a number of chinese J-Link clones that may work with the j-link software your mileage may vary...
      * 
-     * Required Bootloader: S132 V6.1.1 r0
+     * Required Bootloader: 0.2.6 (S132 V6.1.1)
      * 
      * Follow the instructions at Adafruit (link above) to download, install the necessary software
      * 
