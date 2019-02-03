@@ -23,7 +23,7 @@ nrf52PackagePath="$arduinoDataPath/packages/adafruit/hardware/nrf52"
 
 scriptPath="$(dirname "$BASH_SOURCE")"
 
-blueMicroPath=$(cd $scriptPath/.. && pwd)
+blueMicroPath=$(cd $scriptPath/../.. && pwd)
 firmwarePath="${blueMicroPath}/firmware"
 outputPath="${blueMicroPath}/output"
 buildPath="${outputPath}/.build"
