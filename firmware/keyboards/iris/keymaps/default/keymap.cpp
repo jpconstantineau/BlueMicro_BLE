@@ -17,6 +17,22 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 #include "keymap.h"
 
+#if KEYBOARD_SIDE == MASTER
+
+std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
+    {KEYMAP(
+
+     KC_P , KC_1  , KC_2  , KC_3  , KC_4  , KC_5  ,                
+     KC_L , KC_Q  , KC_W  , KC_E  , KC_R  , KC_T  ,
+     KC_M, KC_A  , KC_S  , KC_D  , KC_F  , KC_G  ,
+     KC_O, KC_Z  , KC_X  , KC_C  , KC_V  , KC_B  ,KC_N,
+                              KC_M,KC_H,KC_J 
+  )};
+void setupKeymap() {
+        ;
+    }
+#endif
+
 
     #if KEYBOARD_SIDE == LEFT
 
@@ -32,6 +48,7 @@ std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
 
  
 void setupKeymap() {
+
 
 
     uint32_t layer1[MATRIX_ROWS][MATRIX_COLS] =
