@@ -4,7 +4,7 @@ cd -- "$(dirname "$BASH_SOURCE")"
 
 usage() {
     printf "Usage: ${0} keyboard:keymap:target /path/to/serial/device\n";
-    printf "If you need to find your serial device, try running: ls /dev/cu.*"
+    printf "If you need to find your serial device, try running: ls /dev/tty.usbserial*"
     exit;
 }
 
@@ -16,7 +16,7 @@ parameterMissing() {
 
 flash() {
     printf "Flashing ${keyboard}:${keymap}:${target} over serial port\n\n"
-    nrfutil --verbose dfu serial -pkg ../output/${keyboard}/${keyboard}-${keymap}-${target}.zip -p ${port} -b 115200
+    nrfutil --verbose dfu serial -pkg ../../output/${keyboard}/${keyboard}-${keymap}-${target}.zip -p ${port} -b 115200
 }
 
 RED='\033[0;31m'
@@ -40,12 +40,12 @@ if [ "$keymap" == "" ]; then parameterMissing keymap; exit; fi
 if [ "$target" == "" ]; then parameterMissing target; exit; fi
 if [ "$port" == "" ]; then parameterMissing port; exit; fi
 
-if [ -e ../output/${keyboard}/${keyboard}-${keymap}-${target}.zip ]; then
+if [ -e ../../output/${keyboard}/${keyboard}-${keymap}-${target}.zip ]; then
     flash
 else
     printf "Compiled zip not found: running build script first."
     ./build-macos ${keyboard} ${keymap} ${target}
-    if [ -e ../output/${keyboard}/${keyboard}-${keymap}-${target}.zip ]; then
+    if [ -e ../../output/${keyboard}/${keyboard}-${keymap}-${target}.zip ]; then
         flash
     else
         printf "Compiled zip still not found: do you have the right keyboard, keymap and target?\n"
