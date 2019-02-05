@@ -47,10 +47,12 @@ arduino_compile() {
 
    printf "$keyboard:$keymap:$target... "
 
-   keymapFile="$keyboardsPath/$keyboard/keymaps/$keymap/keymap.h"
+   keymapHeaderFile="$keyboardsPath/$keyboard/keymaps/$keymap/keymap.h"
+   keymapSourceFile="$keyboardsPath/$keyboard/keymaps/$keymap/keymap.cpp"
    configFile="$keyboardsPath/$keyboard/$target/keyboard_config.h"
 
-   cp -f $keymapFile $sourcePath/
+   cp -f $keymapHeaderFile $sourcePath/
+   cp -f $keymapSourceFile $sourcePath/
    cp -f $configFile $sourcePath/
 
    if $continueOnError; then
