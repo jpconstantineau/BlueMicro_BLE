@@ -19,6 +19,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 /**************************************************************************************************************************/
 #include <bluefruit.h>
+#include <Bluefruit_FileIO.h>
 #undef min
 #undef max
 
@@ -820,14 +821,16 @@ uint8_t vbat_per =0;
   bond_print_list(BLE_GAP_ROLE_PERIPH);
   bond_print_list(BLE_GAP_ROLE_CENTRAL);
 
-  Bluefruit.clearBonds();
-  Bluefruit.Central.clearBonds();
-
+//  Bluefruit.clearBonds();
+//  Bluefruit.Central.clearBonds();
+  InternalFS.format(true);
+  
   Serial.println();
   Serial.println("----- After  -----\n");
   
   bond_print_list(BLE_GAP_ROLE_PERIPH);
   bond_print_list(BLE_GAP_ROLE_CENTRAL);
+  monitoring_state = STATE_MONITOR_MODE;
       break;    
     case STATE_BOOT_SERIAL_DFU:
         enterSerialDfu();
