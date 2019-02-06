@@ -18,11 +18,6 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "keymap.h"
 
 
-
-
-
-
-
 #if KEYBOARD_SIDE == MASTER
 
  
@@ -37,33 +32,8 @@ std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
  
 void setupKeymap() {
 
-    uint32_t layer1[MATRIX_ROWS][MATRIX_COLS] =
-        KEYMAP( \
-  KC_1,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,  KC_Y,  \
-  KC_2,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,  KC_H,   \
-  KC_3,  KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,  KC_N,  \
-  KC_4,  KC_5, KC_6, KC_7, KC_8,    KC_9,    KC_0 \
-);
-
-    uint32_t layer2[MATRIX_ROWS][MATRIX_COLS] =
-        KEYMAP( \
-  KC_1,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,  KC_Y,  \
-  KC_2,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,  KC_H,   \
-  KC_3,  KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,  KC_N,  \
-  KC_4,  KC_5, KC_6, KC_7, KC_8,    KC_9,    KC_0 \
-);
-
-    /*
-     * add the other layers
-     */
-    for (int row = 0; row < MATRIX_ROWS; ++row)
-    {
-        for (int col = 0; col < MATRIX_COLS; ++col)
-        {
-            matrix[row][col].addActivation(_L1, _PRESS, layer1[row][col]);
-            matrix[row][col].addActivation(_L2, _PRESS, layer2[row][col]);
-        }
-    }
+   // no layers for master keymap
+   // this is a keymap that's used for testing that each key is responding properly to key presses
 
 }
 
@@ -271,9 +241,6 @@ void setupKeymap() {
     }
 
 }
-
-
-
 
 
 #endif
