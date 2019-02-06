@@ -18,7 +18,7 @@ flash() {
     nrfjprog --family NRF52 --recover
 	nrfjprog --family NRF52 --eraseall
 	nrfjprog --family NRF52 --program ${nrf52PackagePath}/0.8.6/bin/bootloader/feather52/5.1.0/dual/feather52_bootloader_5.1.0_s132_dual.hex
-	nrfjprog --family NRF52 --program ../output/${keyboard}/${keyboard}-${keymap}-${target}.hex
+	nrfjprog --family NRF52 --program ../../output/${keyboard}/${keyboard}-${keymap}-${target}.hex
 	nrfjprog --family NRF52 --program app_valid_setting_apply_nRF52832.hex
 	nrfjprog --family NRF52 --reset
 }
@@ -42,12 +42,12 @@ if [ "$keyboard" == "" ]; then parameterMissing keyboard; exit; fi
 if [ "$keymap" == "" ]; then parameterMissing keymap; exit; fi
 if [ "$target" == "" ]; then parameterMissing target; exit; fi
 
-if [ -e ../output/${keyboard}/${keyboard}-${keymap}-${target}.hex ]; then
+if [ -e ../../output/${keyboard}/${keyboard}-${keymap}-${target}.hex ]; then
     flash
 else
     printf "Compiled hex not found: running build script first."
     ./build-macos ${keyboard} ${keymap} ${target}
-    if [ -e ../output/${keyboard}/${keyboard}-${keymap}-${target}.hex ]; then
+    if [ -e ../../output/${keyboard}/${keyboard}-${keymap}-${target}.hex ]; then
         flash
     else
         printf "Compiled hex still not found: do you have the right keyboard, keymap and target?\n"
