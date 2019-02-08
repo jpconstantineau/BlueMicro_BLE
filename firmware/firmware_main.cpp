@@ -751,7 +751,7 @@ unsigned long timesincelastkeypress = millis() - KeyScanner::getLastPressed();
 #if BACKLIGHT_PWM_ON == 1
 
 
-if (timesincelastkeypress<1000)
+if (timesincelastkeypress<PWM_TOUCH_INTERVAL)
 {
     pwmval = DEFAULT_PWM_VALUE;
 

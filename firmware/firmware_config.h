@@ -113,8 +113,13 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #endif
 
 
-#define DEFAULT_PWM_VALUE 1500
 
+#define SLEEPING_DELAY 30000              // when it's not connected, 30 seconds is good.
+#define SLEEPING_DELAY_CONNECTED 600000   // 2 minutes is way too fast and really ennoying. making it 10 minutes
+#define SLEEP_ACTIVE 1                    // 1 = it will go to sleep. 0 = sleep will not be activated.
+
+#define DEFAULT_PWM_VALUE 1500            // PWM intensity
+#define PWM_TOUCH_INTERVAL 1000           // detection time since last keypress.
 
 #define VBAT_PIN          (A7)
 #define VBAT_MV_PER_LSB   (0.73242188F)   // 3.0V ADC range and 12-bit ADC resolution = 3000mV/4096

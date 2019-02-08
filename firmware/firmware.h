@@ -66,8 +66,4 @@ enum states_monitor_modes {
 
 
 
-#define SLEEPING_DELAY 30000
-#define SLEEPING_DELAY_CONNECTED 120000
-#define SLEEP_ACTIVE 1
-
 #endif /* FIRMWARE_H */
