@@ -1,2 +1,2 @@
-docker run -it  --mount src="${PWD}"/../..,target=/mnt,type=bind jpconstantineau/arduino-cli-bluefruit-nrf52:latest /bin/bash /mnt/build/docker/nrf52xxx.sh all:all:all
-docker run -it  --mount src="${PWD}"/../..,target=/mnt,type=bind jpconstantineau/uf2conv:latest /bin/bash /mnt/build/docker/nrf52840uf2.sh all:all:all
+docker run  --mount src="${PWD}"/../..,target=/mnt,type=bind jpconstantineau/arduino-cli-bluefruit-nrf52:latest /bin/bash /mnt/build/docker/nrf52xxx.sh all:all:all
+docker run  --mount src="${PWD}"/../..,target=/mnt,type=bind jpconstantineau/uf2conv:latest /bin/bash /mnt/build/docker/nrf52840uf2.sh all:all:all
