@@ -5,7 +5,7 @@
 # to native line endings on checkout.
 *.c text
 *.h text
-*.sh text
+*.sh text eol=lf
 
 # Denote all files that are truly binary and should not be modified.
 *.png binary
