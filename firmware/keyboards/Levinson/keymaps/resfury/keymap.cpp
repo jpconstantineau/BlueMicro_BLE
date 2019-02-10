@@ -108,7 +108,7 @@ std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
             KC_J,   KC_L,    KC_U,    KC_Y,    KC_SCLN, KC_BSLS,
             KC_H,   KC_N,    KC_E,    KC_I,    KC_O,    KC_QUOT,
             KC_K,   KC_M,    KC_COMM, KC_DOT,  KC_SLSH, OS(KC_RSFT),
-            KC_SPC, _RAISE,  KC_LEFT, KC_UP,   KC_DOWN, KC_RGHT
+            KC_SPC, RAISE,  KC_LEFT, KC_UP,   KC_DOWN, KC_RGHT
         )
     };
 

@@ -19,6 +19,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 /**************************************************************************************************************************/
 #include <bluefruit.h>
+#include <Bluefruit_FileIO.h>
 #undef min
 #undef max
 
@@ -61,11 +62,12 @@ byte columns[] MATRIX_COL_PINS;     // Contains the GPIO Pin Numbers defined in 
 const uint8_t boot_mode_commands [BOOT_MODE_COMMANDS_COUNT][2] BOOT_MODE_COMMANDS;
 
 KeyScanner keys;
-uint8_t Linkdata[7] = {0 ,0,0,0,0,0,0};
+uint8_t Linkdata[7] = {0,0,0,0,0,0,0};
 
 bool isReportedReleased = true;
-uint8_t monitoring_state = 0;
-SoftwareTimer keyscanTimer;
+uint8_t monitoring_state = STATE_BOOT_INITIALIZE;
+//SoftwareTimer keyscanTimer;
+
 
 
 /**************************************************************************************************************************/
@@ -175,19 +177,25 @@ void setup() {
         NVIC_SystemReset();
       } // end of NFC switch code.
 
-      
+    //  sd_power_dcdc_mode_set(NRF_POWER_DCDC_ENABLE );  // DCDC enables has 100uA lower sleeping current than disabled. (375uA) now getting 462-463uA  Enabling this seems to prevent pairing keys to be stored properly = cannot reconnect when KB is reset.
+      //sd_power_dcdc_mode_set(NRF_POWER_DCDC_DISABLE ); // (476uA while sleeping)1
 
-  Serial.begin(115200);
+      //sd_power_mode_set(NRF_POWER_MODE_CONSTLAT); // SLEEP MODE = 462uA
+      //sd_power_mode_set(NRF_POWER_MODE_LOWPWR);// SLEEP MODE = 463uA
+
+  //Serial.begin(115200);
 
   LOG_LV1("BLEMIC","Starting %s" ,DEVICE_NAME);
 
-  Scheduler.startLoop(monitoringloop);                                        // Starting secong loop task
+  Scheduler.startLoop(monitoringloop);                                        // Starting second loop task
+  Scheduler.startLoop(keyscanningloop);                                        // Starting third loop task
 
-  keyscanTimer.begin(KEYSCANNINGTIMER, keyscan_timer_callback); // runs the keyscan every KEYSCANNINGTIMER milliseconds.
-  keyscanTimer.start(); // Start the timer
+  //keyscanTimer.begin(KEYSCANNINGTIMER, keyscan_timer_callback); // runs the keyscan every KEYSCANNINGTIMER milliseconds.
+  //keyscanTimer.start(); // Start the timer
 
   
   Bluefruit.begin(PERIPHERAL_COUNT,CENTRAL_COUNT);                            // Defined in firmware_config.h
+  Bluefruit.autoConnLed(false);                                               // make sure the BlueFruit connection LED is not toggled.
   Bluefruit.setTxPower(DEVICE_POWER);                                         // Defined in bluetooth_config.h
   Bluefruit.setName(DEVICE_NAME);                                             // Defined in keyboard_config.h
   Bluefruit.configUuid128Count(UUID128_COUNT);                                // Defined in bluetooth_config.h
@@ -245,6 +253,8 @@ void setup() {
    */
 #if BLE_HID == 1
   blehid.begin();
+  // Set callback for set LED from central
+  blehid.setKeyboardLedCallback(set_keyboard_led);
 #endif
 
   /* Set connection interval (min, max) to your perferred value.
@@ -273,7 +283,7 @@ void setup() {
   Bluefruit.Scanner.filterUuid(BLEUART_UUID_SERVICE, UUID128_SVC_KEYBOARD_LINK);  // looks specifically for these 2 services (A OR B) - reduces load
   Bluefruit.Scanner.setInterval(160, 80);                                         // in unit of 0.625 ms  Interval = 100ms, Window = 50 ms
   Bluefruit.Scanner.useActiveScan(false);                                         // If true, will fetch scan response data
-  Bluefruit.Scanner.start(30);                                                     // 0 = Don't stop scanning after 0 seconds
+  Bluefruit.Scanner.start(0);                                                     // 0 = Don't stop scanning after 0 seconds
 
   Bluefruit.Central.setConnectCallback(cent_connect_callback);
   Bluefruit.Central.setDisconnectCallback(cent_disconnect_callback);
@@ -312,9 +322,11 @@ void startAdv(void)
   // Advertising packet
   Bluefruit.Advertising.addFlags(BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE);
   Bluefruit.Advertising.addTxPower();
+
+    #if BLE_HID == 1
   Bluefruit.Advertising.addAppearance(BLE_APPEARANCE_HID_KEYBOARD);
 
-  #if BLE_HID == 1
+
   // Include BLE HID service
   Bluefruit.Advertising.addService(blehid);
   #endif
@@ -485,24 +497,24 @@ void cent_disconnect_callback(uint16_t conn_handle, uint8_t reason)
   (void) conn_handle;
   (void) reason;
   LOG_LV1("CENTRL","Disconnected"  );
+  // if the half disconnects, we need to make sure that the received buffer is set to empty.
+            KeyScanner::updateRemoteLayer(0);  // Layer is only a single uint8
+           KeyScanner::updateRemoteReport(0,0,0, 0,0, 0, 0);
 }
 #endif
 
 //********************************************************************************************//
-//* High Priority Task - runs key scanning - called every ms (timing not guaranteed)         *//
-// WORK IN PROGRESS
+//* High Priority Task - runs key scanning - called every few ms (timing not guaranteed)         *//
+// WORK IN PROGRESS - moved to a task
 //********************************************************************************************//
-void keyscan_timer_callback(TimerHandle_t xTimerID)
+/*void keyscan_timer_callback(TimerHandle_t xTimerID)
 {
   // freeRTOS timer ID, ignored if not used
   (void) xTimerID;
 
 
-  #if MATRIX_SCAN == 1
-  scanMatrix();
-  #endif
   
-}
+}*/
 
 /**************************************************************************************************************************/
 // Keyboard Scanning
@@ -526,13 +538,15 @@ void scanMatrix() {
           pinMode(columns[i], INPUT_PULLDOWN);                              // 'enables' the column High Value on the diode; becomes "LOW" when pressed
           #endif
     }
-      delay(1);   
+
+      delay(1);   // using the FreeRTOS delay function reduced power consumption from 1.5mA down to 0.9mA
       // need for the GPIO lines to settle down electrically before reading.
-      #ifdef NRFX_H__  // Added to support BSP 0.9.0
+     /*#ifdef NRFX_H__  // Added to support BSP 0.9.0
          nrfx_coredep_delay_us(1);
       #else            // Added to support BSP 0.8.6
         nrf_delay_us(1);
-      #endif
+      #endif*/
+
       pindata = NRF_GPIO->IN;                                         // read all pins at once
      for (int i = 0; i < MATRIX_COLS; ++i) {
       KeyScanner::scanMatrix((pindata>>(columns[i]))&1, millis(), j, i);       // This function processes the logic values and does the debouncing
@@ -540,6 +554,88 @@ void scanMatrix() {
      }
     pinMode(rows[j], INPUT);                                          //'disables' the row that was just scanned
    }                                                                  // done scanning the matrix
+}
+/**************************************************************************************************************************/
+// Change Pin Mode - including Sense
+// ToDo: Move to adafruit library?
+/**************************************************************************************************************************/
+void pinModeSense( uint32_t ulPin, uint32_t ulMode )
+{
+  if (ulPin >= PINS_COUNT) {
+    return;
+  }
+
+  ulPin = g_ADigitalPinMap[ulPin];
+
+  //NRF_GPIO_Type * port = nrf_gpio_pin_port_decode(&ulPin);
+
+  // Set pin mode according to chapter '22.6.3 I/O Pin Configuration'
+  switch ( ulMode )
+  {
+    case INPUT:
+      // Set pin to input mode
+      NRF_GPIO->PIN_CNF[ulPin] = ((uint32_t)GPIO_PIN_CNF_DIR_Input        << GPIO_PIN_CNF_DIR_Pos)
+                           | ((uint32_t)GPIO_PIN_CNF_INPUT_Connect    << GPIO_PIN_CNF_INPUT_Pos)
+                           | ((uint32_t)GPIO_PIN_CNF_PULL_Disabled    << GPIO_PIN_CNF_PULL_Pos)
+                           | ((uint32_t)GPIO_PIN_CNF_DRIVE_S0S1       << GPIO_PIN_CNF_DRIVE_Pos)
+                           | ((uint32_t)GPIO_PIN_CNF_SENSE_Disabled   << GPIO_PIN_CNF_SENSE_Pos);
+    break;
+
+    case INPUT_PULLUP:
+      // Set pin to input mode with pull-up resistor enabled
+      NRF_GPIO->PIN_CNF[ulPin] = ((uint32_t)GPIO_PIN_CNF_DIR_Input        << GPIO_PIN_CNF_DIR_Pos)
+                           | ((uint32_t)GPIO_PIN_CNF_INPUT_Connect    << GPIO_PIN_CNF_INPUT_Pos)
+                           | ((uint32_t)GPIO_PIN_CNF_PULL_Pullup      << GPIO_PIN_CNF_PULL_Pos)
+                           | ((uint32_t)GPIO_PIN_CNF_DRIVE_S0S1       << GPIO_PIN_CNF_DRIVE_Pos)
+                           | ((uint32_t)GPIO_PIN_CNF_SENSE_Low   << GPIO_PIN_CNF_SENSE_Pos);
+    break;
+
+    case INPUT_PULLDOWN:
+      // Set pin to input mode with pull-down resistor enabled
+      NRF_GPIO->PIN_CNF[ulPin] = ((uint32_t)GPIO_PIN_CNF_DIR_Input        << GPIO_PIN_CNF_DIR_Pos)
+                           | ((uint32_t)GPIO_PIN_CNF_INPUT_Connect    << GPIO_PIN_CNF_INPUT_Pos)
+                           | ((uint32_t)GPIO_PIN_CNF_PULL_Pulldown    << GPIO_PIN_CNF_PULL_Pos)
+                           | ((uint32_t)GPIO_PIN_CNF_DRIVE_S0S1       << GPIO_PIN_CNF_DRIVE_Pos)
+                           | ((uint32_t)GPIO_PIN_CNF_SENSE_High   << GPIO_PIN_CNF_SENSE_Pos);
+    break;
+
+    case OUTPUT:
+      // Set pin to output mode
+      NRF_GPIO->PIN_CNF[ulPin] = ((uint32_t)GPIO_PIN_CNF_DIR_Output       << GPIO_PIN_CNF_DIR_Pos)
+                           | ((uint32_t)GPIO_PIN_CNF_INPUT_Disconnect << GPIO_PIN_CNF_INPUT_Pos)
+                           | ((uint32_t)GPIO_PIN_CNF_PULL_Disabled    << GPIO_PIN_CNF_PULL_Pos)
+                           | ((uint32_t)GPIO_PIN_CNF_DRIVE_S0S1       << GPIO_PIN_CNF_DRIVE_Pos)
+                           | ((uint32_t)GPIO_PIN_CNF_SENSE_Disabled   << GPIO_PIN_CNF_SENSE_Pos);
+    break;
+
+    default:
+      // do nothing
+    break ;
+  }
+}
+/**************************************************************************************************************************/
+// Prepare sense pins for waking up from complete shutdown
+// ToDo: 
+/**************************************************************************************************************************/
+void setupWakeUp() {
+  uint32_t pindata = 0;
+  for(int j = 0; j < MATRIX_ROWS; ++j) {                             
+    //set the current row as OUPUT and LOW
+    pinMode(rows[j], OUTPUT);
+    #if DIODE_DIRECTION == COL2ROW                                         
+    digitalWrite(rows[j], LOW);                                       // 'enables' a specific row to be "low" 
+    #else
+    digitalWrite(rows[j], HIGH);                                       // 'enables' a specific row to be "HIGH"
+    #endif
+  }
+  //loops thru all of the columns
+  for (int i = 0; i < MATRIX_COLS; ++i) {
+      #if DIODE_DIRECTION == COL2ROW                                         
+        pinModeSense(columns[i], INPUT_PULLUP);                              // 'enables' the column High Value on the diode; becomes "LOW" when pressed 
+      #else
+        pinModeSense(columns[i], INPUT_PULLDOWN);                              // 'enables' the column High Value on the diode; becomes "LOW" when pressed
+      #endif
+  }
 }
 
 /**************************************************************************************************************************/
@@ -623,10 +719,39 @@ uint8_t mods = 0;
 void loop() {
   // put your main code here, to run repeatedly:
 
+unsigned long timesincelastkeypress = millis() - KeyScanner::getLastPressed();
+
+#if SLEEP_ACTIVE == 1
+
+// shutdown when unconnected and no keypresses for SLEEPING_DELAY ms
+  if ((timesincelastkeypress>SLEEPING_DELAY)&&(!Bluefruit.connected()))
+  {
+    LOG_LV2("SLEEP","Not Connected Sleep %i", timesincelastkeypress);
+    setupWakeUp();
+    sd_power_system_off();
+  } 
+
+// shutdown when unconnected and no keypresses for SLEEPING_DELAY_CONNECTED ms
+  if ((timesincelastkeypress>SLEEPING_DELAY_CONNECTED)&&(Bluefruit.connected()))
+  {
+    LOG_LV2("SLEEP","Connected Sleep %i", timesincelastkeypress);
+    setupWakeUp();
+    sd_power_system_off();
+  } 
+#endif
+
+#if BLE_CENTRAL == 1  
+  if ((timesincelastkeypress<10)&&(!Bluefruit.Central.connected()&&(!Bluefruit.Scanner.isRunning())))
+  {
+  Bluefruit.Scanner.start(0);                                                     // 0 = Don't stop scanning after 0 seconds  ();
+  }
+
+#endif
+
 #if BACKLIGHT_PWM_ON == 1
 
 
-if (!(KeyScanner::reportEmpty))
+if (timesincelastkeypress<PWM_TOUCH_INTERVAL)
 {
     pwmval = DEFAULT_PWM_VALUE;
 
@@ -635,10 +760,8 @@ if (!(KeyScanner::reportEmpty))
   if (pwmval > 19) {pwmval = pwmval-10 ;} else {pwmval = 0 ;}
 }
 
-
-buf[0] = (1 << 15) | pwmval; // Inverse polarity (bit 15), 1500us duty cycle
-
-
+  // send PWM config to PWM NRF52 device
+  buf[0] = (1 << 15) | pwmval; // Inverse polarity (bit 15), 1500us duty cycle
   NRF_PWM0->SEQ[0].PTR = (uint32_t)&buf[0];
   NRF_PWM0->TASKS_SEQSTART[0] = 1;
 
@@ -660,36 +783,22 @@ buf[0] = (1 << 15) | pwmval; // Inverse polarity (bit 15), 1500us duty cycle
   } 
   
   
+delay(HIDREPORTINGINTERVAL*4);
+}
+/**************************************************************************************************************************/
+// put your main scanning code here, to run repeatedly:
+/**************************************************************************************************************************/
+void keyscanningloop ()
+{
+  #if MATRIX_SCAN == 1
+  scanMatrix();
+  #endif
   #if SEND_KEYS == 1
   sendKeyPresses();    // how often does this really run?
   #endif
 
- //  //
-
-// Option 1: 6.7-6.8 mA
- //sd_power_mode_set(NRF_POWER_MODE_LOWPWR);
- //   waitForEvent();
-
-// Option 2: 6.8 mA
-//    waitForEvent();  // Request CPU to enter low-power mode until an event/interrupt occurs
-
-// Option 3: 6.9-7.0 mA
-// sd_app_evt_wait();
-
-// option 4: 7.0 mA
-//  __WFE();
-
-// Option 5: 993-1001 uA
-//    sd_power_mode_set(NRF_POWER_MODE_LOWPWR);
-//    __WFI();
-
-// Option 6: 990-1000 uA
- //  __WFI();
-
-// option 7: 631-640 uA
 delay(HIDREPORTINGINTERVAL);
 }
-
 //********************************************************************************************//
 //* Battery Monitoring Task - runs infrequently - except in boot mode                        *//
 //********************************************************************************************//
@@ -703,11 +812,25 @@ uint8_t vbat_per =0;
         monitoring_state = STATE_BOOT_MODE;
       break;    
     case STATE_BOOT_MODE:
-      if (millis()>10000) {monitoring_state = STATE_MONITOR_MODE;}
+      if (millis()>BOOT_MODE_DELAY) {monitoring_state = STATE_MONITOR_MODE;}
+      delay(25); // adds a delay to minimize power consumption during boot mode. 
       break;    
     case STATE_BOOT_CLEAR_BONDS:
-           Bluefruit.clearBonds();
-           Bluefruit.Central.clearBonds();
+  Serial.println();
+  Serial.println("----- Before -----\n");
+  bond_print_list(BLE_GAP_ROLE_PERIPH);
+  bond_print_list(BLE_GAP_ROLE_CENTRAL);
+
+//  Bluefruit.clearBonds();
+//  Bluefruit.Central.clearBonds();
+  InternalFS.format(true);
+  
+  Serial.println();
+  Serial.println("----- After  -----\n");
+  
+  bond_print_list(BLE_GAP_ROLE_PERIPH);
+  bond_print_list(BLE_GAP_ROLE_CENTRAL);
+  monitoring_state = STATE_MONITOR_MODE;
       break;    
     case STATE_BOOT_SERIAL_DFU:
         enterSerialDfu();
@@ -727,7 +850,7 @@ uint8_t vbat_per =0;
                 // VBAT voltage divider is 2M + 0.806M, which needs to be added back
                 // float vbat_mv = (float)vbat_raw * VBAT_MV_PER_LSB * VBAT_DIVIDER_COMP;   // commented out since we don't use/display floating point value anywhere.
                 #endif
-                delay(30000);                                             // wait 30 seconds before a new battery update. 
+                delay(30000);                                             // wait 30 seconds before a new battery update.  Needed to minimize power consumption.
       break;    
     case STATE_BOOT_UNKNOWN:
       break;
@@ -745,4 +868,25 @@ void rtos_idle_callback(void)
 {
   // Don't call any other FreeRTOS blocking API()
   // Perform background task(s) here
+  sd_app_evt_wait();  // puts the nrf52 to sleep when there is nothing to do.  You need this to reduce power consumption. (removing this will increase current to 8mA)
+}
+
+/**
+ * Callback invoked when received Set LED from central.
+ * Must be set previously with setKeyboardLedCallback()
+ *
+ * The LED bit map is as follows: (also defined by KEYBOARD_LED_* )
+ *    Kana (4) | Compose (3) | ScrollLock (2) | CapsLock (1) | Numlock (0)
+ */
+void set_keyboard_led(uint8_t led_bitmap)
+{
+  // light up Red Led if any bits is set
+  if ( led_bitmap )
+  {
+    ledOn( LED_RED );
+  }
+  else
+  {
+    ledOff( LED_RED );
+  }
 }

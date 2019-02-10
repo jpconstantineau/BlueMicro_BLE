@@ -31,7 +31,12 @@ void scanMatrix(void);
 void startAdv(void);
 void sendKeyPresses(void);
 void monitoringloop(void);
-void keyscan_timer_callback(TimerHandle_t xTimerID);
+void keyscanningloop(void);
+//void keyscan_timer_callback(TimerHandle_t xTimerID);
+
+void pinModeSense( uint32_t ulPin, uint32_t ulMode );
+void setupWakeUp(void);
+void set_keyboard_led(uint8_t led_bitmap);
 
 #if BLE_PERIPHERAL == 1
     void cccd_callback(BLECharacteristic& chr, uint16_t cccd_value)  ;

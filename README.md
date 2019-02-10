@@ -19,12 +19,12 @@ A Keyboard Firmware for nRF52832 Boards with a pinout compatible with the Arduin
 
 
 ## Build Status
-| Branch  | Build  | Adafruit BSP Version  |
-|---|---|---|
-| Master  |  ![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE%20-%20Push)  |![Adafruit Library for releases](https://img.shields.io/github/release/adafruit/Adafruit_nRF52_Arduino.svg)  |
-| Develop |![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE-develop)   | ![Adafruit Library for releases](https://img.shields.io/github/release/adafruit/Adafruit_nRF52_Arduino.svg)   |
+| Branch  | Windows Build  | Docker Build | Adafruit BSP Version  |
+|---|---|---|---|
+| Master  |  ![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE%20-%20Push) |  |![Adafruit Library for releases](https://img.shields.io/github/release/adafruit/Adafruit_nRF52_Arduino.svg)  |
+| Develop |![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE-develop) | ![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE-develop-Docker) | ![Adafruit Library for releases](https://img.shields.io/github/release/adafruit/Adafruit_nRF52_Arduino.svg)   |
 
-**Compabible Hardware**  
+**Compatible Hardware**  
 
 ![BlueMicro](/docs/images/BlueMicro_Hardware.jpg)
 
@@ -39,8 +39,8 @@ Bottom Row: BlueMicro V2.0,  BlueMicro V1.0, BlueNano V2.0, BlueNano V1.0, Pro M
 * [BlueMicro V1.1](https://github.com/jpconstantineau/NRF52-Board/tree/master/EByte_E73)  Compatible with more Keyboards - Serial TX/RX are routed separately; Tested and Gerber available
 * [BlueMicro V2.0b](https://github.com/jpconstantineau/NRF52-Board/tree/master/EByte_E73_Batt) Compatible with more Keyboards - Serial TX/RX are routed separately, LiPo Charger on board; Tested and Gerber available 
 * [BlueMicro V2.0c](https://github.com/jpconstantineau/NRF52-Board/tree/master/EByte_E73_Batt_ErgoTravel) Serial TX/RX routed through D2 and D3; Designed for the ErgoTravel. LiPo Charger on Board with battery connection connected to RAW pin. Tested and Gerber available.
-* [BlueNano V1.0](https://github.com/jpconstantineau/NRF52-Board/tree/master/NRF52832-base/NRF52832%20Base) Compatible with even more Keyboards due to its small size 3.3v regulator on board; Tested and Gerber available, not recommended due to the on-board regulator and no LiPo Charger.
-* [BlueNano V2.0](https://github.com/jpconstantineau/NRF52-Board/tree/master/NRF52832-base/NRF52832%20Lipo) Compatible with even more Keyboards due to its small size - Serial USB and PoLi Charger on board. Lots of 0402 components and 2 QFN packages to solder. Under Development
+* [BlueNano V1.0](https://github.com/jpconstantineau/NRF52-Board/tree/master/NRF52832-base/NRF52832%20Base) Compatible with even more Keyboards due to its small size 3.3v regulator on board; Tested and Gerber available, not recommended due to the on-board regulator and no LiPo Charger. No longer being developed.
+* [BlueNano V2.0](https://github.com/jpconstantineau/NRF52-Board/tree/master/NRF52832-base/NRF52832%20Lipo) Compatible with even more Keyboards due to its small size - Serial USB and PoLi Charger on board. Lots of 0402 components and 2 QFN packages to solder. Under Development.
 * [4x4 Backpack](https://github.com/jpconstantineau/NRF52-Board/tree/master/4x4_backpack/4x4_backpack) For use with [40percent.club 4x4 Boards](https://www.40percent.club/2018/01/4x4x4x4x4.html). Uses a CR2032 Battery.
 * [5x5 Backpack](https://github.com/jpconstantineau/NRF52-Board/tree/master/5x5_backpack/5x5_backpack) For use with [40percent.club 5x5 Boards](https://www.40percent.club/2018/04/5x5.html). Uses a CR2032 Battery.
 

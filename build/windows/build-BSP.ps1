@@ -65,7 +65,7 @@ Function Locate-Arduino-Data-Dir {
 Function Check-Adafruit-Nrf52-Package {
     Write-Host -NoNewline "Adafruit nRF52 Package... "
 
-    if(!(Test-Path -Path "$ArduinoDataDir\packages\adafruit\hardware\nrf52")) {
+    if(!(Test-Path -Path "C:\Users\pierre\Documents\Arduino\hardware\Adafruit\Adafruit_nRF52_Arduino")) {
         Write-Host -ForegroundColor Red "Failed"
         Write-Host
         Write-Host -ForegroundColor Yellow "Could not find Adafruit nRF52 Package"
@@ -112,10 +112,10 @@ Function Compile-Board($keyboard, $target, $keymap) {
     # Run compile
     $cmdCompile = 
         '& "$BuilderExe" -compile -logger=machine -warnings "none" -verbose -ide-version "10807" -debug-level 1 ' + 
-        '-hardware "$ArduinoDir\hardware" -hardware "$ArduinoDataDir\packages" ' + 
+        '-hardware "$ArduinoDir\hardware" -hardware "$ArduinoDataDir\packages" -hardware C:\Users\pierre\Documents\Arduino\hardware ' + 
         '-tools "$ArduinoDir\tools-builder" -tools "$ArduinoDir\hardware\tools\avr" -tools "$ArduinoDataDir\packages" ' +
         '-built-in-libraries "$ArduinoDir\libraries"' +
-        '-fqbn "adafruit:nrf52:feather52832:softdevice=s132v6,debug=l0" ' +
+        '-fqbn "Adafruit:Adafruit_nRF52_Arduino:feather52832:softdevice=s132v6,debug=l0" ' +
         '-build-path "$BuildDir" -build-cache "$BuildCacheDir" '
         #'-prefs "build.warn_data_percentage=75" -prefs "runtime.tools.nrfjprog.path=$ArduinoDataDir\packages\adafruit\tools\nrfjprog\9.4.0" -prefs "runtime.tools.gcc-arm-none-eabi.path=$ArduinoDataDir\packages\adafruit\tools\gcc-arm-none-eabi\5_2-2015q4" '
 
@@ -245,7 +245,7 @@ Check-Adafruit-Nrf52-Package
 
 $BuilderExe = "$ArduinoDir\arduino-builder"
 
-$BlueMicroDir = Resolve-Path "$ScriptPath\.." 2>$null
+$BlueMicroDir = Resolve-Path "$ScriptPath\..\.." 2>$null
 
 $FirmwareDir = "$BlueMicroDir\firmware"
 $OutputDir = "$BlueMicroDir\output"

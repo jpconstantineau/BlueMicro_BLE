@@ -29,11 +29,25 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 #define KC_CAP_D MOD(MOD_LSHIFT, KC_D)
 
+#define KC_WIN_1 MOD(MOD_LGUI, KC_1)
+#define KC_WIN_2 MOD(MOD_LGUI, KC_2)
+#define KC_WIN_3 MOD(MOD_LGUI, KC_3)
+#define KC_WIN_4 MOD(MOD_LGUI, KC_4)
+#define KC_WIN_5 MOD(MOD_LGUI, KC_5)
+#define KC_WIN_6 MOD(MOD_LGUI, KC_6)
+#define KC_WIN_7 MOD(MOD_LGUI, KC_7)
+#define KC_WIN_8 MOD(MOD_LGUI, KC_8)
+#define KC_WIN_9 MOD(MOD_LGUI, KC_9)
+
+#define KC_CTL_A MOD(MOD_LCTRL, KC_A)
+#define KC_CTL_B MOD(MOD_LCTRL, KC_B)
+#define KC_CTL_C MOD(MOD_LCTRL, KC_C)
+#define KC_CTL_D MOD(MOD_LCTRL, KC_D)
+
+#define NUM_LAYERS 2
+
 #define _QWERTY 0
 #define _L1  1
-#define _L2  2
-#define _L3  3
-
 #define _PRESS 0
 #define _MT_TAP 1
 #define _MT_HOLD 2

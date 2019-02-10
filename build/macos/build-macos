@@ -17,16 +17,13 @@ done
 shift $(($OPTIND - 1))
 boardParam=$1
 
-arduinoPath="/usr/share/arduino"
-arduinoDataPath=$(cd ~/.arduino15 & pwd)
-nrf52PackagePath="/home/$USER/.arduino15/packages/adafruit/hardware/nrf52"
+arduinoPath="/Applications/Arduino.app"
+arduinoDataPath=$(cd ~/Library/Arduino15 && pwd)
+nrf52PackagePath="$arduinoDataPath/packages/adafruit/hardware/nrf52"
 
 scriptPath="$(dirname "$BASH_SOURCE")"
 
-#replace this variable with path to your avr installation
-arduinoAvrPath="$arduinoPath/hardware/archlinux-arduino/avr"
-
-blueMicroPath=$(cd $scriptPath/.. && pwd)
+blueMicroPath=$(cd $scriptPath/../.. && pwd)
 firmwarePath="${blueMicroPath}/firmware"
 outputPath="${blueMicroPath}/output"
 buildPath="${outputPath}/.build"
@@ -50,12 +47,12 @@ arduino_compile() {
 
    printf "$keyboard:$keymap:$target... "
 
-   keymapFile="$keyboardsPath/$keyboard/keymaps/$keymap/keymap.h"
-   keymapSource="$keyboardsPath/$keyboard/keymaps/$keymap/keymap.cpp"
+   keymapHeaderFile="$keyboardsPath/$keyboard/keymaps/$keymap/keymap.h"
+   keymapSourceFile="$keyboardsPath/$keyboard/keymaps/$keymap/keymap.cpp"
    configFile="$keyboardsPath/$keyboard/$target/keyboard_config.h"
 
-   cp -f $keymapFile $sourcePath/
-   cp -f $keymapSource $sourcePath/ 
+   cp -f $keymapHeaderFile $sourcePath/
+   cp -f $keymapSourceFile $sourcePath/
    cp -f $configFile $sourcePath/
 
    if $continueOnError; then
@@ -66,8 +63,8 @@ arduino_compile() {
    sleep 2
 
    #Compile
-   cmdCompile="$arduinoPath/arduino-builder -compile -logger=machine -hardware $arduinoPath/hardware -hardware /home/$USER/.arduino15/packages -tools $arduinoPath/tools-builder -tools $arduinoAvrPath -tools /home/$USER/.arduino15/packages -built-in-libraries $arduinoPath/lib -fqbn=adafruit:nrf52:feather52:softdevice=s132v510,debug=l0 -ide-version=10805 -build-path $buildPath -warnings=none -build-cache $buildCachePath -prefs=build.warn_data_percentage=75 -prefs=runtime.tools.gcc-arm-none-eabi.path=$arduinoDataPath/packages/adafruit/tools/gcc-arm-none-eabi/5_2-2015q4 -prefs=runtime.tools.nrfjprog.path=$arduinoDataPath/packages/adafruit/tools/nrfjprog/9.4.0 $sourcePath/firmware.ino"
-
+   cmdCompile="$arduinoPath/Contents/Java/arduino-builder -compile -logger=machine -hardware $arduinoPath/Contents/Java/hardware -hardware $arduinoDataPath/packages -tools $arduinoPath/Contents/Java/tools-builder -tools $arduinoPath/Contents/Java/hardware/tools/avr -tools $arduinoDataPath/packages -built-in-libraries $arduinoPath/Contents/Java/libraries -fqbn=adafruit:nrf52:feather52832:softdevice=s132v6,debug=l0 -ide-version=10805 -build-path $buildPath -warnings=none -build-cache $buildCachePath -prefs=build.warn_data_percentage=75 -prefs=runtime.tools.gcc-arm-none-eabi.path=$arduinoDataPath/packages/adafruit/tools/gcc-arm-none-eabi/5_2-2015q4 -prefs=runtime.tools.nrfjprog.path=$arduinoDataPath/packages/adafruit/tools/nrfjprog/9.4.0 $sourcePath/firmware.ino"
+  
    if $verbose; then 
       $cmdCompile
    else

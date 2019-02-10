@@ -48,13 +48,13 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define SEND_KEYS 1
 #define DEVICE_NAME DEVICE_NAME_M
 #elif KEYBOARD_SIDE == TEST
-#define BLE_CENTRAL 1  /// adding central adds 5 mA - this is due to the scanner.
-#define BLE_PERIPHERAL 0 /// adding peripheral adds 0 mA
+#define BLE_CENTRAL 0  /// 
+#define BLE_PERIPHERAL 0 /// 
 #define BLE_PAIRS 0  /// NOT SURE WHAT THIS ACTIVATES
-#define BLE_HID 1 //1 // 
-#define PERIPHERAL_COUNT 1 //1
+#define BLE_HID 1 //1 //  
+#define PERIPHERAL_COUNT 1 //1  
 #define CENTRAL_COUNT 0
-#define MATRIX_SCAN 1 // 1 // adding matrix scanning adds 0.2-0.4 mA
+#define MATRIX_SCAN 1 // 1 
 #define SEND_KEYS 1 // 1 //
 #define DEVICE_NAME DEVICE_NAME_M
 #endif
@@ -90,20 +90,20 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #endif /* KEYBOARD_MODE */
 
 #ifndef BOOT_MODE_COMMANDS
-#define BOOT_MODE_COMMANDS {{KC_SPACE, STATE_MONITOR_MODE},{ KC_K,  STATE_BOOT_CLEAR_BONDS },{ KC_F, STATE_BOOT_SERIAL_DFU},{ KC_W, STATE_BOOT_WIRELESS_DFU}}
+#define BOOT_MODE_COMMANDS {{KC_SPACE, STATE_MONITOR_MODE},{ KC_B,  STATE_BOOT_CLEAR_BONDS },{ KC_F, STATE_BOOT_SERIAL_DFU},{ KC_W, STATE_BOOT_WIRELESS_DFU}}
 #define BOOT_MODE_COMMANDS_COUNT 4
 #endif
 
-#ifndef KEYSCANNINGTIMER 
-#define KEYSCANNINGTIMER 5
+#ifndef BOOT_MODE_DELAY
+#define BOOT_MODE_DELAY  500
 #endif
 
 #ifndef DEBOUNCETIME 
-#define DEBOUNCETIME 15
+#define DEBOUNCETIME 10
 #endif
 
 #ifndef HIDREPORTINGINTERVAL
-#define HIDREPORTINGINTERVAL 25
+#define HIDREPORTINGINTERVAL 1
 #endif
 
 // Battery Service definitions.
@@ -113,8 +113,13 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #endif
 
 
-#define DEFAULT_PWM_VALUE 1500
 
+#define SLEEPING_DELAY 30000              // when it's not connected, 30 seconds is good.
+#define SLEEPING_DELAY_CONNECTED 600000   // 2 minutes is way too fast and really ennoying. making it 10 minutes
+#define SLEEP_ACTIVE 1                    // 1 = it will go to sleep. 0 = sleep will not be activated.
+
+#define DEFAULT_PWM_VALUE 1500            // PWM intensity
+#define PWM_TOUCH_INTERVAL 1000           // detection time since last keypress.
 
 #define VBAT_PIN          (A7)
 #define VBAT_MV_PER_LSB   (0.73242188F)   // 3.0V ADC range and 12-bit ADC resolution = 3000mV/4096

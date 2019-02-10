@@ -24,19 +24,22 @@ nrf52PackagePath="/home/$USER/.arduino15/packages/adafruit/hardware/nrf52"
 scriptPath="$(dirname "$BASH_SOURCE")"
 
 #replace this variable with path to your avr installation
-arduinoAvrPath="$arduinoPath/hardware/archlinux-arduino/avr"
+arduinoAvrPath="$arduinoPath/hardware/arduino/avr"
 
-blueMicroPath=$(cd $scriptPath/.. && pwd)
+blueMicroPath=$(cd $scriptPath/../.. && pwd)
 firmwarePath="${blueMicroPath}/firmware"
 outputPath="${blueMicroPath}/output"
-buildPath="${outputPath}/.build"
-buildCachePath="${outputPath}/.build-cache"
+outputTempPath="/tmp"
+buildPath="${outputTempPath}/.build"
+buildCachePath="${outputTempPath}/.build-cache"
 
-sourcePath="${outputPath}/.source/firmware"
+sourcePath="${outputTempPath}/.source/firmware"
 keyboardsPath="${sourcePath}/keyboards"
 
-successfulBuilds=0
-failedBuilds=0
+successfulBuilds832=0
+failedBuilds832=0
+successfulBuilds840=0
+failedBuilds840=0
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -51,11 +54,11 @@ arduino_compile() {
    printf "$keyboard:$keymap:$target... "
 
    keymapFile="$keyboardsPath/$keyboard/keymaps/$keymap/keymap.h"
-   keymapSource="$keyboardsPath/$keyboard/keymaps/$keymap/keymap.cpp"
+   keymapcppFile="$keyboardsPath/$keyboard/keymaps/$keymap/keymap.cpp"
    configFile="$keyboardsPath/$keyboard/$target/keyboard_config.h"
 
    cp -f $keymapFile $sourcePath/
-   cp -f $keymapSource $sourcePath/ 
+   cp -f $keymapcppFile $sourcePath/
    cp -f $configFile $sourcePath/
 
    if $continueOnError; then
@@ -63,31 +66,53 @@ arduino_compile() {
    fi
 
    #Need to sleep between compile calls else arduino-builder does not recognise changes
-   sleep 2
+   #sleep 2
 
    #Compile
-   cmdCompile="$arduinoPath/arduino-builder -compile -logger=machine -hardware $arduinoPath/hardware -hardware /home/$USER/.arduino15/packages -tools $arduinoPath/tools-builder -tools $arduinoAvrPath -tools /home/$USER/.arduino15/packages -built-in-libraries $arduinoPath/lib -fqbn=adafruit:nrf52:feather52:softdevice=s132v510,debug=l0 -ide-version=10805 -build-path $buildPath -warnings=none -build-cache $buildCachePath -prefs=build.warn_data_percentage=75 -prefs=runtime.tools.gcc-arm-none-eabi.path=$arduinoDataPath/packages/adafruit/tools/gcc-arm-none-eabi/5_2-2015q4 -prefs=runtime.tools.nrfjprog.path=$arduinoDataPath/packages/adafruit/tools/nrfjprog/9.4.0 $sourcePath/firmware.ino"
-
-   if $verbose; then 
-      $cmdCompile
-   else
-      $cmdCompile > /dev/null
-   fi
+   cmdCompile832="/arduino-cli compile -v --fqbn adafruit:nrf52:feather52832 --build-path $buildPath --build-cache-path $buildCachePath $sourcePath/firmware.ino  -o $buildPath/firmware"
+   cmdCompile840="/arduino-cli compile -v --fqbn adafruit:nrf52:feather52840 --build-path $buildPath --build-cache-path $buildCachePath $sourcePath/firmware.ino  -o $buildPath/firmware"
+    if $verbose; then 
+      $cmdCompile832
+    else
+       $cmdCompile832 > /dev/null
+    fi
 
    (($? != 0)) && failed=true || failed=false
 
    set -e
    
    if $failed; then
-     failedBuilds=$((failedBuilds+1))
+     failedBuilds832=$((failedBuilds832+1))
+     printf "${RED}Failed${NC} "
+   else
+     [[ -d $outputPath/$keyboard ]] || mkdir $outputPath/$keyboard
+   
+     cp -f $buildPath/firmware.ino.zip $outputPath/$keyboard/$keyboard-$keymap-$target.nrf52832.zip
+     cp -f $buildPath/firmware.ino.hex $outputPath/$keyboard/$keyboard-$keymap-$target.nrf52832.hex
+
+     successfulBuilds832=$((successfulBuilds832+1))
+     printf "${GREEN}OK${NC} "
+   fi
+   if $verbose; then 
+      $cmdCompile840
+    else
+       $cmdCompile840 > /dev/null
+    fi
+
+   (($? != 0)) && failed=true || failed=false
+
+   set -e
+   
+   if $failed; then
+     failedBuilds840=$((failedBuilds840+1))
      printf "${RED}Failed${NC}\n"
    else
      [[ -d $outputPath/$keyboard ]] || mkdir $outputPath/$keyboard
    
-     cp -f $buildPath/firmware.ino.zip $outputPath/$keyboard/$keyboard-$keymap-$target.zip
-     cp -f $buildPath/firmware.ino.hex $outputPath/$keyboard/$keyboard-$keymap-$target.hex
+     cp -f $buildPath/firmware.ino.zip $outputPath/$keyboard/$keyboard-$keymap-$target.nrf52840.zip
+     cp -f $buildPath/firmware.ino.hex $outputPath/$keyboard/$keyboard-$keymap-$target.nrf52840.hex
 
-     successfulBuilds=$((successfulBuilds+1))
+     successfulBuilds840=$((successfulBuilds840+1))
      printf "${GREEN}OK${NC}\n"
    fi
 }
@@ -144,53 +169,14 @@ fi
 printf "\n"
 printf "Building $selectedKeyboard:$selectedKeymap:$selectedTarget\n"
 
-printf "\n"
-printf "Checking file locations\n"
-printf -- "-----------------------------------\n"
-
-printf "Arduino Installation... "
-if [ -d "$arduinoPath" ]
-then
-   printf "${GREEN}OK${NC}\n"
-else
-   printf "${RED}Failed${NC}\n"
-   printf "\n"
-   printf "Could not find Arduino installation\n"
-   printf "Donwload and install to the ${arduinoPath} path\n\n"
-   exit 1
-fi
-
-printf "Arduino Data Location... "
-if [ -d "$arduinoDataPath" ]
-then
-   printf "${GREEN}OK${NC}\n"
-else
-   printf "${RED}Failed${NC}\n"
-   printf "\n"
-   printf "Could not find Arduino Data path\n"
-   printf "Expected data in ${arduinoDataPath}\n\n"
-   exit 1
-fi
-
-printf "Adafruit nRF52 Package... "
-if [ -d "$nrf52PackagePath" ]
-then
-   printf "${GREEN}OK${NC}\n"
-else
-   printf "${RED}Failed${NC}\n"
-   printf "\n"
-   printf "Could not find Adafruit nRF52 Package\n"
-   printf "Follow the installation instructions at https://learn.adafruit.com/bluefruit-nrf52-feather-learning-guide/arduino-bsp-setup\n\n"
-   exit 1
-fi
 
 [[ -d $outputPath ]] || mkdir $outputPath
 [[ -d $buildPath ]] || mkdir $buildPath
 [[ -d $buildCachePath ]] || mkdir $buildCachePath
 
 printf "\n"
-printf "Compiling\n"
-printf -- "-----------------------------------\n"
+printf "Compiling keyboard:keymap:target  nRF52832  nRF52840\n"
+printf -- "-----------------------------------------------------\n"
 
 rm -rf $sourcePath
 mkdir -p $sourcePath
@@ -242,18 +228,18 @@ do
    done
 done
 
-if ((successfulBuilds == 0)) && ((failedBuilds == 0)); then
+if ((successfulBuilds832 == 0)) && ((failedBuilds832 == 0)); then
    printf "Did not find anything to build for $selectedKeyboard:$selectedKeymap:$selectedTarget\n"
 fi
 
 printf "\n"
-printf "Successful: ${successfulBuilds} Failed: ${failedBuilds}\n"
-
+printf "nRF52832 Successful: ${successfulBuilds832} Failed: ${failedBuilds832}\n"
+printf "nRF52840 Successful: ${successfulBuilds840} Failed: ${failedBuilds840}\n"
 printf "\n"
 printf "Binaries can be found in ${outputPath}\n"
 printf "\n"
 
-if ((failedBuilds != 0 || successfulBuilds == 0)); then
+if ((failedBuilds832 != 0 || successfulBuilds832 == 0)); then
    exit 1
 fi
 
