@@ -287,6 +287,7 @@ if(Test-Path -Path $SourceDir) {
 Copy-Item -Path $FirmwareDir -Recurse -Destination $SourceDir -Container
 
 Write-Verbose "Discovering keyboards"
+Write-Verbose $KeyboardsDir
 Get-ChildItem $KeyboardsDir | ?{ $_.PSIsContainer } | Foreach-Object {
 
     $keyboard = $_.Name
@@ -312,13 +313,14 @@ Get-ChildItem $KeyboardsDir | ?{ $_.PSIsContainer } | Foreach-Object {
     }
 
     foreach ($keymap in $keymaps) {
+        
         if ($SelectedKeymap -ne "all" -and $SelectedKeymap -ne $keymap) {
-            return
+            continue
         }
 
         foreach ($target in $targets) {
             if ($SelectedTarget -ne "all" -and $SelectedTarget -ne $target) {
-                return
+                continue
             }
 
             Compile-Board $keyboard $target $keymap
