@@ -43,7 +43,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
   -4    
   0     
   4     
-
+  8  only available for nrf52840
 */
 
 // These can be modified.  Not sure of what values are allowed.

@@ -17,39 +17,21 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-
-#ifndef FIRMWARE_H
-#define FIRMWARE_H
-#undef min
-#undef max
-#include "firmware_config.h"
-#include "bluetooth_config.h"
-#include "KeyScanner.h"
-#include "keymap.h"
-#include "sleep.h"
-#include "bluetooth.h"
-#include "battery.h"
-#include "LedPwm.h"
 #include "gpio.h"
 
-void setupMatrix(void);
-void scanMatrix(void);
-void startAdv(void);
-void sendKeyPresses(void);
-void monitoringloop(void);
-void keyscanningloop(void);
-
-
-enum states_monitor_modes {
-  STATE_BOOT_INITIALIZE = 0x00,
-  STATE_BOOT_MODE,
-  STATE_BOOT_CLEAR_BONDS,
-  STATE_BOOT_SERIAL_DFU,
-  STATE_BOOT_WIRELESS_DFU,
-  STATE_MONITOR_MODE,
-  STATE_BOOT_UNKNOWN,
-  };
-
-
-
-#endif /* FIRMWARE_H */
+void setupGpio()
+{
+      // this code enables the NFC pins to be GPIO.
+     if ((NRF_UICR->NFCPINS & UICR_NFCPINS_PROTECT_Msk) == (UICR_NFCPINS_PROTECT_NFC << UICR_NFCPINS_PROTECT_Pos)){
+       // Serial.println("Fix NFC pins");
+        NRF_NVMC->CONFIG = NVMC_CONFIG_WEN_Wen << NVMC_CONFIG_WEN_Pos;
+        while (NRF_NVMC->READY == NVMC_READY_READY_Busy);
+        NRF_UICR->NFCPINS &= ~UICR_NFCPINS_PROTECT_Msk;
+        while (NRF_NVMC->READY == NVMC_READY_READY_Busy);
+        NRF_NVMC->CONFIG = NVMC_CONFIG_WEN_Ren << NVMC_CONFIG_WEN_Pos;
+        while (NRF_NVMC->READY == NVMC_READY_READY_Busy);
+        //Serial.println("Done");
+        delay(500);
+        NVIC_SystemReset();
+      } // end of NFC switch code.
+}

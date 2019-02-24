@@ -156,7 +156,7 @@ rm -rf $sourcePath
 mkdir -p $sourcePath
 cp -r $firmwarePath/* $sourcePath
 printf "sourcepath c \n" 
-ls $sourcePath
+
 for keyboard in $sourcePath/keyboards/*/
 do
 printf "keyboard $keyboard \n"
@@ -170,6 +170,7 @@ printf "keyboard $keyboard \n"
    keymaps=()
    for keymap in $sourcePath/keyboards/$keyboard/keymaps/*/
    do
+   printf "keymap  $keymap \n"
       keymap=${keymap%*/}
       keymap=${keymap##*/}
 
@@ -183,6 +184,7 @@ printf "keyboard $keyboard \n"
    targets=()
    for target in $sourcePath/keyboards/$keyboard/*/
    do
+   printf "target  $target \n"
       target=${target%*/}
       target=${target##*/}
 
