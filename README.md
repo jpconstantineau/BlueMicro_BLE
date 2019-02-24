@@ -1,5 +1,13 @@
 # BlueMicro Firmware
 
+A Keyboard Firmware for nRF52832 Boards with a pinout compatible with the Arduino Pro Micro
+
+## Build Status
+| Branch  | Windows Build  | Docker Build | Adafruit BSP Version  |
+|---|---|---|---|
+| Master  |  ![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE%20-%20Push) |  |![Adafruit Library for releases](https://img.shields.io/github/release/adafruit/Adafruit_nRF52_Arduino.svg)  |
+| Develop |![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE-develop) | ![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE-develop-Docker) | ![Adafruit Library for releases](https://img.shields.io/github/release/adafruit/Adafruit_nRF52_Arduino.svg)   |
+
 [![GitHub license](https://img.shields.io/github/license/jpconstantineau/BlueMicro_BLE.svg)](https://github.com/jpconstantineau/BlueMicro_BLE)
 [![Current Version](https://img.shields.io/github/tag/jpconstantineau/BlueMicro_BLE.svg)](https://github.com/jpconstantineau/BlueMicro_BLE/tags)
 
@@ -14,15 +22,6 @@
 
 [![GitHub issues](https://img.shields.io/github/issues/jpconstantineau/BlueMicro_BLE.svg)](https://github.com/jpconstantineau/BlueMicro_BLE/issues)
 
-A Keyboard Firmware for nRF52832 Boards with a pinout compatible with the Arduino Pro Micro
-
-
-
-## Build Status
-| Branch  | Windows Build  | Docker Build | Adafruit BSP Version  |
-|---|---|---|---|
-| Master  |  ![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE%20-%20Push) |  |![Adafruit Library for releases](https://img.shields.io/github/release/adafruit/Adafruit_nRF52_Arduino.svg)  |
-| Develop |![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE-develop) | ![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE-develop-Docker) | ![Adafruit Library for releases](https://img.shields.io/github/release/adafruit/Adafruit_nRF52_Arduino.svg)   |
 
 **Compatible Hardware**  
 
@@ -50,13 +49,16 @@ Bottom Row: BlueMicro V2.0,  BlueMicro V1.0, BlueNano V2.0, BlueNano V1.0, Pro M
 
 Maintainer: [/u/jpconstantineau](https://github.com/jpconstantineau)  
 
-For the Help Pages go [here](https://jpconstantineau.github.io/BlueMicro_BLE/)
+
+# Documentation
+See the pages [Here](http://bluemicro.jpconstantineau.com/#)
+
+You can contribute to the documentation by editing the markdown files located in the docs folder of the repository.
 
 
 # Want to help?
 Contact /u/jpconstantineau on reddit.
 
-https://github.com/adafruit/Adafruit_nRF52_Arduino
 
 # Credits
 
