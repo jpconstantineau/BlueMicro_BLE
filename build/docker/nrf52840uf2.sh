@@ -31,7 +31,7 @@ buildPath="${outputTempPath}/.build"
 buildCachePath="${outputTempPath}/.build-cache"
 
 sourcePath="${outputTempPath}/.source/firmware"
-keyboardsPath="${sourcePath}/keyboards"
+keyboardsPath="${firmwarePath}/keyboards"
 
 echo $keyboardsPath
 
@@ -52,13 +52,13 @@ arduino_compile() {
 
    printf "$keyboard:$keymap:$target... "
 
-   keymapFile="$keyboardsPath/$keyboard/keymaps/$keymap/keymap.h"
-   keymapcppFile="$keyboardsPath/$keyboard/keymaps/$keymap/keymap.cpp"
-   configFile="$keyboardsPath/$keyboard/$target/keyboard_config.h"
+  # keymapFile="$keyboardsPath/$keyboard/keymaps/$keymap/keymap.h"
+  # keymapcppFile="$keyboardsPath/$keyboard/keymaps/$keymap/keymap.cpp"
+  # configFile="$keyboardsPath/$keyboard/$target/keyboard_config.h"
 
-   cp -f $keymapFile $sourcePath/
-   cp -f $keymapcppFile $sourcePath/
-   cp -f $configFile $sourcePath/
+  # cp -f $keymapFile $sourcePath/
+  # cp -f $keymapcppFile $sourcePath/
+  # cp -f $configFile $sourcePath/
 
    if $continueOnError; then
       set +e
