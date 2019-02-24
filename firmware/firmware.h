@@ -17,7 +17,6 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-
 #ifndef FIRMWARE_H
 #define FIRMWARE_H
 #undef min
@@ -34,11 +33,9 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 void setupMatrix(void);
 void scanMatrix(void);
-void startAdv(void);
 void sendKeyPresses(void);
 void monitoringloop(void);
 void keyscanningloop(void);
-
 
 enum states_monitor_modes {
   STATE_BOOT_INITIALIZE = 0x00,
@@ -49,7 +46,5 @@ enum states_monitor_modes {
   STATE_MONITOR_MODE,
   STATE_BOOT_UNKNOWN,
   };
-
-
 
 #endif /* FIRMWARE_H */

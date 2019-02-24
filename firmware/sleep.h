@@ -30,7 +30,6 @@ extern byte columns[] ;     // Contains the GPIO Pin Numbers defined in keyboard
 
 void pinModeSense( uint32_t ulPin, uint32_t ulMode );
 void setupWakeUp(void);
-
 void gotoSleep(unsigned long timesincelastkeypress,bool connected);
 
 #endif

@@ -18,13 +18,13 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 */
 #include "LedPwm.h"
-/**************************************************************************************************************************/
+
 
 #if BACKLIGHT_PWM_ON == 1  //setup PWM module
 int16_t pwmval = DEFAULT_PWM_VALUE;
 static int16_t buf[] = {(int16_t)(1 << 15) | (int16_t) DEFAULT_PWM_VALUE}; // Inverse polarity (bit 15), 1500us duty cycle
 
-
+/**************************************************************************************************************************/
 void setupPWM(void)
 {
   // Configure BACKLIGHT_LED_PIN as output, and set it to 0
@@ -52,7 +52,7 @@ void setupPWM(void)
   
   }
 
-
+/**************************************************************************************************************************/
 void updatePWM(unsigned long timesincelastkeypress)
 {
 if (timesincelastkeypress<PWM_TOUCH_INTERVAL)

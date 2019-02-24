@@ -30,6 +30,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 
 void setupBluetooth(void);
+void startAdv(void);
 void set_keyboard_led(uint8_t led_bitmap);
 
 void sendKeys(uint8_t currentReport[8]);

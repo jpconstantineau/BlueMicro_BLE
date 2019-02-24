@@ -78,7 +78,6 @@ void pinModeSense( uint32_t ulPin, uint32_t ulMode )
 }
 /**************************************************************************************************************************/
 // Prepare sense pins for waking up from complete shutdown
-// ToDo: 
 /**************************************************************************************************************************/
 void setupWakeUp() {
   uint32_t pindata = 0;
@@ -101,11 +100,10 @@ void setupWakeUp() {
   }
 }
 
-
-
+/**************************************************************************************************************************/
 void gotoSleep(unsigned long timesincelastkeypress,bool connected)
 {
-    // shutdown when unconnected and no keypresses for SLEEPING_DELAY ms
+  // shutdown when unconnected and no keypresses for SLEEPING_DELAY ms
   if ((timesincelastkeypress>SLEEPING_DELAY)&&(!connected))
   {
     LOG_LV2("SLEEP","Not Connected Sleep %i", timesincelastkeypress);
@@ -113,7 +111,7 @@ void gotoSleep(unsigned long timesincelastkeypress,bool connected)
     sd_power_system_off();
   } 
 
-// shutdown when unconnected and no keypresses for SLEEPING_DELAY_CONNECTED ms
+  // shutdown when unconnected and no keypresses for SLEEPING_DELAY_CONNECTED ms
   if ((timesincelastkeypress>SLEEPING_DELAY_CONNECTED)&&(connected))
   {
     LOG_LV2("SLEEP","Connected Sleep %i", timesincelastkeypress);

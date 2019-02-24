@@ -44,7 +44,7 @@ extern BLEBas blebas;
   BLEClientCharacteristic KBLinkClientChar_Layer_Request = BLEClientCharacteristic(UUID128_CHR_KEYBOARD_LAYER_REQUEST);
   BLEClientCharacteristic KBLinkClientChar_Buffer        = BLEClientCharacteristic(UUID128_CHR_KEYBOARD_BUFFER); 
 #endif
-
+/**************************************************************************************************************************/
 void setupBluetooth(void)
 {
 
@@ -333,7 +333,7 @@ void cent_disconnect_callback(uint16_t conn_handle, uint8_t reason)
 }
 #endif
 
-
+/**************************************************************************************************************************/
 /**
  * Callback invoked when received Set LED from central.
  * Must be set previously with setKeyboardLedCallback()
@@ -354,7 +354,7 @@ void set_keyboard_led(uint8_t led_bitmap)
     ledOff( LED_RED );
   }
 }
-
+/**************************************************************************************************************************/
 void sendlayer(uint8_t layer)
 {
     // Note that HID standard only has a buffer of 6 keys (plus modifiers)
@@ -370,7 +370,7 @@ void sendlayer(uint8_t layer)
         }
         #endif 
 }
-
+/**************************************************************************************************************************/
 void sendKeys(uint8_t currentReport[8])
 {
     #if BLE_HID == 1  
@@ -394,17 +394,17 @@ void sendKeys(uint8_t currentReport[8])
          ; // Only send layer to slaves - send nothing here
     #endif 
 }
-
+/**************************************************************************************************************************/
 void sendRelease(uint8_t currentReport[8])
 {
-          #if BLE_HID == 1
+    #if BLE_HID == 1
         blehid.keyRelease();                                             // HID uses the standard blehid service
-      #endif
-      #if BLE_PERIPHERAL ==1     
-        KBLinkChar_Buffer.notify(currentReport,7);                              // Peripheral->central uses the subscribe/notify mechanism
-      #endif
-        #if BLE_CENTRAL ==1
+    #endif
+    #if BLE_PERIPHERAL ==1     
+        KBLinkChar_Buffer.notify(currentReport,7);                       // Peripheral->central uses the subscribe/notify mechanism
+    #endif
+    #if BLE_CENTRAL ==1
           // Only send layer to slaves
           ;                                                              // Central does not need to send the buffer to the Peripheral.
-        #endif
+    #endif
 }

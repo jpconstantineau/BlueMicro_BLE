@@ -66,8 +66,6 @@ uint8_t mvToPercent(float mvolts) {
     return battery_level;
 }
 
-
-
 void updateBattery(void)
 {
     int vbat_raw = 0;
@@ -82,4 +80,8 @@ void updateBattery(void)
                 // VBAT voltage divider is 2M + 0.806M, which needs to be added back
                 // float vbat_mv = (float)vbat_raw * VBAT_MV_PER_LSB * VBAT_DIVIDER_COMP;   // commented out since we don't use/display floating point value anywhere.
 }
+#endif
+/**************************************************************************************************************************/
+#if BLE_CR2032_MONITORING == 1
+
 #endif

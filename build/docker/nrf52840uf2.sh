@@ -155,11 +155,11 @@ printf -- "----------------------------------------------------------\n"
 rm -rf $sourcePath
 mkdir -p $sourcePath
 cp -r $firmwarePath/* $sourcePath
-printf "sourcepath c \n" 
+
 
 for keyboard in $sourcePath/keyboards/*/
 do
-printf "keyboard $keyboard \n"
+
    keyboard=${keyboard%*/}
    keyboard=${keyboard##*/}
 
@@ -170,7 +170,7 @@ printf "keyboard $keyboard \n"
    keymaps=()
    for keymap in $sourcePath/keyboards/$keyboard/keymaps/*/
    do
-   printf "keymap  $keymap \n"
+
       keymap=${keymap%*/}
       keymap=${keymap##*/}
 
@@ -184,7 +184,7 @@ printf "keyboard $keyboard \n"
    targets=()
    for target in $sourcePath/keyboards/$keyboard/*/
    do
-   printf "target  $target \n"
+
       target=${target%*/}
       target=${target##*/}
 
@@ -201,6 +201,7 @@ printf "keyboard $keyboard \n"
    
    for keymap in "${keymaps[@]}"; do
       for target in "${targets[@]}"; do
+         printf "arduino_compile $keyboard $keymap $target \n"
          arduino_compile $keyboard $keymap $target
       done
    done
