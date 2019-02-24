@@ -155,9 +155,11 @@ printf -- "----------------------------------------------------------\n"
 rm -rf $sourcePath
 mkdir -p $sourcePath
 cp -r $firmwarePath/* $sourcePath
-echo $sourcePath
+printf "sourcepath c \n" 
+ls $sourcePath
 for keyboard in $sourcePath/keyboards/*/
 do
+printf "keyboard $keyboard \n"
    keyboard=${keyboard%*/}
    keyboard=${keyboard##*/}
 
