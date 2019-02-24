@@ -155,7 +155,7 @@ printf -- "----------------------------------------------------------\n"
 rm -rf $sourcePath
 mkdir -p $sourcePath
 cp -r $firmwarePath/* $sourcePath
-
+echo $sourcePath
 for keyboard in $sourcePath/keyboards/*/
 do
    keyboard=${keyboard%*/}
