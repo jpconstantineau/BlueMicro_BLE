@@ -33,6 +33,8 @@ buildCachePath="${outputTempPath}/.build-cache"
 sourcePath="${outputTempPath}/.source/firmware"
 keyboardsPath="${sourcePath}/keyboards"
 
+echo $keyboardsPath
+
 successfulBuilds832=0
 failedBuilds832=0
 successfulBuilds840=0
