@@ -21,9 +21,9 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define KEYBOARD_CONFIG_H
 #include "avr_mapping.h"
 
+//#define KEYBOARD_SIDE MASTER
 #define KEYBOARD_SIDE LEFT
 //#define KEYBOARD_SIDE RIGHT
-//#define KEYBOARD_SIDE MASTER
 // CHANGE THIS FOR THE KEYBOARD TO MATCH WHAT IS BEING FLASHED. OPTIONS: LEFT  RIGHT  MASTER
 
 #define DEVICE_NAME_R                         "ErgoTravelBLE_R"                          /**< Name of device. Will be included in the advertising data. */

@@ -24,9 +24,12 @@ if exist ..\..\output\%~1\%~1-%~2-%~3.zip (
 
 
 :flash
-   	echo Flashing %~1-%~2-%~3 over serial port %~4
-	C:\Users\pierre\Documents\Arduino\hardware\Adafruit\Adafruit_nRF52_Arduino\tools\adafruit-nrfutil\win32\adafruit-nrfutil.exe --verbose dfu serial -pkg ..\..\output\%~1\%~1-%~2-%~3.zip -p %~4 -b 115200 --singlebank
-
+   	@echo Flashing %~1-%~2-%~3 over serial port %~4
+   	set prefix=%localappdata%\Arduino15\packages\adafruit\hardware\nrf52\
+   	set postfix=tools\adafruit-nrfutil\win32\adafruit-nrfutil.exe --verbose dfu serial -pkg ..\..\output\%~1\%~1-%~2-%~3.zip -p %~4 -b 115200 --singlebank
+   	set search_cmd="dir /b %prefix%"
+   	FOR /F "tokens=*" %%i IN (' %search_cmd% ') DO SET ver=%%i
+   	%prefix%\%ver%\%postfix% 
 
 :usage
 	@echo Usage: flash_serial keyboard keymap target serial-port

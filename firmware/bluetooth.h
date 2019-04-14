@@ -29,9 +29,10 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "battery.h"
 
 
+
 void setupBluetooth(void);
 void startAdv(void);
-void set_keyboard_led(uint8_t led_bitmap);
+void set_keyboard_led(uint16_t conn_handle, uint8_t led_bitmap);
 
 void sendKeys(uint8_t currentReport[8]);
 void sendRelease(uint8_t currentReport[8]);
@@ -41,8 +42,8 @@ void sendlayer(uint8_t layer);
 #endif
 
 #if BLE_PERIPHERAL == 1
-    void cccd_callback(BLECharacteristic& chr, uint16_t cccd_value)  ;
-    void layer_request_callback (BLECharacteristic& chr, uint8_t* data, uint16_t len, uint16_t offset);
+    void cccd_callback(uint16_t conn_hdl,BLECharacteristic* chr, uint16_t cccd_value)  ;
+    void layer_request_callback (uint16_t conn_hdl,BLECharacteristic* chr, uint8_t* data, uint16_t len);
 #endif
 
 

@@ -23,13 +23,18 @@ if exist ..\..\output\%~1\%~1-%~2-%~3.hex (
 
 
 :flash
-   	echo Flashing %~1-%~2-%~3
+   	echo Flashing Bootloader before %~1-%~2-%~3
 	nrfjprog --family NRF52 --recover
 	nrfjprog --family NRF52 --eraseall
 	nrfjprog --family NRF52 --program %localappdata%\Arduino15\packages\adafruit\hardware\nrf52\0.10.1\bootloader\feather_nrf52832\feather_nrf52832_bootloader-0.2.9_s132_6.1.1.hex
-	nrfjprog --family NRF52 --program ..\..\output\%~1\%~1-%~2-%~3.hex
-	nrfjprog --family NRF52 --program ..\app_valid_setting_apply_nRF52832.hex
 	nrfjprog --family NRF52 --reset
+
+    @echo Flashing %~1-%~2-%~3 over serial port %~4
+   	set prefix=%localappdata%\Arduino15\packages\adafruit\hardware\nrf52\
+   	set postfix=tools\adafruit-nrfutil\win32\adafruit-nrfutil.exe --verbose dfu serial -pkg ..\..\output\%~1\%~1-%~2-%~3.zip -p %~4 -b 115200 --singlebank
+   	set search_cmd="dir /b %prefix%"
+   	FOR /F "tokens=*" %%i IN (' %search_cmd% ') DO SET ver=%%i
+   	%prefix%\%ver%\%postfix%
 
 :usage
 	@echo Usage: flash_swd keyboard keymap target

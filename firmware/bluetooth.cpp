@@ -22,7 +22,10 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 BLEDis bledis;                                                                    // Device Information Service
 extern KeyScanner keys;
 
-
+ #if BLE_HID == 1
+ uint16_t hid_conn_hdl;
+ #endif 
+ 
 #if BLE_LIPO_MONITORING == 1 
 extern BLEBas blebas; 
 #endif
@@ -54,7 +57,7 @@ void setupBluetooth(void)
   Bluefruit.setName(DEVICE_NAME);                                             // Defined in keyboard_config.h
   Bluefruit.configUuid128Count(UUID128_COUNT);                                // Defined in bluetooth_config.h
   Bluefruit.configServiceChanged(true);                                       // helps troubleshooting...
-  Bluefruit.setConnInterval(9, 12);
+  //********Bluefruit.setConnInterval(9, 12);                                 // 0.10.1: not needed for master...
 
   // Configure and Start Device Information Service
   bledis.setManufacturer(MANUFACTURER_NAME);                                  // Defined in keyboard_config.h
@@ -77,7 +80,7 @@ uint8_t Linkdata[7] = {0,0,0,0,0,0,0};
   KBLinkChar_Layers.setPermission(SECMODE_OPEN, SECMODE_NO_ACCESS);
   KBLinkChar_Layers.setFixedLen(1);
   KBLinkChar_Layers.setUserDescriptor("Keyboard Layer");
-  KBLinkChar_Layers.setCccdWriteCallback(cccd_callback);
+  KBLinkChar_Layers.setCccdWriteCallback(cccd_callback,true);     /// 0.10.1 - second parameter is the "use adafruit calback" to call adafruit's method before ours.  Not sure what it does.
   KBLinkChar_Layers.begin();
   KBLinkChar_Layers.write8(0);  // initialize with layer 0
 
@@ -93,7 +96,7 @@ uint8_t Linkdata[7] = {0,0,0,0,0,0,0};
   KBLinkChar_Buffer.setPermission(SECMODE_OPEN, SECMODE_NO_ACCESS);
   KBLinkChar_Buffer.setFixedLen(7);
   KBLinkChar_Buffer.setUserDescriptor("Keyboard HID Buffer");
-  KBLinkChar_Buffer.setCccdWriteCallback(cccd_callback);
+  KBLinkChar_Buffer.setCccdWriteCallback(cccd_callback,true);     /// 0.10.1 - second parameter is the "use adafruit calback" to call adafruit's method before ours.  Not sure what it does.
   KBLinkChar_Buffer.begin();
   KBLinkChar_Buffer.write(Linkdata, 7);  // initialize with empty buffer
 
@@ -125,8 +128,8 @@ uint8_t Linkdata[7] = {0,0,0,0,0,0,0};
   KBLinkClientChar_Buffer.begin();
   KBLinkClientChar_Buffer.setNotifyCallback(notify_callback);
   KBLinkClientChar_Layer_Request.begin(); 
-  Bluefruit.setConnectCallback(prph_connect_callback);
-  Bluefruit.setDisconnectCallback(prph_disconnect_callback);  
+  Bluefruit.Periph.setConnectCallback(prph_connect_callback);
+  Bluefruit.Periph.setDisconnectCallback(prph_disconnect_callback);  
   Bluefruit.Scanner.setRxCallback(scan_callback);
   Bluefruit.Scanner.restartOnDisconnect(true);
   Bluefruit.Scanner.filterRssi(-80);                                              // limits very far away devices - reduces load
@@ -217,28 +220,28 @@ void notify_callback(BLEClientCharacteristic* chr, uint8_t* data, uint16_t len)
 // This callback is called when a Notification subscription event occurs (This occurs on the server)
 /**************************************************************************************************************************/
  #if BLE_PERIPHERAL == 1
-void cccd_callback(BLECharacteristic& chr, uint16_t cccd_value)    
+void cccd_callback(uint16_t conn_hdl, BLECharacteristic* chr, uint16_t cccd_value)    
 {
     LOG_LV1("CBCCCD","notify_callback: %i " ,cccd_value);
     
     // Check the characteristic this CCCD update is associated with in case
     // this handler is used for multiple CCCD records.
-    if (chr.uuid == KBLinkChar_Layers.uuid) {
-        if (chr.notifyEnabled()) {              
+    if (chr->uuid == KBLinkChar_Layers.uuid) {
+        if (chr->notifyEnabled()) {              
             LOG_LV1("CBCCCD","Layers 'Notify' enabled");
         } else {
             LOG_LV1("CBCCCD","Layers 'Notify' disabled");
         }
     }
-      if (chr.uuid == KBLinkChar_Layer_Request.uuid) {
-          if (chr.notifyEnabled()) {
+      if (chr->uuid == KBLinkChar_Layer_Request.uuid) {
+          if (chr->notifyEnabled()) {
             LOG_LV1("CBCCCD","KBLinkChar_Layer_Request 'Notify' enabled");
           } else {
             LOG_LV1("CBCCCD","KBLinkChar_Layer_Request 'Notify' disabled");
           }
       }
-      if (chr.uuid == KBLinkChar_Buffer.uuid) {
-          if (chr.notifyEnabled()) {
+      if (chr->uuid == KBLinkChar_Buffer.uuid) {
+          if (chr->notifyEnabled()) {
             LOG_LV1("CBCCCD","KBLinkChar_Buffer 'Notify' enabled");
           } else {
             LOG_LV1("CBCCCD","KBLinkChar_Buffer 'Notify' disabled");
@@ -250,13 +253,13 @@ void cccd_callback(BLECharacteristic& chr, uint16_t cccd_value)
 // This callback is called layer_request when characteristic is being written to.  This occurs on the server (Peripheral)
 // Called by KBLinkChar_Layer_Request
 /**************************************************************************************************************************/
-void layer_request_callback (BLECharacteristic& chr, uint8_t* data, uint16_t len, uint16_t offset)
+void layer_request_callback (uint16_t conn_hdl, BLECharacteristic* chr, uint8_t* data, uint16_t len)
 {
-LOG_LV1("CB_CHR","layer_request_callback: len %i offset %i  data %i" ,len, offset, data[0]);
+LOG_LV1("CB_CHR","layer_request_callback: len %i offset %i  data %i" ,len, data[0]);
       if (len>0)
       {
         // update state
-        KeyScanner::updateRemoteLayer(data[offset]);
+        KeyScanner::updateRemoteLayer(data[0]);
       }  
 }
 #endif
@@ -279,9 +282,15 @@ void scan_callback(ble_gap_evt_adv_report_t* report)
 /**************************************************************************************************************************/
 void prph_connect_callback(uint16_t conn_handle)
 {
-  char peer_name[32] = { 0 };
-  Bluefruit.Gap.getPeerName(conn_handle, peer_name, sizeof(peer_name));
-  LOG_LV1("PRPH","Connected to %i %s",conn_handle,peer_name  );
+char peer_name[32] = { 0 };
+BLEConnection* connection = Bluefruit.Connection(conn_handle);
+connection->getPeerName(peer_name, sizeof(peer_name));
+LOG_LV1("PRPH","Connected to %i %s",conn_handle,peer_name  );
+
+// if HID then save connection handle to HID_connection handle
+#if BLE_HID == 1
+hid_conn_hdl = conn_handle;
+#endif
 }
 
 /**************************************************************************************************************************/
@@ -292,6 +301,11 @@ void prph_disconnect_callback(uint16_t conn_handle, uint8_t reason)
   (void) conn_handle;
   (void) reason;
   LOG_LV1("PRPH","Disconnected"  );
+
+// if HID then save connection handle to HID_connection handle
+#if BLE_HID == 1
+hid_conn_hdl = 0;
+#endif
 }
 
 
@@ -301,7 +315,8 @@ void prph_disconnect_callback(uint16_t conn_handle, uint8_t reason)
 void cent_connect_callback(uint16_t conn_handle)
 {
   char peer_name[32] = { 0 };
-  Bluefruit.Gap.getPeerName(conn_handle, peer_name, sizeof(peer_name));
+  BLEConnection* connection = Bluefruit.Connection(conn_handle);
+  connection->getPeerName(peer_name, sizeof(peer_name));
   LOG_LV1("CENTRL","Connected to %i %s",conn_handle,peer_name );
   if (KBLinkClientService.discover(conn_handle)) // validating that KBLink service is available to this connection
   {
@@ -316,7 +331,7 @@ void cent_connect_callback(uint16_t conn_handle)
   {
     LOG_LV1("CENTRL","No KBLink Service on this connection"  );
     // disconect since we couldn't find KBLink service
-    Bluefruit.Central.disconnect(conn_handle);
+    Bluefruit.disconnect(conn_handle);
   }   
 }
 /**************************************************************************************************************************/
@@ -341,8 +356,9 @@ void cent_disconnect_callback(uint16_t conn_handle, uint8_t reason)
  * The LED bit map is as follows: (also defined by KEYBOARD_LED_* )
  *    Kana (4) | Compose (3) | ScrollLock (2) | CapsLock (1) | Numlock (0)
  */
-void set_keyboard_led(uint8_t led_bitmap)
+void set_keyboard_led(uint16_t conn_handle, uint8_t led_bitmap)
 {
+  (void) conn_handle;
   // light up Red Led if any bits is set
   // RED LED is on P0.17 and is not being used on the standard BlueMicro
   if ( led_bitmap )
@@ -385,7 +401,8 @@ void sendKeys(uint8_t currentReport[8])
         keycode[4] = KeyScanner::currentReport[5];                                           // Buffer 
         keycode[5] = KeyScanner::currentReport[6];                                           // Buffer 
         layer = KeyScanner::currentReport[7];                                                // Layer
-        blehid.keyboardReport(mods,  keycode); 
+        blehid.keyboardReport(hid_conn_hdl,mods,  keycode); 
+        LOG_LV2("HID","Sending blehid.keyboardReport " );
     #endif
     #if BLE_PERIPHERAL ==1  
         KBLinkChar_Buffer.notify(KeyScanner::currentReport,7);
@@ -398,7 +415,8 @@ void sendKeys(uint8_t currentReport[8])
 void sendRelease(uint8_t currentReport[8])
 {
     #if BLE_HID == 1
-        blehid.keyRelease();                                             // HID uses the standard blehid service
+        blehid.keyRelease(hid_conn_hdl);                                             // HID uses the standard blehid service
+        LOG_LV2("HID","Sending blehid.keyRelease " );
     #endif
     #if BLE_PERIPHERAL ==1     
         KBLinkChar_Buffer.notify(currentReport,7);                       // Peripheral->central uses the subscribe/notify mechanism
