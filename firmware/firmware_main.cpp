@@ -19,9 +19,12 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 /**************************************************************************************************************************/
 #include <bluefruit.h>
-#include <Bluefruit_FileIO.h>
+//#include <Bluefruit_FileIO.h>
 #include "firmware.h"
+#include <Adafruit_LittleFS.h>
+#include <InternalFileSystem.h>
 
+using namespace Adafruit_LittleFS_Namespace;
 /**************************************************************************************************************************/
 // Keyboard Matrix
 byte rows[] MATRIX_ROW_PINS;        // Contains the GPIO Pin Numbers defined in keyboard_config.h
@@ -210,7 +213,7 @@ void monitoringloop() {
        // bond_print_list(BLE_GAP_ROLE_CENTRAL);
       //  Bluefruit.clearBonds();
       //  Bluefruit.Central.clearBonds();
-        InternalFS.format(true);  // using formatting instead of clearbonds due to the potential issue with corrupted file system and the keybord being stuck not being able to pair and save bonds.
+        InternalFS.format();  // using formatting instead of clearbonds due to the potential issue with corrupted file system and the keybord being stuck not being able to pair and save bonds.
         
       //  Serial.println();
        // Serial.println("----- After  -----\n");
