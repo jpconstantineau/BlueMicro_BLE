@@ -26,7 +26,7 @@ if exist ..\..\output\%~1\%~1-%~2-%~3.hex (
    	echo Flashing Bootloader before %~1-%~2-%~3
 	nrfjprog --family NRF52 --recover
 	nrfjprog --family NRF52 --eraseall
-	nrfjprog --family NRF52 --program %localappdata%\Arduino15\packages\adafruit\hardware\nrf52\0.10.1\bootloader\feather_nrf52832\feather_nrf52832_bootloader-0.2.9_s132_6.1.1.hex
+	nrfjprog --family NRF52 --program %localappdata%\Arduino15\packages\adafruit\hardware\nrf52\0.11.1\bootloader\feather_nrf52832\feather_nrf52832_bootloader-0.2.11_s132_6.1.1.hex
 	nrfjprog --family NRF52 --reset
 
     @echo Flashing %~1-%~2-%~3 over serial port %~4
