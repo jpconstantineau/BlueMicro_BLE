@@ -24,43 +24,37 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define KEYBOARD_SIDE MASTER
 
 
-#define DEVICE_NAME_R                         "4x4Numpad_R"                         /**< Name of device. Will be included in the advertising data. */
-#define DEVICE_NAME_L                         "4x4Numpad_L"                         /**< Name of device. Will be included in the advertising data. */
-#define DEVICE_NAME_M                         "4x4Numpad"                           /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME_R                         "4x12_R"                         /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME_L                         "4x12_L"                         /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME_M                         "4x12"                           /**< Name of device. Will be included in the advertising data. */
 
-#define DEVICE_MODEL                        "4x4Numpad_V1"                          /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_MODEL                        "4x12_V1"                          /**< Name of device. Will be included in the advertising data. */
 
-#define MANUFACTURER_NAME                   "keyboards.jpconstantineau.com"         /**< Manufacturer. Will be passed to Device Information Service. */
+#define MANUFACTURER_NAME                   "keyboards.jpconstantineau.com"            /**< Manufacturer. Will be passed to Device Information Service. */
 
 
 /* HARDWARE DEFINITION*/
 /* key matrix size */
 #define MATRIX_ROWS 4
-#define MATRIX_COLS 4
+#define MATRIX_COLS 12
 
-#define MATRIX_ROW_PINS {25, 26, 27, 28}
-#define MATRIX_COL_PINS {29, 30, 2, 3}
-
-#define BACKLIGHT_LED_PIN 23
-#define BACKLIGHT_PWM_ON 1 
-
-#define WS2812B_LED_PIN 24
-#define WS2812B_LED_COUNT 1
-#define WS2812B_I2S_ON 1 
+#define MATRIX_ROW_PINS {F6, B3, B2, B6}
+#define MATRIX_COL_PINS {F4, F5, B5, B4, E6, D7, C6, D4, D0, D1, 8, 6} // d2 d3  BlueMicrov2.0c: d2 = 8, d3=6
+#define UNUSED_PINS {}
 
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW
 
 #define KEYMAP( \
-	 K00,   K01,   K02,   K03,      \
-	 K10,   K11,   K12,   K13,     \
-	 K20,   K21,   K22,   K23,     \
-	 K30,   K31,   K32,   K33 \
+	 K00,   K01,   K02,   K03,  K04,   K05,   K06,   K07,  K08,   K09,   K010,   K011,     \
+	 K10,   K11,   K12,   K13,  K14,   K15,   K16,   K17,  K18,   K19,   K110,   K111,    \
+	 K20,   K21,   K22,   K23,  K24,   K25,   K26,   K27,  K28,   K29,   K210,   K211,   \
+	 K30,   K31,   K32,   K33,  K34,   K35,   K36,   K37,  K38,   K39,   K310,   K311 \
 ) { \
-	{ K00,   K01,   K02,   K03,   }, \
-	{ K10,   K11,   K12,   K13,   }, \
-	{ K20,   K21,   K22,   K23,   }, \
-	{ K30,   K31,   K32,   K33    } \
+	{ K00,   K01,   K02,   K03, K04,   K05,   K06,   K07,  K08,   K09,   K010,   K011,  }, \
+	{ K10,   K11,   K12,   K13, K14,   K15,   K16,   K17,  K18,   K19,   K110,   K111,  }, \
+	{ K20,   K21,   K22,   K23, K24,   K25,   K26,   K27,  K28,   K29,   K210,   K211,  }, \
+	{ K30,   K31,   K32,   K33, K34,   K35,   K36,   K37,  K38,   K39,   K310,   K311  } \
 }
 
 
