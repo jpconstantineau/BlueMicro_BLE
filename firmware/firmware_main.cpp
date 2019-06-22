@@ -19,7 +19,6 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 /**************************************************************************************************************************/
 #include <bluefruit.h>
-//#include <Bluefruit_FileIO.h>
 #include "firmware.h"
 #include <Adafruit_LittleFS.h>
 #include <InternalFileSystem.h>
@@ -31,6 +30,8 @@ byte rows[] MATRIX_ROW_PINS;        // Contains the GPIO Pin Numbers defined in 
 byte columns[] MATRIX_COL_PINS;     // Contains the GPIO Pin Numbers defined in keyboard_config.h  
 
 const uint8_t boot_mode_commands [BOOT_MODE_COMMANDS_COUNT][2] BOOT_MODE_COMMANDS;
+
+SoftwareTimer keyscantimer, monitoringtimer, batterytimer;
 
 KeyScanner keys;
 
@@ -46,9 +47,11 @@ void setup() {
 
   setupGpio();                                                                // checks that NFC functions on GPIOs are disabled.
 
-  Scheduler.startLoop(monitoringloop);                                        // Starting second loop task for monitoring tasks
-  Scheduler.startLoop(keyscanningloop);                                       // Starting third loop task for key scanning
+ // Scheduler.startLoop(monitoringloop);                                        // Starting second loop task for monitoring tasks
 
+  keyscantimer.begin(HIDREPORTINGINTERVAL, keyscantimer_callback);
+  monitoringtimer.begin(HIDREPORTINGINTERVAL*10, monitoringtimer_callback);
+  batterytimer.begin(30*1000, batterytimer_callback);
   setupBluetooth();
 
   #if BACKLIGHT_PWM_ON == 1 //setup PWM module
@@ -58,6 +61,10 @@ void setup() {
   setupKeymap();
   setupMatrix();
   startAdv(); 
+  keyscantimer.start();
+  monitoringtimer.start();
+  batterytimer.start();
+  suspendLoop(); // this commands suspends the main loop.  We are no longer using the loop but scheduling things using the timers.
 };
 /**************************************************************************************************************************/
 //
@@ -97,13 +104,13 @@ void scanMatrix() {
           #endif
     }
 
-      delay(1);   // using the FreeRTOS delay function reduced power consumption from 1.5mA down to 0.9mA
+      //delay(1);   // using the FreeRTOS delay function reduced power consumption from 1.5mA down to 0.9mA
       // need for the GPIO lines to settle down electrically before reading.
-     /*#ifdef NRFX_H__  // Added to support BSP 0.9.0
+      #ifdef NRFX_H__  // Added to support BSP 0.9.0
          nrfx_coredep_delay_us(1);
       #else            // Added to support BSP 0.8.6
         nrf_delay_us(1);
-      #endif*/
+      #endif
 
       pindata = NRF_GPIO->IN;                                         // read all pins at once
      for (int i = 0; i < MATRIX_COLS; ++i) {
@@ -144,10 +151,19 @@ void sendKeyPresses() {
 /**************************************************************************************************************************/
 // put your main code here, to run repeatedly:
 /**************************************************************************************************************************/
-void loop() {
-  // put your main code here, to run repeatedly:
+void loop() {};  // loop is now empty and no longer being called.
 
-  unsigned long timesincelastkeypress = millis() - KeyScanner::getLastPressed();
+/**************************************************************************************************************************/
+// put your key scanning code here, to run repeatedly:
+/**************************************************************************************************************************/
+void keyscantimer_callback(TimerHandle_t _handle) {
+    #if MATRIX_SCAN == 1
+    scanMatrix();
+  #endif
+  #if SEND_KEYS == 1
+    sendKeyPresses();    // how often does this really run?
+  #endif
+   unsigned long timesincelastkeypress = millis() - KeyScanner::getLastPressed();
 
   #if SLEEP_ACTIVE == 1
     gotoSleep(timesincelastkeypress,Bluefruit.connected());
@@ -178,25 +194,23 @@ void loop() {
         }
       }
   } 
-  delay(HIDREPORTINGINTERVAL*4);
-};
-/**************************************************************************************************************************/
-// put your key scanning code here, to run repeatedly:
-/**************************************************************************************************************************/
-void keyscanningloop () {
-  #if MATRIX_SCAN == 1
-    scanMatrix();
-  #endif
-  #if SEND_KEYS == 1
-    sendKeyPresses();    // how often does this really run?
-  #endif
-
-  delay(HIDREPORTINGINTERVAL);
+  sd_power_mode_set(NRF_POWER_MODE_LOWPWR);
+  sd_app_evt_wait();
 }
 //********************************************************************************************//
 //* Battery Monitoring Task - runs infrequently - except in boot mode                        *//
 //********************************************************************************************//
-void monitoringloop() {
+void batterytimer_callback(TimerHandle_t _handle)
+{
+    #if BLE_LIPO_MONITORING == 1
+      updateBattery();
+    #endif
+    sd_power_mode_set(NRF_POWER_MODE_LOWPWR);
+    sd_app_evt_wait();
+}
+
+void monitoringtimer_callback(TimerHandle_t _handle)
+{
   switch(monitoring_state)
   {
     case STATE_BOOT_INITIALIZE:
@@ -204,7 +218,7 @@ void monitoringloop() {
       break;    
     case STATE_BOOT_MODE:
       if (millis()>BOOT_MODE_DELAY) {monitoring_state = STATE_MONITOR_MODE;}
-      delay(25); // adds a delay to minimize power consumption during boot mode. 
+    //  delay(25); // adds a delay to minimize power consumption during boot mode. 
       break;    
     case STATE_BOOT_CLEAR_BONDS:
        // Serial.println();
@@ -229,10 +243,8 @@ void monitoringloop() {
         enterOTADfu();
       break;
     case STATE_MONITOR_MODE:
-                #if BLE_LIPO_MONITORING == 1
-                  updateBattery();
-                #endif
-                delay(30000);                                             // wait 30 seconds before a new battery update.  Needed to minimize power consumption.
+                
+             //   delay(30000);                                             // wait 30 seconds before a new battery update.  Needed to minimize power consumption.
       break;    
     case STATE_BOOT_UNKNOWN:
       break;
@@ -240,6 +252,8 @@ void monitoringloop() {
       break;
     
   } 
+  sd_power_mode_set(NRF_POWER_MODE_LOWPWR);
+  sd_app_evt_wait();
 };
 //********************************************************************************************//
 //* Idle Task - runs when there is nothing to do                                             *//
@@ -248,5 +262,6 @@ void monitoringloop() {
 void rtos_idle_callback(void) {
   // Don't call any other FreeRTOS blocking API()
   // Perform background task(s) here
+  sd_power_mode_set(NRF_POWER_MODE_LOWPWR);
   sd_app_evt_wait();  // puts the nrf52 to sleep when there is nothing to do.  You need this to reduce power consumption. (removing this will increase current to 8mA)
 };
