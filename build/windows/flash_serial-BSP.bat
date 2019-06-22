@@ -9,7 +9,7 @@ if exist ..\..\output\%~1\%~1-%~2-%~3.zip (
 	goto flash
 ) else (
 	@echo Compiled zip package not found: running build script first.
-	powershell ./build-windows-BSP.ps1 %~1 %~2 %~3
+	powershell ./build-BSP.ps1 %~1 %~2 %~3
 
 	if exist ..\..\output\%~1\%~1-%~2-%~3.zip (
 		goto flash

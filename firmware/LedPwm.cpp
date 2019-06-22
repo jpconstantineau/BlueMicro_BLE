@@ -61,7 +61,7 @@ if (timesincelastkeypress<PWM_TOUCH_INTERVAL)
 
 }else
 {
-  if (pwmval > 19) {pwmval = pwmval-10 ;} else {pwmval = 0 ;}
+  if (pwmval > 1) {pwmval-- ;} else {pwmval = 0 ;}
 }
 
   // send PWM config to PWM NRF52 device

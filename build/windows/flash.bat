@@ -8,7 +8,7 @@ if exist ..\..\output\%~1\%~1-%~2-%~3.hex (
 	goto flash
 ) else (
 	@echo Compiled hex not found: running build script first.
-	powershell ./build-windows.ps1 %~1 %~2 %~3
+	powershell ./build.ps1 %~1 %~2 %~3
 
 	if exist ..\..\output\%~1\%~1-%~2-%~3.hex (
 		goto flash

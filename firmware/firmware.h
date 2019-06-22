@@ -34,9 +34,10 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 void setupMatrix(void);
 void scanMatrix(void);
 void sendKeyPresses(void);
-void monitoringloop(void);
-void keyscanningloop(void);
 
+void keyscantimer_callback(TimerHandle_t _handle);
+void monitoringtimer_callback(TimerHandle_t _handle);
+void batterytimer_callback(TimerHandle_t _handle);
 enum states_monitor_modes {
   STATE_BOOT_INITIALIZE = 0x00,
   STATE_BOOT_MODE,
