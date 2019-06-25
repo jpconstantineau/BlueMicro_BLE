@@ -25,6 +25,6 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "firmware_config.h"
 
 void setupPWM(void);
-void updatePWM(unsigned long timesincelastkeypress);
+void updatePWM(int mode, unsigned long timesincelastkeypress);
 
 #endif

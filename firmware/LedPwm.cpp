@@ -32,42 +32,62 @@ void setupPWM(void)
   NRF_GPIO->OUTCLR = (1 << BACKLIGHT_LED_PIN);
   
   
-  NRF_PWM0->PRESCALER   = PWM_PRESCALER_PRESCALER_DIV_8; // 1 us
-  NRF_PWM0->PSEL.OUT[0] = BACKLIGHT_LED_PIN;
-  NRF_PWM0->MODE        = (PWM_MODE_UPDOWN_Up << PWM_MODE_UPDOWN_Pos);
-  NRF_PWM0->DECODER     = (PWM_DECODER_LOAD_Common     << PWM_DECODER_LOAD_Pos) | 
+  NRF_PWM2->PRESCALER   = PWM_PRESCALER_PRESCALER_DIV_8; // 1 us
+  NRF_PWM2->PSEL.OUT[0] = BACKLIGHT_LED_PIN;
+  NRF_PWM2->MODE        = (PWM_MODE_UPDOWN_Up << PWM_MODE_UPDOWN_Pos);
+  NRF_PWM2->DECODER     = (PWM_DECODER_LOAD_Common     << PWM_DECODER_LOAD_Pos) | 
                           (PWM_DECODER_MODE_RefreshCount   << PWM_DECODER_MODE_Pos);
-  NRF_PWM0->LOOP        = (PWM_LOOP_CNT_Disabled       << PWM_LOOP_CNT_Pos);
-  NRF_PWM0->COUNTERTOP  = 10000; // 5ms period = 200 Hz PWM frequency
+  NRF_PWM2->LOOP        = (PWM_LOOP_CNT_Disabled       << PWM_LOOP_CNT_Pos);
+  NRF_PWM2->COUNTERTOP  = 10000; // 5ms period = 200 Hz PWM frequency
   
   
-  NRF_PWM0->SEQ[0].CNT = ((sizeof(buf) / sizeof(uint16_t)) << PWM_SEQ_CNT_CNT_Pos);
-  NRF_PWM0->SEQ[0].ENDDELAY = 0;
-  NRF_PWM0->SEQ[0].PTR = (uint32_t)&buf[0];
-  NRF_PWM0->SEQ[0].REFRESH = 0;
-  NRF_PWM0->SHORTS = 0;//(PWM_SHORTS_LOOPSDONE_SEQSTART0_Enabled << PWM_SHORTS_LOOPSDONE_SEQSTART0_Pos);//0;
+  NRF_PWM2->SEQ[0].CNT = ((sizeof(buf) / sizeof(uint16_t)) << PWM_SEQ_CNT_CNT_Pos);
+  NRF_PWM2->SEQ[0].ENDDELAY = 0;
+  NRF_PWM2->SEQ[0].PTR = (uint32_t)&buf[0];
+  NRF_PWM2->SEQ[0].REFRESH = 0;
+  NRF_PWM2->SHORTS = 0;//(PWM_SHORTS_LOOPSDONE_SEQSTART0_Enabled << PWM_SHORTS_LOOPSDONE_SEQSTART0_Pos);//0;
   
-  NRF_PWM0->ENABLE = 1;
-  NRF_PWM0->TASKS_SEQSTART[0] = 1; 
+  NRF_PWM2->ENABLE = 1;
+  NRF_PWM2->TASKS_SEQSTART[0] = 1; 
   
   }
 
 /**************************************************************************************************************************/
-void updatePWM(unsigned long timesincelastkeypress)
+void updatePWM(int mode, unsigned long timesincelastkeypress)
 {
-if (timesincelastkeypress<PWM_TOUCH_INTERVAL)
-{
-    pwmval = DEFAULT_PWM_VALUE;
 
-}else
-{
-  if (pwmval > 1) {pwmval-- ;} else {pwmval = 0 ;}
+  switch (mode)
+  {
+  case 0: // OFF.
+      // send PWM config to PWM NRF52 device
+    buf[0] = (1 << 15) | 0; // Inverse polarity (bit 15), 1500us duty cycle
+    NRF_PWM2->SEQ[0].PTR = (uint32_t)&buf[0];
+    NRF_PWM2->TASKS_SEQSTART[0] = 1;
+    break;
+
+  case 1: // Bright when typing, dim when not typing
+        if (timesincelastkeypress<PWM_TOUCH_INTERVAL)
+        {
+            pwmval = DEFAULT_PWM_VALUE;
+
+        }else
+        {
+          if (pwmval > 1) {pwmval-- ;} else {pwmval = 0 ;}
+        }
+
+          // send PWM config to PWM NRF52 device
+          buf[0] = (1 << 15) | pwmval; // Inverse polarity (bit 15), 1500us duty cycle
+          NRF_PWM2->SEQ[0].PTR = (uint32_t)&buf[0];
+          NRF_PWM2->TASKS_SEQSTART[0] = 1;
+        
+    break;
+
+  default:
+    // unknown mode.  switch to mode 0
+    break;
+  }
 }
 
-  // send PWM config to PWM NRF52 device
-  buf[0] = (1 << 15) | pwmval; // Inverse polarity (bit 15), 1500us duty cycle
-  NRF_PWM0->SEQ[0].PTR = (uint32_t)&buf[0];
-  NRF_PWM0->TASKS_SEQSTART[0] = 1;
-}
+
 
 #endif

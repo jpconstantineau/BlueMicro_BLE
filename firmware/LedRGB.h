@@ -1,5 +1,5 @@
 /*
-Copyright 2018 <Pierre Constantineau>
+Copyright 2019 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -17,37 +17,30 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-#ifndef FIRMWARE_H
-#define FIRMWARE_H
-#undef min
-#undef max
+
+#ifndef LEDRGB_H
+#define LEDRGB_H
+#include <Arduino.h>
+#include "keyboard_config.h"
 #include "firmware_config.h"
-#include "bluetooth_config.h"
-#include "KeyScanner.h"
-#include "keymap.h"
-#include "sleep.h"
-#include "bluetooth.h"
-#include "battery.h"
-#include "LedPwm.h"
-#include "LedRGB.h"
-#include "gpio.h"
+#include "Adafruit_NeoPixel.h"
 
-void setupMatrix(void);
-void scanMatrix(void);
-void sendKeyPresses(void);
+// IMPORTANT NOTES:
+// See https://arduino.stackexchange.com/questions/34095/how-do-i-configure-the-arduino-ide-to-look-for-source-code-in-a-subdirectory-wit
+// We need to copy the adafruit library files and copy to the firmware folder.
+// This is because the arduino IDE can't really work with folders properly
+// if one renames the "libraries" folder to "src", then it tries to compile all the examples and link everything.  Something we don't want to do (and ultimately fails)
 
-void keyscantimer_callback(TimerHandle_t _handle);
-void monitoringtimer_callback(TimerHandle_t _handle);
-void batterytimer_callback(TimerHandle_t _handle);
-void RGBtimer_callback(TimerHandle_t _handle);
-enum states_monitor_modes {
-  STATE_BOOT_INITIALIZE = 0x00,
-  STATE_BOOT_MODE,
-  STATE_BOOT_CLEAR_BONDS,
-  STATE_BOOT_SERIAL_DFU,
-  STATE_BOOT_WIRELESS_DFU,
-  STATE_MONITOR_MODE,
-  STATE_BOOT_UNKNOWN,
-  };
+  typedef struct rgb_color
+  {
+    unsigned char red, green, blue;
+    rgb_color() {};
+    rgb_color(uint8_t r, uint8_t g, uint8_t b) : red(r), green(g), blue(b) {};
+  } rgb_color;
 
-#endif /* FIRMWARE_H */
+extern Adafruit_NeoPixel pixels;
+void setupRGB(void);
+void updateRGB(int mode, unsigned long timesincelastkeypress);
+void suspendRGB(void);
+
+#endif

@@ -31,7 +31,7 @@ byte columns[] MATRIX_COL_PINS;     // Contains the GPIO Pin Numbers defined in 
 
 const uint8_t boot_mode_commands [BOOT_MODE_COMMANDS_COUNT][2] BOOT_MODE_COMMANDS;
 
-SoftwareTimer keyscantimer, monitoringtimer, batterytimer;
+SoftwareTimer keyscantimer, monitoringtimer, batterytimer;//, RGBtimer;
 
 KeyScanner keys;
 
@@ -52,10 +52,14 @@ void setup() {
   keyscantimer.begin(HIDREPORTINGINTERVAL, keyscantimer_callback);
   monitoringtimer.begin(HIDREPORTINGINTERVAL*10, monitoringtimer_callback);
   batterytimer.begin(30*1000, batterytimer_callback);
+  //RGBtimer.begin(WS2812B_LED_COUNT*25, RGBtimer_callback);
   setupBluetooth();
 
   #if BACKLIGHT_PWM_ON == 1 //setup PWM module
     setupPWM();
+  #endif
+  #if WS2812B_LED_ON == 1 //setup PWM module
+    setupRGB();
   #endif
   // Set up keyboard matrix and start advertising
   setupKeymap();
@@ -64,6 +68,7 @@ void setup() {
   keyscantimer.start();
   monitoringtimer.start();
   batterytimer.start();
+  //RGBtimer.start();
   suspendLoop(); // this commands suspends the main loop.  We are no longer using the loop but scheduling things using the timers.
 };
 /**************************************************************************************************************************/
@@ -177,9 +182,12 @@ void keyscantimer_callback(TimerHandle_t _handle) {
   #endif
 
   #if BACKLIGHT_PWM_ON == 1
-    updatePWM(timesincelastkeypress);
+    updatePWM(1, timesincelastkeypress);
   #endif
 
+    #if WS2812B_LED_ON == 1 
+     updateRGB(1, timesincelastkeypress);
+    #endif
   if (monitoring_state == STATE_BOOT_MODE)
   {
       KeyScanner::getReport();                                            // get state data - Data is in KeyScanner::currentReport
@@ -208,6 +216,18 @@ void batterytimer_callback(TimerHandle_t _handle)
     sd_power_mode_set(NRF_POWER_MODE_LOWPWR);
     sd_app_evt_wait();
 }
+
+void RGBtimer_callback(TimerHandle_t _handle)
+{
+    #if WS2812B_LED_ON == 1 
+      unsigned long timesincelastkeypress = millis() - KeyScanner::getLastPressed();
+     updateRGB(0, timesincelastkeypress);
+    #endif
+    sd_power_mode_set(NRF_POWER_MODE_LOWPWR);
+    sd_app_evt_wait();
+}
+
+
 
 void monitoringtimer_callback(TimerHandle_t _handle)
 {
@@ -263,5 +283,5 @@ void rtos_idle_callback(void) {
   // Don't call any other FreeRTOS blocking API()
   // Perform background task(s) here
   sd_power_mode_set(NRF_POWER_MODE_LOWPWR);
-  sd_app_evt_wait();  // puts the nrf52 to sleep when there is nothing to do.  You need this to reduce power consumption. (removing this will increase current to 8mA)
+    sd_app_evt_wait();  // puts the nrf52 to sleep when there is nothing to do.  You need this to reduce power consumption. (removing this will increase current to 8mA)
 };
