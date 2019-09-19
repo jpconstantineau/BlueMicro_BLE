@@ -41,6 +41,8 @@ Bottom Row: BlueMicro V2.0,  BlueMicro V1.0, BlueNano V2.0, BlueNano V1.0, Pro M
 * [BLE Phage Basic](https://southpawdesign.net/products/blue-phage-basic?variant=8958741545020) (Compatible with even more Keyboards due to its small size - Serial TX/RX are routed separately)
 
 
+We need your help in bringing support for the nrf52840.  Contact us and let us know how you want to help!
+
 Maintainer: [/u/jpconstantineau](https://github.com/jpconstantineau)  
 
 
