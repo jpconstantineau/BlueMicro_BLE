@@ -1,1 +1,1 @@
-C:\Users\pierre\Documents\Arduino\hardware\Adafruit\Adafruit_nRF52_Arduino\tools\adafruit-nrfutil\win32\adafruit-nrfutil.exe --verbose dfu serial -pkg hid_keyboard.ino.zip -p COM18 -b 115200 
+%localappdata%\Arduino15\packages\adafruit\hardware\nrf52\0.13.0\tools\adafruit-nrfutil\win32\adafruit-nrfutil.exe  --verbose dfu serial -pkg board_tester.ino.zip -p %1 -b 115200 --singlebank

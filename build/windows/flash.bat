@@ -26,7 +26,7 @@ if exist ..\..\output\%~1\%~1-%~2-%~3.hex (
    	echo Flashing Bootloader before %~1-%~2-%~3
 	nrfjprog --family NRF52 --recover
 	nrfjprog --family NRF52 --eraseall
-	nrfjprog --family NRF52 --program %localappdata%\Arduino15\packages\adafruit\hardware\nrf52\0.11.1\bootloader\feather_nrf52832\feather_nrf52832_bootloader-0.2.11_s132_6.1.1.hex
+	nrfjprog --program %localappdata%\Arduino15\packages\adafruit\hardware\nrf52\0.13.0\bootloader\feather_nrf52832\feather_nrf52832_bootloader-0.2.12_s132_6.1.1.hex -f nrf52 --chiperase --reset 
 	nrfjprog --family NRF52 --reset
 
     @echo Flashing %~1-%~2-%~3 over serial port %~4
@@ -37,6 +37,6 @@ if exist ..\..\output\%~1\%~1-%~2-%~3.hex (
    	%prefix%\%ver%\%postfix%
 
 :usage
-	@echo Usage: flash_swd keyboard keymap target
+	@echo Usage: flash_swd keyboard keymap target COMPort
 
 

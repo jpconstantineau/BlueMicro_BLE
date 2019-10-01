@@ -26,7 +26,7 @@ if exist ..\..\output\%~1\%~1-%~2-%~3.hex (
    	echo Flashing %~1-%~2-%~3
 	nrfjprog --family NRF52 --recover
 	nrfjprog --family NRF52 --eraseall
-	nrfjprog --family NRF52 --program %localappdata%\Arduino15\packages\adafruit\hardware\nrf52\0.11.0\bootloader\feather_nrf52832\feather_nrf52832_bootloader-0.2.11_s132_6.1.1.hex
+	nrfjprog --program %localappdata%\Arduino15\packages\adafruit\hardware\nrf52\0.13.0\bootloader\feather_nrf52832\feather_nrf52832_bootloader-0.2.12_s132_6.1.1.hex -f nrf52 --chiperase --reset 
 	nrfjprog --family NRF52 --program ..\..\output\%~1\%~1-%~2-%~3.hex
 	nrfjprog --family NRF52 --program ..\app_valid_setting_apply_nRF52832.hex
 	nrfjprog --family NRF52 --reset
