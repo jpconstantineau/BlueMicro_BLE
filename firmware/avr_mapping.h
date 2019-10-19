@@ -26,40 +26,61 @@ This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
 #ifndef AVR_MAPPING_H
 #define AVR_MAPPING_H
 
-#define D3      17  //
-#define D2      7   //
-#define D1      25  //sda
-#define D0      26  //scl
-#define D4      27
-#define C6      28
-#define D7      29
-#define E6      30
-#define B4      15
-#define B5      16
+// TODO get all the details setup here...
+// FEATHERNRF52832 Not an AVR/Pro Micro Footprint
+// BLUEMICROV1_0   CR2032  
+// BLUEMICROV1_1   CR2032
+// BLUEMICROV2_0   LiPo
+// BLUEMICROV2_0B  LiPo
+// BLUEMICROV2_0C  LiPo
+// BLUENANO1_0     CR2032
+// BLUENANO2_0     LiPo
 
-#define F4      5
-#define F5      4
-#define F6      3
-#define F7      2
-#define B1      12  //sck
-#define B3      14  //miso
-#define B2      13  //mosi
-#define B6      11
 
-#define BLUEMICRO 0
-#define BLUEMACRO 1
+    #if HARDWARE_MAPPING == BLUEMICROV2_0C
+        #define BLE_LIPO_MONITORING 1
+        #define D3      6  //
+        #define D2      8   //
+        #define D1      25  //sda
+        #define D0      26  //scl
+        #define D4      27
+        #define C6      28
+        #define D7      29
+        #define E6      30
+        #define B4      15
+        #define B5      16
 
-/*
-Common Defines.
-*/
-// ToDo: Move these defines to a more logical location.
+        #define F4      5
+        #define F5      4
+        #define F6      3
+        #define F7      2
+        #define B1      12  //sck
+        #define B3      14  //miso
+        #define B2      13  //mosi
+        #define B6      11
 
-#define COL2ROW       0
-#define ROW2COL       1
+    #else // use elseif
 
-#define TEST 0
-#define LEFT 1
-#define RIGHT 2
-#define MASTER 3
+        #define D3      17  //
+        #define D2      7   //
+        #define D1      25  //sda
+        #define D0      26  //scl
+        #define D4      27
+        #define C6      28
+        #define D7      29
+        #define E6      30
+        #define B4      15
+        #define B5      16
+
+        #define F4      5
+        #define F5      4
+        #define F6      3
+        #define F7      2
+        #define B1      12  //sck
+        #define B3      14  //miso
+        #define B2      13  //mosi
+        #define B6      11
+
+    #endif
 
 #endif /* AVR_MAPPING_H */

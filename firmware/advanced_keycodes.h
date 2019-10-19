@@ -36,6 +36,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define TG(KC) ((1 << 16) | KC)
 #define OS(KC) ((2 << 16) | KC)
 
+#define S(KC) MOD(MOD_LSHIFT, KC)
 
 // define any shift/ctl/alt key combinations
 #define KC_TILD MOD(MOD_LSHIFT, KC_GRV)

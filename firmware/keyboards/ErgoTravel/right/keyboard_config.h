@@ -20,6 +20,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 #ifndef KEYBOARD_CONFIG_H
 #define KEYBOARD_CONFIG_H
+#include "hardware_variants.h"
+#define HARDWARE_MAPPING  BLUEMICROV2_0C
 #include "avr_mapping.h"
 
 //#define KEYBOARD_SIDE LEFT
