@@ -1,5 +1,5 @@
 /*
-Copyright 2018 <Pierre Constantineau>
+Copyright 2019 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -17,28 +17,26 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-#include <stdint.h>
-#include "hid_keycodes.h"
-#include "hardware_variants.h"
-#include "keyboard_config.h"
-#include "advanced_keycodes.h"
-#include "Key.h"
-#include <array>
-#ifndef KEYMAP_H
-#define KEYMAP_H
 
-#define KC_CAP_D MOD(MOD_LSHIFT, KC_D)
-#define NUM_LAYERS 2
+#ifndef HARDWAREVARIANTS_H
+#define HARDWAREVARIANTS_H
 
-#define _QWERTY 0
-#define _L1  1
-#define _PRESS 0
-#define _MT_TAP 1
-#define _MT_HOLD 2
-#define _DT_TAP 3
-#define _DT_DOUBLETAP 4
+#define FEATHERNRF52832 0
+#define BLUEMICROV1_0   1
+#define BLUEMICROV1_1   2
+#define BLUEMICROV2_0   3
+#define BLUEMICROV2_0B  4
+#define BLUEMICROV2_0C  5
+#define BLUENANO1_0     6
+#define BLUENANO2_0     7
 
-void setupKeymap();
-extern std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix;
 
-#endif /* KEYMAP_H */
+#define COL2ROW       0
+#define ROW2COL       1
+
+#define TEST 0
+#define LEFT 1
+#define RIGHT 2
+#define MASTER 3
+
+#endif  /*HARDWAREVARIANTS_H*/
