@@ -90,8 +90,8 @@ uint32_t layer1[MATRIX_ROWS][MATRIX_COLS] =
   KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, \
   KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, \
   KC_DEL,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,    \
-  _______, KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,   \
-  _______, _______, _______, _______, LOWER, _______  \
+  KC_TRNS, KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,   \
+  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, _______  \
 );
 
 uint32_t layer2[MATRIX_ROWS][MATRIX_COLS] =
@@ -99,8 +99,8 @@ uint32_t layer2[MATRIX_ROWS][MATRIX_COLS] =
   KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,     \
   KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,     \
   KC_DEL,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,    \
-  _______, KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,   \
-  _______, _______, _______, _______, _______, _______ \
+  KC_TRNS, KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,   \
+  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, _______ \
 );
 
 uint32_t layer3[MATRIX_ROWS][MATRIX_COLS] =
@@ -108,8 +108,8 @@ uint32_t layer3[MATRIX_ROWS][MATRIX_COLS] =
   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,    \
   _______, _______, _______, _______, _______, _______,  \
   _______, _______, _______, _______, _______, _______,\
-  _______, _______, _______, _______, _______, _______, \
-  ADJUST, _______, _______, _______, _______, _______ \
+  KC_TRNS, _______, _______, _______, _______, _______, \
+  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, _______ \
 );
 
 
@@ -152,7 +152,7 @@ uint32_t layer1[MATRIX_ROWS][MATRIX_COLS] =
    KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_DEL, \
    KC_F6,   KC_UNDS, KC_PLUS, KC_LCBR, KC_RCBR, KC_PIPE, \
    KC_F12,S(KC_NUHS),S(KC_NUBS),_______, _______, _______, \
-   _______, _______, _______,_______, _______, _______ \
+   _______, KC_TRNS, _______,_______, _______, _______ \
 );
 
 uint32_t layer2[MATRIX_ROWS][MATRIX_COLS] =
@@ -161,7 +161,7 @@ uint32_t layer2[MATRIX_ROWS][MATRIX_COLS] =
  KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_DEL, \
  KC_F6,   KC_MINS, KC_EQL,  KC_LBRC, KC_RBRC, KC_BSLS, \
  KC_F12,  KC_NUHS, KC_NUBS, _______, _______, _______, \
- _______, RAISE, _______, _______, _______, _______ \
+ _______, KC_TRNS, _______, _______, _______, _______ \
 );
 
 uint32_t layer3[MATRIX_ROWS][MATRIX_COLS] =
@@ -170,7 +170,7 @@ uint32_t layer3[MATRIX_ROWS][MATRIX_COLS] =
  _______, _______, _______, _______, _______, KC_DEL, \
  _______, _______, _______, _______,  _______, _______, \
   _______, _______, _______, _______, _______, _______, \
-  _______, _______, _______, _______, _______, _______ \
+  _______, KC_TRNS, _______, _______, _______, _______ \
 );
 
 
