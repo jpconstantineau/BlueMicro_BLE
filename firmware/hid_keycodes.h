@@ -127,7 +127,8 @@ https://www.usb.org/sites/default/files/documents/hut1_12v2.pdf
 #define KC_LWIN KC_LGUI
 #define KC_RCMD KC_RGUI
 #define KC_RWIN KC_RGUI
-#define _______ KC_NO
+#define _______ KC_TRNS
+#define XXXXXXX KC_NO
 
 
 /* USB HID Keyboard/Keypad Usage(0x07) */
