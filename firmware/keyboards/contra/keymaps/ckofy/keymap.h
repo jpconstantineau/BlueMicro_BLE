@@ -33,7 +33,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define _L1  1
 #define _L2  2
 #define _L3  3
-#define _______ KC_TRNS
+
 
 #define KC_CUT  MOD(MOD_LCTRL, KC_X)	// CUT
 #define KC_CPY  MOD(MOD_LCTRL, KC_C)	// COPY
