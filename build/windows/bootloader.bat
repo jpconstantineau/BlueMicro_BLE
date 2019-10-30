@@ -1,1 +1,1 @@
-	nrfjprog --family NRF52 --program %localappdata%\Arduino15\packages\adafruit\hardware\nrf52\0.13.0\bootloader\feather_nrf52832\feather_nrf52832_bootloader-0.2.12_s132_6.1.1.hex -f nrf52 --chiperase --reset 
+	nrfjprog --family NRF52 --program %localappdata%\Arduino15\packages\adafruit\hardware\nrf52\0.14.6\bootloader\feather_nrf52832\feather_nrf52832_bootloader-0.2.13_s132_6.1.1.hex -f nrf52 --chiperase --reset 
