@@ -121,7 +121,8 @@ void scanMatrix() {
      pindata = 0; // test reading nothing - this will check that the read behaves differently on the nrf52840...
     
      for (int i = 0; i < MATRIX_COLS; ++i) {
-      KeyScanner::scanMatrix((pindata>>(columns[i]))&1, millis(), j, i);       // This function processes the logic values and does the debouncing
+      KeyScanner::scanMatrix((digitalRead(columns[i])), millis(), j, i); 
+      //KeyScanner::scanMatrix((pindata>>(columns[i]))&1, millis(), j, i);       // This function processes the logic values and does the debouncing
       pinMode(columns[i], INPUT);                                     //'disables' the column that just got looped thru
      }
     pinMode(rows[j], INPUT);                                          //'disables' the row that was just scanned
