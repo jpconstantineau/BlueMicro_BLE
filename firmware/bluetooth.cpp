@@ -57,6 +57,7 @@ void setupBluetooth(void)
   Bluefruit.setName(DEVICE_NAME);                                             // Defined in keyboard_config.h
   Bluefruit.configUuid128Count(UUID128_COUNT);                                // Defined in bluetooth_config.h
   Bluefruit.configServiceChanged(true);                                       // helps troubleshooting...
+  Bluefruit.setAppearance(BLE_APPEARANCE_HID_KEYBOARD);                       // How the device appears once connected
   //********Bluefruit.setConnInterval(9, 12);                                 // 0.10.1: not needed for master...
 
   // Configure and Start Device Information Service
