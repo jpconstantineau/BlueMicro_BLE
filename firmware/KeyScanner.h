@@ -42,7 +42,7 @@ class KeyScanner {
         static bool getReport();
         static unsigned long getLastPressed();
         static bool layerChanged;
-        static bool reportEmpty;
+        static bool reportChanged;
         static uint8_t localLayer;
         static uint8_t layerMode;
         static uint8_t currentReport[8];
@@ -56,6 +56,7 @@ class KeyScanner {
         static void resetRemoteReport();
         
         static uint8_t remoteReport[8];
+        static uint8_t previousReport[8];
         static unsigned long timestamps[MATRIX_ROWS][MATRIX_COLS]; 
         static unsigned long lastPressed;
 

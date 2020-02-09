@@ -23,17 +23,17 @@ if exist ..\..\output\%~1\%~1-%~2-%~3.hex (
 
 
 :flash
-   	echo Flashing Bootloader before %~1-%~2-%~3
-	nrfjprog --family NRF52 --recover
-	nrfjprog --family NRF52 --eraseall
-	nrfjprog --program %localappdata%\Arduino15\packages\adafruit\hardware\nrf52\0.18.0\bootloader\feather_nrf52832\feather_nrf52832_bootloader-0.3.0_s132_6.1.1.hex -f nrf52 --chiperase --reset 
-	nrfjprog --family NRF52 --reset
 
-    @echo Flashing %~1-%~2-%~3 over serial port %~4
    	set prefix=%localappdata%\Arduino15\packages\adafruit\hardware\nrf52\
    	set postfix=tools\adafruit-nrfutil\win32\adafruit-nrfutil.exe --verbose dfu serial -pkg ..\..\output\%~1\%~1-%~2-%~3.zip -p %~4 -b 115200 --singlebank
    	set search_cmd="dir /b %prefix%"
    	FOR /F "tokens=*" %%i IN (' %search_cmd% ') DO SET ver=%%i
+	set bootloaderprefix=%prefix%\%ver%\bootloader\feather_nrf52832\
+	set searchbootloader_cmd="dir *.zip /b %bootloaderprefix%"
+    FOR /F "tokens=*" %%i IN (' %searchbootloader_cmd% ') DO SET bootloader=%%i
+	@echo Flashing Bootloader before %~1-%~2-%~3
+	%prefix%\%ver%/tools/adafruit-nrfutil/win32/adafruit-nrfutil.exe --verbose dfu serial -pkg %bootloaderprefix%\%bootloader% -p %~4 -b 115200 --touch 1200
+    @echo Flashing %~1-%~2-%~3 over serial port %~4
    	%prefix%\%ver%\%postfix%
 
 :usage

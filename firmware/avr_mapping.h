@@ -230,7 +230,6 @@ This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
         #define B3      14  //miso
         #define B2      13  //mosi
         #define B6      11
-
     #endif
 #endif
 
