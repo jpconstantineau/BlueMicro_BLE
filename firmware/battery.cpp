@@ -36,34 +36,16 @@ int readVBAT(void) {
 };
 
 uint8_t mvToPercent(float mvolts) {
-    uint8_t battery_level;
+  if(mvolts<3300)
+    return 0;
 
-    if (mvolts >= 3000)
-    {
-        battery_level = 100;
-    }
-    else if (mvolts > 2900)
-    {
-        battery_level = 100 - ((3000 - mvolts) * 58) / 100;
-    }
-    else if (mvolts > 2740)
-    {
-        battery_level = 42 - ((2900 - mvolts) * 24) / 160;
-    }
-    else if (mvolts > 2440)
-    {
-        battery_level = 18 - ((2740 - mvolts) * 12) / 300;
-    }
-    else if (mvolts > 2100)
-    {
-        battery_level = 6 - ((2440 - mvolts) * 6) / 340;
-    }
-    else
-    {
-        battery_level = 0;
-    }
+  if(mvolts <3600) {
+    mvolts -= 3300;
+    return mvolts/30;
+  }
 
-    return battery_level;
+  mvolts -= 3600;
+  return 10 + (mvolts * 0.15F );  // thats mvolts /6.66666666
 }
 
 void updateBattery(void)
@@ -71,7 +53,7 @@ void updateBattery(void)
     int vbat_raw = 0;
     uint8_t vbat_per =0;
     vbat_raw = readVBAT();                                // Get a raw ADC reading
-    vbat_per = mvToPercent(vbat_raw * VBAT_MV_PER_LSB);       // Convert from raw mv to percentage (based on LIPO chemistry)
+    vbat_per = mvToPercent(vbat_raw * VBAT_MV_PER_LSB * VBAT_DIVIDER_COMP);       // Convert from raw mv to percentage (based on LIPO chemistry)
     blebas.notify(vbat_per);                                  // update the Battery Service.  Use notify instead of write to ensure that subscribers receive the new value.
               
                 // Convert the raw value to compensated mv, taking the resistor-
