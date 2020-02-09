@@ -125,7 +125,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 #define VBAT_PIN          (A7)
 #define VBAT_MV_PER_LSB   (0.73242188F)   // 3.0V ADC range and 12-bit ADC resolution = 3000mV/4096
-#ifdef NRF52840_XXAA
+#ifdef ARDUINO_NRF52840_FEATHER           // these settings are specific to the NRF52840_FEATHER not the NRF52840 Chip.
 #define VBAT_DIVIDER      (0.5F)          // 150K + 150K voltage divider on VBAT
 #define VBAT_DIVIDER_COMP (2.0F)          // Compensation factor for the VBAT divider
 #else
