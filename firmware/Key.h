@@ -33,14 +33,14 @@ class Key {
         void press(unsigned long currentMillis);
         void clear(unsigned long currentMillis);
 
-        void addActivation(const uint8_t layer, const uint8_t method, const uint32_t activation);
+        void addActivation(const uint8_t layer, const Method method, const uint32_t activation);
 
         std::pair<uint16_t, uint8_t> getPair(uint8_t layer);
 
         Key(uint32_t activation);
 
     private:
-        uint8_t lastMethod;
+        Method lastMethod;
         KeyState state;
 
         ActArray activations;

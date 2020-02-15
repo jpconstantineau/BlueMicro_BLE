@@ -15,7 +15,7 @@ This is how the key is activated. options are:
 * MT\_TAP: it is pressed and then released.  The key is sent as soon as the key is released.  
 * MT\_HOLD: it is pressed and held.  The key is sent when the time limit expires.  The key is not repeated.  HOLD is useful for toggling modifiers or layers.
 * DT\_TAP: it is pressed, released and not pressed again for DOUBLETAP\_TIME\_LIMIT. The keyboard will wait for the double tap time limit until the single tap key is sent.
-* DT\_DOUBLTAP: it is pressed, released and tapped again within a certain time.  The keyboard will send the key as soon as a double tap is detected.
+* DT\_DOUBLETAP: it is pressed, released and tapped again within a certain time.  The keyboard will send the key as soon as a double tap is detected.
 (DOUBLETAP\_TIME\_LIMIT duration (in ms) is defined in KeyStates.h)
 
 There is a difference between MT\_TAP and DT\_TAP:  The key difference is when the keycode is sent.  With MT, the keycode is sent as soon as the key is released.  With DT, the keycode is sent some time after the key is released: delay time is there to detect the double taps.
