@@ -22,6 +22,12 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #ifndef ADVANCED_KEYCODES_H
 #define ADVANCED_KEYCODES_H
 
+enum class Duration {
+    MOMENTARY = 0,
+    TOGGLE = 1,
+    ONE_SHOT = 2,
+};
+
 #define MOD(M, KC) ((uint16_t) KC | (uint16_t) M)
 
 #define MOD_LCTRL (1 << 8)
@@ -33,8 +39,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define MOD_RALT (64 << 8)
 #define MOD_RGUI (128 << 8)
 
-#define TG(KC) ((1 << 16) | KC)
-#define OS(KC) ((2 << 16) | KC)
+#define TG(KC) ((static_cast<int>(Duration::TOGGLE) << 16) | KC)
+#define OS(KC) ((static_cast<int>(Duration::ONE_SHOT) << 16) | KC)
 
 #define S(KC) MOD(MOD_LSHIFT, KC)
 

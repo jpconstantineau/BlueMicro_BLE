@@ -18,6 +18,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 */
 #include "KeyState.h"
+#include "advanced_keycodes.h"
 #include "hid_keycodes.h"
 #include <array>
 #include <utility>
@@ -26,7 +27,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define KEY_H
 
 using ActArray = std::array<std::array<uint16_t, 5>, 2>;
-using DurArray = std::array<std::array<uint8_t, 5>, 2>;
+using DurArray = std::array<std::array<Duration, 5>, 2>;
 
 class Key {
     public:
@@ -35,7 +36,7 @@ class Key {
 
         void addActivation(const uint8_t layer, const Method method, const uint32_t activation);
 
-        std::pair<uint16_t, uint8_t> getPair(uint8_t layer);
+        std::pair<uint16_t, Duration> getActiveActivation(uint8_t layer);
 
         Key(uint32_t activation);
 
