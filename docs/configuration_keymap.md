@@ -11,7 +11,7 @@ A single keycode field is made up of four different pieces of information:
 
 ### The activation method
 This is how the key is activated. options are:
-* PRESS: it is pressed.  This is the normal operation of a keyboard where a key will be sent, then repeated until the key is released.  If you want to use another activation method, use **KC_NO** in the standard PRESS to make sure that the standard activations don't get sent to the computer.
+* PRESS: it is pressed.  This is the normal operation of a keyboard where a key will be sent, and kept in the HID report until the key is released.  If you want to use another activation method, use **KC_NO** in the standard PRESS to make sure that the standard activations don't get sent to the computer.
 * MT\_TAP: it is pressed and then released.  The key is sent as soon as the key is released.  
 * MT\_HOLD: it is pressed and held.  The key is sent when the time limit expires.  The key is not repeated.  HOLD is useful for toggling modifiers or layers.
 * DT\_TAP: it is pressed, released and not pressed again for DOUBLETAP\_TIME\_LIMIT. The keyboard will wait for the double tap time limit until the single tap key is sent.
@@ -22,9 +22,9 @@ There is a difference between MT\_TAP and DT\_TAP:  The key difference is when t
 
 Note: if you receive repeated keypresses, check that you do not have PRESS, MT_TAP and DT_TAP are not all defined.  
 It is recommended that you use one of the 3 methods and do not combine them:
-* PRESS: key is sent with every HID report, The computer will automatically detect this and repeat the keycode until a HID report without the keycode is received. Default behaviour.  Note that if the computer loose connection with the keyboard, it will not receive the "empty" HID report and will start repeating the keypress.
-* MT_TAP/MT_HOLD: This adds a timer to the keyboard to detect when the key is being held.  When held, a different keycode can be sent.  For each activation state of this method, a single HID report will be sent.
-* DT_TAP/DT_DOUBLETAP: This adds a timer to  the keyboard to detect if the same key is pressed again within a given time period.  When double-tapped, a different keycode can be sent. For each activation state of this method, a single HID report will be sent.
+* PRESS: key is sent with every HID report. The computer will automatically detect this and repeat the keycode until a HID report without the keycode is received. Default behaviour.  Note that if the computer loose connection with the keyboard, it will not receive the "empty" HID report and will start repeating the keypress.
+* MT_TAP/MT_HOLD: This adds a timer to the keyboard to detect when the key is being held.  When held, a different keycode can be sent.  For each activation state of this method, a single HID report will be sent and then immediately released.
+* DT_TAP/DT_DOUBLETAP: This adds a timer to  the keyboard to detect if the same key is pressed again within a given time period.  When double-tapped, a different keycode can be sent. For each activation state of this method, a single HID report will be sent and then immediately released.
 
 ### The activation duration
 Once Activated, sending of the keycode can be sent at different times:
