@@ -185,6 +185,7 @@ void KeyScanner::updateBuffer(uint8_t layer)
                 }
                 else if (duration == Duration::ONE_SHOT)
                 {
+                    // TODO: Holding the key will keep appending to this buffer?
                     oneshotBuffer.push_back(activeKeycode);
                 }
                 else if (activeKeycode < 0xE0) 

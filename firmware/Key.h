@@ -42,6 +42,7 @@ class Key {
 
     private:
         Method lastMethod;
+        std::pair<uint16_t, Duration> lastActivation;
         KeyState state;
 
         ActArray activations;

@@ -99,22 +99,35 @@ std::pair<uint16_t, Duration> Key::getActiveActivation(uint8_t layer)
             break;
         default:
             lastMethod = Method::NONE;
-            return std::make_pair(0, Duration::MOMENTARY);
+            lastActivation = std::make_pair(0, Duration::MOMENTARY);
+            return lastActivation;
     }
 
     const auto methodIndex = static_cast<int>(method);
 
     /*
-     * check that the last method is different from 
+     * only activate if the last method is different from 
      * the current one, unless it was press
      *
      * this is to make sure that mt/dt activations
      * are only read once - important when toggling
      */
-    if ((lastMethod == Method::PRESS && durations[layer][methodIndex] != Duration::TOGGLE) || method != lastMethod)
+    if (method != lastMethod)
     {
         lastMethod = method;
-        return std::make_pair(activations[layer][methodIndex], durations[layer][methodIndex]);
+        lastActivation = std::make_pair(activations[layer][methodIndex], durations[layer][methodIndex]);
+        return lastActivation;
+    }
+    /*
+     * for momentary durations, make sure to return
+     * the keycode of the selected layer at press time,
+     * as long as it remains pressed, so that releasing
+     * the layer key doesn't change the meaning of a key
+     * inside that layer
+     */
+    else if (lastMethod == Method::PRESS && lastActivation.second != Duration::TOGGLE)
+    {
+        return lastActivation;
     }
     else 
     {
