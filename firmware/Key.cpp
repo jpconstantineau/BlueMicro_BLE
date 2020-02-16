@@ -23,16 +23,17 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 Key::Key(uint32_t activation) 
 {
     activations[0][0] = static_cast<uint16_t>(activation & 0x0000FFFF); 
-    durations[0][0] = static_cast<uint8_t>((activation & 0x00FF0000) >> 16);
+    durations[0][0] = static_cast<Duration>((activation & 0x00FF0000) >> 16);
 
     //last method is the "release" method
-    lastMethod = 5;
+    lastMethod = Method::NONE;
 }
 
 //should be called with 
-void Key::addActivation(const uint8_t layer, const uint8_t method, const uint32_t activation) 
+void Key::addActivation(const uint8_t layer, const Method method, const uint32_t activation) 
 {
     auto keycode = static_cast<uint16_t>(activation & 0x0000FFFF);
+    auto methodIndex = static_cast<int>(method);
 
     /*
      * if the activation is transparent,
@@ -52,11 +53,11 @@ void Key::addActivation(const uint8_t layer, const uint8_t method, const uint32_
             break;
         }
 
-        keycode = activations[--tempLayer][method];
+        keycode = activations[--tempLayer][methodIndex];
     }
 
-    activations[layer][method] = keycode;
-    durations[layer][method] = static_cast<uint8_t>((activation & 0x00FF0000) >> 16);
+    activations[layer][methodIndex] = keycode;
+    durations[layer][methodIndex] = static_cast<Duration>((activation & 0x00FF0000) >> 16);
 
     /*
      * tell the state to make sure to look for the added
@@ -75,47 +76,62 @@ void Key::clear(const unsigned long currentMillis)
     state.clear(currentMillis);
 }
 
-std::pair<uint16_t, uint8_t> Key::getPair(uint8_t layer)
+std::pair<uint16_t, Duration> Key::getActiveActivation(uint8_t layer)
 {
-    uint8_t method;
+    Method method;
 
     switch(state.getState()) 
     {
         case KeyState::State::PRESSED:
-            method = 0;
+            method = Method::PRESS;
             break;
         case KeyState::State::MT_TAPPED:
-            method = 1;
+            method = Method::MT_TAP;
             break;
         case KeyState::State::MT_HELD:
-            method = 2;
+            method = Method::MT_HOLD;
             break;
         case KeyState::State::DT_TAPPED:
-            method = 3;
+            method = Method::DT_TAP;
             break;
         case KeyState::State::DT_DOUBLETAPPED:
-            method = 4;
+            method = Method::DT_DOUBLETAP;
             break;
         default:
-            lastMethod = 5;
-            return std::make_pair(0, 0);
+            lastMethod = Method::NONE;
+            lastActivation = std::make_pair(0, Duration::MOMENTARY);
+            return lastActivation;
     }
 
+    const auto methodIndex = static_cast<int>(method);
+
     /*
-     * check that the last method is different from 
+     * only activate if the last method is different from 
      * the current one, unless it was press
      *
      * this is to make sure that mt/dt activations
      * are only read once - important when toggling
      */
-    if ((lastMethod == 0 && durations[layer][method] != 1) || method != lastMethod)
+    if (method != lastMethod)
     {
         lastMethod = method;
-        return std::make_pair(activations[layer][method], durations[layer][method]);
+        lastActivation = std::make_pair(activations[layer][methodIndex], durations[layer][methodIndex]);
+        return lastActivation;
+    }
+    /*
+     * for momentary durations, make sure to return
+     * the keycode of the selected layer at press time,
+     * as long as it remains pressed, so that releasing
+     * the layer key doesn't change the meaning of a key
+     * inside that layer
+     */
+    else if (lastMethod == Method::PRESS && lastActivation.second != Duration::TOGGLE)
+    {
+        return lastActivation;
     }
     else 
     {
-        return std::make_pair(0, 0);
+        return std::make_pair(0, Duration::MOMENTARY);
     }
 }
 

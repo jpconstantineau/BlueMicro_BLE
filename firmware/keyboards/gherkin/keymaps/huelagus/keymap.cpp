@@ -87,16 +87,16 @@ void setupKeymap() {
     {
         for (int col = 0; col < MATRIX_COLS; ++col)
         {
-            ADDLAYER(_QWERTY, _MT_TAP , qwerty_tap[row][col]);
-            ADDLAYER(_QWERTY, _MT_HOLD, qwerty_hold[row][col]);
+            ADDLAYER(_QWERTY, Method::MT_TAP , qwerty_tap[row][col]);
+            ADDLAYER(_QWERTY, Method::MT_HOLD, qwerty_hold[row][col]);
 
-            ADDLAYER(_QWERTY,_DT_TAP , qwerty_stap[row][col]);
-            ADDLAYER(_QWERTY,_DT_DOUBLETAP , qwerty_dtap[row][col]);
+            ADDLAYER(_QWERTY, Method::DT_TAP, qwerty_stap[row][col]);
+            ADDLAYER(_QWERTY, Method::DT_DOUBLETAP, qwerty_dtap[row][col]);
       
-            ADDLAYER(_L1, _PRESS, layer1[row][col]);
-            ADDLAYER(_L2, _PRESS, layer2[row][col]);
-            ADDLAYER(_L3, _PRESS, layer3[row][col]);
-            ADDLAYER(_L4, _PRESS, layer4[row][col]);
+            ADDLAYER(_L1, Method::PRESS, layer1[row][col]);
+            ADDLAYER(_L2, Method::PRESS, layer2[row][col]);
+            ADDLAYER(_L3, Method::PRESS, layer3[row][col]);
+            ADDLAYER(_L4, Method::PRESS, layer4[row][col]);
             
         }
     }

@@ -26,6 +26,15 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define TIME_TILL_HOLD 600
 #define TIME_TILL_RELEASE 80
 
+enum class Method {
+    PRESS = 0,
+    MT_TAP = 1,
+    MT_HOLD = 2,
+    DT_TAP = 3,
+    DT_DOUBLETAP = 4,
+    NONE = 5,
+};
+
 class KeyState 
 {
     public:
@@ -34,7 +43,7 @@ class KeyState
         void press(unsigned long currentMillis);
         void clear(unsigned long currentMillis);
 
-        void addMethod(uint8_t method);
+        void addMethod(Method method);
 
         enum class State
         {
@@ -52,7 +61,7 @@ class KeyState
 
     private:
         bool canDoubletap;
-        bool checkMT, checkDT;
+        bool checkModTap, checkDoubleTap;
 
         //std::array<5, bool> checkMethods;
 

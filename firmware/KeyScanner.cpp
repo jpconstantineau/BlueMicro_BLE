@@ -18,6 +18,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 */
 #include "KeyScanner.h"
+#include <tuple>
+
 // ToDo: There seems to be lots of redundency in data.
 // ToDo: consider interrupts or GPIOTE
 // ToDo: there must be a better way to debounce
@@ -150,12 +152,13 @@ void KeyScanner::updateBuffer(uint8_t layer)
     for(int row = 0; row < MATRIX_ROWS; ++row) {
         for (auto& key : matrix[row]) 
         {
-            //pair of activation/duration
-            auto activation = key.getPair(layer);
+            uint16_t activeKeycode;
+            Duration duration;
+            std::tie(activeKeycode, duration) = key.getActiveActivation(layer);
 
-            if (activation.first != 0) 
+            if (activeKeycode != 0) 
             {
-                activeKeys.push_back(activation.first);
+                activeKeys.push_back(activeKeycode);
 
                 /*
                  * define behavior of
@@ -165,9 +168,9 @@ void KeyScanner::updateBuffer(uint8_t layer)
                  * empty oneshot when a keycode that's before
                  * the modifiers is pressed
                  */
-                if (activation.second == 1) 
+                if (duration == Duration::TOGGLE) 
                 {
-                    auto it = std::find(toggleBuffer.begin(), toggleBuffer.end(), activation.first);
+                    auto it = std::find(toggleBuffer.begin(), toggleBuffer.end(), activeKeycode);
 
                     if (it != toggleBuffer.end())
                     {
@@ -175,16 +178,17 @@ void KeyScanner::updateBuffer(uint8_t layer)
                     }
                     else 
                     {
-                        toggleBuffer.push_back(activation.first);
+                        toggleBuffer.push_back(activeKeycode);
                     }
 
 
                 }
-                else if (activation.second == 2)
+                else if (duration == Duration::ONE_SHOT)
                 {
-                    oneshotBuffer.push_back(activation.first);
+                    // TODO: Holding the key will keep appending to this buffer?
+                    oneshotBuffer.push_back(activeKeycode);
                 }
-                else if (activation.first < 0xE0) 
+                else if (activeKeycode < 0xE0) 
                 {
                     emptyOneshot = true;
                 }
