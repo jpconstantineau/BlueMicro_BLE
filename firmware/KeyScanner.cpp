@@ -322,12 +322,28 @@ bool KeyScanner::getReport()
     currentReport[0] = currentMod;
     currentReport[7] = localLayer;
 
-    if((currentReport[0] != 0) | (currentReport[1] != 0)| (currentReport[2] != 0)| (currentReport[3] != 0)| (currentReport[4] != 0)| (currentReport[5] != 0)| (currentReport[6] != 0))
-    {reportEmpty = false;}
+   if((currentReport[0] != previousReport[0])
+        | (currentReport[1] != previousReport[1])
+         | (currentReport[2] != previousReport[2])
+          | (currentReport[3] != previousReport[3])
+           | (currentReport[4] != previousReport[4])
+            | (currentReport[5] != previousReport[5])
+             | (currentReport[6] != previousReport[6])
+              | (currentReport[7] != previousReport[7]))
+    {reportChanged = false;}
     else
-    {reportEmpty = true;}
+    {reportChanged = true;}
 
-    return reportEmpty;
+    previousReport[0] = currentReport[0];
+    previousReport[1] = currentReport[1];
+    previousReport[2] = currentReport[2];
+    previousReport[3] = currentReport[3];
+    previousReport[4] = currentReport[4];
+    previousReport[5] = currentReport[5];
+    previousReport[6] = currentReport[6];
+    previousReport[7] = currentReport[7];
+
+    return reportChanged;
 }
 
 unsigned long KeyScanner::getLastPressed() 
@@ -338,9 +354,10 @@ unsigned long KeyScanner::getLastPressed()
 
 
 uint8_t KeyScanner::currentReport[8] = {0, 0, 0 ,0, 0, 0, 0, 0}; 
-uint8_t KeyScanner::remoteReport[8]  = {0, 0, 0 ,0, 0, 0, 0, 0};
+uint8_t KeyScanner::remoteReport[8]  = {0, 0, 0 ,0, 0, 0, 0, 0}; 
+uint8_t KeyScanner::previousReport[8] = {0, 0, 0 ,0, 0, 0, 0, 0};
 bool    KeyScanner::layerChanged = false;
-bool    KeyScanner::reportEmpty = true;
+bool    KeyScanner::reportChanged = true;
 uint8_t KeyScanner::localLayer = 0;
 uint8_t KeyScanner::remoteLayer = 0;
 uint8_t KeyScanner::remoteMod = 0;

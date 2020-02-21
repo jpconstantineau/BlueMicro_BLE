@@ -42,6 +42,8 @@ uint8_t monitoring_state = STATE_BOOT_INITIALIZE;
 // put your setup code here, to run once:
 /**************************************************************************************************************************/
 void setup() {
+ Serial.begin(115200);
+  while ( !Serial ) delay(10);   // for nrf52840 with native usb
 
   LOG_LV1("BLEMIC","Starting %s" ,DEVICE_NAME);
 
@@ -91,7 +93,18 @@ void setupMatrix(void) {
 // Keyboard Scanning
 /**************************************************************************************************************************/
 void scanMatrix() {
-  uint32_t pindata = 0;
+  uint32_t pindata0 = 0;
+  uint32_t pindata1 = 0;
+  unsigned long timestamp = millis();   // lets call it once per scan instead of once per key in the matrix
+    
+  for (int i = 0; i < MATRIX_COLS; ++i) {                               // Setting columns before scanning.
+        #if DIODE_DIRECTION == COL2ROW                                         
+        pinMode(columns[i], INPUT_PULLUP);                              // 'enables' the column High Value on the diode; becomes "LOW" when pressed 
+        #else
+        pinMode(columns[i], INPUT_PULLDOWN);                            // 'enables' the column High Value on the diode; becomes "LOW" when pressed
+        #endif
+  }
+
   for(int j = 0; j < MATRIX_ROWS; ++j) {                             
     //set the current row as OUPUT and LOW
     pinMode(rows[j], OUTPUT);
@@ -100,50 +113,57 @@ void scanMatrix() {
     #else
     digitalWrite(rows[j], HIGH);                                       // 'enables' a specific row to be "HIGH"
     #endif
-    //loops thru all of the columns
-    for (int i = 0; i < MATRIX_COLS; ++i) {
-          #if DIODE_DIRECTION == COL2ROW                                         
-          pinMode(columns[i], INPUT_PULLUP);                              // 'enables' the column High Value on the diode; becomes "LOW" when pressed 
-          #else
-          pinMode(columns[i], INPUT_PULLDOWN);                              // 'enables' the column High Value on the diode; becomes "LOW" when pressed
-          #endif
-    }
 
-      //delay(1);   // using the FreeRTOS delay function reduced power consumption from 1.5mA down to 0.9mA
-      // need for the GPIO lines to settle down electrically before reading.
-      #ifdef NRFX_H__  // Added to support BSP 0.9.0
-         nrfx_coredep_delay_us(1);
-      #else            // Added to support BSP 0.8.6
-        nrf_delay_us(1);
-      #endif
+        nrfx_coredep_delay_us(1);   // need for the GPIO lines to settle down electrically before reading.
 
-      pindata = NRF_GPIO->IN;                                         // read all pins at once
-     for (int i = 0; i < MATRIX_COLS; ++i) {
-      KeyScanner::scanMatrix((pindata>>(columns[i]))&1, millis(), j, i);       // This function processes the logic values and does the debouncing
-      pinMode(columns[i], INPUT);                                     //'disables' the column that just got looped thru
-     }
+        #ifdef NRF52840_XXAA        // This is chip dependent and not on the board.  As such, we need this to also support the nrf52840 feather which remaps the numbers of the GPIOs to Pins numbers.
+          pindata0 = NRF_P0->IN;                                         // read all pins at once
+          pindata1 = NRF_P1->IN;                                         // read all pins at once
+          for (int i = 0; i < MATRIX_COLS; ++i) {
+            int ulPin = g_ADigitalPinMap[columns[i]];
+            if (ulPin<32)
+            {
+              KeyScanner::scanMatrix((pindata0>>(ulPin))&1, timestamp, j, i);       // This function processes the logic values and does the debouncing 
+            } else
+            {
+              KeyScanner::scanMatrix((pindata1>>(ulPin-32))&1, timestamp, j, i);    // This function processes the logic values and does the debouncing 
+            }
+           // pinMode(columns[i], INPUT);                                     //'disables' the column that just got looped thru - no need to differentiate DIODE_DIRECTION and we can reset it
+          } 
+        #else
+          pindata0 = NRF_GPIO->IN;                                         // read all pins at once
+          for (int i = 0; i < MATRIX_COLS; ++i) {
+            KeyScanner::scanMatrix((pindata0>>(columns[i]))&1, timestamp, j, i);       // This function processes the logic values and does the debouncing
+          }
+        #endif
     pinMode(rows[j], INPUT);                                          //'disables' the row that was just scanned
    }                                                                  // done scanning the matrix
+
+  for (int i = 0; i < MATRIX_COLS; ++i) {                             //Scanning done, disabling all columns
+    pinMode(columns[i], INPUT);                                     
+  }
 };
+
+
 /**************************************************************************************************************************/
 // Communication with computer and other boards
 /**************************************************************************************************************************/
 void sendKeyPresses() {
    KeyScanner::getReport();                                            // get state data - Data is in KeyScanner::currentReport  
-   if (!(KeyScanner::reportEmpty))  //any key presses anywhere?
+   if (!(KeyScanner::reportChanged))  //any new key presses anywhere?
    {                                                                              
         sendKeys(KeyScanner::currentReport);
         isReportedReleased = false;
-        LOG_LV1("MXSCAN","SEND: %i %i %i %i %i %i %i %i %i %i" ,millis(),KeyScanner::currentReport[0], KeyScanner::currentReport[1],KeyScanner::currentReport[2],KeyScanner::currentReport[3], KeyScanner::currentReport[4],KeyScanner::currentReport[5], KeyScanner::currentReport[6],KeyScanner::currentReport[7] );        
+        LOG_LV1("MXSCAN","SEND: %i %i %i %i %i %i %i %i %i " ,millis(),KeyScanner::currentReport[0], KeyScanner::currentReport[1],KeyScanner::currentReport[2],KeyScanner::currentReport[3], KeyScanner::currentReport[4],KeyScanner::currentReport[5], KeyScanner::currentReport[6],KeyScanner::currentReport[7] );        
     }
-   else                                                                  //NO key presses anywhere
+ /*  else                                                                  //NO key presses anywhere
    {
     if ((!isReportedReleased)){
       sendRelease(KeyScanner::currentReport);  
       isReportedReleased = true;                                         // Update flag so that we don't re-issue the message if we don't need to.
-      LOG_LV1("MXSCAN","RELEASED: %i %i %i %i %i %i %i %i %i %i" ,millis(),KeyScanner::currentReport[0], KeyScanner::currentReport[1],KeyScanner::currentReport[2],KeyScanner::currentReport[3], KeyScanner::currentReport[4],KeyScanner::currentReport[5], KeyScanner::currentReport[6],KeyScanner::currentReport[7] ); 
+      LOG_LV1("MXSCAN","RELEASED: %i %i %i %i %i %i %i %i %i " ,millis(),KeyScanner::currentReport[0], KeyScanner::currentReport[1],KeyScanner::currentReport[2],KeyScanner::currentReport[3], KeyScanner::currentReport[4],KeyScanner::currentReport[5], KeyScanner::currentReport[6],KeyScanner::currentReport[7] ); 
     }
-   }
+   }*/
   #if BLE_PERIPHERAL ==1   | BLE_CENTRAL ==1                            /**************************************************/
     if(KeyScanner::layerChanged)                                               //layer comms
     {   
@@ -191,7 +211,7 @@ void keyscantimer_callback(TimerHandle_t _handle) {
   if (monitoring_state == STATE_BOOT_MODE)
   {
       KeyScanner::getReport();                                            // get state data - Data is in KeyScanner::currentReport
-      if (!(KeyScanner::reportEmpty))
+      if (!(KeyScanner::reportChanged))
       {
         for (int i = 0; i < BOOT_MODE_COMMANDS_COUNT; ++i)          // loop through BOOT_MODE_COMMANDS and compare with the first key being pressed - assuming only 1 key will be pressed when in boot mode.
         {

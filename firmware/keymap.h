@@ -23,16 +23,15 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "advanced_keycodes.h"
 #include "Key.h"
 #include <array>
-
 #ifndef KEYMAP_H
 #define KEYMAP_H
+
 
 #define KC_CAP_D MOD(MOD_LSHIFT, KC_D)
 
 #define _QWERTY 0
 #define _L1  1
 #define _L2  2
-#define _L3  3
 
 #define _PRESS 0
 #define _MT_TAP 1
@@ -43,4 +42,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 void setupKeymap();
 extern std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix;
 
-#endif /* KEYMAP_H */
+
+
+#endif
+
+
