@@ -29,9 +29,19 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "keymap.h"
 #include "KeyState.h"
 
+
+#include "advanced_keycodes.h"
+#include "Key.h"
+
 #ifndef KEYSCANNER_H
 #define KEYSCANNER_H
 
+#ifndef USER_MACRO_FUNCTION  
+#define USER_MACRO_FUNCTION 1  
+        void process_user_macros(uint16_t macroid);
+
+#endif
+        extern void sendString(const char* str);
 class KeyScanner {
     public:
         KeyScanner();
@@ -54,6 +64,8 @@ class KeyScanner {
         static bool updateModifiers();
         static void copyRemoteReport();
         static void resetRemoteReport();
+        static bool processingmacros;
+
         
         static uint8_t remoteReport[8];
         static uint8_t previousReport[8];

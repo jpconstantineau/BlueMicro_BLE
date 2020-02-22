@@ -134,9 +134,9 @@ https://www.usb.org/sites/default/files/documents/hut1_12v2.pdf
 /* USB HID Keyboard/Keypad Usage(0x07) */
 enum hid_keyboard_keypad_usage {
     KC_NO               = 0x00,
-    KC_ROLL_OVER,
-    KC_POST_FAIL,
-    KC_UNDEFINED,
+    KC_ROLL_OVER,       // this is equivalent to KC_TRANSPARENT
+    KC_POST_FAIL,       
+    KC_UNDEFINED,       
     KC_A,
     KC_B,
     KC_C,
@@ -299,9 +299,17 @@ enum hid_keyboard_keypad_usage {
     KC_CRSEL,
     KC_EXSEL,           /* 0xA4 */
 
-    /*0xA5 to 0xAF - RESERVED*/
-
-    
+    KC_RESERVED_A5, /*0xA5 to 0xAF - RESERVED*/ // Used as macro identifier
+    KC_RESERVED_A6,                             // this is used for special keyboard functions
+    KC_RESERVED_A7,
+    KC_RESERVED_A8,
+    KC_RESERVED_A9,
+    KC_RESERVED_AA,
+    KC_RESERVED_AB,
+    KC_RESERVED_AC,
+    KC_RESERVED_AD,
+    KC_RESERVED_AE,
+    KC_RESERVED_AF,
 #if 0
     /* NOTE: Following codes(0xB0-DD) are not used but are in the HID Document. Leaving them for reference. */
     KC_KP_00            = 0xB0,

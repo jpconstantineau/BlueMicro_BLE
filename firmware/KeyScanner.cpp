@@ -27,6 +27,18 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 // ToDo: Action Keycodes - Bluetooth commands
 // ToDo: Action Keycodes - Reset/DFU commands
 
+#if USER_MACRO_FUNCTION == 1  
+    void process_user_macros(uint16_t macroid)
+    {
+        switch (macroid)
+        {
+            case MC(KC_A):
+            sendString("Macro Example 1");
+            break;
+        }
+    }
+#endif
+
 KeyScanner::KeyScanner() {    // Constructor
     ;
 }
@@ -187,11 +199,21 @@ void KeyScanner::updateBuffer(uint8_t layer)
                 {
                     // TODO: Holding the key will keep appending to this buffer?
                     oneshotBuffer.push_back(activeKeycode);
+              /* NOT SURE IF THATS WORKING...      if ((activeKeycode & 0x00FF) == KC_RESERVED_A5 )  // macros
+                    {
+                        emptyOneshot = true;
+                    }
+                    else if ((activeKeycode & 0x00FF) == KC_RESERVED_A6 )  //special functions
+                    {
+                        emptyOneshot = true;
+                    }*/
                 }
                 else if (activeKeycode < 0xE0) 
                 {
                     emptyOneshot = true;
                 }
+
+
             }
         }
     }
@@ -301,17 +323,33 @@ bool KeyScanner::getReport()
     resetReport();
     copyRemoteReport();
     updateLayer();
-    updateModifiers();
+   // updateModifiers();
 
     for (auto keycode : activeKeys) 
     {
         auto hidKeycode = static_cast<uint8_t>(keycode & 0x00FF);
+        auto extraModifiers = static_cast<uint8_t>((keycode & 0xFF00) >> 8);
 
         if (hidKeycode >= KC_A && hidKeycode <= KC_EXSEL)
         {
             currentReport[bufferposition] = hidKeycode;
             ++bufferposition;
         }
+        
+        //check if the hid keycode contains a modifier. // also check for macros.
+        switch (hidKeycode) { 
+            case KC_LCTRL:  currentMod |= 1;    currentMod |= extraModifiers; break;
+            case KC_LSHIFT: currentMod |= 2;    currentMod |= extraModifiers; break;
+            case KC_LALT:   currentMod |= 4;    currentMod |= extraModifiers; break;
+            case KC_LGUI:   currentMod |= 8;    currentMod |= extraModifiers; break;
+            case KC_RCTRL:  currentMod |= 16;   currentMod |= extraModifiers; break;
+            case KC_RSHIFT: currentMod |= 32;   currentMod |= extraModifiers; break;
+            case KC_RALT:   currentMod |= 64;   currentMod |= extraModifiers; break;
+            case KC_RGUI:   currentMod |= 128;  currentMod |= extraModifiers; break;
+            case KC_RESERVED_A5: if(!processingmacros){process_user_macros(keycode); processingmacros=true;} break;     // KC_RESERVED_A5 is the keycode marker for a macro.
+            case KC_RESERVED_A6: break;                                                                                 // KC_RESERVED_A6 is the keycode marker for a special keyboard function.
+        }
+
 
         if (bufferposition == 7)
         {
@@ -319,8 +357,12 @@ bool KeyScanner::getReport()
         }
     }
 
+
+
     currentReport[0] = currentMod;
     currentReport[7] = localLayer;
+
+    
 
    if((currentReport[0] != previousReport[0])
         | (currentReport[1] != previousReport[1])
@@ -330,7 +372,18 @@ bool KeyScanner::getReport()
             | (currentReport[5] != previousReport[5])
              | (currentReport[6] != previousReport[6])
               | (currentReport[7] != previousReport[7]))
-    {reportChanged = false;}
+    {
+        reportChanged = false;
+        if (processingmacros)
+            if ((currentReport[0] == 0 )
+                && (currentReport[1] == 0 )
+                && (currentReport[2] == 0 )
+                && (currentReport[3] == 0 )
+                && (currentReport[4] == 0 )
+                && (currentReport[5] == 0 )
+                && (currentReport[6] == 0 ))
+            {processingmacros=false;}
+    }
     else
     {reportChanged = true;}
 
@@ -342,6 +395,8 @@ bool KeyScanner::getReport()
     previousReport[5] = currentReport[5];
     previousReport[6] = currentReport[6];
     previousReport[7] = currentReport[7];
+
+
 
     return reportChanged;
 }
@@ -358,6 +413,8 @@ uint8_t KeyScanner::remoteReport[8]  = {0, 0, 0 ,0, 0, 0, 0, 0};
 uint8_t KeyScanner::previousReport[8] = {0, 0, 0 ,0, 0, 0, 0, 0};
 bool    KeyScanner::layerChanged = false;
 bool    KeyScanner::reportChanged = true;
+bool    KeyScanner::processingmacros = false;
+
 uint8_t KeyScanner::localLayer = 0;
 uint8_t KeyScanner::remoteLayer = 0;
 uint8_t KeyScanner::remoteMod = 0;

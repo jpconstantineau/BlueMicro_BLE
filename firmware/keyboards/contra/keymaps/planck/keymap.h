@@ -89,7 +89,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define IPSUM    MC(KC_W)
 
 #define USER_MACRO_FUNCTION   0 
-void process_user_macros(uint32_t macroid);
+void process_user_macros(uint16_t macroid);
 
 void setupKeymap();
 extern std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix;

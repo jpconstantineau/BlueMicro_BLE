@@ -55,5 +55,5 @@ void sendlayer(uint8_t layer);
     void cent_connect_callback(uint16_t conn_handle);
     void cent_disconnect_callback(uint16_t conn_handle, uint8_t reason);
 #endif
-
+void sendString(const char* str);
 #endif /* BLUETOOTH_H */

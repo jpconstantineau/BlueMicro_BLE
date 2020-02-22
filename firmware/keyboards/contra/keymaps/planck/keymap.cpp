@@ -90,7 +90,7 @@ void setupKeymap() {
 }
 
 
-void process_user_macros(uint32_t macroid)
+void process_user_macros(uint16_t macroid)
 {
  switch (macroid)
  {

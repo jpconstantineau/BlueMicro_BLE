@@ -427,3 +427,9 @@ void sendRelease(uint8_t currentReport[8])
           ;                                                              // Central does not need to send the buffer to the Peripheral.
     #endif
 }
+void sendString(const char* str)
+{
+  #if BLE_HID == 1
+    blehid.keySequence(str,3);
+    #endif
+}
