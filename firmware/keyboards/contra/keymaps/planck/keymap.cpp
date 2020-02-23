@@ -168,11 +168,11 @@ void process_user_macros(uint16_t macroid)
      sendString("{}"); 
     // kctosend[] = { SEND_KC(KC_LEFT), '\0'};
    // sendKeycode(kctosend);  //this still crashes the board...
-
+//sendKeycode(KC_LEFT);
       break;
      case (BRC_FN):
      sendString("[]");
-   //  sendKey(KC_LEFT);
+  //   sendKeycode(KC_LEFT);
       break;
      case PRN_FN:
      sendString("()"); 

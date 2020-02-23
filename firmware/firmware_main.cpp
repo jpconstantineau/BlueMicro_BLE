@@ -144,7 +144,17 @@ void scanMatrix() {
   }
 };
 
-
+#if USER_MACRO_FUNCTION == 1  
+    void process_user_macros(uint16_t macroid)
+    {
+        switch ((macroid))
+        {
+            case MC(KC_A):
+            sendString("Macro Example 1");
+            break;
+        }
+    }
+#endif
 /**************************************************************************************************************************/
 // Communication with computer and other boards
 /**************************************************************************************************************************/
@@ -156,6 +166,11 @@ void sendKeyPresses() {
        // isReportedReleased = false;
         LOG_LV1("MXSCAN","SEND: %i %i %i %i %i %i %i %i %i " ,millis(),KeyScanner::currentReport[0], KeyScanner::currentReport[1],KeyScanner::currentReport[2],KeyScanner::currentReport[3], KeyScanner::currentReport[4],KeyScanner::currentReport[5], KeyScanner::currentReport[6],KeyScanner::currentReport[7] );        
     }
+
+    if (KeyScanner::macro > 0){
+      process_user_macros(KeyScanner::macro);
+      KeyScanner::macro = 0;
+    } 
  /*  else                                                                  //NO key presses anywhere
    {
     if ((!isReportedReleased)){

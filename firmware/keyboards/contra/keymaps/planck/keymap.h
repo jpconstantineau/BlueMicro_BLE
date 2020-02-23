@@ -100,7 +100,7 @@ void process_user_macros(uint16_t macroid);
 void setupKeymap();
 extern std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix;
 extern void sendString(const char* str);
-extern void sendKeycode(const char* keycode);
+extern void sendKeycode(const char keycode);
 
 #endif
 

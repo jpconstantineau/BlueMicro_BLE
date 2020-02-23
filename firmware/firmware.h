@@ -51,4 +51,12 @@ enum states_monitor_modes {
   STATE_BOOT_UNKNOWN,
   };
 
+#ifndef USER_MACRO_FUNCTION  
+#define USER_MACRO_FUNCTION 1  
+        void process_user_macros(uint16_t macroid);
+
+#endif
+        extern void sendString(const char* str);
+        extern void sendKeycode(const char* keycode);
+
 #endif /* FIRMWARE_H */

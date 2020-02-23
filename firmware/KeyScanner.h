@@ -36,13 +36,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #ifndef KEYSCANNER_H
 #define KEYSCANNER_H
 
-#ifndef USER_MACRO_FUNCTION  
-#define USER_MACRO_FUNCTION 1  
-        void process_user_macros(uint16_t macroid);
 
-#endif
-        extern void sendString(const char* str);
-        extern void sendKeycode(const char* keycode);
 class KeyScanner {
     public:
         KeyScanner();
@@ -54,6 +48,7 @@ class KeyScanner {
         static unsigned long getLastPressed();
         static bool layerChanged;
         static bool reportChanged;
+        static uint16_t macro;
         static uint8_t localLayer;
         static uint8_t layerMode;
         static uint8_t currentReport[8];

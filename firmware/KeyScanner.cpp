@@ -27,17 +27,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 // ToDo: Action Keycodes - Bluetooth commands
 // ToDo: Action Keycodes - Reset/DFU commands
 
-#if USER_MACRO_FUNCTION == 1  
-    void process_user_macros(uint16_t macroid)
-    {
-        switch ((macroid))
-        {
-            case MC(KC_A):
-            sendString("Macro Example 1");
-            break;
-        }
-    }
-#endif
+
 
 KeyScanner::KeyScanner() {    // Constructor
     ;
@@ -346,7 +336,7 @@ bool KeyScanner::getReport()
             case KC_RSHIFT: currentMod |= 32;   currentMod |= extraModifiers; break;
             case KC_RALT:   currentMod |= 64;   currentMod |= extraModifiers; break;
             case KC_RGUI:   currentMod |= 128;  currentMod |= extraModifiers; break;
-            case KC_RESERVED_A5: if(!processingmacros){process_user_macros(keycode); processingmacros=true;} break;     // KC_RESERVED_A5 is the keycode marker for user macros.
+            case KC_RESERVED_A5: if(!processingmacros){macro = keycode; processingmacros=true;} break;// process_user_macros(keycode);  break;     // KC_RESERVED_A5 is the keycode marker for user macros.
             case KC_RESERVED_A6: break;                                                                                 // KC_RESERVED_A6 is the keycode marker for special keyboard functions.
             case KC_RESERVED_A7: break;                                                                                 // KC_RESERVED_A7 is the keycode marker for consumer reports.
             case KC_RESERVED_A8: break;                                                                                 // KC_RESERVED_A8 is the keycode marker for mouse reports.
@@ -410,6 +400,7 @@ bool    KeyScanner::reportChanged = false;
 bool    KeyScanner::processingmacros = false;
 
 uint8_t KeyScanner::localLayer = 0;
+uint16_t KeyScanner::macro = 0;
 uint8_t KeyScanner::remoteLayer = 0;
 uint8_t KeyScanner::remoteMod = 0;
 uint8_t KeyScanner::currentMod = 0;

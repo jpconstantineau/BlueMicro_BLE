@@ -434,13 +434,13 @@ void sendString(const char* str)
     #endif
 }
 
-void sendKeycode(const char* keycode)
+void sendKeycode(const char keycode)
 {
   #if BLE_HID == 1
   hid_keyboard_report_t report;
   varclr(&report);
   report.modifier = 0;
-  report.keycode[0] = *keycode;
+  report.keycode[0] = keycode;
 
 
     blehid.keyboardReport(hid_conn_hdl,&report);
