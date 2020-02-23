@@ -222,8 +222,6 @@ void keyscantimer_callback(TimerHandle_t _handle) {
         }
       }
   } 
-  sd_power_mode_set(NRF_POWER_MODE_LOWPWR);
-  sd_app_evt_wait();
 }
 //********************************************************************************************//
 //* Battery Monitoring Task - runs infrequently - except in boot mode                        *//
@@ -233,8 +231,6 @@ void batterytimer_callback(TimerHandle_t _handle)
     #if BLE_LIPO_MONITORING == 1
       updateBattery();
     #endif
-    sd_power_mode_set(NRF_POWER_MODE_LOWPWR);
-    sd_app_evt_wait();
 }
 
 void RGBtimer_callback(TimerHandle_t _handle)
@@ -243,8 +239,6 @@ void RGBtimer_callback(TimerHandle_t _handle)
       unsigned long timesincelastkeypress = millis() - KeyScanner::getLastPressed();
      updateRGB(0, timesincelastkeypress);
     #endif
-    sd_power_mode_set(NRF_POWER_MODE_LOWPWR);
-    sd_app_evt_wait();
 }
 
 
@@ -292,14 +286,13 @@ void monitoringtimer_callback(TimerHandle_t _handle)
       break;
     
   } 
-  sd_power_mode_set(NRF_POWER_MODE_LOWPWR);
-  sd_app_evt_wait();
 };
+
 //********************************************************************************************//
 //* Idle Task - runs when there is nothing to do                                             *//
 //* Any impact of placing code here on current consumption?                                  *//
 //********************************************************************************************//
-void rtos_idle_callback(void) {
+extern "C" void vApplicationIdleHook(void) {
   // Don't call any other FreeRTOS blocking API()
   // Perform background task(s) here
   sd_power_mode_set(NRF_POWER_MODE_LOWPWR);
