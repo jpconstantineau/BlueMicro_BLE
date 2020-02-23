@@ -30,7 +30,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #if USER_MACRO_FUNCTION == 1  
     void process_user_macros(uint16_t macroid)
     {
-        switch (macroid)
+        switch ((macroid))
         {
             case MC(KC_A):
             sendString("Macro Example 1");
@@ -346,10 +346,11 @@ bool KeyScanner::getReport()
             case KC_RSHIFT: currentMod |= 32;   currentMod |= extraModifiers; break;
             case KC_RALT:   currentMod |= 64;   currentMod |= extraModifiers; break;
             case KC_RGUI:   currentMod |= 128;  currentMod |= extraModifiers; break;
-            case KC_RESERVED_A5: if(!processingmacros){process_user_macros(keycode); processingmacros=true;} break;     // KC_RESERVED_A5 is the keycode marker for a macro.
-            case KC_RESERVED_A6: break;                                                                                 // KC_RESERVED_A6 is the keycode marker for a special keyboard function.
+            case KC_RESERVED_A5: if(!processingmacros){process_user_macros(keycode); processingmacros=true;} break;     // KC_RESERVED_A5 is the keycode marker for user macros.
+            case KC_RESERVED_A6: break;                                                                                 // KC_RESERVED_A6 is the keycode marker for special keyboard functions.
+            case KC_RESERVED_A7: break;                                                                                 // KC_RESERVED_A7 is the keycode marker for consumer reports.
+            case KC_RESERVED_A8: break;                                                                                 // KC_RESERVED_A8 is the keycode marker for mouse reports.
         }
-
 
         if (bufferposition == 7)
         {
@@ -357,12 +358,8 @@ bool KeyScanner::getReport()
         }
     }
 
-
-
     currentReport[0] = currentMod;
     currentReport[7] = localLayer;
-
-    
 
    if((currentReport[0] != previousReport[0])
         | (currentReport[1] != previousReport[1])
@@ -373,7 +370,7 @@ bool KeyScanner::getReport()
              | (currentReport[6] != previousReport[6])
               | (currentReport[7] != previousReport[7]))
     {
-        reportChanged = false;
+        reportChanged = true;
         if (processingmacros)
             if ((currentReport[0] == 0 )
                 && (currentReport[1] == 0 )
@@ -385,7 +382,7 @@ bool KeyScanner::getReport()
             {processingmacros=false;}
     }
     else
-    {reportChanged = true;}
+    {reportChanged = false;}
 
     previousReport[0] = currentReport[0];
     previousReport[1] = currentReport[1];
@@ -396,8 +393,6 @@ bool KeyScanner::getReport()
     previousReport[6] = currentReport[6];
     previousReport[7] = currentReport[7];
 
-
-
     return reportChanged;
 }
 
@@ -407,12 +402,11 @@ unsigned long KeyScanner::getLastPressed()
 }
 /**************************************************************************************************************************/
 
-
 uint8_t KeyScanner::currentReport[8] = {0, 0, 0 ,0, 0, 0, 0, 0}; 
 uint8_t KeyScanner::remoteReport[8]  = {0, 0, 0 ,0, 0, 0, 0, 0}; 
 uint8_t KeyScanner::previousReport[8] = {0, 0, 0 ,0, 0, 0, 0, 0};
 bool    KeyScanner::layerChanged = false;
-bool    KeyScanner::reportChanged = true;
+bool    KeyScanner::reportChanged = false;
 bool    KeyScanner::processingmacros = false;
 
 uint8_t KeyScanner::localLayer = 0;
@@ -428,4 +422,3 @@ std::vector<uint16_t> KeyScanner::macroBuffer {};
 std::vector<uint16_t> KeyScanner::toggleBuffer {};
 std::vector<uint16_t> KeyScanner::leaderBuffer {};
 std::vector<uint16_t> KeyScanner::oneshotBuffer {};
-

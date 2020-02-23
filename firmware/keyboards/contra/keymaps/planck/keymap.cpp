@@ -28,7 +28,63 @@ std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
 
  
 void setupKeymap() {
+   
 
+    uint32_t lower[MATRIX_ROWS][MATRIX_COLS] =
+        KEYMAP(
+        KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR,    KC_ASTR,    KC_LPRN, KC_RPRN, KC_BSPC,
+        KC_DEL,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_UNDS,    KC_PLUS,    KC_LCBR, KC_RCBR, KC_PIPE,
+        _______, KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  S(KC_NUHS), S(KC_NUBS), KC_HOME, KC_END,  _______,
+        _______, _______, _______, _______, L_LOWER, _______, _______, L_RAISE,    KC_MNXT,    KC_VOLD, KC_VOLU, KC_MPLY);
+
+    uint32_t raise[MATRIX_ROWS][MATRIX_COLS] =
+        KEYMAP(
+    KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSPC,
+    KC_DEL,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_MINS, KC_EQL,  KC_LBRC, KC_RBRC, KC_BSLS,
+    _______, KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_NUHS, KC_NUBS, KC_PGUP, KC_PGDN, _______,
+    _______, _______, _______, _______, L_LOWER, _______, _______, L_RAISE, KC_MNXT, KC_VOLD, KC_VOLU, KC_MPLY);
+
+    uint32_t adjust[MATRIX_ROWS][MATRIX_COLS] =
+        KEYMAP(
+    _______, RESET,   _______,   RGB_TOG, RGB_MOD, RGB_HUI, RGB_HUD, RGB_SAI, RGB_SAD,  RGB_VAI, RGB_VAD, KC_DEL ,
+    _______, _______, _______,  _______,   _______,  _______, _______, KM_QWERTY,  KM_COLEMAK,  KM_DVORAK,  _______,  _______,
+    _______, _______,  _______,  _______,   _______,  _______,   _______,  _______, _______, _______, _______, _______,
+    _______, _______, _______, _______, L_LOWER, _______, _______, L_RAISE, _______,  _______, _______, _______);
+
+    uint32_t macro[MATRIX_ROWS][MATRIX_COLS] =
+        KEYMAP(
+    _______, HOME_ADD, EMAIL_1,  NAME_1, CBR_FN, PHONE_1, TAB_DOWN_RTRN, INOWORD, IN_R,  IPADDR, SMILE, IPSUM ,
+    _______, WORK_ADD, EMAIL_2,  NAME_2, BRC_FN, PHONE_2, TAB_UP_RTRN, FOREXMPL,  _______,  _______,  _______,  _______,
+    _______, _______,  _______,  NAME_3, PRN_FN, _______,   _______,  FF_TEXT, _______, LARW_L, LARW_R, _______,
+    L_MACRO, _______, _______, _______, L_LOWER, _______, _______, L_RAISE, KM_QWERTY,  KM_COLEMAK, KM_DVORAK, KM_PLOVER);
+
+    /*
+     * add the other layers
+     */
+ 
+    for (int row = 0; row < MATRIX_ROWS; ++row)
+    {
+        for (int col = 0; col < MATRIX_COLS; ++col)
+        {
+            matrix[row][col].addActivation(_LOWER, Method::PRESS,   lower[row][col]);
+            matrix[row][col].addActivation(_RAISE, Method::PRESS,   raise[row][col]);
+            matrix[row][col].addActivation(_ADJUST, Method::PRESS,  adjust[row][col]);
+            matrix[row][col].addActivation(_MACRO, Method::PRESS,   macro[row][col]);
+        }
+    }
+
+}
+
+
+void process_user_macros(uint16_t macroid)
+{
+
+     uint32_t qwerty[MATRIX_ROWS][MATRIX_COLS] =
+        KEYMAP(
+        KC_TAB,    KC_Q,    KC_W,    KC_E,   KC_R,    KC_T,    KC_Y,    KC_U,   KC_I,    KC_O,    KC_P,     KC_BSPACE,
+        KC_ESC,    KC_A,    KC_S,    KC_D,   KC_F,    KC_G,    KC_H,    KC_J,   KC_K,    KC_L,    KC_SCLN,  KC_QUOT,
+        KC_LSFT,   KC_Z,    KC_X,    KC_C,   KC_V,    KC_B,    KC_N,    KC_M,   KC_COMMA,KC_DOT,  KC_SLASH, KC_ENTER, 
+        L_MACRO,   KC_LCTL, KC_LALT, KC_LGUI,L_LOWER, KC_SPC,  KC_SPC,  L_RAISE,KC_LEFT, KC_DOWN,   KC_UP,  KC_RIGHT);
     uint32_t colemak[MATRIX_ROWS][MATRIX_COLS] =
         KEYMAP(
         KC_TAB,  KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,    KC_J,    KC_L,    KC_U,    KC_Y,    KC_SCLN, KC_BSPC,
@@ -42,58 +98,51 @@ void setupKeymap() {
            KC_LSFT, KC_SCLN, KC_Q,    KC_J,    KC_K,    KC_X,    KC_B,    KC_M,    KC_W,    KC_V,    KC_Z,    KC_ENT ,
            L_MACRO, KC_LCTL, KC_LALT, KC_LGUI, L_LOWER, KC_SPC,  KC_SPC,  L_RAISE, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT);
 
-    uint32_t lower[MATRIX_ROWS][MATRIX_COLS] =
+    uint32_t plover[MATRIX_ROWS][MATRIX_COLS] =
         KEYMAP(
-        KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR,    KC_ASTR,    KC_LPRN, KC_RPRN, KC_BSPC,
-        KC_DEL,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_UNDS,    KC_PLUS,    KC_LCBR, KC_RCBR, KC_PIPE,
-        _______, KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  S(KC_NUHS), S(KC_NUBS), KC_HOME, KC_END,  _______,
-        _______, _______, _______, _______, L_LOWER, _______, _______, L_ADJUST,    KC_MNXT,    KC_VOLD, KC_VOLU, KC_MPLY);
-
-    uint32_t raise[MATRIX_ROWS][MATRIX_COLS] =
-        KEYMAP(
-    KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSPC,
-    KC_DEL,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_MINS, KC_EQL,  KC_LBRC, KC_RBRC, KC_BSLS,
-    _______, KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_NUHS, KC_NUBS, KC_PGUP, KC_PGDN, _______,
-    _______, _______, _______, _______, L_ADJUST, _______, _______, L_RAISE, KC_MNXT, KC_VOLD, KC_VOLU, KC_MPLY);
-
-    uint32_t adjust[MATRIX_ROWS][MATRIX_COLS] =
-        KEYMAP(
-    _______, RESET,   _______,   RGB_TOG, RGB_MOD, RGB_HUI, RGB_HUD, RGB_SAI, RGB_SAD,  RGB_VAI, RGB_VAD, KC_DEL ,
-    _______, _______, _______,  _______,   _______,  _______, _______, _______,  _______,  _______,  _______,  _______,
-    _______, _______,  _______,  _______,   _______,  _______,   _______,  _______, _______, _______, _______, _______,
-    _______, _______, _______, _______, L_ADJUST, _______, _______, L_ADJUST, _______,  _______, _______, _______);
-
-    uint32_t macro[MATRIX_ROWS][MATRIX_COLS] =
-        KEYMAP(
-    _______, HOME_ADD, EMAIL_1,  NAME_1, CBR_FN, PHONE_1, TAB_DOWN_RTRN, INOWORD, IN_R,  IPADDR, SMILE, IPSUM ,
-    _______, WORK_ADD, EMAIL_2,  NAME_2, BRC_FN, PHONE_2, TAB_UP_RTRN, FOREXMPL,  _______,  _______,  _______,  _______,
-    _______, _______,  _______,  NAME_3, PRN_FN, _______,   _______,  FF_TEXT, _______, LARW_L, LARW_R, _______,
-    L_MACRO, _______, _______, _______, L_LOWER, _______, _______, L_RAISE, _______,  _______, _______, _______);
-
-    /*
-     * add the other layers
-     */
- 
-    for (int row = 0; row < MATRIX_ROWS; ++row)
-    {
-        for (int col = 0; col < MATRIX_COLS; ++col)
+           KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1   ,
+           XXXXXXX, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC,
+           XXXXXXX, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
+           EXT_PLV, XXXXXXX, XXXXXXX, KC_C,    KC_V,    XXXXXXX, XXXXXXX, KC_N,    KC_M,    XXXXXXX, XXXXXXX, XXXXXXX);       
+ //const char kctosend[] = { KC_LEFT, '\0'};
+ switch ((macroid))
+ { 
+     case (KM_QWERTY):
+        for (int row = 0; row < MATRIX_ROWS; ++row)
         {
-          //  matrix[row][col].addActivation(_COLEMAK, Method::PRESS, colemak[row][col]);
-          //  matrix[row][col].addActivation(_DVORAK, Method::PRESS,  dvorak[row][col]);
-            matrix[row][col].addActivation(_LOWER, Method::PRESS,   lower[row][col]);
-            matrix[row][col].addActivation(_RAISE, Method::PRESS,   raise[row][col]);
-            matrix[row][col].addActivation(_ADJUST, Method::PRESS,  adjust[row][col]);
-            matrix[row][col].addActivation(_MACRO, Method::PRESS,   macro[row][col]);
+            for (int col = 0; col < MATRIX_COLS; ++col)
+            {
+                matrix[row][col].addActivation(_QWERTY, Method::PRESS,  qwerty[row][col]);
+            }
         }
-    }
-
-}
-
-
-void process_user_macros(uint16_t macroid)
-{
- switch (macroid)
- {
+        break;
+     case (KM_COLEMAK):
+        for (int row = 0; row < MATRIX_ROWS; ++row)
+        {
+            for (int col = 0; col < MATRIX_COLS; ++col)
+            {
+                matrix[row][col].addActivation(_COLEMAK, Method::PRESS, colemak[row][col]);
+            }
+        }
+        break;
+     case KM_DVORAK:
+        for (int row = 0; row < MATRIX_ROWS; ++row)
+        {
+            for (int col = 0; col < MATRIX_COLS; ++col)
+            {
+                matrix[row][col].addActivation(_DVORAK, Method::PRESS,  dvorak[row][col]);
+            }
+        }
+        break;
+    case KM_PLOVER:
+        for (int row = 0; row < MATRIX_ROWS; ++row)
+        {
+            for (int col = 0; col < MATRIX_COLS; ++col)
+            {
+                matrix[row][col].addActivation(_PLOVER, Method::PRESS,  plover[row][col]);
+            }
+        }
+        break;
      case HOME_ADD:
      sendString("123 Quiet Crescent");
      break;
@@ -115,20 +164,29 @@ void process_user_macros(uint16_t macroid)
      case NAME_3:
      sendString("Last Name");
       break;
-     case CBR_FN:
-     sendString("{}"); // more to add here
+     case (CBR_FN):
+     sendString("{}"); 
+    // kctosend[] = { SEND_KC(KC_LEFT), '\0'};
+   // sendKeycode(kctosend);  //this still crashes the board...
+
       break;
-     case BRC_FN:
-     sendString("[]"); // more to add here
+     case (BRC_FN):
+     sendString("[]");
+   //  sendKey(KC_LEFT);
       break;
      case PRN_FN:
-     sendString("()"); // more to add here 
+     sendString("()"); 
+    // sendKey(KC_LEFT);
       break;
      case TAB_DOWN_RTRN:
-     sendString("%in%"); // different here
+    // sendKey(KC_TAB);
+   //  sendKey(KC_DOWN);
+   //  sendKey(KC_ENTER);
       break;
      case TAB_UP_RTRN:
-     sendString("%in%"); // different here
+   //  sendKey(KC_TAB);
+   //  sendKey(KC_UP);
+   //  sendKey(KC_ENTER);
       break;
      case PHONE_1:
      sendString("234-567-8901");
@@ -137,13 +195,18 @@ void process_user_macros(uint16_t macroid)
      sendString("987-654-3210");
       break;
      case INOWORD:
-     sendString("(i.e., )");  // more to add here
+     sendString("(i.e., )");  
+ //    sendKeycode(SEND_KC(KC_LEFT));
       break;
      case FOREXMPL:
-     sendString("(e.g., )"); // more to add here
+     sendString("(e.g., )"); 
+   //  sendKey(KC_LEFT);
       break;
      case FF_TEXT:
-     sendString("rff"); // more to add here
+  //   sendKey(KC_LALT);
+     sendString("rff"); 
+  //   sendKey(KC_LEFT);
+  //   sendKey(KC_ENTER);
       break;
      case IN_R:
      sendString("%in%");

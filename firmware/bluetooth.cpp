@@ -430,6 +430,23 @@ void sendRelease(uint8_t currentReport[8])
 void sendString(const char* str)
 {
   #if BLE_HID == 1
-    blehid.keySequence(str,3);
+    blehid.keySequence(str,5);
+    #endif
+}
+
+void sendKeycode(const char* keycode)
+{
+  #if BLE_HID == 1
+  hid_keyboard_report_t report;
+  varclr(&report);
+  report.modifier = 0;
+  report.keycode[0] = *keycode;
+
+
+    blehid.keyboardReport(hid_conn_hdl,&report);
+    delay(5);
+    report.keycode[0] = 0;
+    blehid.keyboardReport(hid_conn_hdl,&report);
+    delay(5);
     #endif
 }

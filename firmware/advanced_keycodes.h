@@ -46,6 +46,8 @@ enum class Duration {
 #define MAC(KC) ((static_cast<int>(Duration::ONE_SHOT) << 16) |  (KC << 8 ) | KC_RESERVED_A5)
 #define S(KC) MOD(MOD_LSHIFT, KC)
 
+#define SEND_KC(KC) (static_cast<uint8_t>(KC & 0x00FF))
+
 // define any shift/ctl/alt key combinations
 #define KC_TILD MOD(MOD_LSHIFT, KC_GRV)
 #define KC_EXLM MOD(MOD_LSHIFT, KC_1)

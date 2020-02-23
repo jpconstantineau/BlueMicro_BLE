@@ -42,6 +42,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 #endif
         extern void sendString(const char* str);
+        extern void sendKeycode(const char* keycode);
 class KeyScanner {
     public:
         KeyScanner();

@@ -35,7 +35,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define  _DVORAK 0
 #define  _LOWER 1
 #define  _RAISE 2
-//  _PLOVER, // no plover since it needs NKRO and BLE only supports 6KRO
+#define  _PLOVER 0 // no plover since it needs NKRO and BLE only supports 6KRO
 #define _ADJUST 3
 #define _MACRO 4
 
@@ -43,6 +43,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define L_QWERTY   (LAYER_0 + _QWERTY)
 #define L_COLEMAK  (LAYER_0 + _COLEMAK)
 #define L_DVORAK   (LAYER_0 + _DVORAK)
+#define L_PLOVER   (LAYER_0 + _PLOVER)
 #define L_LOWER    (LAYER_0 + _LOWER)
 #define L_RAISE    (LAYER_0 + _RAISE)
 #define L_ADJUST   (LAYER_0 + _ADJUST)
@@ -63,6 +64,11 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define RGB_VAI _______
 #define RGB_VAD _______
 
+#define KM_QWERTY  MC(KC_1)
+#define KM_COLEMAK MC(KC_2)
+#define KM_DVORAK  MC(KC_3)
+#define KM_PLOVER  MC(KC_4)
+#define EXT_PLV  KM_QWERTY
 
 #define HOME_ADD MC(KC_A)
 #define WORK_ADD MC(KC_B)
@@ -94,7 +100,7 @@ void process_user_macros(uint16_t macroid);
 void setupKeymap();
 extern std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix;
 extern void sendString(const char* str);
-
+extern void sendKeycode(const char* keycode);
 
 #endif
 

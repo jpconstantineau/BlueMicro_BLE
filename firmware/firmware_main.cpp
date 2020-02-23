@@ -35,7 +35,7 @@ SoftwareTimer keyscantimer, monitoringtimer, batterytimer;//, RGBtimer;
 
 KeyScanner keys;
 
-bool isReportedReleased = true;
+//bool isReportedReleased = true;
 uint8_t monitoring_state = STATE_BOOT_INITIALIZE;
 
 /**************************************************************************************************************************/
@@ -150,10 +150,10 @@ void scanMatrix() {
 /**************************************************************************************************************************/
 void sendKeyPresses() {
    KeyScanner::getReport();                                            // get state data - Data is in KeyScanner::currentReport  
-   if (!(KeyScanner::reportChanged))  //any new key presses anywhere?
+   if ((KeyScanner::reportChanged))  //any new key presses anywhere?
    {                                                                              
         sendKeys(KeyScanner::currentReport);
-        isReportedReleased = false;
+       // isReportedReleased = false;
         LOG_LV1("MXSCAN","SEND: %i %i %i %i %i %i %i %i %i " ,millis(),KeyScanner::currentReport[0], KeyScanner::currentReport[1],KeyScanner::currentReport[2],KeyScanner::currentReport[3], KeyScanner::currentReport[4],KeyScanner::currentReport[5], KeyScanner::currentReport[6],KeyScanner::currentReport[7] );        
     }
  /*  else                                                                  //NO key presses anywhere
@@ -211,7 +211,7 @@ void keyscantimer_callback(TimerHandle_t _handle) {
   if (monitoring_state == STATE_BOOT_MODE)
   {
       KeyScanner::getReport();                                            // get state data - Data is in KeyScanner::currentReport
-      if (!(KeyScanner::reportChanged))
+      if ((KeyScanner::reportChanged))
       {
         for (int i = 0; i < BOOT_MODE_COMMANDS_COUNT; ++i)          // loop through BOOT_MODE_COMMANDS and compare with the first key being pressed - assuming only 1 key will be pressed when in boot mode.
         {
@@ -222,8 +222,8 @@ void keyscantimer_callback(TimerHandle_t _handle) {
         }
       }
   } 
-  sd_power_mode_set(NRF_POWER_MODE_LOWPWR);
-  sd_app_evt_wait();
+//  sd_power_mode_set(NRF_POWER_MODE_LOWPWR);
+ // sd_app_evt_wait();
 }
 //********************************************************************************************//
 //* Battery Monitoring Task - runs infrequently - except in boot mode                        *//
@@ -233,8 +233,8 @@ void batterytimer_callback(TimerHandle_t _handle)
     #if BLE_LIPO_MONITORING == 1
       updateBattery();
     #endif
-    sd_power_mode_set(NRF_POWER_MODE_LOWPWR);
-    sd_app_evt_wait();
+ //   sd_power_mode_set(NRF_POWER_MODE_LOWPWR);
+ //   sd_app_evt_wait();
 }
 
 void RGBtimer_callback(TimerHandle_t _handle)
@@ -243,8 +243,8 @@ void RGBtimer_callback(TimerHandle_t _handle)
       unsigned long timesincelastkeypress = millis() - KeyScanner::getLastPressed();
      updateRGB(0, timesincelastkeypress);
     #endif
-    sd_power_mode_set(NRF_POWER_MODE_LOWPWR);
-    sd_app_evt_wait();
+  //  sd_power_mode_set(NRF_POWER_MODE_LOWPWR);
+  //  sd_app_evt_wait();
 }
 
 
@@ -292,8 +292,8 @@ void monitoringtimer_callback(TimerHandle_t _handle)
       break;
     
   } 
-  sd_power_mode_set(NRF_POWER_MODE_LOWPWR);
-  sd_app_evt_wait();
+ // sd_power_mode_set(NRF_POWER_MODE_LOWPWR);
+ // sd_app_evt_wait();
 };
 //********************************************************************************************//
 //* Idle Task - runs when there is nothing to do                                             *//
@@ -302,6 +302,6 @@ void monitoringtimer_callback(TimerHandle_t _handle)
 void rtos_idle_callback(void) {
   // Don't call any other FreeRTOS blocking API()
   // Perform background task(s) here
-  sd_power_mode_set(NRF_POWER_MODE_LOWPWR);
+    sd_power_mode_set(NRF_POWER_MODE_LOWPWR);
     sd_app_evt_wait();  // puts the nrf52 to sleep when there is nothing to do.  You need this to reduce power consumption. (removing this will increase current to 8mA)
 };
