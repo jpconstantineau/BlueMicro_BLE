@@ -159,7 +159,7 @@ void scanMatrix() {
     }
 #endif
 /**************************************************************************************************************************/
-// Communication with computer and other boards
+// macro string queue management
 /**************************************************************************************************************************/
 void addStringToQueue(const char* str)
 {
@@ -181,10 +181,17 @@ void addStringToQueue(const char* str)
 void addKeycodeToQueue(const uint16_t keycode)
 {
   auto it = stringbuffer.begin();
-  it = stringbuffer.insert(it, keycode);
+  auto hidKeycode = static_cast<uint8_t>(keycode & 0x00FF);
+
+        if (hidKeycode >= KC_A && hidKeycode <= KC_EXSEL)  // only insert keycodes if they are valid keyboard codes...
+        {
+            it = stringbuffer.insert(it, keycode);
+        }
   }
 
-
+/**************************************************************************************************************************/
+// Communication with computer and other boards
+/**************************************************************************************************************************/
 void sendKeyPresses() {
   uint8_t report[8] = {0, 0, 0 ,0, 0, 0, 0, 0}; ;
   uint16_t keyreport;
