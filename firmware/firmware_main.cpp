@@ -38,6 +38,8 @@ KeyScanner keys;
 //bool isReportedReleased = true;
 uint8_t monitoring_state = STATE_BOOT_INITIALIZE;
 
+static std::vector<uint16_t> stringbuffer; 
+
 /**************************************************************************************************************************/
 // put your setup code here, to run once:
 /**************************************************************************************************************************/
@@ -72,6 +74,7 @@ void setup() {
   batterytimer.start();
   //RGBtimer.start();
   suspendLoop(); // this commands suspends the main loop.  We are no longer using the loop but scheduling things using the timers.
+  stringbuffer.clear();
 };
 /**************************************************************************************************************************/
 //
@@ -150,7 +153,7 @@ void scanMatrix() {
         switch ((macroid))
         {
             case MC(KC_A):
-            sendString("Macro Example 1");
+            addStringToQueue( "Macro Example 1");
             break;
         }
     }
@@ -158,27 +161,61 @@ void scanMatrix() {
 /**************************************************************************************************************************/
 // Communication with computer and other boards
 /**************************************************************************************************************************/
-void sendKeyPresses() {
-   KeyScanner::getReport();                                            // get state data - Data is in KeyScanner::currentReport  
-   if ((KeyScanner::reportChanged))  //any new key presses anywhere?
-   {                                                                              
-        sendKeys(KeyScanner::currentReport);
-       // isReportedReleased = false;
-        LOG_LV1("MXSCAN","SEND: %i %i %i %i %i %i %i %i %i " ,millis(),KeyScanner::currentReport[0], KeyScanner::currentReport[1],KeyScanner::currentReport[2],KeyScanner::currentReport[3], KeyScanner::currentReport[4],KeyScanner::currentReport[5], KeyScanner::currentReport[6],KeyScanner::currentReport[7] );        
-    }
+void addStringToQueue(const char* str)
+{
+  auto it = stringbuffer.begin();
+  uint8_t modifier;
+  uint8_t keycode;
+  uint16_t keyreport;
+  char ch;
+  while( (ch = *str++) != 0 )
+  {
+    modifier = ( hid_ascii_to_keycode[(uint8_t)ch][0] ) ? KEYBOARD_MODIFIER_LEFTSHIFT : 0;
+    keycode = hid_ascii_to_keycode[(uint8_t)ch][1];
+    keyreport = MOD( modifier << 8 , keycode);
+    it = stringbuffer.insert(it, keyreport);
+  }
 
-    if (KeyScanner::macro > 0){
+}
+
+void addKeycodeToQueue(const uint16_t keycode)
+{
+  auto it = stringbuffer.begin();
+  it = stringbuffer.insert(it, keycode);
+  }
+
+
+void sendKeyPresses() {
+  uint8_t report[8] = {0, 0, 0 ,0, 0, 0, 0, 0}; ;
+  uint16_t keyreport;
+
+   KeyScanner::getReport();                                            // get state data - Data is in KeyScanner::currentReport  
+  if (KeyScanner::macro > 0){
       process_user_macros(KeyScanner::macro);
       KeyScanner::macro = 0;
-    } 
- /*  else                                                                  //NO key presses anywhere
-   {
-    if ((!isReportedReleased)){
-      sendRelease(KeyScanner::currentReport);  
-      isReportedReleased = true;                                         // Update flag so that we don't re-issue the message if we don't need to.
-      LOG_LV1("MXSCAN","RELEASED: %i %i %i %i %i %i %i %i %i " ,millis(),KeyScanner::currentReport[0], KeyScanner::currentReport[1],KeyScanner::currentReport[2],KeyScanner::currentReport[3], KeyScanner::currentReport[4],KeyScanner::currentReport[5], KeyScanner::currentReport[6],KeyScanner::currentReport[7] ); 
+  } 
+  if (!stringbuffer.empty()) // if the macro buffer isn't empty, send the first character of the buffer... which is located at the back of the FIFO queue
+  {
+    keyreport = stringbuffer.back();
+    stringbuffer.pop_back();
+
+    report[0] = static_cast<uint8_t>((keyreport & 0xFF00) >> 8);// mods
+    report[1] = static_cast<uint8_t>(keyreport & 0x00FF);
+    sendKeys(report);
+    if (stringbuffer.empty()) // make sure to send an empty report when done...
+    {
+      delay(5);
+      report[0] = 0;
+      report[1] = 0;
+      sendKeys(report);
     }
-   }*/
+  }
+  else if ((KeyScanner::reportChanged))  //any new key presses anywhere?
+  {                                                                              
+        sendKeys(KeyScanner::currentReport);
+        LOG_LV1("MXSCAN","SEND: %i %i %i %i %i %i %i %i %i " ,millis(),KeyScanner::currentReport[0], KeyScanner::currentReport[1],KeyScanner::currentReport[2],KeyScanner::currentReport[3], KeyScanner::currentReport[4],KeyScanner::currentReport[5], KeyScanner::currentReport[6],KeyScanner::currentReport[7] );        
+  }
+
   #if BLE_PERIPHERAL ==1   | BLE_CENTRAL ==1                            /**************************************************/
     if(KeyScanner::layerChanged)                                               //layer comms
     {   

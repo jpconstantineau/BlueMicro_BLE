@@ -17,7 +17,20 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 
 #include "keymap.h"
- 
+
+// todo: ADJUST Layer access: pressing multiple layer keys accesses another layer
+// todo: MEDIA Keys 
+// todo: keyboard functions (reset, dfu, etc)
+// todo: test one shot with layers
+// todo: test toggle with layers
+// todo: test one shot with macros
+// todo: test toggle with modifiers
+// todo: test one shot with modifiers
+
+// todo: Test tap/double-tap
+// todo: test press/hold: mod when held, key when tapped
+// todo: test press/hold: layer when held, key when tapped
+
 std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
     {{
         {KC_TAB,    KC_Q,    KC_W,    KC_E,   KC_R,    KC_T,    KC_Y,    KC_U,   KC_I,    KC_O,    KC_P,     KC_BSPACE,},
@@ -144,90 +157,88 @@ void process_user_macros(uint16_t macroid)
         }
         break;
      case HOME_ADD:
-     sendString("123 Quiet Crescent");
+     addStringToQueue("123 Quiet Crescent");
      break;
      case WORK_ADD:
-     sendString("123 Work Place");
+     addStringToQueue("123 Work Place");
       break;
      case EMAIL_1:
-     sendString("Primary@Email");
+     addStringToQueue("Primary@Email");
       break;
      case EMAIL_2:
-     sendString("Other@Email");
+     addStringToQueue("Other@Email");
       break;
      case NAME_1:
-     sendString("First Name");
+     addStringToQueue("First Name");
       break;
      case NAME_2:
-     sendString("Middle Name");
+     addStringToQueue("Middle Name");
       break;
      case NAME_3:
-     sendString("Last Name");
+     addStringToQueue("Last Name");
       break;
      case (CBR_FN):
-     sendString("{}"); 
-    // kctosend[] = { SEND_KC(KC_LEFT), '\0'};
-   // sendKeycode(kctosend);  //this still crashes the board...
-//sendKeycode(KC_LEFT);
+      addStringToQueue("{}"); 
+      addKeycodeToQueue(KC_LEFT);
       break;
      case (BRC_FN):
-     sendString("[]");
-  //   sendKeycode(KC_LEFT);
+      addStringToQueue("[]");
+      addKeycodeToQueue(KC_LEFT);
       break;
      case PRN_FN:
-     sendString("()"); 
-    // sendKey(KC_LEFT);
+      addStringToQueue("()"); 
+      addKeycodeToQueue(KC_LEFT);
       break;
      case TAB_DOWN_RTRN:
-    // sendKey(KC_TAB);
-   //  sendKey(KC_DOWN);
-   //  sendKey(KC_ENTER);
+      addKeycodeToQueue(KC_TAB);
+      addKeycodeToQueue(KC_DOWN);
+      addKeycodeToQueue(KC_ENTER);
       break;
      case TAB_UP_RTRN:
-   //  sendKey(KC_TAB);
-   //  sendKey(KC_UP);
-   //  sendKey(KC_ENTER);
+       addKeycodeToQueue(KC_TAB);
+       addKeycodeToQueue(KC_UP);
+       addKeycodeToQueue(KC_ENTER);
       break;
      case PHONE_1:
-     sendString("234-567-8901");
+     addStringToQueue("234-567-8901");
       break;
      case PHONE_2:
-     sendString("987-654-3210");
+     addStringToQueue("987-654-3210");
       break;
      case INOWORD:
-     sendString("(i.e., )");  
- //    sendKeycode(SEND_KC(KC_LEFT));
+     addStringToQueue("(i.e., )");  
+     addKeycodeToQueue(SEND_KC(KC_LEFT));
       break;
      case FOREXMPL:
-     sendString("(e.g., )"); 
-   //  sendKey(KC_LEFT);
+     addStringToQueue("(e.g., )"); 
+     addKeycodeToQueue(KC_LEFT);
       break;
      case FF_TEXT:
-  //   sendKey(KC_LALT);
-     sendString("rff"); 
-  //   sendKey(KC_LEFT);
-  //   sendKey(KC_ENTER);
+     addKeycodeToQueue(KC_LALT);
+     addStringToQueue("rff"); 
+     addKeycodeToQueue(KC_LEFT);
+     addKeycodeToQueue(KC_ENTER);
       break;
      case IN_R:
-     sendString("%in%");
+     addStringToQueue("%in%");
       break;
      case LARW_L:
-     sendString("<-");
+     addStringToQueue("<-");
       break;
      case LARW_R:
-     sendString("->");
+     addStringToQueue("->");
       break;
      break;
      case IPADDR:
-     sendString("192.168.1.");
+     addStringToQueue("192.168.1.");
       break;
      break;
      case SMILE:
-     sendString(":)");
+     addStringToQueue(":)");
       break;
      break;
      case IPSUM:
-     sendString("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
+     addStringToQueue("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
      break;
  }
 }

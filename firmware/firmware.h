@@ -50,13 +50,14 @@ enum states_monitor_modes {
   STATE_MONITOR_MODE,
   STATE_BOOT_UNKNOWN,
   };
-
+void addStringToQueue(const char* str);
+void addKeycodeToQueue(const uint16_t keycode);
 #ifndef USER_MACRO_FUNCTION  
 #define USER_MACRO_FUNCTION 1  
         void process_user_macros(uint16_t macroid);
 
 #endif
-        extern void sendString(const char* str);
-        extern void sendKeycode(const char* keycode);
+     //   extern void sendString(const char* str);
+     //   extern void sendKeycode(const char* keycode);
 
 #endif /* FIRMWARE_H */

@@ -99,8 +99,10 @@ void process_user_macros(uint16_t macroid);
 
 void setupKeymap();
 extern std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix;
-extern void sendString(const char* str);
-extern void sendKeycode(const char keycode);
+//extern void sendString(const char* str);
+//extern void sendKeycode(const char keycode);
+extern void addStringToQueue(const char* str);
+extern void addKeycodeToQueue(const uint16_t keycode);
 
 #endif
 
