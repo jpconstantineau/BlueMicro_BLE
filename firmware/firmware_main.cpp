@@ -221,7 +221,18 @@ void sendKeyPresses() {
   {                                                                              
         sendKeys(KeyScanner::currentReport);
         LOG_LV1("MXSCAN","SEND: %i %i %i %i %i %i %i %i %i " ,millis(),KeyScanner::currentReport[0], KeyScanner::currentReport[1],KeyScanner::currentReport[2],KeyScanner::currentReport[3], KeyScanner::currentReport[4],KeyScanner::currentReport[5], KeyScanner::currentReport[6],KeyScanner::currentReport[7] );        
+  } else if (KeyScanner::specialfunction > 0)
+  {
+    KeyScanner::specialfunction = 0; 
+  } else if (KeyScanner::consumer > 0)
+  {
+    sendMediaKey(KeyScanner::consumer);
+    KeyScanner::consumer = 0; 
+  } else if (KeyScanner::mouse > 0)
+  {
+    KeyScanner::mouse = 0; 
   }
+  
 
   #if BLE_PERIPHERAL ==1   | BLE_CENTRAL ==1                            /**************************************************/
     if(KeyScanner::layerChanged)                                               //layer comms

@@ -389,7 +389,129 @@ enum hid_keyboard_keypad_usage {
 #define LAYER_E      0xFE
 #define LAYER_F      0xFF
 
+#define RESET               KB(KC_A)   
+#define DEBUG               KB(KC_B)
+#define EEPROM_RESET        KB(KC_C)
+#define EEP_RST             EEPROM_RESET
+#define DFU                 KB(KC_D)
+#define SERIAL_DFU          KB(KC_E)
+#define CLEAR_BONDS         KB(KC_F)
 
+#define BL_TOGG             KB(KC_G)
+#define BL_STEP             KB(KC_H)
+#define BL_ON               KB(KC_I)
+#define BL_OFF              KB(KC_J)
+#define BL_INC              KB(KC_K)
+#define BL_DEC              KB(KC_L)
+#define BL_BRTG             KB(KC_M)
+#define BL_REACT            KB(KC_N)
+#define BL_STEPINC          KB(KC_O)
+#define BL_STEPDEC          KB(KC_P)
+
+#define OUT_AUTO            KB(KC_Q)
+#define OUT_USB             KB(KC_R)
+#define OUT_BT              KB(KC_S) 
+
+#define RGB_TOG             KB(KC_T) 
+#define RGB_MODE_FORWARD    KB(KC_U) 
+#define RGB_MOD             RGB_MODE_FORWARD
+#define RGB_MODE_REVERSE	KB(KC_V) 
+#define RGB_RMOD            RGB_MODE_REVERSE
+#define RGB_HUI             KB(KC_W) 
+#define RGB_HUD             KB(KC_X) 
+#define RGB_SAI             KB(KC_Y) 
+#define RGB_SAD             KB(KC_Z) 
+#define RGB_VAI             KB(KC_1) 
+#define RGB_VAD             KB(KC_2) 
+#define RGB_MODE_PLAIN      KB(KC_3) 
+#define RGB_M_P             RGB_MODE_PLAIN
+#define RGB_MODE_BREATHE    KB(KC_4) 
+#define RGB_M_B             RGB_MODE_BREATHE
+#define RGB_MODE_RAINBOW    KB(KC_5) 
+#define RGB_M_R             RGB_MODE_RAINBOW 
+#define RGB_MODE_SWIRL      KB(KC_6) 
+#define RGB_M_SW            RGB_MODE_SWIRL
+#define RGB_MODE_SNAKE      KB(KC_7) 
+#define RGB_M_SN            RGB_MODE_SNAKE
+#define RGB_MODE_KNIGHT     KB(KC_8) 
+#define RGB_M_K             RGB_MODE_KNIGHT
+#define RGB_MODE_XMAS       KB(KC_8) 
+#define RGB_M_X             RGB_MODE_XMAS
+#define RGB_MODE_GRADIENT   KB(KC_0) 
+#define RGB_M_G             RGB_MODE_GRADIENT
+#define RGB_MODE_RGBTEST    KB(KC_F1) 
+#define RGB_M_T             RGB_MODE_RGBTEST
+#define RGB_SPI             KB(KC_F2) 
+#define RGB_SPD             KB(KC_F3) 
+
+// Power Control
+#define KC_SYSTEM_POWER      MK(KC_A) //HID_USAGE_CONSUMER_POWER  
+#define KC_SYSTEM_RESET      MK(KC_B) //HID_USAGE_CONSUMER_RESET          
+#define KC_SYSTEM_SLEEP	     MK(KC_C) //HID_USAGE_CONSUMER_SLEEP    
+
+// Screen Brightness
+#define KC_DISPLAY_BRIGHTI   MK(KC_D) //HID_USAGE_CONSUMER_BRIGHTNESS_INCREMENT
+#define KC_DISPLAY_BRIGHTD   MK(KC_E) //HID_USAGE_CONSUMER_BRIGHTNESS_DECREMENT
+
+  // These HID usages operate only on mobile systems (battery powered) and
+  // require Windows 8 (build 8302 or greater).
+#define KC_RADIO_CONTROL     MK(KC_F) //  HID_USAGE_CONSUMER_WIRELESS_RADIO_CONTROLS           
+#define KC_RADIO_BUTTONS	 MK(KC_G) //  HID_USAGE_CONSUMER_WIRELESS_RADIO_BUTTONS            
+#define KC_RADIO_LED	     MK(KC_H) //  HID_USAGE_CONSUMER_WIRELESS_RADIO_LED                
+#define KC_RADIO_SWITCH	     MK(KC_I) //  HID_USAGE_CONSUMER_WIRELESS_RADIO_SLIDER_SWITCH      
+
+// Media Control
+#define KC_MEDIA_PLAY_PAUSE	 MK(KC_K) //HID_USAGE_CONSUMER_PLAY_PAUSE  
+#define KC_MEDIA_NEXT_TRACK  MK(KC_L) //HID_USAGE_CONSUMER_SCAN_NEXT         
+#define KC_MEDIA_PREV_TRACK  MK(KC_M) //HID_USAGE_CONSUMER_SCAN_PREVIOUS    
+#define KC_MEDIA_STOP	     MK(KC_N) //HID_USAGE_CONSUMER_STOP
+#define KC_AUDIO_VOL         MK(KC_O) //HID_USAGE_CONSUMER_VOLUME   
+#define KC_AUDIO_MUTE	     MK(KC_P) //HID_USAGE_CONSUMER_MUTE  
+#define KC_AUDIO_BASS        MK(KC_Q) //HID_USAGE_CONSUMER_BASS 
+#define KC_AUDIO_TREBLE      MK(KC_R) //HID_USAGE_CONSUMER_TREBLE 
+#define KC_AUDIO_BASS_BOOST  MK(KC_S) //HID_USAGE_CONSUMER_BASS_BOOST           
+#define KC_AUDIO_VOL_UP      MK(KC_T) //HID_USAGE_CONSUMER_VOLUME_INCREMENT 
+#define KC_AUDIO_VOL_DOWN    MK(KC_U) //HID_USAGE_CONSUMER_VOLUME_DECREMENT  
+#define KC_AUDIO_BASS_UP     MK(KC_V) //HID_USAGE_CONSUMER_BASS_INCREMENT      
+#define KC_AUDIO_BASS_DOWN   MK(KC_W) //HID_USAGE_CONSUMER_BASS_DECREMENT          
+#define KC_AUDIO_TREBLE_UP   MK(KC_X) //HID_USAGE_CONSUMER_TREBLE_INCREMENT           
+#define KC_AUDIO_TREBLE_DOWN MK(KC_Y) //HID_USAGE_CONSUMER_TREBLE_DECREMENT     
+
+ // Application Launcher  
+#define KC_MSEL              MK(KC_Z) //HID_USAGE_CONSUMER_AL_CONSUMER_CONTROL_CONFIGURATION 
+#define KC_WWW               MK(KC_1) //HID_USAGE_CONSUMER_AL_EMAIL_READER   
+#define KC_CALCULATOR        MK(KC_2) //HID_USAGE_CONSUMER_AL_CALCULATOR    
+#define KC_MYCM              MK(KC_3) //HID_USAGE_CONSUMER_AL_LOCAL_BROWSER  
+
+// Browser/Explorer Specific
+#define KC_WWW_SEARCH	     MK(KC_4) //HID_USAGE_CONSUMER_AC_SEARCH         
+#define KC_WWW_HOME	         MK(KC_5) //HID_USAGE_CONSUMER_AC_HOME          
+#define KC_WWW_BACK	         MK(KC_6) //HID_USAGE_CONSUMER_AC_BACK          
+#define KC_WWW_FORWARD	     MK(KC_7) //HID_USAGE_CONSUMER_AC_FORWARD     
+#define KC_WWW_STOP	         MK(KC_8) //HID_USAGE_CONSUMER_AC_STOP      
+#define KC_WWW_REFRESH	     MK(KC_9) //HID_USAGE_CONSUMER_AC_REFRESH     
+#define KC_WWW_FAVORITES     MK(KC_0) //HID_USAGE_CONSUMER_AC_BOOKMARKS     
+
+ // Mouse Horizontal scroll
+#define KC_AC_PAN            MK(KC_F1) //HID_USAGE_CONSUMER_AC_PAN 
+
+#define KC_PWR 	            KC_SYSTEM_POWER
+#define KC_SLEP             KC_SYSTEM_SLEEP
+#define KC_MUTE             KC_AUDIO_MUTE
+#define KC_VOLU             KC_AUDIO_VOL_UP
+#define KC_VOLD             KC_AUDIO_VOL_DOWN
+#define KC_MNXT             KC_MEDIA_NEXT_TRACK 
+#define KC_MPRV             KC_MEDIA_PREV_TRACK
+#define KC_MSTP             KC_MEDIA_STOP
+#define KC_MPLY             KC_MEDIA_PLAY_PAUSE
+#define KC_CALC             KC_CALCULATOR
+#define KC_WSCH             KC_WWW_SEARCH
+#define KC_WHOM             KC_WWW_HOME
+#define KC_WBAK             KC_WWW_BACK
+#define KC_WFWD             KC_WWW_FORWARD
+#define KC_WSTP             KC_WWW_STOP
+#define KC_WREF             KC_WWW_REFRESH
+#define KC_WFAV             KC_WWW_FAVORITES
 
 #endif /* HID_KEYCODES_H */
 

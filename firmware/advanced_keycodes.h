@@ -41,6 +41,8 @@ enum class Duration {
 
 #define MC(KC) (((uint16_t) KC << 8 ) | KC_RESERVED_A5 )             // move KC to upper 8 bits and use KC_RESERVED_A5 keycode for marking this as a macro.
 #define KB(KC) (((uint16_t) KC << 8 ) | KC_RESERVED_A6 )             // move KC to upper 8 bits and use KC_RESERVED_A6 keycode for marking this as a special keyboard function.
+#define MK(KC) (((uint16_t) KC << 8 ) | KC_RESERVED_A7 )             // move KC to upper 8 bits and use KC_RESERVED_A7 keycode for marking this as a media key.
+#define MS(KC) (((uint16_t) KC << 8 ) | KC_RESERVED_A8 )             // move KC to upper 8 bits and use KC_RESERVED_A8 keycode for marking this as a mouse key.
 #define TG(KC) ((static_cast<int>(Duration::TOGGLE) << 16) | KC)
 #define OS(KC) ((static_cast<int>(Duration::ONE_SHOT) << 16) | KC)
 #define MAC(KC) ((static_cast<int>(Duration::ONE_SHOT) << 16) |  (KC << 8 ) | KC_RESERVED_A5)

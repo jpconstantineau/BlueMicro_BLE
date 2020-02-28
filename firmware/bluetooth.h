@@ -57,4 +57,5 @@ void sendlayer(uint8_t layer);
 #endif
 void sendString(const char* str);
 void sendKeycode(const char keycode);
+void sendMediaKey(uint16_t keycode);
 #endif /* BLUETOOTH_H */

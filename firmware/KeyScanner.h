@@ -49,6 +49,9 @@ class KeyScanner {
         static bool layerChanged;
         static bool reportChanged;
         static uint16_t macro;
+        static uint16_t specialfunction;
+        static uint16_t consumer;
+        static uint16_t mouse;
         static uint8_t localLayer;
         static uint8_t layerMode;
         static uint8_t currentReport[8];
