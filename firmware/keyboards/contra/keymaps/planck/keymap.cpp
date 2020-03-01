@@ -18,9 +18,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 #include "keymap.h"
 
-// todo: ADJUST Layer access: pressing multiple layer keys accesses another layer
-// todo: MEDIA Keys 
-// todo: keyboard functions (reset, dfu, etc)
+// todo: ADJUST Layer access: pressing multiple layer keys accesses another layer 
 // todo: test one shot with layers
 // todo: test toggle with layers
 // todo: test one shot with macros
@@ -59,17 +57,17 @@ void setupKeymap() {
 
     uint32_t adjust[MATRIX_ROWS][MATRIX_COLS] =
         KEYMAP(
-    _______, RESET,   _______,   RGB_TOG, RGB_MOD, RGB_HUI, RGB_HUD, RGB_SAI, RGB_SAD,  RGB_VAI, RGB_VAD, KC_DEL ,
-    _______, _______, _______,  _______,   _______,  _______, _______, KM_QWERTY,  KM_COLEMAK,  KM_DVORAK,  _______,  _______,
-    _______, _______,  _______,  _______,   _______,  _______,   _______,  _______, _______, _______, _______, _______,
-    _______, _______, _______, _______, L_LOWER, _______, _______, L_RAISE, _______,  _______, _______, _______);
+    _______, RESET,   _______,  RGB_TOG, RGB_MOD, RGB_HUI, RGB_HUD, RGB_SAI,   RGB_SAD,    RGB_VAI,   RGB_VAD,   KC_DEL ,
+    _______, _______, _______,  _______, _______, _______, _______, KM_QWERTY, KM_COLEMAK, KM_DVORAK, KM_PLOVER, _______,
+    _______, _______, _______,  _______, _______, _______, _______, _______,   _______,    _______,   _______,   _______,
+    _______, _______, _______,  _______, L_LOWER, _______, _______, L_RAISE,   _______,    _______,   _______,   _______);
 
-    uint32_t macro[MATRIX_ROWS][MATRIX_COLS] =
+    uint32_t macro[MATRIX_ROWS][MATRIX_COLS] =            // XXXXXXX = nothing    _______ = transparent = use lower layer keycode
         KEYMAP(
-    _______, HOME_ADD, EMAIL_1,  NAME_1, CBR_FN, PHONE_1, TAB_DOWN_RTRN, INOWORD, IN_R,  IPADDR, SMILE, IPSUM ,
-    _______, WORK_ADD, EMAIL_2,  NAME_2, BRC_FN, PHONE_2, TAB_UP_RTRN, FOREXMPL,  _______,  _______,  _______,  _______,
-    _______, _______,  _______,  NAME_3, PRN_FN, _______,   _______,  FF_TEXT, _______, LARW_L, LARW_R, _______,
-    L_MACRO, _______, _______, _______, L_LOWER, _______, _______, L_RAISE, KM_QWERTY,  KM_COLEMAK, KM_DVORAK, KM_PLOVER);
+    PRINT_BATTERY, HOME_ADD, EMAIL_1,  NAME_1,  CBR_FN,  PHONE_1, TAB_DOWN_RTRN, INOWORD,  IN_R,      IPADDR,     SMILE,     IPSUM ,
+    PRINT_INFO   , WORK_ADD, EMAIL_2,  NAME_2,  BRC_FN,  PHONE_2, TAB_UP_RTRN,   FOREXMPL, XXXXXXX,   XXXXXXX,    XXXXXXX,   XXXXXXX,
+    XXXXXXX      , XXXXXXX,  XXXXXXX,  NAME_3,  PRN_FN,  XXXXXXX, XXXXXXX,       FF_TEXT,  XXXXXXX,   LARW_L,     LARW_R,    XXXXXXX,
+    L_MACRO      , XXXXXXX,  XXXXXXX,  XXXXXXX, L_LOWER, XXXXXXX, XXXXXXX,       L_RAISE,  KM_QWERTY, KM_COLEMAK, KM_DVORAK, KM_PLOVER);
 
     /*
      * add the other layers
@@ -79,10 +77,10 @@ void setupKeymap() {
     {
         for (int col = 0; col < MATRIX_COLS; ++col)
         {
-            matrix[row][col].addActivation(_LOWER, Method::PRESS,   lower[row][col]);
-            matrix[row][col].addActivation(_RAISE, Method::PRESS,   raise[row][col]);
+            matrix[row][col].addActivation(_LOWER,  Method::PRESS,   lower[row][col]);
+            matrix[row][col].addActivation(_RAISE,  Method::PRESS,   raise[row][col]);
             matrix[row][col].addActivation(_ADJUST, Method::PRESS,  adjust[row][col]);
-            matrix[row][col].addActivation(_MACRO, Method::PRESS,   macro[row][col]);
+            matrix[row][col].addActivation(_MACRO,  Method::PRESS,   macro[row][col]);
         }
     }
 
@@ -117,7 +115,7 @@ void process_user_macros(uint16_t macroid)
            XXXXXXX, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC,
            XXXXXXX, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
            EXT_PLV, XXXXXXX, XXXXXXX, KC_C,    KC_V,    XXXXXXX, XXXXXXX, KC_N,    KC_M,    XXXXXXX, XXXXXXX, XXXXXXX);       
- //const char kctosend[] = { KC_LEFT, '\0'};
+
  switch ((macroid))
  { 
      case (KM_QWERTY):

@@ -26,9 +26,9 @@ extern KeyScanner keys;
  uint16_t hid_conn_hdl;
  #endif 
  
-#if BLE_LIPO_MONITORING == 1 
+//#if BLE_LIPO_MONITORING == 1 
 extern BLEBas blebas; 
-#endif
+//#endif
 #if BLE_PERIPHERAL == 1                                                             // PERIPHERAL IS THE SLAVE BOARD
   BLEService KBLinkService = BLEService(UUID128_SVC_KEYBOARD_LINK);                 // Keyboard Link Service - Slave/Server Side                 
   BLECharacteristic KBLinkChar_Layers        = BLECharacteristic(UUID128_CHR_KEYBOARD_LAYERS);
@@ -65,12 +65,12 @@ void setupBluetooth(void)
   bledis.setModel(DEVICE_MODEL);                                              // Defined in keyboard_config.h
   bledis.begin();
 
-  #if BLE_LIPO_MONITORING == 1
+  //#if BLE_LIPO_MONITORING == 1
   // Configure and Start Battery Service
   blebas.begin();
   blebas.write(100); // put the battery level at 100% - until it is updated by the battery monitoring loop.
-  readVBAT(); // Get a single ADC sample and throw it away
-  #endif
+  Battery::readVBAT(); // Get a single ADC sample and throw it away
+  //#endif
   
 #if BLE_PERIPHERAL == 1
 uint8_t Linkdata[7] = {0,0,0,0,0,0,0};
@@ -463,40 +463,3 @@ uint16_t usagecode = 0;
   #endif 
 }
 /**************************************************************************************************************************/
-void sendRelease(uint8_t currentReport[8])
-{
-    #if BLE_HID == 1
-        blehid.keyRelease(hid_conn_hdl);                                             // HID uses the standard blehid service
-        LOG_LV2("HID","Sending blehid.keyRelease " );
-    #endif
-    #if BLE_PERIPHERAL ==1     
-        KBLinkChar_Buffer.notify(currentReport,7);                       // Peripheral->central uses the subscribe/notify mechanism
-    #endif
-    #if BLE_CENTRAL ==1
-          // Only send layer to slaves
-          ;                                                              // Central does not need to send the buffer to the Peripheral.
-    #endif
-}
-void sendString(const char* str)
-{
-  #if BLE_HID == 1
-    blehid.keySequence(str,5);
-    #endif
-}
-
-void sendKeycode(const char keycode)// this doesn't work... it crashes the board.
-{
-  #if BLE_HID == 1
-  hid_keyboard_report_t report;
-  varclr(&report);
-  report.modifier = 0;
-  report.keycode[0] = keycode;
-
-
-    blehid.keyboardReport(hid_conn_hdl,&report);
-    delay(5);
-    report.keycode[0] = 0;
-    blehid.keyboardReport(hid_conn_hdl,&report);
-    delay(5);
-    #endif
-}

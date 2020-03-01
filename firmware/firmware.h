@@ -38,26 +38,14 @@ void scanMatrix(void);
 void sendKeyPresses(void);
 
 void keyscantimer_callback(TimerHandle_t _handle);
-void monitoringtimer_callback(TimerHandle_t _handle);
 void batterytimer_callback(TimerHandle_t _handle);
 void RGBtimer_callback(TimerHandle_t _handle);
-enum states_monitor_modes {
-  STATE_BOOT_INITIALIZE = 0x00,
-  STATE_BOOT_MODE,
-  STATE_BOOT_CLEAR_BONDS,
-  STATE_BOOT_SERIAL_DFU,
-  STATE_BOOT_WIRELESS_DFU,
-  STATE_MONITOR_MODE,
-  STATE_BOOT_UNKNOWN,
-  };
 void addStringToQueue(const char* str);
 void addKeycodeToQueue(const uint16_t keycode);
+void process_keyboard_function(uint16_t keycode);
 #ifndef USER_MACRO_FUNCTION  
 #define USER_MACRO_FUNCTION 1  
-        void process_user_macros(uint16_t macroid);
-
+void process_user_macros(uint16_t macroid);
 #endif
-     //   extern void sendString(const char* str);
-     //   extern void sendKeycode(const char* keycode);
 
 #endif /* FIRMWARE_H */

@@ -435,7 +435,7 @@ enum hid_keyboard_keypad_usage {
 #define RGB_M_SN            RGB_MODE_SNAKE
 #define RGB_MODE_KNIGHT     KB(KC_8) 
 #define RGB_M_K             RGB_MODE_KNIGHT
-#define RGB_MODE_XMAS       KB(KC_8) 
+#define RGB_MODE_XMAS       KB(KC_9) 
 #define RGB_M_X             RGB_MODE_XMAS
 #define RGB_MODE_GRADIENT   KB(KC_0) 
 #define RGB_M_G             RGB_MODE_GRADIENT
@@ -443,6 +443,9 @@ enum hid_keyboard_keypad_usage {
 #define RGB_M_T             RGB_MODE_RGBTEST
 #define RGB_SPI             KB(KC_F2) 
 #define RGB_SPD             KB(KC_F3) 
+
+#define PRINT_BATTERY       KB(KC_F4)
+#define PRINT_INFO          KB(KC_F5)
 
 // Power Control
 #define KC_SYSTEM_POWER      MK(KC_A) //HID_USAGE_CONSUMER_POWER  

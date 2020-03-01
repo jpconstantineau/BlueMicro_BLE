@@ -369,7 +369,7 @@ bool KeyScanner::getReport()
                 && (currentReport[4] == 0 )
                 && (currentReport[5] == 0 )
                 && (currentReport[6] == 0 ))
-            {processingmacros=false;}
+            {processingmacros=false; macro=0; specialfunction=0; consumer=0; mouse=0;}
     }
     else
     {reportChanged = false;}

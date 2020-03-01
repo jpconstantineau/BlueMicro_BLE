@@ -40,6 +40,7 @@ This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
 #ifdef ARDUINO_NRF52832_FEATHER
     #if HARDWARE_MAPPING == BLUEMICROV1_0
         #define BLE_LIPO_MONITORING 0
+        #define BLE_CR2032_MONITORING 1
         #define D3      6  //
         #define D2      8   //
         #define D1      25  //sda
@@ -62,6 +63,7 @@ This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
         
     #elif HARDWARE_MAPPING == BLUEMICROV1_1
         #define BLE_LIPO_MONITORING 0
+        #define BLE_CR2032_MONITORING 1
         #define D3      17  //
         #define D2      7   //
         #define D1      25  //sda

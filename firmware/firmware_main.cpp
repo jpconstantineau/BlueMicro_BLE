@@ -29,16 +29,12 @@ using namespace Adafruit_LittleFS_Namespace;
 byte rows[] MATRIX_ROW_PINS;        // Contains the GPIO Pin Numbers defined in keyboard_config.h
 byte columns[] MATRIX_COL_PINS;     // Contains the GPIO Pin Numbers defined in keyboard_config.h  
 
-const uint8_t boot_mode_commands [BOOT_MODE_COMMANDS_COUNT][2] BOOT_MODE_COMMANDS;
-
-SoftwareTimer keyscantimer, monitoringtimer, batterytimer;//, RGBtimer;
-
+SoftwareTimer keyscantimer, batterytimer;//, RGBtimer;
+//extern float vbat_mv;
 KeyScanner keys;
+Battery batterymonitor;
 
-//bool isReportedReleased = true;
-uint8_t monitoring_state = STATE_BOOT_INITIALIZE;
-
-static std::vector<uint16_t> stringbuffer; 
+static std::vector<uint16_t> stringbuffer; // buffer for macros to type into...
 
 /**************************************************************************************************************************/
 // put your setup code here, to run once:
@@ -51,10 +47,7 @@ void setup() {
 
   setupGpio();                                                                // checks that NFC functions on GPIOs are disabled.
 
- // Scheduler.startLoop(monitoringloop);                                        // Starting second loop task for monitoring tasks
-
   keyscantimer.begin(HIDREPORTINGINTERVAL, keyscantimer_callback);
-  monitoringtimer.begin(HIDREPORTINGINTERVAL*10, monitoringtimer_callback);
   batterytimer.begin(30*1000, batterytimer_callback);
   //RGBtimer.begin(WS2812B_LED_COUNT*25, RGBtimer_callback);
   setupBluetooth();
@@ -70,7 +63,6 @@ void setup() {
   setupMatrix();
   startAdv(); 
   keyscantimer.start();
-  monitoringtimer.start();
   batterytimer.start();
   //RGBtimer.start();
   suspendLoop(); // this commands suspends the main loop.  We are no longer using the loop but scheduling things using the timers.
@@ -123,7 +115,7 @@ void scanMatrix() {
           pindata0 = NRF_P0->IN;                                         // read all pins at once
           pindata1 = NRF_P1->IN;                                         // read all pins at once
           for (int i = 0; i < MATRIX_COLS; ++i) {
-            int ulPin = g_ADigitalPinMap[columns[i]];
+            int ulPin = g_ADigitalPinMap[columns[i]];                               // This maps the Board Pin to the GPIO.
             if (ulPin<32)
             {
               KeyScanner::scanMatrix((pindata0>>(ulPin))&1, timestamp, j, i);       // This function processes the logic values and does the debouncing 
@@ -131,12 +123,12 @@ void scanMatrix() {
             {
               KeyScanner::scanMatrix((pindata1>>(ulPin-32))&1, timestamp, j, i);    // This function processes the logic values and does the debouncing 
             }
-           // pinMode(columns[i], INPUT);                                     //'disables' the column that just got looped thru - no need to differentiate DIODE_DIRECTION and we can reset it
           } 
         #else
-          pindata0 = NRF_GPIO->IN;                                         // read all pins at once
+          pindata0 = NRF_GPIO->IN;                                                // read all pins at once
           for (int i = 0; i < MATRIX_COLS; ++i) {
-            KeyScanner::scanMatrix((pindata0>>(columns[i]))&1, timestamp, j, i);       // This function processes the logic values and does the debouncing
+            int ulPin = g_ADigitalPinMap[columns[i]];                             // This maps the Board Pin to the GPIO. Added to ensure compatibility with potential new nrf52832 boards
+            KeyScanner::scanMatrix((pindata0>>(ulPin))&1, timestamp, j, i);       // This function processes the logic values and does the debouncing
           }
         #endif
     pinMode(rows[j], INPUT);                                          //'disables' the row that was just scanned
@@ -147,6 +139,8 @@ void scanMatrix() {
   }
 };
 
+/**************************************************************************************************************************/
+/**************************************************************************************************************************/
 #if USER_MACRO_FUNCTION == 1  
     void process_user_macros(uint16_t macroid)
     {
@@ -177,7 +171,8 @@ void addStringToQueue(const char* str)
   }
 
 }
-
+/**************************************************************************************************************************/
+/**************************************************************************************************************************/
 void addKeycodeToQueue(const uint16_t keycode)
 {
   auto it = stringbuffer.begin();
@@ -188,6 +183,124 @@ void addKeycodeToQueue(const uint16_t keycode)
             it = stringbuffer.insert(it, keycode);
         }
   }
+/**************************************************************************************************************************/
+/**************************************************************************************************************************/
+void process_keyboard_function(uint16_t keycode)
+{
+  char buffer [50];
+   switch(keycode)
+  {
+    case RESET:
+      NVIC_SystemReset();
+      break;
+    case DEBUG:
+      break;
+    case EEPROM_RESET:
+      InternalFS.format();
+      break;
+    case CLEAR_BONDS:
+      InternalFS.format();
+      break;      
+    case DFU:
+      enterOTADfu();
+      break;
+    case SERIAL_DFU:
+      enterSerialDfu();
+      break;
+
+    case OUT_AUTO:
+      break;
+    case OUT_USB:
+      break;
+    case OUT_BT:
+      break;  
+
+    case BL_TOGG:
+      break;
+    case BL_STEP:
+      break;
+    case BL_ON:
+      break;
+    case BL_OFF:
+      break;      
+    case BL_INC:
+      break;
+    case BL_DEC:
+      break;
+    case BL_BRTG:
+      break;
+    case BL_REACT:
+      break;
+    case BL_STEPINC:
+      break;   
+    case BL_STEPDEC:
+      break;   
+
+    case RGB_TOG:
+      break;
+    case RGB_MODE_FORWARD:
+      break;
+    case RGB_MODE_REVERSE:
+      break;
+    case RGB_HUI:
+      break;      
+    case RGB_HUD:
+      break;
+    case RGB_SAI:
+      break;
+    case RGB_SAD:
+      break;
+    case RGB_VAI:
+      break;
+    case RGB_VAD:
+      break;   
+    case RGB_MODE_PLAIN:
+      break;
+    case RGB_MODE_BREATHE:
+      break;
+    case RGB_MODE_RAINBOW:
+      break;
+    case RGB_MODE_SWIRL:
+      break;   
+    case RGB_MODE_SNAKE:
+      break;
+    case RGB_MODE_KNIGHT:
+      break;
+    case RGB_MODE_XMAS:
+      break;   
+    case RGB_MODE_GRADIENT:
+      break;
+    case RGB_MODE_RGBTEST:
+      break;
+    case RGB_SPI:
+      break;   
+    case RGB_SPD:
+      break;    
+    case PRINT_BATTERY:
+     #if BLE_LIPO_MONITORING == 1
+      sprintf (buffer, "LIPO = %f mV (%f %%)", Battery::vbat_mv*1.0, Battery::vbat_per*1.0);
+      #else
+      sprintf (buffer, "VDD = %f mV (%f %%)", Battery::vbat_mv*1.0, Battery::vbat_per*1.0);
+      #endif
+      addStringToQueue(buffer);
+      addKeycodeToQueue(KC_ENTER);
+      break;
+    case PRINT_INFO:
+      addStringToQueue("Keyboard Name  : " DEVICE_NAME " "); addKeycodeToQueue(KC_ENTER);
+      addStringToQueue("Keyboard Model : " DEVICE_MODEL " "); addKeycodeToQueue(KC_ENTER);
+      addStringToQueue("Keyboard Mfg   : " MANUFACTURER_NAME " "); addKeycodeToQueue(KC_ENTER);
+      addStringToQueue("BSP Library    : " ARDUINO_BSP_VERSION " "); addKeycodeToQueue(KC_ENTER);
+      sprintf(buffer,"Bootloader     : %s", getBootloaderVersion());
+      addStringToQueue(buffer); 
+      addKeycodeToQueue(KC_ENTER);
+      sprintf(buffer,"Serial No      : %s", getMcuUniqueID());
+      addStringToQueue(buffer);
+      addKeycodeToQueue(KC_ENTER);
+      sprintf(buffer,"Device Power   : %f", DEVICE_POWER*1.0);
+      addStringToQueue(buffer);
+      break;      
+  }
+}
 
 /**************************************************************************************************************************/
 // Communication with computer and other boards
@@ -195,6 +308,7 @@ void addKeycodeToQueue(const uint16_t keycode)
 void sendKeyPresses() {
   uint8_t report[8] = {0, 0, 0 ,0, 0, 0, 0, 0}; ;
   uint16_t keyreport;
+  uint16_t lookahead_keyreport;
 
    KeyScanner::getReport();                                            // get state data - Data is in KeyScanner::currentReport  
   if (KeyScanner::macro > 0){
@@ -205,16 +319,28 @@ void sendKeyPresses() {
   {
     keyreport = stringbuffer.back();
     stringbuffer.pop_back();
-
+    
     report[0] = static_cast<uint8_t>((keyreport & 0xFF00) >> 8);// mods
     report[1] = static_cast<uint8_t>(keyreport & 0x00FF);
     sendKeys(report);
+    delay(HIDREPORTINGINTERVAL);
     if (stringbuffer.empty()) // make sure to send an empty report when done...
-    {
-      delay(5);
+    { 
       report[0] = 0;
       report[1] = 0;
       sendKeys(report);
+      delay(HIDREPORTINGINTERVAL);
+    }
+    else
+    {
+      lookahead_keyreport = stringbuffer.back();
+      if (lookahead_keyreport == keyreport) // if the next key is the same, make sure to send a key release before sending it again...
+      {
+        report[0] = 0;
+        report[1] = 0;
+        sendKeys(report);
+        delay(HIDREPORTINGINTERVAL);
+      }
     }
   }
   else if ((KeyScanner::reportChanged))  //any new key presses anywhere?
@@ -223,6 +349,7 @@ void sendKeyPresses() {
         LOG_LV1("MXSCAN","SEND: %i %i %i %i %i %i %i %i %i " ,millis(),KeyScanner::currentReport[0], KeyScanner::currentReport[1],KeyScanner::currentReport[2],KeyScanner::currentReport[3], KeyScanner::currentReport[4],KeyScanner::currentReport[5], KeyScanner::currentReport[6],KeyScanner::currentReport[7] );        
   } else if (KeyScanner::specialfunction > 0)
   {
+    process_keyboard_function(KeyScanner::specialfunction);
     KeyScanner::specialfunction = 0; 
   } else if (KeyScanner::consumer > 0)
   {
@@ -278,30 +405,16 @@ void keyscantimer_callback(TimerHandle_t _handle) {
     #if WS2812B_LED_ON == 1 
      updateRGB(1, timesincelastkeypress);
     #endif
-  if (monitoring_state == STATE_BOOT_MODE)
-  {
-      KeyScanner::getReport();                                            // get state data - Data is in KeyScanner::currentReport
-      if ((KeyScanner::reportChanged))
-      {
-        for (int i = 0; i < BOOT_MODE_COMMANDS_COUNT; ++i)          // loop through BOOT_MODE_COMMANDS and compare with the first key being pressed - assuming only 1 key will be pressed when in boot mode.
-        {
-          if(KeyScanner::currentReport[1] == boot_mode_commands[i][0])
-          {
-            monitoring_state = boot_mode_commands[i][1];
-          }
-        }
-      }
-  } 
 
 }
 //********************************************************************************************//
-//* Battery Monitoring Task - runs infrequently - except in boot mode                        *//
+//* Battery Monitoring Task - runs infrequently                                              *//
 //********************************************************************************************//
 void batterytimer_callback(TimerHandle_t _handle)
 {
-    #if BLE_LIPO_MONITORING == 1
-      updateBattery();
-    #endif
+   // #if BLE_LIPO_MONITORING == 1
+      Battery::updateBattery();
+   // #endif
 }
 
 void RGBtimer_callback(TimerHandle_t _handle)
@@ -311,53 +424,6 @@ void RGBtimer_callback(TimerHandle_t _handle)
      updateRGB(0, timesincelastkeypress);
     #endif
 }
-
-
-
-void monitoringtimer_callback(TimerHandle_t _handle)
-{
-  switch(monitoring_state)
-  {
-    case STATE_BOOT_INITIALIZE:
-        monitoring_state = STATE_BOOT_MODE;
-      break;    
-    case STATE_BOOT_MODE:
-      if (millis()>BOOT_MODE_DELAY) {monitoring_state = STATE_MONITOR_MODE;}
-    //  delay(25); // adds a delay to minimize power consumption during boot mode. 
-      break;    
-    case STATE_BOOT_CLEAR_BONDS:
-       // Serial.println();
-       // Serial.println("----- Before -----\n");
-       // bond_print_list(BLE_GAP_ROLE_PERIPH);
-       // bond_print_list(BLE_GAP_ROLE_CENTRAL);
-      //  Bluefruit.clearBonds();
-      //  Bluefruit.Central.clearBonds();
-        InternalFS.format();  // using formatting instead of clearbonds due to the potential issue with corrupted file system and the keybord being stuck not being able to pair and save bonds.
-        
-      //  Serial.println();
-       // Serial.println("----- After  -----\n");
-        
-       // bond_print_list(BLE_GAP_ROLE_PERIPH);
-       // bond_print_list(BLE_GAP_ROLE_CENTRAL);
-        monitoring_state = STATE_MONITOR_MODE;
-      break;    
-    case STATE_BOOT_SERIAL_DFU:
-        enterSerialDfu();
-      break;    
-    case STATE_BOOT_WIRELESS_DFU:
-        enterOTADfu();
-      break;
-    case STATE_MONITOR_MODE:
-                
-             //   delay(30000);                                             // wait 30 seconds before a new battery update.  Needed to minimize power consumption.
-      break;    
-    case STATE_BOOT_UNKNOWN:
-      break;
-    default:
-      break;
-    
-  } 
-};
 
 //********************************************************************************************//
 //* Idle Task - runs when there is nothing to do                                             *//

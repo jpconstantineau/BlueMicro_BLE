@@ -17,20 +17,25 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
+#ifndef BATTERY_BM_H
+#define BATTERY_BM_H 
 
-#ifndef BATTERY_H
-#define BATTERY_H
     #include <Arduino.h>
     #include <bluefruit.h>
     #include "firmware_config.h"
     #include "keyboard_config.h"
+  uint32_t analogReadVDD();
 
-    #if BLE_LIPO_MONITORING == 1
-        int readVBAT(void);
-        uint8_t mvToPercent(float mvolts);
-        void updateBattery(void);
-    #endif
-    #if BLE_CR2032_MONITORING == 1
+  class Battery {
+    public:
+        Battery();  
+        static uint8_t vbat_per;
+        static uint32_t vbat_mv;
+        static uint32_t vbat_raw;
+        static uint32_t readVBAT(void);
+        static uint8_t mvToPercent(uint32_t mvolts);
+        static void updateBattery(void);
+    private:
+  };
 
-    #endif
 #endif
