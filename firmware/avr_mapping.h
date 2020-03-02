@@ -39,8 +39,7 @@ This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
 
 #ifdef ARDUINO_NRF52832_FEATHER
     #if HARDWARE_MAPPING == BLUEMICROV1_0
-        #define BLE_LIPO_MONITORING 0
-        #define BLE_CR2032_MONITORING 1
+        #define BATTERY_TYPE BATT_CR2032
         #define D3      6  //
         #define D2      8   //
         #define D1      25  //sda
@@ -62,8 +61,7 @@ This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
         #define B6      11
         
     #elif HARDWARE_MAPPING == BLUEMICROV1_1
-        #define BLE_LIPO_MONITORING 0
-        #define BLE_CR2032_MONITORING 1
+        #define BATTERY_TYPE BATT_CR2032
         #define D3      17  //
         #define D2      7   //
         #define D1      25  //sda
@@ -85,7 +83,7 @@ This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
         #define B6      11
 
  #elif HARDWARE_MAPPING == BLUEMICROV2_0
-        #define BLE_LIPO_MONITORING 1
+        #define BATTERY_TYPE BATT_LIPO
         #define D3      17  //
         #define D2      7   //
         #define D1      25  //sda
@@ -107,7 +105,7 @@ This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
         #define B6      11
 
     #elif HARDWARE_MAPPING == BLUEMICROV2_0B
-        #define BLE_LIPO_MONITORING 1
+        #define BATTERY_TYPE BATT_LIPO
         #define D3      17  //
         #define D2      7   //
         #define D1      25  //sda
@@ -128,7 +126,7 @@ This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
         #define B2      13  //mosi
         #define B6      11
     #elif HARDWARE_MAPPING == BLUEMICROV2_0C
-        #define BLE_LIPO_MONITORING 1
+        #define BATTERY_TYPE BATT_LIPO
         #define D3      6  //
         #define D2      8   //
         #define D1      25  //sda
@@ -149,7 +147,7 @@ This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
         #define B2      13  //mosi
         #define B6      11
     #elif HARDWARE_MAPPING == BLUEMICROV2_1A
-        #define BLE_LIPO_MONITORING 1
+        #define BATTERY_TYPE BATT_LIPO
         #define D3      18  // NOTE on board serial
         #define D2      7   // NOTE on board serial
         #define D1      25  //sda
@@ -170,7 +168,7 @@ This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
         #define B2      13  //mosi
         #define B6      11
     #elif HARDWARE_MAPPING == BLUENANO1_0
-        #define BLE_LIPO_MONITORING 0
+        #define BATTERY_TYPE BATT_UNKNOWN
         #define D3      5  //
         #define D2      4   //
         #define D1      25  //sda
@@ -191,7 +189,7 @@ This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
         #define B2      13  //mosi
         #define B6      18
     #elif HARDWARE_MAPPING == BLUENANO2_0
-        #define BLE_LIPO_MONITORING 1
+        #define BATTERY_TYPE BATT_LIPO
         #define D3      5  //
         #define D2      4   //
         #define D1      3  
@@ -212,7 +210,7 @@ This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
         #define B2      14
         #define B6      18
     #else // use elseif  Use BlueMicro V2.0c config details as default.
-        #define BLE_LIPO_MONITORING 1
+        #define BATTERY_TYPE BATT_LIPO
         #define D3      6  //
         #define D2      8   //
         #define D1      25  //sda
@@ -237,7 +235,7 @@ This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
 
 #ifdef ARDUINO_NRF52840_PCA10056
   #if HARDWARE_MAPPING == BLUEMICRO840V1_0
-        #define BLE_LIPO_MONITORING 1
+        #define BATTERY_TYPE BATT_LIPO
         #define D3      6  
         #define D2      8   
         #define D1      15  

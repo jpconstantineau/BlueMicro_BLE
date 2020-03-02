@@ -98,15 +98,9 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 // Battery Service definitions.
 
-#ifndef BLE_LIPO_MONITORING
-#define BLE_LIPO_MONITORING 0
+#ifndef BATTERY_TYPE
+#define BATTERY_TYPE BATT_UNKNOWN
 #endif
-
-#ifndef BLE_CR2032_MONITORING
-#define BLE_CR2032_MONITORING 0
-#endif
-
-
 
 #define SLEEPING_DELAY 30000              // when it's not connected, 30 seconds is good.
 #define SLEEPING_DELAY_CONNECTED 600000   // 2 minutes is way too fast and really ennoying. making it 10 minutes

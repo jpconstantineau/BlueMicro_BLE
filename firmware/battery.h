@@ -24,18 +24,27 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
     #include <bluefruit.h>
     #include "firmware_config.h"
     #include "keyboard_config.h"
-  uint32_t analogReadVDD();
+  
+  enum BatteryType {
+    BATT_UNKNOWN = 0,
+    BATT_CR2032 = 1,
+    BATT_LIPO = 2,
+};
 
   class Battery {
     public:
         Battery();  
         static uint8_t vbat_per;
         static uint32_t vbat_mv;
-        static uint32_t vbat_raw;
+        static uint32_t vbat_vdd;
+        static uint8_t batt_type;
+        static void updateBattery(void);
         static uint32_t readVBAT(void);
         static uint8_t mvToPercent(uint32_t mvolts);
-        static void updateBattery(void);
     private:
+        static uint32_t analogReadVDD();
+        static uint32_t vbat_raw;
+
   };
 
 #endif

@@ -26,9 +26,9 @@ extern KeyScanner keys;
  uint16_t hid_conn_hdl;
  #endif 
  
-//#if BLE_LIPO_MONITORING == 1 
+
 extern BLEBas blebas; 
-//#endif
+
 #if BLE_PERIPHERAL == 1                                                             // PERIPHERAL IS THE SLAVE BOARD
   BLEService KBLinkService = BLEService(UUID128_SVC_KEYBOARD_LINK);                 // Keyboard Link Service - Slave/Server Side                 
   BLECharacteristic KBLinkChar_Layers        = BLECharacteristic(UUID128_CHR_KEYBOARD_LAYERS);
@@ -65,12 +65,12 @@ void setupBluetooth(void)
   bledis.setModel(DEVICE_MODEL);                                              // Defined in keyboard_config.h
   bledis.begin();
 
-  //#if BLE_LIPO_MONITORING == 1
+ 
   // Configure and Start Battery Service
   blebas.begin();
   blebas.write(100); // put the battery level at 100% - until it is updated by the battery monitoring loop.
   Battery::readVBAT(); // Get a single ADC sample and throw it away
-  //#endif
+  
   
 #if BLE_PERIPHERAL == 1
 uint8_t Linkdata[7] = {0,0,0,0,0,0,0};

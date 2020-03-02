@@ -188,6 +188,7 @@ void addKeycodeToQueue(const uint16_t keycode)
 void process_keyboard_function(uint16_t keycode)
 {
   char buffer [50];
+  uint8_t intval;
    switch(keycode)
   {
     case RESET:
@@ -277,11 +278,35 @@ void process_keyboard_function(uint16_t keycode)
     case RGB_SPD:
       break;    
     case PRINT_BATTERY:
-     #if BLE_LIPO_MONITORING == 1
-      sprintf (buffer, "LIPO = %f mV (%f %%)", Battery::vbat_mv*1.0, Battery::vbat_per*1.0);
-      #else
-      sprintf (buffer, "VDD = %f mV (%f %%)", Battery::vbat_mv*1.0, Battery::vbat_per*1.0);
-      #endif
+      intval = Battery::vbat_per;
+
+      switch (Battery::batt_type)
+      {
+        case BATT_UNKNOWN:
+            snprintf (buffer, sizeof(buffer), "VDD = %.0f mV, VBatt = %.0f mV", Battery::vbat_vdd*1.0, Battery::vbat_mv*1.0);
+        break;
+        case BATT_CR2032:
+            if (intval>99)
+            {
+              snprintf (buffer, sizeof(buffer), "VDD = %.0f mV (%4d %%)", Battery::vbat_mv*1.0, intval);
+            }
+            else
+            {
+              snprintf (buffer, sizeof(buffer), "VDD = %.0f mV (%3d %%)", Battery::vbat_mv*1.0, intval);
+            }
+            
+        break;
+        case BATT_LIPO:
+            if (intval>99)
+            {
+              sprintf (buffer, "LIPO = %.0f mV (%4d %%)", Battery::vbat_mv*1.0, intval);
+            }
+            else
+            {
+              sprintf (buffer, "LIPO = %.0f mV (%3d %%)", Battery::vbat_mv*1.0, intval);
+            }   
+        break;
+      }
       addStringToQueue(buffer);
       addKeycodeToQueue(KC_ENTER);
       break;
@@ -412,9 +437,9 @@ void keyscantimer_callback(TimerHandle_t _handle) {
 //********************************************************************************************//
 void batterytimer_callback(TimerHandle_t _handle)
 {
-   // #if BLE_LIPO_MONITORING == 1
+   
       Battery::updateBattery();
-   // #endif
+   
 }
 
 void RGBtimer_callback(TimerHandle_t _handle)
