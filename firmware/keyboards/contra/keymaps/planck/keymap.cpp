@@ -242,3 +242,7 @@ void process_user_macros(uint16_t macroid)
 }
 
 
+void process_user_layers(uint16_t layermask)
+{
+    KeyScanner::process_for_tri_layers(_LOWER, _RAISE, _ADJUST);
+}

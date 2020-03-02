@@ -140,16 +140,33 @@ void KeyScanner::copyRemoteReport()
     if (remoteReport[6]>0){currentReport[bufferposition] = remoteReport[6]; bufferposition++; }
 #endif
 }
-
+uint8_t KeyScanner::getlayer(uint16_t layers)
+{
+    //this will return the highest layer
+    uint8_t layerid = 0;
+    if (layers>0)// skip the calc if no layers are selected
+    {
+    while (layers >>= 1) {
+        layerid++;
+        }
+    }
+    return layerid;
+}
 /*
  * loop through the entire matrix, checking for 
  * activated keys and adding the activated ones
  * into a buffer
  */
-void KeyScanner::updateBuffer(uint8_t layer)
+void KeyScanner::updateBuffer()
 {
     activeKeys.clear();
     bool emptyOneshot = false;
+
+
+// call the tri layer functions...
+process_user_layers(detectedlayerkeys);
+
+uint8_t layer = getlayer(detectedlayerkeys);
 
     for(int row = 0; row < MATRIX_ROWS; ++row) {
         for (auto& key : matrix[row]) 
@@ -230,43 +247,52 @@ void KeyScanner::updateBuffer(uint8_t layer)
 }
 
 /**************************************************************************************************************************/
+// inspired by QMK's update_tri_layer_state... Modified to replace instead of adding to detected layer keys
+// can be called multiple times to catch multiple 2-layer patterns
+/**************************************************************************************************************************/
+void KeyScanner::process_for_tri_layers(uint8_t if_layer1, uint8_t and_layer2, uint8_t use_layer3)
+{
+    uint16_t mask12 = (1UL << if_layer1) | (1UL << and_layer2);             // merge the two layers with bitwise shifts to detect the triggered layer keys
+    uint16_t mask3 = 1UL << use_layer3;                                     // create a mask to return the resulting layer
+    detectedlayerkeys = (detectedlayerkeys & mask12) == mask12 ? ((detectedlayerkeys & ~mask12) | mask3) : (detectedlayerkeys); // if detectedlayerkeys has mask12 in it,remove mask12 and add extra layer; otherwise return as is.
+}
+
+
+#if USER_LAYER_FUNCTION == 1 
+void process_user_layers(uint16_t layermask)
+{
+   ;
+}
+#endif
+/**************************************************************************************************************************/
 // Scan for layer changes - must do this first.
 /**************************************************************************************************************************/
 bool KeyScanner::updateLayer()
 {
-    uint8_t prevlayer = localLayer;     // remember last layer
-
-    // Select the layer which the selection is done on
-    // this isthe larger of local and remote layers
-    uint8_t selectionLayer = localLayer; 
-
-    if (localLayer < remoteLayer)
-    {
-        selectionLayer = remoteLayer;
-    }
-
+    uint16_t prevlayer = localLayer;                    // remember last layer mask
+    detectedlayerkeys = localLayer | remoteLayer; // merge the layer masks
+    
     // read through the matrix and select all of the 
     // currently pressed keys 
-    updateBuffer(selectionLayer);
+    updateBuffer();
 
     /* 
      * iterate through all of the currently pressed keys, if 
-     * a layer key is pressed, change the layer accordingly
+     * a layer key is pressed, change the layer mask accordingly
      * if no other layers are set in the buffer, the default
-     * layer should be chosen
+     * layer should be chosen (=0)
      */
-    localLayer = LAYER_0 - 0xF0;
+    localLayer = 0; // reset the layer mask before we fill it again
     for (auto keycode : activeKeys)
     {
         // the first byte is the actual HID keycode of the key
         uint8_t keyValue = static_cast<uint8_t>(keycode & 0x00FF);
-
         if (keyValue >= LAYER_0 && keyValue <= LAYER_F)
-        {
-            // calculate layer offset
-            localLayer = keyValue - 0xF0;
+        {  
+            localLayer = localLayer | (1 << (keyValue - 0xF0)) ;  // Add layer to layer mask for next scan
         }
     }
+    
 
     layerChanged = (prevlayer != localLayer);
     return layerChanged;
@@ -398,19 +424,19 @@ uint8_t KeyScanner::previousReport[8] = {0, 0, 0 ,0, 0, 0, 0, 0};
 bool    KeyScanner::layerChanged = false;
 bool    KeyScanner::reportChanged = false;
 bool    KeyScanner::processingmacros = false;
-
-uint8_t KeyScanner::localLayer = 0;
+uint16_t KeyScanner::detectedlayerkeys = 0;
+uint16_t KeyScanner::localLayer = 0;
 uint16_t KeyScanner::macro = 0;
 uint16_t KeyScanner::specialfunction = 0;
 uint16_t KeyScanner::consumer = 0;
 uint16_t KeyScanner::mouse = 0;
-uint8_t KeyScanner::remoteLayer = 0;
+uint16_t KeyScanner::remoteLayer = 0;
 uint8_t KeyScanner::remoteMod = 0;
 uint8_t KeyScanner::currentMod = 0;
 unsigned long KeyScanner::timestamps[MATRIX_ROWS][MATRIX_COLS]  = {0};
 unsigned long KeyScanner::lastPressed = 0;
 uint8_t KeyScanner::bufferposition = 0;
-uint8_t KeyScanner::layerMode = 0;
+//uint8_t KeyScanner::layerMode = 0;
 std::vector<uint16_t> KeyScanner::activeKeys {};
 std::vector<uint16_t> KeyScanner::macroBuffer {};
 std::vector<uint16_t> KeyScanner::toggleBuffer {};
