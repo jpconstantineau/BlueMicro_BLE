@@ -17,21 +17,13 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 #include "keymap.h"
 
-// Layer access from main
-// OS(KC_LSFT) on main layer
-// TG(KC_LSFT) on main layer
-// KC_CALC (media key) on main layer
-
-// KC_TRNS on layer
-// KC_TRNS on layer to main keys
-// KC_WWW on layer (media key)
 
 
 std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
     {{
-        {KC_1,     OS(KC_1),     TG(KC_1),     KC_NO,},
-        {KC_CALC,  OS(KC_CALC),  TG(KC_CALC),  KC_NO,},
-        {KC_LSFT,  OS(KC_LSFT) , TG(KC_LSFT),  KC_NO,},
+        {KC_1,     OS(KC_2),     TG(KC_3),     KC_4,},
+        {KC_CALC,  OS(KC_WWW),   TG(KC_MYCM),  KC_MSEL,},
+        {KC_LSFT,  OS(KC_LCTL) , TG(KC_LALT),  KC_CAP_D,},
         {LAYER_1,  OS(LAYER_1) , TG(LAYER_1),  KC_NO}
     }};
 
@@ -40,10 +32,10 @@ void setupKeymap() {
 
     uint32_t layer1[MATRIX_ROWS][MATRIX_COLS] =
         KEYMAP(
-        KC_TRNS,    OS(KC_A),     TG(KC_A),       KC_A,    
-        KC_TRNS,    OS(KC_WWW),   TG(KC_WWW),     KC_WWW,  
-        KC_TRNS,    OS(KC_LCTL),  TG(KC_LCTL),    KC_LCTL,    
-        KC_TRNS,    OS(LAYER_1),  TG(LAYER_1),    LAYER_1);
+        KC_A,    OS(KC_B),      TG(KC_C),       KC_CAP_D,    
+        KC_E,    OS(KC_CALC),     TG(KC_CALC),    KC_CALC,  
+        KC_I,    OS(KC_LSFT),   TG(KC_LSFT),    KC_LSFT,    
+        LAYER_1, OS(LAYER_1),   TG(LAYER_1),    LAYER_1);
 
     /*
      * add the other layers

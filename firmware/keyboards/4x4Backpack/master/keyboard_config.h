@@ -32,7 +32,6 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 #define MANUFACTURER_NAME                   "keyboards.jpconstantineau.com"         /**< Manufacturer. Will be passed to Device Information Service. */
 
-#define BATTERY_TYPE BATT_CR2032
 
 /* HARDWARE DEFINITION*/
 /* key matrix size */
