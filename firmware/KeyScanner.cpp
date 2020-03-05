@@ -140,6 +140,8 @@ void KeyScanner::copyRemoteReport()
     if (remoteReport[6]>0){currentReport[bufferposition] = remoteReport[6]; bufferposition++; }
 #endif
 }
+
+/**************************************************************************************************************************/
 uint8_t KeyScanner::getlayer(uint16_t layers)
 {
     //this will return the highest layer
@@ -152,6 +154,8 @@ uint8_t KeyScanner::getlayer(uint16_t layers)
     }
     return layerid;
 }
+
+/**************************************************************************************************************************/
 /*
  * loop through the entire matrix, checking for 
  * activated keys and adding the activated ones
@@ -161,6 +165,7 @@ void KeyScanner::updateBuffer()
 {
     activeKeys.clear();
     bool emptyOneshot = false;
+    //bool emptyOneshotLayer = false;
 
 
 // call the tri layer functions...
@@ -190,7 +195,6 @@ uint8_t layer = getlayer(detectedlayerkeys);
                 if (duration == Duration::TOGGLE) 
                 {
                     auto it = std::find(toggleBuffer.begin(), toggleBuffer.end(), activeKeycode);
-
                     if (it != toggleBuffer.end())
                     {
                         toggleBuffer.erase(it);
@@ -199,27 +203,30 @@ uint8_t layer = getlayer(detectedlayerkeys);
                     {
                         toggleBuffer.push_back(activeKeycode);
                     }
-
-
                 }
                 else if (duration == Duration::ONE_SHOT)
                 {
-                    // TODO: Holding the key will keep appending to this buffer?
-                    oneshotBuffer.push_back(activeKeycode);
-              /* NOT SURE IF THATS WORKING...      if ((activeKeycode & 0x00FF) == KC_RESERVED_A5 )  // macros
+                    auto it = std::find(oneshotBuffer.begin(), oneshotBuffer.end(), activeKeycode);
+                    if (it != oneshotBuffer.end())
                     {
-                        emptyOneshot = true;
+                        ;
                     }
-                    else if ((activeKeycode & 0x00FF) == KC_RESERVED_A6 )  //special functions
+                    else 
                     {
-                        emptyOneshot = true;
-                    }*/
+                        oneshotBuffer.push_back(activeKeycode);
+                        uint8_t keyValue = static_cast<uint8_t>(activeKeycode & 0x00FF);
+                        if (keyValue >= LAYER_0 && keyValue <= LAYER_F)
+                        {  
+                            oneshotLayer = oneshotLayer | (1 << (keyValue - 0xF0)) ;  // Add layer to layer mask for next scan  They must be handled separately due to needing layers ahead of picking up keycodes.
+                        }
+                    }
+                    
                 }
-                else if (activeKeycode < 0xE0) 
+                else if ((activeKeycode & 0x00FF) < 0xE0) // it's active, not a modifier, not a layer, not toggle and not one shot, ignore attached modifiers...
                 {
                     emptyOneshot = true;
-                }
 
+                } 
 
             }
         }
@@ -241,8 +248,9 @@ uint8_t layer = getlayer(detectedlayerkeys);
         {
             activeKeys.push_back(activation);
         }
-
+        
         oneshotBuffer.clear();
+        oneshotLayer = 0;
     }
 }
 
@@ -270,7 +278,7 @@ void process_user_layers(uint16_t layermask)
 bool KeyScanner::updateLayer()
 {
     uint16_t prevlayer = localLayer;                    // remember last layer mask
-    detectedlayerkeys = localLayer | remoteLayer; // merge the layer masks
+    detectedlayerkeys = localLayer | remoteLayer | oneshotLayer; // merge the layer masks
     
     // read through the matrix and select all of the 
     // currently pressed keys 
@@ -367,7 +375,8 @@ bool KeyScanner::getReport()
             case KC_RESERVED_A7: if(!processingmacros){consumer = keycode; processingmacros=true;} break;               // KC_RESERVED_A7 is the keycode marker for consumer reports.
             case KC_RESERVED_A8: if(!processingmacros){mouse = keycode; processingmacros=true;} break;                  // KC_RESERVED_A8 is the keycode marker for mouse reports.
         }
-
+        //add all of the extra modifiers into the curren modifier 
+        currentMod |= extraModifiers;
         if (bufferposition == 7)
         {
             bufferposition = 1;
@@ -431,6 +440,8 @@ uint16_t KeyScanner::specialfunction = 0;
 uint16_t KeyScanner::consumer = 0;
 uint16_t KeyScanner::mouse = 0;
 uint16_t KeyScanner::remoteLayer = 0;
+
+uint16_t KeyScanner::oneshotLayer = 0;
 uint8_t KeyScanner::remoteMod = 0;
 uint8_t KeyScanner::currentMod = 0;
 unsigned long KeyScanner::timestamps[MATRIX_ROWS][MATRIX_COLS]  = {0};

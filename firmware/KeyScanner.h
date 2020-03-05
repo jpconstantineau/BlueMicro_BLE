@@ -72,7 +72,7 @@ class KeyScanner {
         static bool processingmacros;
         static uint8_t getlayer(uint16_t layers);
 
-        
+        static uint16_t oneshotLayer;
         static uint8_t remoteReport[8];
         static uint8_t previousReport[8];
         static unsigned long timestamps[MATRIX_ROWS][MATRIX_COLS]; 
