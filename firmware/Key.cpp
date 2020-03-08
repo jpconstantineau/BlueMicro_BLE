@@ -34,7 +34,7 @@ void Key::addActivation(const uint8_t layer, const Method method, const uint32_t
 {
     auto keycode = static_cast<uint16_t>(activation & 0x0000FFFF);
     auto methodIndex = static_cast<int>(method);
-
+ 
     /*
      * if the activation is transparent,
      * look for the first non transparent activation
@@ -63,7 +63,11 @@ void Key::addActivation(const uint8_t layer, const Method method, const uint32_t
      * tell the state to make sure to look for the added
      * activation
      */
-    state.addMethod(method);
+    if (keycode  != XXXXXXX)// need to check if there is an actual keycode to send with this method.  We only activate the method if there is a keycode...
+    {
+       state.addMethod(method);
+    }
+    
 }
 
 void Key::press(const unsigned long currentMillis) 
@@ -125,7 +129,8 @@ std::pair<uint16_t, Duration> Key::getActiveActivation(uint8_t layer)
      * the layer key doesn't change the meaning of a key
      * inside that layer
      */
-    else if (lastMethod == Method::PRESS && lastActivation.second != Duration::TOGGLE)
+    else if ((lastMethod == Method::PRESS || lastMethod == Method::MT_HOLD) && lastActivation.second != Duration::TOGGLE)
+  // else if ((lastMethod == Method::PRESS ) && lastActivation.second != Duration::TOGGLE)
     {
         return lastActivation;
     }

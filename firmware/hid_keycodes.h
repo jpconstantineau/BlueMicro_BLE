@@ -130,6 +130,8 @@ https://www.usb.org/sites/default/files/documents/hut1_12v2.pdf
 #define _______ KC_TRNS
 #define XXXXXXX KC_NO
 
+#define  KC_LABK KC_LT
+#define  KC_RABK KC_GT
 
 /* USB HID Keyboard/Keypad Usage(0x07) */
 enum hid_keyboard_keypad_usage {
@@ -483,6 +485,7 @@ enum hid_keyboard_keypad_usage {
  // Application Launcher  
 #define KC_MSEL              MK(KC_Z) //HID_USAGE_CONSUMER_AL_CONSUMER_CONTROL_CONFIGURATION 
 #define KC_WWW               MK(KC_1) //HID_USAGE_CONSUMER_AL_EMAIL_READER   
+#define KC_MAIL              KC_WWW   // not sure about this one...
 #define KC_CALCULATOR        MK(KC_2) //HID_USAGE_CONSUMER_AL_CALCULATOR    
 #define KC_MYCM              MK(KC_3) //HID_USAGE_CONSUMER_AL_LOCAL_BROWSER  
 

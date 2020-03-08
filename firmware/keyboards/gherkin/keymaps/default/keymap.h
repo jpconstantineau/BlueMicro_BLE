@@ -33,6 +33,50 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define _L1  1
 #define _L2  2
 #define _L3  3
+#define _L4  4
+#define _L5  5
+
+
+#define FN1_SPC      XXXXXXX
+#define FN1_SPC_TAP  KC_SPC
+#define FN1_SPC_HOLD (LAYER_1)
+
+#define FN2_BSPC       XXXXXXX
+#define FN2_BSPC_TAP   KC_BSPC
+#define FN2_BSPC_HOLD  (LAYER_2)
+
+#define FN3_C        XXXXXXX
+#define FN3_C_TAP    KC_C
+#define FN3_C_HOLD   (LAYER_3)
+
+#define FN4_V        XXXXXXX
+#define FN4_V_TAP      KC_V
+#define FN4_V_HOLD    (LAYER_4)
+
+#define FN5_B         XXXXXXX
+#define FN5_B_TAP     KC_B
+#define FN5_B_HOLD    (LAYER_5)
+
+#define CTL_Z         XXXXXXX
+#define CTL_Z_TAP     KC_Z
+#define CTL_Z_HOLD    (KC_LCTRL)
+
+#define ALT_X         XXXXXXX
+#define ALT_X_TAP     KC_X
+#define ALT_X_HOLD    (KC_LALT)
+
+#define ALT_N         XXXXXXX
+#define ALT_N_TAP     KC_N
+#define ALT_N_HOLD   ( KC_RALT)
+
+#define CTL_M        XXXXXXX
+#define CTL_M_TAP    KC_M
+#define CTL_M_HOLD   (KC_RCTRL)
+
+#define SFT_ENT       XXXXXXX
+#define SFT_ENT_TAP   KC_ENT
+#define SFT_ENT_HOLD  (KC_RSHIFT)
+
 
 void setupKeymap();
 extern std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix;
