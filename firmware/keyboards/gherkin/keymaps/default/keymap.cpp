@@ -69,9 +69,9 @@ KEYMAP(
 
     uint32_t layer5[MATRIX_ROWS][MATRIX_COLS] =
         KEYMAP(
-    KC_CALC, KC_WHOM, KC_MAIL, KC_MYCM, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_PSCR,
-    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, BL_DEC,  BL_INC,
-    DFU,     XXXXXXX, XXXXXXX, XXXXXXX, RESET,   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX );
+    KC_CALC,  KC_WHOM, KC_MAIL, KC_MYCM, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_PSCR,
+    PRINT_BATTERY,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, BL_DEC,  BL_INC,
+    GITCOMMIT,XXXXXXX, XXXXXXX, XXXXXXX, RESET,   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, SERIAL_DFU );
 
     /*
      * add the other layers
@@ -89,6 +89,102 @@ KEYMAP(
             matrix[row][col].addActivation(_L5, Method::PRESS, layer5[row][col]);
         }
     }
-
 }
 
+void process_user_macros(uint16_t macroid)
+{  
+
+ switch ((macroid))
+ { 
+     case HOME_ADD:
+     addStringToQueue("123 Quiet Crescent");
+     break;
+     case WORK_ADD:
+     addStringToQueue("123 Work Place");
+      break;
+     case EMAIL_1:
+     addStringToQueue("Primary@Email");
+      break;
+     case EMAIL_2:
+     addStringToQueue("Other@Email");
+      break;
+     case NAME_1:
+     addStringToQueue("First Name");
+      break;
+     case NAME_2:
+     addStringToQueue("Middle Name");
+      break;
+     case NAME_3:
+     addStringToQueue("Last Name");
+      break;
+     case (CBR_FN):
+      addStringToQueue("{}"); 
+      addKeycodeToQueue(KC_LEFT);
+      break;
+     case (BRC_FN):
+      addStringToQueue("[]");
+      addKeycodeToQueue(KC_LEFT);
+      break;
+     case PRN_FN:
+      addStringToQueue("()"); 
+      addKeycodeToQueue(KC_LEFT);
+      break;
+     case TAB_DOWN_RTRN:
+      addKeycodeToQueue(KC_TAB);
+      addKeycodeToQueue(KC_DOWN);
+      addKeycodeToQueue(KC_ENTER);
+      break;
+     case TAB_UP_RTRN:
+       addKeycodeToQueue(KC_TAB);
+       addKeycodeToQueue(KC_UP);
+       addKeycodeToQueue(KC_ENTER);
+      break;
+     case PHONE_1:
+     addStringToQueue("234-567-8901");
+      break;
+     case PHONE_2:
+     addStringToQueue("987-654-3210");
+      break;
+     case INOWORD:
+     addStringToQueue("(i.e., )");  
+     addKeycodeToQueue(SEND_KC(KC_LEFT));
+      break;
+     case FOREXMPL:
+     addStringToQueue("(e.g., )"); 
+     addKeycodeToQueue(KC_LEFT);
+      break;
+     case FF_TEXT:
+     addKeycodeToQueue(KC_LALT);
+     addStringToQueue("rff"); 
+     addKeycodeToQueue(KC_LEFT);
+     addKeycodeToQueue(KC_ENTER);
+      break;
+     case IN_R:
+     addStringToQueue("%in%");
+      break;
+     case LARW_L:
+     addStringToQueue("<-");
+      break;
+     case LARW_R:
+     addStringToQueue("->");
+      break;
+     break;
+     case IPADDR:
+     addStringToQueue("192.168.1.");
+      break;
+     break;
+     case SMILE:
+     addStringToQueue(":)");
+      break;
+     break;
+     case IPSUM:
+     addStringToQueue("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
+     break;
+     case GITCOMMIT:
+      addStringToQueue("git add .");
+      addKeycodeToQueue(KC_ENTER);
+      addStringToQueue("git commit -m \"\""); 
+      addKeycodeToQueue(KC_LEFT);
+     break;
+ }
+}

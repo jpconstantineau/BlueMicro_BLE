@@ -79,6 +79,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define IPADDR   MC(KC_U)
 #define SMILE    MC(KC_V)
 #define IPSUM    MC(KC_W)
+#define GITCOMMIT MC(KC_X)
 
 #define USER_MACRO_FUNCTION   0 
 void process_user_macros(uint16_t macroid);
