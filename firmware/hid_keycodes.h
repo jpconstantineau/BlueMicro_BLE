@@ -521,5 +521,24 @@ enum hid_keyboard_keypad_usage {
 #define KC_WREF             KC_WWW_REFRESH
 #define KC_WFAV             KC_WWW_FAVORITES
 
+
+// Mouse keycodes...
+#define KC_MS_OFF    MS(KC_A)
+#define KC_MS_UP     MS(KC_B)
+#define KC_MS_DOWN   MS(KC_C)
+#define KC_MS_LEFT   MS(KC_D)
+#define KC_MS_RIGHT  MS(KC_E)
+#define KC_MS_BTN1   MS(KC_F)
+#define KC_MS_BTN2   MS(KC_G)
+#define KC_MS_BTN3   MS(KC_H)
+#define KC_MS_BTN4   MS(KC_I)
+#define KC_MS_BTN5   MS(KC_J)
+#define KC_MS_WH_UP     MS(KC_K)
+#define KC_MS_WH_DOWN   MS(KC_L)
+#define KC_MS_WH_LEFT   MS(KC_M)
+#define KC_MS_WH_RIGHT  MS(KC_N)
+
+
+
 #endif /* HID_KEYCODES_H */
 

@@ -433,6 +433,7 @@ void sendKeyPresses() {
     KeyScanner::consumer = 0; 
   } else if (KeyScanner::mouse > 0)
   {
+    sendMouseKey(KeyScanner::mouse);
     KeyScanner::mouse = 0; 
   }
   

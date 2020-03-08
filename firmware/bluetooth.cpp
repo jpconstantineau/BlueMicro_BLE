@@ -412,7 +412,41 @@ void sendKeys(uint8_t currentReport[8])
          ; // Only send layer to slaves - send nothing here
     #endif 
 }
+#define MOVE_STEP    10
+void sendMouseKey(uint16_t keycode)
+{
+  #if BLE_HID == 1
+  switch (keycode) 
+  {
+    case KC_MS_OFF:   blehid.mouseButtonRelease(hid_conn_hdl); break;
+    case KC_MS_UP:    blehid.mouseMove(hid_conn_hdl, 0, -MOVE_STEP); break;
+    case KC_MS_DOWN:  blehid.mouseMove(hid_conn_hdl, 0,  MOVE_STEP); break;
+    case KC_MS_LEFT:  blehid.mouseMove(hid_conn_hdl, -MOVE_STEP, 0); break;
+    case KC_MS_RIGHT: blehid.mouseMove(hid_conn_hdl,  MOVE_STEP, 0); break;
 
+    case KC_MS_BTN1:  blehid.mouseButtonPress(hid_conn_hdl, MOUSE_BUTTON_LEFT); break;
+    case KC_MS_BTN2:  blehid.mouseButtonPress(hid_conn_hdl, MOUSE_BUTTON_RIGHT); break;
+    case KC_MS_BTN3:  blehid.mouseButtonPress(hid_conn_hdl, MOUSE_BUTTON_MIDDLE); break;
+    case KC_MS_BTN4:  blehid.mouseButtonPress(hid_conn_hdl, MOUSE_BUTTON_BACKWARD); break;
+    case KC_MS_BTN5:  blehid.mouseButtonPress(hid_conn_hdl, MOUSE_BUTTON_FORWARD); break;
+
+    case KC_MS_WH_UP: blehid.mouseScroll(hid_conn_hdl,  -1); break;
+    case KC_MS_WH_DOWN: blehid.mouseScroll(hid_conn_hdl, 1); break;
+    case KC_MS_WH_LEFT: blehid.mousePan(hid_conn_hdl,   -1); break;
+    case KC_MS_WH_RIGHT: blehid.mousePan(hid_conn_hdl,   1); break;
+  }
+  
+  //  blehid.mousePan(hid_conn_hdl, int8_t pan);
+ //   blehid.mouseScroll(hid_conn_hdl, int8_t scroll);
+  //  blehid.mouseMove(hid_conn_hdl, int8_t x, int8_t y);
+  //  blehid.mouseButtonRelease(hid_conn_hdl);
+  //  blehid.mouseButtonPress(hid_conn_hdl, MOUSE_BUTTON_LEFT);
+  //  blehid.mouseButtonPress(hid_conn_hdl, MOUSE_BUTTON_RIGHT);
+  //  blehid.mouseButtonPress(hid_conn_hdl, MOUSE_BUTTON_MIDDLE);
+  //  blehid.mouseButtonPress(hid_conn_hdl, MOUSE_BUTTON_BACKWARD);
+  //  blehid.mouseButtonPress(hid_conn_hdl, MOUSE_BUTTON_FORWARD);
+  #endif
+}
 void sendMediaKey(uint16_t keycode)
 {
 uint16_t usagecode = 0;

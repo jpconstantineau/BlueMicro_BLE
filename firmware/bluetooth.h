@@ -36,6 +36,7 @@ void set_keyboard_led(uint16_t conn_handle, uint8_t led_bitmap);
 
 void sendKeys(uint8_t currentReport[8]);
 void sendMediaKey(uint16_t keycode);
+void sendMouseKey(uint16_t keycode);
 
 #if BLE_PERIPHERAL ==1   | BLE_CENTRAL ==1 
 void sendlayer(uint8_t layer);

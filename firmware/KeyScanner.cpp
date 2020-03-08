@@ -370,10 +370,10 @@ bool KeyScanner::getReport()
             case KC_RSHIFT: currentMod |= 32;   currentMod |= extraModifiers; break;
             case KC_RALT:   currentMod |= 64;   currentMod |= extraModifiers; break;
             case KC_RGUI:   currentMod |= 128;  currentMod |= extraModifiers; break;
-            case KC_RESERVED_A5: if(!processingmacros){macro = keycode; processingmacros=true;} break;                  // KC_RESERVED_A5 is the keycode marker for user macros.
-            case KC_RESERVED_A6: if(!processingmacros){specialfunction = keycode; processingmacros=true;} break;        // KC_RESERVED_A6 is the keycode marker for special keyboard functions.
-            case KC_RESERVED_A7: if(!processingmacros){consumer = keycode; processingmacros=true;} break;               // KC_RESERVED_A7 is the keycode marker for consumer reports.
-            case KC_RESERVED_A8: if(!processingmacros){mouse = keycode; processingmacros=true;} break;                  // KC_RESERVED_A8 is the keycode marker for mouse reports.
+            case KC_RESERVED_A5: if(!processingmacros){macro = keycode; processingmacros=true; } extraModifiers=0; break;                  // KC_RESERVED_A5 is the keycode marker for user macros.
+            case KC_RESERVED_A6: if(!processingmacros){specialfunction = keycode; processingmacros=true;} extraModifiers=0; break;        // KC_RESERVED_A6 is the keycode marker for special keyboard functions.
+            case KC_RESERVED_A7: if(!processingmacros){consumer = keycode; processingmacros=true;} extraModifiers=0; break;               // KC_RESERVED_A7 is the keycode marker for consumer reports.
+            case KC_RESERVED_A8: mouse = keycode; extraModifiers=0; break;                  // KC_RESERVED_A8 is the keycode marker for mouse reports. Mousekeys can be repeated... We therefore don't need the macro logic
         }
         //add all of the extra modifiers into the curren modifier 
         currentMod |= extraModifiers;
