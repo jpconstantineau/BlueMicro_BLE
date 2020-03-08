@@ -35,6 +35,7 @@ KeyScanner keys;
 Battery batterymonitor;
 
 static std::vector<uint16_t> stringbuffer; // buffer for macros to type into...
+static bool helpmode = false;
 
 /**************************************************************************************************************************/
 // put your setup code here, to run once:
@@ -209,6 +210,10 @@ void process_keyboard_function(uint16_t keycode)
       enterSerialDfu();
       break;
 
+    case HELP_MODE:
+      helpmode = !helpmode;
+      break;  
+
     case OUT_AUTO:
       break;
     case OUT_USB:
@@ -216,66 +221,112 @@ void process_keyboard_function(uint16_t keycode)
     case OUT_BT:
       break;  
 
+#if BACKLIGHT_PWM_ON == 1
+    // BACKLIGHT FUNCTIONS
     case BL_TOGG:
-      break;
-    case BL_STEP:
-      break;
+    if (helpmode) {addStringToQueue("BL_TOGG");}
+      stepPWMMode();
+    break;
+    case BL_STEP:  // step through modes
+    if (helpmode) {addStringToQueue("BL_STEP");}
+      stepPWMMode();
+    break;
     case BL_ON:
-      break;
+   if (helpmode) { addStringToQueue("BL_ON");}
+      setPWMMode(3);
+      PWMSetMaxVal();
+    break;
     case BL_OFF:
-      break;      
+    if (helpmode) {addStringToQueue("BL_OFF");}
+      setPWMMode(0);
+    break;
     case BL_INC:
-      break;
+    if (helpmode) {addStringToQueue("BL_INC");}
+      incPWMMaxVal();
+    break;
     case BL_DEC:
-      break;
+    if (helpmode) {addStringToQueue("BL_DEC");}
+      decPWMMaxVal();
+    break;
     case BL_BRTG:
-      break;
+    if (helpmode) {addStringToQueue("BL_BRTG");}
+      setPWMMode(2);
+    break;
     case BL_REACT:
-      break;
+    if (helpmode) {addStringToQueue("BL_REACT");}
+      setPWMMode(1);
+      PWMSetMaxVal();
+    break;
     case BL_STEPINC:
-      break;   
+    if (helpmode) {addStringToQueue("BL_STEPINC");}
+        incPWMStepSize();
+      break;
     case BL_STEPDEC:
-      break;   
+    if (helpmode) {addStringToQueue("BL_STEPDEC");}
+        decPWMStepSize();
+      break;
+
+#endif   
 
     case RGB_TOG:
+      if (helpmode) {addStringToQueue("RGB_TOG");}
       break;
     case RGB_MODE_FORWARD:
+      if (helpmode) {addStringToQueue("RGB_MODE_FORWARD");}
       break;
     case RGB_MODE_REVERSE:
+      if (helpmode) {addStringToQueue("RGB_MODE_REVERSE");}
       break;
     case RGB_HUI:
+      if (helpmode) {addStringToQueue("RGB_HUI");}
       break;      
     case RGB_HUD:
+      if (helpmode) {addStringToQueue("RGB_HUD");}
       break;
     case RGB_SAI:
+      if (helpmode) {addStringToQueue("RGB_SAI");}
       break;
     case RGB_SAD:
+      if (helpmode) {addStringToQueue("RGB_SAD");}
       break;
     case RGB_VAI:
+      if (helpmode) {addStringToQueue("RGB_VAI");}
       break;
     case RGB_VAD:
+      if (helpmode) {addStringToQueue("RGB_VAD");}
       break;   
     case RGB_MODE_PLAIN:
+      if (helpmode) {addStringToQueue("RGB_MODE_PLAIN");}
       break;
     case RGB_MODE_BREATHE:
+      if (helpmode) {addStringToQueue("RGB_MODE_BREATHE");}
       break;
     case RGB_MODE_RAINBOW:
+      if (helpmode) {addStringToQueue("RGB_MODE_RAINBOW");}
       break;
     case RGB_MODE_SWIRL:
+      if (helpmode) {addStringToQueue("RGB_MODE_SWIRL");}
       break;   
     case RGB_MODE_SNAKE:
+      if (helpmode) {addStringToQueue("RGB_MODE_SNAKE");}
       break;
     case RGB_MODE_KNIGHT:
+      if (helpmode) {addStringToQueue("RGB_MODE_KNIGHT");}
       break;
     case RGB_MODE_XMAS:
+      if (helpmode) {addStringToQueue("RGB_MODE_XMAS");}
       break;   
     case RGB_MODE_GRADIENT:
+      if (helpmode) {addStringToQueue("RGB_MODE_GRADIENT");}
       break;
     case RGB_MODE_RGBTEST:
+      if (helpmode) {addStringToQueue("RGB_MODE_RGBTEST");}
       break;
     case RGB_SPI:
+      if (helpmode) {addStringToQueue("RGB_SPI");}
       break;   
     case RGB_SPD:
+      if (helpmode) {addStringToQueue("RGB_SPD");}
       break;    
     case PRINT_BATTERY:
       intval = Battery::vbat_per;
@@ -424,7 +475,7 @@ void keyscantimer_callback(TimerHandle_t _handle) {
   #endif
 
   #if BACKLIGHT_PWM_ON == 1
-    updatePWM(1, timesincelastkeypress);
+    updatePWM(timesincelastkeypress);
   #endif
 
     #if WS2812B_LED_ON == 1 

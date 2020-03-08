@@ -106,8 +106,12 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define SLEEPING_DELAY_CONNECTED 600000   // 2 minutes is way too fast and really ennoying. making it 10 minutes
 #define SLEEP_ACTIVE 1                    // 1 = it will go to sleep. 0 = sleep will not be activated.
 
+#ifndef DEFAULT_PWM_MAX_VALUE 
+#define DEFAULT_PWM_MAX_VALUE 0x7FFF      // PWM max intensity
+#endif
+
 #ifndef DEFAULT_PWM_VALUE 
-#define DEFAULT_PWM_VALUE 1500            // PWM intensity
+#define DEFAULT_PWM_VALUE 0x7FFF          // PWM default intensity
 #endif
 
 #define PWM_TOUCH_INTERVAL 1000           // detection time since last keypress.
