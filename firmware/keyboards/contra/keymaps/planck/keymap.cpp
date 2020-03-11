@@ -18,8 +18,6 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 #include "keymap.h"
 
-// todo: ADJUST Layer access: pressing multiple layer keys accesses another layer 
-// todo: test one shot with layers
 // todo: test toggle with layers
 // todo: test one shot with macros
 // todo: test toggle with modifiers
