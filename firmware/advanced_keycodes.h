@@ -71,6 +71,7 @@ enum class Duration {
 
 #define KC_COLN MOD(MOD_LSHIFT, KC_SCLN)
 #define KC_DQUO MOD(MOD_LSHIFT, KC_QUOTE)
+#define KC_DQT  KC_DQUO
 
 #define KC_LT   MOD(MOD_LSHIFT, KC_COMMA)
 #define KC_GT   MOD(MOD_LSHIFT, KC_DOT)
@@ -78,5 +79,15 @@ enum class Duration {
 
 #define KC_NUTL MOD(MOD_LSHIFT,KC_NUHS) // Non-US # and ~
 #define KC_NUPI MOD(MOD_LSHIFT,KC_NUBS) // Non-US \ and |
+
+#define LALT(KEY) MOD(MOD_LALT, KEY)
+#define RALT(KEY) MOD(MOD_RALT, KEY)
+#define LCTL(KEY) MOD(MOD_LCTRL, KEY)
+#define RCTL(KEY) MOD(MOD_RCTRL, KEY)
+#define RSFT(KEY) MOD(MOD_RSHIFT, KEY)
+#define LSFT(KEY) MOD(MOD_LSHIFT, KEY)
+#define LGUI(KEY) MOD(MOD_LGUI, KEY)
+#define RGUI(KEY) MOD(MOD_RGUI, KEY)
+
 
 #endif

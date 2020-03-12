@@ -66,12 +66,41 @@ void setupKeymap() {
             KC_LSFT, _______, KC_CUT, KC_COPY, KC_PASTE, ENOTE2, ENOTE2,  _______, TD_LBRC_LCBR, TD_RBRC_RCBR,  KC_PLUS, KC_RSFT,
             KC_GRV, _______, _______, _______, _______, _______, _______, _______,     KC_RALT,       KC_TILD, KC_MINS, KC_EQL);
 
+    uint32_t lower_tap[MATRIX_ROWS][MATRIX_COLS] =
+        KEYMAP(
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,       XXXXXXX,    XXXXXXX,    XXXXXXX, TD_MINS_UNDS_TAP, XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,       XXXXXXX,    XXXXXXX,    XXXXXXX, XXXXXXX,          XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,       XXXXXXX,    TD_LBRC_LCBR_TAP,    TD_RBRC_RCBR_TAP, XXXXXXX,          XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,       XXXXXXX,    XXXXXXX,    XXXXXXX, XXXXXXX,          XXXXXXX);
+
+    uint32_t lower_dtap[MATRIX_ROWS][MATRIX_COLS] =
+        KEYMAP(
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,        XXXXXXX,    XXXXXXX,    XXXXXXX, TD_MINS_UNDS_DTAP, XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,        XXXXXXX,    XXXXXXX,    XXXXXXX, XXXXXXX,           XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,        XXXXXXX,    TD_LBRC_LCBR_DTAP,    TD_RBRC_RCBR_DTAP, XXXXXXX,           XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,        XXXXXXX,    XXXXXXX,    XXXXXXX, XXXXXXX,           XXXXXXX);
+
+
     uint32_t raise[MATRIX_ROWS][MATRIX_COLS] =
         KEYMAP(
             KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10, KC_F11,  KC_F12,
             CTRLESC,  KC_VOLD, KC_VOLU, KC_MUTE, ENOTE3, ENOTE1, ENOTE1, LCTL(KC_LEFT), LCTL(KC_UP),    LCTL(KC_DOWN),   LCTL(KC_RGHT), KC_BSLS,
             KC_LSFT, _______, KC_CUT, KC_COPY, KC_PASTE, ENOTE2, ENOTE2, _______, TD_LBRC_LCBR, TD_RBRC_RCBR, KC_PGUP, KC_RSFT,
             KC_GRV, _______, _______, _______, _______, _______, _______, _______, KC_RCTL,       KC_HOME,      KC_PGDN, KC_END);
+
+    uint32_t raise_tap[MATRIX_ROWS][MATRIX_COLS] =
+        KEYMAP(
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,       XXXXXXX,    XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,       XXXXXXX,    XXXXXXX,    XXXXXXX, XXXXXXX,          XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,       XXXXXXX,    TD_LBRC_LCBR_TAP,    TD_RBRC_RCBR_TAP, XXXXXXX,          XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,       XXXXXXX,    XXXXXXX,    XXXXXXX, XXXXXXX,          XXXXXXX);
+
+    uint32_t raise_dtap[MATRIX_ROWS][MATRIX_COLS] =
+        KEYMAP(
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,        XXXXXXX,    XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,        XXXXXXX,    XXXXXXX,    XXXXXXX, XXXXXXX,           XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,        XXXXXXX,    TD_LBRC_LCBR_DTAP,    TD_RBRC_RCBR_DTAP, XXXXXXX,           XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,        XXXXXXX,    XXXXXXX,    XXXXXXX, XXXXXXX,           XXXXXXX);
 
     uint32_t shift[MATRIX_ROWS][MATRIX_COLS] =
         KEYMAP(
@@ -80,12 +109,44 @@ void setupKeymap() {
     RSFT(KC_QUOT), RSFT(KC_Z),    RSFT(KC_X),    RSFT(KC_C),    RSFT(KC_V),    RSFT(KC_B),    RSFT(KC_N),   RSFT(KC_M),   TD_LPRN_LABK,  TD_RPRN_RABK,  RSFT(KC_SLSH), SHIFTL,
     _______,       _______,       RSFT(KC_LGUI), RSFT(KC_LALT), _______,      RSFT(KC_DEL),   RSFT(KC_SPC), _______,      _______,       RSFT(KC_LEFT), RSFT(KC_DOWN), RSFT(KC_RIGHT));
 
+    uint32_t shift_tap[MATRIX_ROWS][MATRIX_COLS] =
+        KEYMAP(
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,       XXXXXXX,    XXXXXXX,    XXXXXXX, XXXXXXX,          XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,       XXXXXXX,    XXXXXXX,    XXXXXXX, XXXXXXX,          TD_QUOT_DQT_TAP,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,       XXXXXXX,    TD_LPRN_LABK_TAP,    TD_RPRN_RABK_TAP, XXXXXXX,          XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,       XXXXXXX,    XXXXXXX,    XXXXXXX, XXXXXXX,          XXXXXXX);
+
+    uint32_t shift_dtap[MATRIX_ROWS][MATRIX_COLS] =
+        KEYMAP(
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,        XXXXXXX,    XXXXXXX,    XXXXXXX, XXXXXXX,           XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,        XXXXXXX,    XXXXXXX,    XXXXXXX, XXXXXXX,           TD_QUOT_DQT_DTAP,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,        XXXXXXX,    TD_LPRN_LABK_DTAP,    TD_RPRN_RABK_DTAP, XXXXXXX,           XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,        XXXXXXX,    XXXXXXX,    XXXXXXX, XXXXXXX,           XXXXXXX);
+
+
+
     uint32_t adjust[MATRIX_ROWS][MATRIX_COLS] =
         KEYMAP(
             KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, TD_LPRN_LABK, TD_RPRN_RABK,  KC_UNDS, KC_PLUS,
             _______, _______, _______,  _______,   _______,  _______, _______, _______,  RGB_TOG,  RGB_MOD, RGB_HUI, RGB_HUD,
             KC_LSFT, _______,  _______,  _______,   _______,  _______,   _______,  _______, RGB_SAI,  RGB_SAD, RGB_VAI, KC_RSFT,
             RESET,   _______, _______, _______, _______, _______, _______, _______, _______,  BL_TOGG, BANDW,   HCNTRST);
+
+    uint32_t adjust_tap[MATRIX_ROWS][MATRIX_COLS] =
+        KEYMAP(
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,       XXXXXXX,    TD_LPRN_LABK_TAP,    TD_RPRN_RABK_TAP, XXXXXXX,          XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,       XXXXXXX,    XXXXXXX,    XXXXXXX, XXXXXXX,          XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,       XXXXXXX,    XXXXXXX,    XXXXXXX, XXXXXXX,          XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,       XXXXXXX,    XXXXXXX,    XXXXXXX, XXXXXXX,          XXXXXXX);
+
+    uint32_t adjust_dtap[MATRIX_ROWS][MATRIX_COLS] =
+        KEYMAP(
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,        XXXXXXX,    TD_LPRN_LABK_DTAP,    TD_RPRN_RABK_DTAP, XXXXXXX,           XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,        XXXXXXX,    XXXXXXX,    XXXXXXX, XXXXXXX,           XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,        XXXXXXX,    XXXXXXX,    XXXXXXX, XXXXXXX,           XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,        XXXXXXX,    XXXXXXX,    XXXXXXX, XXXXXXX,           XXXXXXX);
+
+
 
         uint32_t extra[MATRIX_ROWS][MATRIX_COLS] =
         KEYMAP(
@@ -96,10 +157,10 @@ void setupKeymap() {
 
     uint32_t macro[MATRIX_ROWS][MATRIX_COLS] =            // XXXXXXX = nothing    _______ = transparent = use lower layer keycode
         KEYMAP(
-    PRINT_BATTERY, HOME_ADD, EMAIL_1,  NAME_1,  CBR_FN,  PHONE_1, TAB_DOWN_RTRN, INOWORD,  IN_R,      IPADDR,     SMILE,     IPSUM ,
-    PRINT_INFO   , WORK_ADD, EMAIL_2,  NAME_2,  BRC_FN,  PHONE_2, TAB_UP_RTRN,   FOREXMPL, XXXXXXX,   XXXXXXX,    XXXXXXX,   XXXXXXX,
-    XXXXXXX      , XXXXXXX,  XXXXXXX,  NAME_3,  PRN_FN,  XXXXXXX, XXXXXXX,       FF_TEXT,  XXXXXXX,   LARW_L,     LARW_R,    XXXXXXX,
-    XXXXXXX      , XXXXXXX,  XXXXXXX,  XXXXXXX, L_LOWER, XXXXXXX, XXXXXXX,       L_RAISE,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX);
+            PRINT_BATTERY, HOME_ADD, EMAIL_1,  NAME_1,  CBR_FN,  PHONE_1, TAB_DOWN_RTRN, INOWORD,  IN_R,      IPADDR,     SMILE,     IPSUM ,
+            PRINT_INFO   , WORK_ADD, EMAIL_2,  NAME_2,  BRC_FN,  PHONE_2, TAB_UP_RTRN,   FOREXMPL, XXXXXXX,   XXXXXXX,    XXXXXXX,   XXXXXXX,
+            XXXXXXX      , XXXXXXX,  XXXXXXX,  NAME_3,  PRN_FN,  XXXXXXX, XXXXXXX,       FF_TEXT,  XXXXXXX,   LARW_L,     LARW_R,    XXXXXXX,
+            XXXXXXX      , XXXXXXX,  XXXXXXX,  XXXXXXX, L_LOWER, XXXXXXX, XXXXXXX,       L_RAISE,  XXXXXXX,   XXXXXXX,    XXXXXXX,   XXXXXXX);
 
     /*
      * add the other layers
@@ -115,10 +176,23 @@ void setupKeymap() {
             matrix[row][col].addActivation(_QWERTY, Method::DT_DOUBLETAP, qwerty_dtap[row][col]);
 
             matrix[row][col].addActivation(_LOWER,  Method::PRESS,   lower[row][col]);
+            matrix[row][col].addActivation(_LOWER,  Method::DT_TAP,  lower_tap[row][col]);
+            matrix[row][col].addActivation(_LOWER,  Method::DT_DOUBLETAP, lower_dtap[row][col]);
+
             matrix[row][col].addActivation(_RAISE,  Method::PRESS,   raise[row][col]);
+            matrix[row][col].addActivation(_RAISE,  Method::DT_TAP,  raise_tap[row][col]);
+            matrix[row][col].addActivation(_RAISE,  Method::DT_DOUBLETAP, raise_dtap[row][col]);
+
             matrix[row][col].addActivation(_ADJUST, Method::PRESS,  adjust[row][col]);
-            matrix[row][col].addActivation(_EXTRA,  Method::PRESS,  adjust[row][col]);
-            matrix[row][col].addActivation(_SHIFT,  Method::PRESS,  adjust[row][col]);
+            matrix[row][col].addActivation(_ADJUST, Method::DT_TAP,  adjust_tap[row][col]);
+            matrix[row][col].addActivation(_ADJUST, Method::DT_DOUBLETAP,  adjust_dtap[row][col]);
+
+            matrix[row][col].addActivation(_EXTRA,  Method::PRESS,   extra[row][col]);
+
+            matrix[row][col].addActivation(_SHIFT,  Method::PRESS,   shift[row][col]);
+            matrix[row][col].addActivation(_SHIFT,  Method::DT_TAP,  shift_tap[row][col]);
+            matrix[row][col].addActivation(_SHIFT,  Method::DT_DOUBLETAP,  shift_dtap[row][col]);
+
             matrix[row][col].addActivation(_MACRO,  Method::PRESS,   macro[row][col]);
         }
     }
