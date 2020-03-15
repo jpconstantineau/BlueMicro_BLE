@@ -379,6 +379,33 @@ void process_keyboard_function(uint16_t keycode)
 }
 
 /**************************************************************************************************************************/
+/**************************************************************************************************************************/
+void process_user_special_keys()
+{
+  
+   switch(KeyScanner::special_key)
+  {
+    case KS(KC_ESC):
+            if (KeyScanner::currentReport[0] == 0) {KeyScanner::currentReport[KeyScanner::bufferposition] = KC_ESC; KeyScanner::reportChanged = true;}// return esc if no modifiers are selected
+          //  else{
+         //     KeyScanner::currentReport[KeyScanner::bufferposition] = KC_ESC;KeyScanner::reportChanged = true;
+        //    }
+          else if (BIT_RSHIFT & KeyScanner::currentReport[0] ) {KeyScanner::currentReport[KeyScanner::bufferposition] = KC_GRAVE;KeyScanner::reportChanged = true; }//  return KC_GRAVE and the shift modifier
+          else if (BIT_LSHIFT & KeyScanner::currentReport[0] ) {KeyScanner::currentReport[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::reportChanged = true;}//  return KC_GRAVE and the shift modifier
+          else if (BIT_LGUI & KeyScanner::currentReport[0] ) {KeyScanner::currentReport[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::currentReport[0]  = KeyScanner::currentReport[0]  & ~BIT_LGUI;KeyScanner::reportChanged = true;}//  return KC_GRAVE and remove the gui modifier
+          else if (BIT_RGUI & KeyScanner::currentReport[0] ) {KeyScanner::currentReport[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::currentReport[0]  = KeyScanner::currentReport[0]  & ~BIT_RGUI;KeyScanner::reportChanged = true;}//  return KC_GRAVE and remove the gui modifier
+          else if (BIT_LALT & KeyScanner::currentReport[0] ) {KeyScanner::currentReport[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::currentReport[0]  = KeyScanner::currentReport[0]  & ~BIT_LALT;KeyScanner::reportChanged = true;}//  return KC_GRAVE and remove the gui modifier
+          else if (BIT_RALT & KeyScanner::currentReport[0] ) {KeyScanner::currentReport[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::currentReport[0]  = KeyScanner::currentReport[0]  & ~BIT_RALT;KeyScanner::reportChanged = true;}//  return KC_GRAVE and remove the gui modifier
+      break;
+    default:
+      break;
+  }
+KeyScanner::currentReport[KeyScanner::bufferposition] = KC_ESC;
+
+
+}
+
+/**************************************************************************************************************************/
 // Communication with computer and other boards
 /**************************************************************************************************************************/
 void sendKeyPresses() {
@@ -386,7 +413,13 @@ void sendKeyPresses() {
   uint16_t keyreport;
   uint16_t lookahead_keyreport;
 
-   KeyScanner::getReport();                                            // get state data - Data is in KeyScanner::currentReport  
+   KeyScanner::getReport();                                            // get state data - Data is in KeyScanner::currentReport 
+
+  if (KeyScanner::special_key > 0){
+      process_user_special_keys();
+      KeyScanner::special_key = 0;
+  }
+
   if (KeyScanner::macro > 0){
       process_user_macros(KeyScanner::macro);
       KeyScanner::macro = 0;

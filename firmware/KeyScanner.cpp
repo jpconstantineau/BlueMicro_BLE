@@ -344,10 +344,18 @@ bool KeyScanner::updateModifiers()
 
 bool KeyScanner::getReport()
 {
+    previousReport[0] = currentReport[0];
+    previousReport[1] = currentReport[1];
+    previousReport[2] = currentReport[2];
+    previousReport[3] = currentReport[3];
+    previousReport[4] = currentReport[4];
+    previousReport[5] = currentReport[5];
+    previousReport[6] = currentReport[6];
+    previousReport[7] = currentReport[7];
+
     resetReport();
     copyRemoteReport();
     updateLayer();
-   // updateModifiers();
 
     for (auto keycode : activeKeys) 
     {
@@ -373,7 +381,9 @@ bool KeyScanner::getReport()
             case KC_RESERVED_A5: if(!processingmacros){macro = keycode; processingmacros=true; } extraModifiers=0; break;                  // KC_RESERVED_A5 is the keycode marker for user macros.
             case KC_RESERVED_A6: if(!processingmacros){specialfunction = keycode; processingmacros=true;} extraModifiers=0; break;        // KC_RESERVED_A6 is the keycode marker for special keyboard functions.
             case KC_RESERVED_A7: if(!processingmacros){consumer = keycode; processingmacros=true;} extraModifiers=0; break;               // KC_RESERVED_A7 is the keycode marker for consumer reports.
-            case KC_RESERVED_A8: mouse = keycode; extraModifiers=0; break;                  // KC_RESERVED_A8 is the keycode marker for mouse reports. Mousekeys can be repeated... We therefore don't need the macro logic
+            case KC_RESERVED_A8: consumer = keycode;  extraModifiers=0; break;              // KC_RESERVED_A8 is the keycode marker for repeating consumer reports.
+            case KC_RESERVED_A9: mouse = keycode; extraModifiers=0; break;                  // KC_RESERVED_A8 is the keycode marker for mouse reports. Mousekeys can be repeated... We therefore don't need the macro logic
+            case KC_RESERVED_AA: special_key = keycode; extraModifiers=0; break;            // KC_RESERVED_AA is the keycode marker for special keys.
         }
         //add all of the extra modifiers into the curren modifier 
         currentMod |= extraModifiers;
@@ -409,15 +419,6 @@ bool KeyScanner::getReport()
     else
     {reportChanged = false;}
 
-    previousReport[0] = currentReport[0];
-    previousReport[1] = currentReport[1];
-    previousReport[2] = currentReport[2];
-    previousReport[3] = currentReport[3];
-    previousReport[4] = currentReport[4];
-    previousReport[5] = currentReport[5];
-    previousReport[6] = currentReport[6];
-    previousReport[7] = currentReport[7];
-
     return reportChanged;
 }
 
@@ -439,6 +440,7 @@ uint16_t KeyScanner::macro = 0;
 uint16_t KeyScanner::specialfunction = 0;
 uint16_t KeyScanner::consumer = 0;
 uint16_t KeyScanner::mouse = 0;
+uint16_t KeyScanner::special_key = 0;
 uint16_t KeyScanner::remoteLayer = 0;
 
 uint16_t KeyScanner::oneshotLayer = 0;

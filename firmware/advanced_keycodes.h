@@ -30,19 +30,30 @@ enum class Duration {
 
 #define MOD(M, KC) ((uint16_t) KC | (uint16_t) M)
 
-#define MOD_LCTRL (1 << 8)
-#define MOD_LSHIFT (2 << 8)
-#define MOD_LALT (4 << 8)
-#define MOD_LGUI (8 << 8)
-#define MOD_RCTRL (16 << 8)
-#define MOD_RSHIFT (32 << 8)
-#define MOD_RALT (64 << 8)
-#define MOD_RGUI (128 << 8)
+#define BIT_LCTRL (1)
+#define BIT_LSHIFT (2 << 8)
+#define BIT_LALT (4 << 8)
+#define BIT_LGUI (8 << 8)
+#define BIT_RCTRL (16 << 8)
+#define BIT_RSHIFT (32 << 8)
+#define BIT_RALT (64 << 8)
+#define BIT_RGUI (128 << 8)
+
+#define MOD_LCTRL (BIT_LCTRL << 8)
+#define MOD_LSHIFT (BIT_LSHIFT << 8)
+#define MOD_LALT (BIT_LALT << 8)
+#define MOD_LGUI (BIT_LGUI << 8)
+#define MOD_RCTRL (BIT_RCTRL << 8)
+#define MOD_RSHIFT (BIT_RSHIFT << 8)
+#define MOD_RALT (BIT_RALT << 8)
+#define MOD_RGUI (BIT_RGUI << 8)
 
 #define MC(KC) (((uint16_t) KC << 8 ) | KC_RESERVED_A5 )             // move KC to upper 8 bits and use KC_RESERVED_A5 keycode for marking this as a macro.
 #define KB(KC) (((uint16_t) KC << 8 ) | KC_RESERVED_A6 )             // move KC to upper 8 bits and use KC_RESERVED_A6 keycode for marking this as a special keyboard function.
 #define MK(KC) (((uint16_t) KC << 8 ) | KC_RESERVED_A7 )             // move KC to upper 8 bits and use KC_RESERVED_A7 keycode for marking this as a media key.
-#define MS(KC) (((uint16_t) KC << 8 ) | KC_RESERVED_A8 )             // move KC to upper 8 bits and use KC_RESERVED_A8 keycode for marking this as a mouse key.
+#define MR(KC) (((uint16_t) KC << 8 ) | KC_RESERVED_A8 )             // move KC to upper 8 bits and use KC_RESERVED_A8 keycode for marking this as a repeating media key.
+#define MS(KC) (((uint16_t) KC << 8 ) | KC_RESERVED_A9 )             // move KC to upper 8 bits and use KC_RESERVED_A9 keycode for marking this as a mouse key.
+#define KS(KC) (((uint16_t) KC << 8 ) | KC_RESERVED_AA )             // move KC to upper 8 bits and use KC_RESERVED_AA keycode for marking this as a special key.
 #define TG(KC) ((static_cast<int>(Duration::TOGGLE) << 16) | KC)
 #define OS(KC) ((static_cast<int>(Duration::ONE_SHOT) << 16) | KC)
 #define MAC(KC) ((static_cast<int>(Duration::ONE_SHOT) << 16) |  (KC << 8 ) | KC_RESERVED_A5)
