@@ -42,7 +42,7 @@ static bool helpmode = false;
 /**************************************************************************************************************************/
 void setup() {
  Serial.begin(115200);
-  while ( !Serial ) delay(10);   // for nrf52840 with native usb
+ // while ( !Serial ) delay(10);   // for nrf52840 with native usb this makes the nrf52840 stall and wait for a serial connection.  Something not wanted for a keyboard...
 
   LOG_LV1("BLEMIC","Starting %s" ,DEVICE_NAME);
 
@@ -61,13 +61,18 @@ void setup() {
   #endif
   // Set up keyboard matrix and start advertising
   setupKeymap();
+  
   setupMatrix();
+  
   startAdv(); 
   keyscantimer.start();
   batterytimer.start();
+  /*
   //RGBtimer.start();
   suspendLoop(); // this commands suspends the main loop.  We are no longer using the loop but scheduling things using the timers.
+  */
   stringbuffer.clear();
+  
 };
 /**************************************************************************************************************************/
 //
@@ -382,27 +387,27 @@ void process_keyboard_function(uint16_t keycode)
 /**************************************************************************************************************************/
 void process_user_special_keys()
 {
-  
+  uint8_t mods = KeyScanner::currentReport[0] ;
+          LOG_LV1("SPECIAL","PROCESS: %i %i %i %i %i %i %i %i %i" ,KeyScanner::special_key,mods, KeyScanner::currentReport[1],KeyScanner::currentReport[2],KeyScanner::currentReport[3], KeyScanner::currentReport[4],KeyScanner::currentReport[5], KeyScanner::currentReport[6],KeyScanner::bufferposition );  
    switch(KeyScanner::special_key)
   {
     case KS(KC_ESC):
-            if (KeyScanner::currentReport[0] == 0) {KeyScanner::currentReport[KeyScanner::bufferposition] = KC_ESC; KeyScanner::reportChanged = true;}// return esc if no modifiers are selected
-          //  else{
-         //     KeyScanner::currentReport[KeyScanner::bufferposition] = KC_ESC;KeyScanner::reportChanged = true;
-        //    }
-          else if (BIT_RSHIFT & KeyScanner::currentReport[0] ) {KeyScanner::currentReport[KeyScanner::bufferposition] = KC_GRAVE;KeyScanner::reportChanged = true; }//  return KC_GRAVE and the shift modifier
-          else if (BIT_LSHIFT & KeyScanner::currentReport[0] ) {KeyScanner::currentReport[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::reportChanged = true;}//  return KC_GRAVE and the shift modifier
-          else if (BIT_LGUI & KeyScanner::currentReport[0] ) {KeyScanner::currentReport[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::currentReport[0]  = KeyScanner::currentReport[0]  & ~BIT_LGUI;KeyScanner::reportChanged = true;}//  return KC_GRAVE and remove the gui modifier
-          else if (BIT_RGUI & KeyScanner::currentReport[0] ) {KeyScanner::currentReport[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::currentReport[0]  = KeyScanner::currentReport[0]  & ~BIT_RGUI;KeyScanner::reportChanged = true;}//  return KC_GRAVE and remove the gui modifier
-          else if (BIT_LALT & KeyScanner::currentReport[0] ) {KeyScanner::currentReport[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::currentReport[0]  = KeyScanner::currentReport[0]  & ~BIT_LALT;KeyScanner::reportChanged = true;}//  return KC_GRAVE and remove the gui modifier
-          else if (BIT_RALT & KeyScanner::currentReport[0] ) {KeyScanner::currentReport[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::currentReport[0]  = KeyScanner::currentReport[0]  & ~BIT_RALT;KeyScanner::reportChanged = true;}//  return KC_GRAVE and remove the gui modifier
+        switch (mods)
+        {
+          case 0:          KeyScanner::currentReport[KeyScanner::bufferposition] = KC_ESC;   KeyScanner::reportChanged = true; break;
+          case BIT_LCTRL:  KeyScanner::currentReport[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::reportChanged = true; KeyScanner::currentReport[0]  = 0; break;
+          case BIT_LSHIFT: KeyScanner::currentReport[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::reportChanged = true; KeyScanner::currentReport[0]  = BIT_LSHIFT; break;
+          case BIT_LALT:   KeyScanner::currentReport[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::reportChanged = true; KeyScanner::currentReport[0]  = 0; break;
+          case BIT_LGUI:   KeyScanner::currentReport[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::reportChanged = true; KeyScanner::currentReport[0]  = 0; break;
+          case BIT_RCTRL:  KeyScanner::currentReport[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::reportChanged = true; KeyScanner::currentReport[0]  = 0; break;
+          case BIT_RSHIFT: KeyScanner::currentReport[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::reportChanged = true; KeyScanner::currentReport[0]  = 0; break;
+          case BIT_RALT:   KeyScanner::currentReport[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::reportChanged = true; KeyScanner::currentReport[0]  = 0; break;
+          case BIT_RGUI:   KeyScanner::currentReport[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::reportChanged = true; KeyScanner::currentReport[0]  = 0; break;
+        }  
       break;
     default:
       break;
   }
-KeyScanner::currentReport[KeyScanner::bufferposition] = KC_ESC;
-
-
 }
 
 /**************************************************************************************************************************/

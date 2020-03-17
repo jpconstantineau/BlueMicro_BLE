@@ -155,12 +155,9 @@ void startAdv(void)
   Bluefruit.Advertising.addFlags(BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE);
   Bluefruit.Advertising.addTxPower();
 
-    #if BLE_HID == 1
+  #if BLE_HID == 1
   Bluefruit.Advertising.addAppearance(BLE_APPEARANCE_HID_KEYBOARD);
-
-
-  // Include BLE HID service
-  Bluefruit.Advertising.addService(blehid);
+  Bluefruit.Advertising.addService(blehid);  // Include BLE HID service
   #endif
   
   #if BLE_PERIPHERAL ==1
@@ -175,7 +172,8 @@ void startAdv(void)
   // ToDo: Consider Configuration Service... Save config to board, reset to default values, go to DFU, etc...
   
   // There is probably not enough room for the dev name in the advertising packet. Putting it in the ScanResponse Packet
-  Bluefruit.ScanResponse.addName();
+  //Bluefruit.ScanResponse.addName();
+  Bluefruit.Advertising.addName();
   
   /* Start Advertising
    * - Enable auto advertising if disconnected

@@ -19,32 +19,33 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 #ifndef KEYBOARD_CONFIG_H
 #define KEYBOARD_CONFIG_H
-//#include "hardware_variants.h"
-//#define HARDWARE_MAPPING  BLUEMICROV2_1A
-//#include "avr_mapping.h"
+#include "avr_mapping.h"
 
 #define KEYBOARD_SIDE MASTER
 
 
-#define DEVICE_NAME_R                         "4x12_R"                         /**< Name of device. Will be included in the advertising data. */
-#define DEVICE_NAME_L                         "4x12_L"                         /**< Name of device. Will be included in the advertising data. */
-#define DEVICE_NAME_M                         "4x12"                           /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME_R                         "4x4Staggered_R"                         /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME_L                         "4x4Staggered_L"                         /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME_M                         "4x4Staggered"                           /**< Name of device. Will be included in the advertising data. */
 
-#define DEVICE_MODEL                        "4x12_V1"                          /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_MODEL                        "4x4Staggered_V1"                          /**< Name of device. Will be included in the advertising data. */
 
 #define MANUFACTURER_NAME                   "keyboards.jpconstantineau.com"            /**< Manufacturer. Will be passed to Device Information Service. */
+
 
 /* HARDWARE DEFINITION*/
 /* key matrix size */
 #define MATRIX_ROWS 4
 #define MATRIX_COLS 12
+#ifdef ARDUINO_NRF52832_FEATHER  // this is for the 4x4 backpack and the 4x4 Platform
+	#define MATRIX_ROW_PINS {25, 26, 27, 28}
+	#define MATRIX_COL_PINS {29, 30, 2, 3, 4, 5, 7, 9, 10, 11, 12, 13 } // last 4: 17,16,15, 14
+#endif
 
-//#define MATRIX_ROW_PINS {F6, B3, B2, B6}
-//#define MATRIX_COL_PINS {F4, F5, B5, B4, E6, D7, C6, D4, D0, D1, D2, D3} 
-
-#define MATRIX_ROW_PINS {3, 14, 13, 11}
-#define MATRIX_COL_PINS {5, 4, 16, 15, 30, 29, 28, 27, 26, 25, 7, 18} 
-
+#ifdef ARDUINO_NRF52840_PCA10056 // this is for the 4x4 backpack nrf52840
+	#define MATRIX_ROW_PINS {43, 3, 28, 45}
+	#define MATRIX_COL_PINS {2, 29, 30,  26, 6, 5, 8, 41, 22, 13, 20, 17} // last 4: 10, 38, 9, 24
+#endif
 #define UNUSED_PINS {}
 
 /* COL2ROW or ROW2COL */
