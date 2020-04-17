@@ -24,8 +24,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 // ToDo: consider interrupts or GPIOTE
 // ToDo: there must be a better way to debounce
 // ToDo: consider multiple boards and the merging of multiple buffers/modifiers and layer requests.
-// ToDo: Action Keycodes - Bluetooth commands
-// ToDo: Action Keycodes - Reset/DFU commands
+
 
 
 
@@ -356,6 +355,10 @@ bool KeyScanner::getReport()
     resetReport();
     copyRemoteReport();
     updateLayer();
+    if (remotespecialkeycode>0){
+        activeKeys.push_back(remotespecialkeycode);
+        remotespecialkeycode=0;
+    }
 
     for (auto keycode : activeKeys) 
     {
@@ -442,6 +445,7 @@ uint16_t KeyScanner::consumer = 0;
 uint16_t KeyScanner::mouse = 0;
 uint16_t KeyScanner::special_key = 0;
 uint16_t KeyScanner::remoteLayer = 0;
+uint16_t KeyScanner::remotespecialkeycode = 0;
 
 uint16_t KeyScanner::oneshotLayer = 0;
 uint8_t KeyScanner::remoteMod = 0;

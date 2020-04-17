@@ -61,6 +61,7 @@ class KeyScanner {
         static uint16_t localLayer;
         static uint16_t special_key;
        // static uint8_t layerMode;
+        static uint16_t remotespecialkeycode;
         static uint8_t currentReport[8];
        
         static uint8_t bufferposition;

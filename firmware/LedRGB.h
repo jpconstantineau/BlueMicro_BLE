@@ -24,6 +24,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "keyboard_config.h"
 #include "firmware_config.h"
 #include "Adafruit_NeoPixel.h"
+#include "hid_keycodes.h"
+#include "advanced_keycodes.h"
 
 // IMPORTANT NOTES:
 // See https://arduino.stackexchange.com/questions/34095/how-do-i-configure-the-arduino-ide-to-look-for-source-code-in-a-subdirectory-wit
@@ -40,7 +42,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 extern Adafruit_NeoPixel pixels;
 void setupRGB(void);
-void updateRGB(int mode, unsigned long timesincelastkeypress);
+void updateRGBmode(uint32_t mode);
+void updateRGB(unsigned long timesincelastkeypress);
 void suspendRGB(void);
 
 #endif

@@ -28,19 +28,35 @@ using namespace Adafruit_LittleFS_Namespace;
 // Keyboard Matrix
 byte rows[] MATRIX_ROW_PINS;        // Contains the GPIO Pin Numbers defined in keyboard_config.h
 byte columns[] MATRIX_COL_PINS;     // Contains the GPIO Pin Numbers defined in keyboard_config.h  
+//uint32_t lastupdatetime =0;
+SoftwareTimer keyscantimer, batterytimer;
 
-SoftwareTimer keyscantimer, batterytimer;//, RGBtimer;
-//extern float vbat_mv;
+static PersistentState keyboardconfig;
+static DynamicState keyboardstate;
+
 KeyScanner keys;
 Battery batterymonitor;
 
 static std::vector<uint16_t> stringbuffer; // buffer for macros to type into...
-static bool helpmode = false;
+//static bool helpmode = false;
+
+/**************************************************************************************************************************/
+void setupConfig() {
+  keyboardconfig.ledbacklight=BACKLIGHT_PWM_ON;
+  keyboardconfig.ledrgb=WS2812B_LED_ON;
+  keyboardconfig.timerkeyscaninterval=HIDREPORTINGINTERVAL;
+  keyboardconfig.timerbatteryinterval=30*1000;
+
+  keyboardstate.helpmode = false;
+  keyboardstate.timestamp = millis();
+}
+
 
 /**************************************************************************************************************************/
 // put your setup code here, to run once:
 /**************************************************************************************************************************/
 void setup() {
+ setupConfig();
  Serial.begin(115200);
  // while ( !Serial ) delay(10);   // for nrf52840 with native usb this makes the nrf52840 stall and wait for a serial connection.  Something not wanted for a keyboard...
 
@@ -48,31 +64,27 @@ void setup() {
 
   setupGpio();                                                                // checks that NFC functions on GPIOs are disabled.
 
-  keyscantimer.begin(HIDREPORTINGINTERVAL, keyscantimer_callback);
-  batterytimer.begin(30*1000, batterytimer_callback);
-  //RGBtimer.begin(WS2812B_LED_COUNT*25, RGBtimer_callback);
+  keyscantimer.begin(keyboardconfig.timerkeyscaninterval, keyscantimer_callback);
+  batterytimer.begin(keyboardconfig.timerbatteryinterval, batterytimer_callback);
   setupBluetooth();
 
-  #if BACKLIGHT_PWM_ON == 1 //setup PWM module
+  if(keyboardconfig.ledbacklight)
+  {
     setupPWM();
-  #endif
-  #if WS2812B_LED_ON == 1 //setup PWM module
+  }
+
+  if(keyboardconfig.ledrgb)
+  {
     setupRGB();
-  #endif
+  }
   // Set up keyboard matrix and start advertising
   setupKeymap();
-  
   setupMatrix();
-  
   startAdv(); 
   keyscantimer.start();
   batterytimer.start();
-  /*
-  //RGBtimer.start();
   suspendLoop(); // this commands suspends the main loop.  We are no longer using the loop but scheduling things using the timers.
-  */
   stringbuffer.clear();
-  
 };
 /**************************************************************************************************************************/
 //
@@ -96,7 +108,8 @@ void setupMatrix(void) {
 void scanMatrix() {
   uint32_t pindata0 = 0;
   uint32_t pindata1 = 0;
-  unsigned long timestamp = millis();   // lets call it once per scan instead of once per key in the matrix
+  keyboardstate.timestamp  = millis();   // lets call it once per scan instead of once per key in the matrix
+  
     
   for (int i = 0; i < MATRIX_COLS; ++i) {                               // Setting columns before scanning.
         #if DIODE_DIRECTION == COL2ROW                                         
@@ -124,17 +137,17 @@ void scanMatrix() {
             int ulPin = g_ADigitalPinMap[columns[i]];                               // This maps the Board Pin to the GPIO.
             if (ulPin<32)
             {
-              KeyScanner::scanMatrix((pindata0>>(ulPin))&1, timestamp, j, i);       // This function processes the logic values and does the debouncing 
+              KeyScanner::scanMatrix((pindata0>>(ulPin))&1, keyboardstate.timestamp, j, i);       // This function processes the logic values and does the debouncing 
             } else
             {
-              KeyScanner::scanMatrix((pindata1>>(ulPin-32))&1, timestamp, j, i);    // This function processes the logic values and does the debouncing 
+              KeyScanner::scanMatrix((pindata1>>(ulPin-32))&1, keyboardstate.timestamp, j, i);    // This function processes the logic values and does the debouncing 
             }
           } 
         #else
           pindata0 = NRF_GPIO->IN;                                                // read all pins at once
           for (int i = 0; i < MATRIX_COLS; ++i) {
             int ulPin = g_ADigitalPinMap[columns[i]];                             // This maps the Board Pin to the GPIO. Added to ensure compatibility with potential new nrf52832 boards
-            KeyScanner::scanMatrix((pindata0>>(ulPin))&1, timestamp, j, i);       // This function processes the logic values and does the debouncing
+            KeyScanner::scanMatrix((pindata0>>(ulPin))&1, keyboardstate.timestamp, j, i);       // This function processes the logic values and does the debouncing
           }
         #endif
     pinMode(rows[j], INPUT);                                          //'disables' the row that was just scanned
@@ -216,7 +229,7 @@ void process_keyboard_function(uint16_t keycode)
       break;
 
     case HELP_MODE:
-      helpmode = !helpmode;
+       keyboardstate.helpmode = ! keyboardstate.helpmode;
       break;  
 
     case OUT_AUTO:
@@ -226,140 +239,147 @@ void process_keyboard_function(uint16_t keycode)
     case OUT_BT:
       break;  
 
-#if BACKLIGHT_PWM_ON == 1
     // BACKLIGHT FUNCTIONS
     case BL_TOGG:
-    if (helpmode) {addStringToQueue("BL_TOGG");}
+    if ( keyboardstate.helpmode) {addStringToQueue("BL_TOGG");}
       stepPWMMode();
     break;
     case BL_STEP:  // step through modes
-    if (helpmode) {addStringToQueue("BL_STEP");}
+    if ( keyboardstate.helpmode) {addStringToQueue("BL_STEP");}
       stepPWMMode();
     break;
     case BL_ON:
-   if (helpmode) { addStringToQueue("BL_ON");}
+   if ( keyboardstate.helpmode) { addStringToQueue("BL_ON");}
       setPWMMode(3);
       PWMSetMaxVal();
     break;
     case BL_OFF:
-    if (helpmode) {addStringToQueue("BL_OFF");}
+    if ( keyboardstate.helpmode) {addStringToQueue("BL_OFF");}
       setPWMMode(0);
     break;
     case BL_INC:
-    if (helpmode) {addStringToQueue("BL_INC");}
+    if ( keyboardstate.helpmode) {addStringToQueue("BL_INC");}
       incPWMMaxVal();
     break;
     case BL_DEC:
-    if (helpmode) {addStringToQueue("BL_DEC");}
+    if ( keyboardstate.helpmode) {addStringToQueue("BL_DEC");}
       decPWMMaxVal();
     break;
     case BL_BRTG:
-    if (helpmode) {addStringToQueue("BL_BRTG");}
+    if ( keyboardstate.helpmode) {addStringToQueue("BL_BRTG");}
       setPWMMode(2);
     break;
     case BL_REACT:
-    if (helpmode) {addStringToQueue("BL_REACT");}
+    if ( keyboardstate.helpmode) {addStringToQueue("BL_REACT");}
       setPWMMode(1);
       PWMSetMaxVal();
     break;
     case BL_STEPINC:
-    if (helpmode) {addStringToQueue("BL_STEPINC");}
+    if ( keyboardstate.helpmode) {addStringToQueue("BL_STEPINC");}
         incPWMStepSize();
       break;
     case BL_STEPDEC:
-    if (helpmode) {addStringToQueue("BL_STEPDEC");}
+    if ( keyboardstate.helpmode) {addStringToQueue("BL_STEPDEC");}
         decPWMStepSize();
       break;
 
-#endif   
-
     case RGB_TOG:
-      if (helpmode) {addStringToQueue("RGB_TOG");}
+      if ( keyboardstate.helpmode) {addStringToQueue("RGB_TOG");}
       break;
     case RGB_MODE_FORWARD:
-      if (helpmode) {addStringToQueue("RGB_MODE_FORWARD");}
+      if ( keyboardstate.helpmode) {addStringToQueue("RGB_MODE_FORWARD");}
       break;
     case RGB_MODE_REVERSE:
-      if (helpmode) {addStringToQueue("RGB_MODE_REVERSE");}
+      if ( keyboardstate.helpmode) {addStringToQueue("RGB_MODE_REVERSE");}
       break;
     case RGB_HUI:
-      if (helpmode) {addStringToQueue("RGB_HUI");}
+      if ( keyboardstate.helpmode) {addStringToQueue("RGB_HUI");}
+      
       break;      
     case RGB_HUD:
-      if (helpmode) {addStringToQueue("RGB_HUD");}
+      if ( keyboardstate.helpmode) {addStringToQueue("RGB_HUD");}
       break;
     case RGB_SAI:
-      if (helpmode) {addStringToQueue("RGB_SAI");}
+      if ( keyboardstate.helpmode) {addStringToQueue("RGB_SAI");}
       break;
     case RGB_SAD:
-      if (helpmode) {addStringToQueue("RGB_SAD");}
+      if ( keyboardstate.helpmode) {addStringToQueue("RGB_SAD");}
       break;
     case RGB_VAI:
-      if (helpmode) {addStringToQueue("RGB_VAI");}
+      if ( keyboardstate.helpmode) {addStringToQueue("RGB_VAI");}
       break;
     case RGB_VAD:
-      if (helpmode) {addStringToQueue("RGB_VAD");}
+      if ( keyboardstate.helpmode) {addStringToQueue("RGB_VAD");}
       break;   
     case RGB_MODE_PLAIN:
-      if (helpmode) {addStringToQueue("RGB_MODE_PLAIN");}
+      if ( keyboardstate.helpmode) {addStringToQueue("RGB_MODE_PLAIN");}
+      updateRGBmode(RGB_MODE_PLAIN);
       break;
     case RGB_MODE_BREATHE:
-      if (helpmode) {addStringToQueue("RGB_MODE_BREATHE");}
+      if ( keyboardstate.helpmode) {addStringToQueue("RGB_MODE_BREATHE");}
+      updateRGBmode(RGB_MODE_BREATHE);
       break;
     case RGB_MODE_RAINBOW:
-      if (helpmode) {addStringToQueue("RGB_MODE_RAINBOW");}
+      if ( keyboardstate.helpmode) {addStringToQueue("RGB_MODE_RAINBOW");}
+      updateRGBmode(RGB_MODE_RAINBOW);
       break;
     case RGB_MODE_SWIRL:
-      if (helpmode) {addStringToQueue("RGB_MODE_SWIRL");}
+      if ( keyboardstate.helpmode) {addStringToQueue("RGB_MODE_SWIRL");}
+      updateRGBmode(RGB_MODE_SWIRL);
       break;   
     case RGB_MODE_SNAKE:
-      if (helpmode) {addStringToQueue("RGB_MODE_SNAKE");}
+      if ( keyboardstate.helpmode) {addStringToQueue("RGB_MODE_SNAKE");}
+      updateRGBmode(RGB_MODE_SNAKE);
       break;
     case RGB_MODE_KNIGHT:
-      if (helpmode) {addStringToQueue("RGB_MODE_KNIGHT");}
+      if ( keyboardstate.helpmode) {addStringToQueue("RGB_MODE_KNIGHT");}
+      updateRGBmode(RGB_MODE_KNIGHT);
       break;
     case RGB_MODE_XMAS:
-      if (helpmode) {addStringToQueue("RGB_MODE_XMAS");}
+      if ( keyboardstate.helpmode) {addStringToQueue("RGB_MODE_XMAS");}
+      updateRGBmode(RGB_MODE_XMAS);
       break;   
     case RGB_MODE_GRADIENT:
-      if (helpmode) {addStringToQueue("RGB_MODE_GRADIENT");}
+      if ( keyboardstate.helpmode) {addStringToQueue("RGB_MODE_GRADIENT");}
+      updateRGBmode(RGB_MODE_GRADIENT);
       break;
     case RGB_MODE_RGBTEST:
-      if (helpmode) {addStringToQueue("RGB_MODE_RGBTEST");}
+      if ( keyboardstate.helpmode) {addStringToQueue("RGB_MODE_RGBTEST");}
+      updateRGBmode(RGB_MODE_RGBTEST);
       break;
     case RGB_SPI:
-      if (helpmode) {addStringToQueue("RGB_SPI");}
+      if ( keyboardstate.helpmode) {addStringToQueue("RGB_SPI");}
       break;   
     case RGB_SPD:
-      if (helpmode) {addStringToQueue("RGB_SPD");}
+      if ( keyboardstate.helpmode) {addStringToQueue("RGB_SPD");}
       break;    
     case PRINT_BATTERY:
-      intval = Battery::vbat_per;
+      intval = batterymonitor.vbat_per;
 
-      switch (Battery::batt_type)
+      switch (batterymonitor.batt_type)
       {
         case BATT_UNKNOWN:
-            snprintf (buffer, sizeof(buffer), "VDD = %.0f mV, VBatt = %.0f mV", Battery::vbat_vdd*1.0, Battery::vbat_mv*1.0);
+            snprintf (buffer, sizeof(buffer), "VDD = %.0f mV, VBatt = %.0f mV", batterymonitor.vbat_vdd*1.0, batterymonitor.vbat_mv*1.0);
         break;
         case BATT_CR2032:
             if (intval>99)
             {
-              snprintf (buffer, sizeof(buffer), "VDD = %.0f mV (%4d %%)", Battery::vbat_mv*1.0, intval);
+              snprintf (buffer, sizeof(buffer), "VDD = %.0f mV (%4d %%)", batterymonitor.vbat_mv*1.0, intval);
             }
             else
             {
-              snprintf (buffer, sizeof(buffer), "VDD = %.0f mV (%3d %%)", Battery::vbat_mv*1.0, intval);
+              snprintf (buffer, sizeof(buffer), "VDD = %.0f mV (%3d %%)", batterymonitor.vbat_mv*1.0, intval);
             }
             
         break;
         case BATT_LIPO:
             if (intval>99)
             {
-              sprintf (buffer, "LIPO = %.0f mV (%4d %%)", Battery::vbat_mv*1.0, intval);
+              sprintf (buffer, "LIPO = %.0f mV (%4d %%)", batterymonitor.vbat_mv*1.0, intval);
             }
             else
             {
-              sprintf (buffer, "LIPO = %.0f mV (%3d %%)", Battery::vbat_mv*1.0, intval);
+              sprintf (buffer, "LIPO = %.0f mV (%3d %%)", batterymonitor.vbat_mv*1.0, intval);
             }   
         break;
       }
@@ -429,7 +449,7 @@ void sendKeyPresses() {
       process_user_macros(KeyScanner::macro);
       KeyScanner::macro = 0;
   } 
-  if (!stringbuffer.empty()) // if the macro buffer isn't empty, send the first character of the buffer... which is located at the back of the FIFO queue
+  if (!stringbuffer.empty()) // if the macro buffer isn't empty, send the first character of the buffer... which is located at the back of the queue
   {
     keyreport = stringbuffer.back();
     stringbuffer.pop_back();
@@ -437,13 +457,13 @@ void sendKeyPresses() {
     report[0] = static_cast<uint8_t>((keyreport & 0xFF00) >> 8);// mods
     report[1] = static_cast<uint8_t>(keyreport & 0x00FF);
     sendKeys(report);
-    delay(HIDREPORTINGINTERVAL);
+    delay(keyboardconfig.timerkeyscaninterval);
     if (stringbuffer.empty()) // make sure to send an empty report when done...
     { 
       report[0] = 0;
       report[1] = 0;
       sendKeys(report);
-      delay(HIDREPORTINGINTERVAL);
+      delay(keyboardconfig.timerkeyscaninterval);
     }
     else
     {
@@ -453,14 +473,14 @@ void sendKeyPresses() {
         report[0] = 0;
         report[1] = 0;
         sendKeys(report);
-        delay(HIDREPORTINGINTERVAL);
+        delay(keyboardconfig.timerkeyscaninterval);
       }
     }
   }
   else if ((KeyScanner::reportChanged))  //any new key presses anywhere?
   {                                                                              
         sendKeys(KeyScanner::currentReport);
-        LOG_LV1("MXSCAN","SEND: %i %i %i %i %i %i %i %i %i " ,millis(),KeyScanner::currentReport[0], KeyScanner::currentReport[1],KeyScanner::currentReport[2],KeyScanner::currentReport[3], KeyScanner::currentReport[4],KeyScanner::currentReport[5], KeyScanner::currentReport[6],KeyScanner::currentReport[7] );        
+        LOG_LV1("MXSCAN","SEND: %i %i %i %i %i %i %i %i %i " ,keyboardstate.timestamp,KeyScanner::currentReport[0], KeyScanner::currentReport[1],KeyScanner::currentReport[2],KeyScanner::currentReport[3], KeyScanner::currentReport[4],KeyScanner::currentReport[5], KeyScanner::currentReport[6],KeyScanner::currentReport[7] );        
   } else if (KeyScanner::specialfunction > 0)
   {
     process_keyboard_function(KeyScanner::specialfunction);
@@ -477,10 +497,11 @@ void sendKeyPresses() {
   
 
   #if BLE_PERIPHERAL ==1   | BLE_CENTRAL ==1                            /**************************************************/
-    if(KeyScanner::layerChanged)                                               //layer comms
+    if(KeyScanner::layerChanged || (keyboardstate.timestamp-keyboardstate.lastupdatetime > 1000))     //layer comms
     {   
+        keyboardstate.lastupdatetime = keyboardstate.timestamp;
         sendlayer(KeyScanner::localLayer);
-        LOG_LV1("MXSCAN","Layer %i  %i" ,millis(),KeyScanner::localLayer);
+        LOG_LV1("MXSCAN","Layer %i  %i" ,keyboardstate.timestamp,KeyScanner::localLayer);
         KeyScanner::layerChanged = false;                                      // mark layer as "not changed" since last update
     } 
   #endif                                                                /**************************************************/
@@ -489,9 +510,7 @@ void sendKeyPresses() {
 // put your main code here, to run repeatedly:
 /**************************************************************************************************************************/
 void loop() {};  // loop is now empty and no longer being called.
-
-/**************************************************************************************************************************/
-// put your key scanning code here, to run repeatedly:
+// keyscantimer is being called instead
 /**************************************************************************************************************************/
 void keyscantimer_callback(TimerHandle_t _handle) {
     #if MATRIX_SCAN == 1
@@ -500,7 +519,7 @@ void keyscantimer_callback(TimerHandle_t _handle) {
   #if SEND_KEYS == 1
     sendKeyPresses();    // how often does this really run?
   #endif
-   unsigned long timesincelastkeypress = millis() - KeyScanner::getLastPressed();
+   unsigned long timesincelastkeypress = keyboardstate.timestamp - KeyScanner::getLastPressed();
 
   #if SLEEP_ACTIVE == 1
     gotoSleep(timesincelastkeypress,Bluefruit.connected());
@@ -509,36 +528,29 @@ void keyscantimer_callback(TimerHandle_t _handle) {
   #if BLE_CENTRAL == 1  
     if ((timesincelastkeypress<10)&&(!Bluefruit.Central.connected()&&(!Bluefruit.Scanner.isRunning())))
     {
-      Bluefruit.Scanner.start(0);                                                     // 0 = Don't stop scanning after 0 seconds  ();
+      Bluefruit.Scanner.start(0);                                             // 0 = Don't stop scanning after 0 seconds  ();
     }
   #endif
 
-  #if BACKLIGHT_PWM_ON == 1
+  if(keyboardconfig.ledbacklight)
+  {
     updatePWM(timesincelastkeypress);
-  #endif
+  }
 
-    #if WS2812B_LED_ON == 1 
-     updateRGB(1, timesincelastkeypress);
-    #endif
+  if(keyboardconfig.ledrgb)
+  {
+     updateRGB(timesincelastkeypress);
+  }
 
 }
 //********************************************************************************************//
 //* Battery Monitoring Task - runs infrequently                                              *//
 //********************************************************************************************//
 void batterytimer_callback(TimerHandle_t _handle)
-{
-   
-      Battery::updateBattery();
-   
+{ 
+      batterymonitor.updateBattery();
 }
 
-void RGBtimer_callback(TimerHandle_t _handle)
-{
-    #if WS2812B_LED_ON == 1 
-      unsigned long timesincelastkeypress = millis() - KeyScanner::getLastPressed();
-     updateRGB(0, timesincelastkeypress);
-    #endif
-}
 
 //********************************************************************************************//
 //* Idle Task - runs when there is nothing to do                                             *//

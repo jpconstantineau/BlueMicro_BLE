@@ -114,9 +114,31 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define DEFAULT_PWM_VALUE 0x7FFF          // PWM default intensity
 #endif
 
-#define PWM_TOUCH_INTERVAL 1000           // detection time since last keypress.
+#ifndef BACKLIGHT_LED_PIN
+#define BACKLIGHT_LED_PIN 0          
+#endif
 
-#define VBAT_PIN          (A7)
+#ifndef WS2812B_LED_PIN
+#define WS2812B_LED_PIN 0          
+#endif
+
+#ifndef WS2812B_LED_COUNT
+#define WS2812B_LED_COUNT 0          
+#endif
+
+#ifndef WS2812B_LED_ON
+#define WS2812B_LED_ON 0          
+#endif
+
+#ifndef BACKLIGHT_PWM_ON
+#define BACKLIGHT_PWM_ON 0          
+#endif
+
+#define PWM_TOUCH_INTERVAL 1000           // detection time since last keypress.
+#ifndef VBAT_PIN
+   #define VBAT_PIN          (A7)
+#endif
+
 #define VBAT_MV_PER_LSB   (0.73242188F)   // 3.0V ADC range and 12-bit ADC resolution = 3000mV/4096
 #ifdef ARDUINO_NRF52840_FEATHER           // these settings are specific to the NRF52840_FEATHER not the NRF52840 Chip.
   #define VBAT_DIVIDER      (0.5F)          // 150K + 150K voltage divider on VBAT

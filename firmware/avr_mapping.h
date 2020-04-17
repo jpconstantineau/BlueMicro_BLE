@@ -255,6 +255,30 @@ This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
         #define B3      3
         #define B2      28
         #define B6      43 //1.11 = 32+11
+
+
+    #elif HARDWARE_MAPPING == NICE_NANOV0_2
+        #define BATTERY_TYPE BATT_LIPO
+        #define VBAT_PIN  4
+        #define D3      6  
+        #define D2      8   
+        #define D1      17  
+        #define D0      20  
+        #define D4      22
+        #define C6      24
+        #define D7      32 //1.00  = 32+0
+        #define E6      11
+        #define B4      9
+        #define B5      10
+
+        #define F4      31
+        #define F5      29 
+        #define F6      2
+        #define F7      47 //1.15  = 32+15
+        #define B1      45 //1.13  = 32+13
+        #define B3      43 //1.11 = 32+11
+        #define B2      38 //1.06 = 32+6
+        #define B6      36 //1.04 = 32+4
   #else // setup defaults for AVR mapping default.
         #define BATTERY_TYPE BATT_LIPO
         #define D3      6  

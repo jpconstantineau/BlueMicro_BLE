@@ -19,8 +19,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 #include "LedPwm.h"
 
-
-#if BACKLIGHT_PWM_ON == 1  //setup PWM module
+//extern PersistentState keyboardconfig;
 int16_t pwmval = DEFAULT_PWM_VALUE;
 static int16_t buf[] = {(int16_t)(1 << 15) | (int16_t) DEFAULT_PWM_VALUE}; // Inverse polarity (bit 15), 1500us duty cycle
 
@@ -203,5 +202,3 @@ uint16_t cie_lightness(uint16_t v) {
     }
   }
 }
-
-#endif
