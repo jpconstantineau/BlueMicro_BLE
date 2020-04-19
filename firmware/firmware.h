@@ -35,7 +35,6 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 
     typedef struct { 
-          
         bool    ledbacklight;  
         bool    ledrgb;    
         uint32_t timerkeyscaninterval;
@@ -46,6 +45,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
     typedef struct { 
           uint32_t timestamp;
           uint32_t lastupdatetime;
+
           bool helpmode;
   
     } DynamicState;

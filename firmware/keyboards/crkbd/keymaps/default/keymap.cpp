@@ -77,7 +77,7 @@ void setupKeymap() {
  */
     uint32_t layer1[MATRIX_ROWS][MATRIX_COLS] =
         KEYMAP( \
-  KC_GRAVE,KC_1,    KC_2,    KC_3,    KC_4,   KC_5,  \
+  KC_GRAVE,KC_1,   KC_2,   KC_3,   KC_4,   KC_5,  \
   KC_DEL  ,KC_F1  ,KC_F2  ,KC_F3  ,KC_F4  ,KC_F5  ,    \
   KC_LSFT ,KC_F7  ,KC_F8  ,KC_F9  ,KC_F10 ,KC_F11 ,   \
                                   LAYER_3, LAYER_1, KC_SPC \
@@ -116,15 +116,15 @@ void setupKeymap() {
     uint32_t layer3[MATRIX_ROWS][MATRIX_COLS] =
         KEYMAP( \
   KC_GRAVE,KC_F1,   KC_F2,  KC_F3,   KC_F4,   KC_F5,  \
- _______, _______,_______,_______, _______, _______,    \
-  KC_LSFT,_______,_______,_______, _______, _______,  \
+ _______, _______,KC_MS_UP,_______, KC_CALC, KC_VOLU,    \
+  KC_LSFT,KC_MS_LEFT,KC_MS_DOWN,KC_MS_RIGHT, KC_WWW, KC_VOLD,  \
     LAYER_3, LAYER_1,KC_SPC \
 );
 
     uint32_t layer4[MATRIX_ROWS][MATRIX_COLS] =
         KEYMAP( \
-  KC_CALC,KC_F1,   KC_F2,  KC_F3,   KC_F4, KC_VOLU,  \
- PRINT_INFO, _______,_______,_______, _______, KC_VOLD,    \
+ _______,_______, _______,  _______,   _______, _______,  \
+ _______, _______,_______,_______, _______, _______,    \
   KC_LSFT,_______,_______,_______, _______, _______,  \
     LAYER_3, LAYER_1,KC_SPC \
 );
@@ -236,10 +236,10 @@ void setupKeymap() {
 
     uint32_t layer4[MATRIX_ROWS][MATRIX_COLS] =
         KEYMAP( \
-  KC_VOLU,    KC_F7,    KC_F8,    KC_F9,    KC_F10,   KC_CALC,  \
-  KC_VOLD,  _______,  _______,  KC_MS_BTN1,  KC_MS_UP,  KC_MS_BTN2,   \
-   PRINT_INFO,  _______,  _______,  KC_MS_LEFT,  KC_MS_DOWN,  KC_MS_RIGHT,  \
-  KC_SPC,   LAYER_2,  LAYER_4 \
+  KC_VOLU,     KC_MSEL,    KC_WWW,    KC_CALC,     KC_MYCM,     _______,  \
+  KC_VOLD,     _______,    _______,   KC_MS_BTN1,  KC_MS_UP,    KC_MS_BTN2,   \
+  PRINT_INFO,  _______,    _______,   KC_MS_LEFT,  KC_MS_DOWN,  KC_MS_RIGHT,  \
+  KC_SPC,      LAYER_2,    LAYER_4 \
 );
 
     /*
