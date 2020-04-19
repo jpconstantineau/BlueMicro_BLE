@@ -18,11 +18,13 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 */
 #include "LedRGB.h"
-#if WS2812B_LED_ON == 1  //setup RGB module
+
 
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel();
 uint8_t RGBval = 150;
+uint8_t RGBcounter = 0;
 rgb_color colors[WS2812B_LED_COUNT];
+uint32_t rgb_mode = RGB_MODE_PLAIN;
 
 // Converts a color from HSV to RGB.
 // h is hue, as a number between 0 and 360.
@@ -51,11 +53,15 @@ rgb_color hsvToRgb(uint16_t h, uint8_t s, uint8_t v)
 void setupRGB(void)
 {
    pixels.begin(); // INITIALIZE NeoPixel strip object (REQUIRED)
-pixels.setPin(WS2812B_LED_PIN);
-pixels.updateLength(WS2812B_LED_COUNT);
+   pixels.setPin(WS2812B_LED_PIN);
+   pixels.updateLength(WS2812B_LED_COUNT);
+}
+void updateRGBmode(uint32_t mode)
+{
+   rgb_mode = mode;
 }
 
-void updateRGB(int mode, unsigned long timesincelastkeypress)
+void updateRGB(unsigned long timesincelastkeypress)
 {
  uint16_t time = millis() >> 2;
 if (timesincelastkeypress<PWM_TOUCH_INTERVAL)
@@ -78,32 +84,52 @@ if (timesincelastkeypress<PWM_TOUCH_INTERVAL)
 }
 pixels.clear();
 
-switch (mode)
-{
-case 0:                         // OFF
-    
-    for(uint16_t i=0; i<WS2812B_LED_COUNT; i++) { // For each pixel...
-        pixels.setPixelColor(i, 0, 0, 0);  
+switch (rgb_mode)
+    {
+        case 0:                         // OFF  
+            for(uint16_t i=0; i<WS2812B_LED_COUNT; i++) { // For each pixel...
+                pixels.setPixelColor(i, 0, 0, 0);  
+            }
+            break;
+        case RGB_MODE_PLAIN:           // RAINBOW
+            for(uint16_t i=0; i<WS2812B_LED_COUNT; i++) { // For each pixel...
+                byte x = (time >> 2) - (i << 3);
+                colors[i] = hsvToRgb((uint32_t)x * 359 / 256, 255, RGBval);
+                pixels.setPixelColor(i, colors[i].red, colors[i].green, colors[i].blue); 
+            }
+            break;
+        case RGB_MODE_BREATHE:      
+            break;
+        case RGB_MODE_RAINBOW:      
+            break;
+        case RGB_MODE_SWIRL:      
+            break; 
+        case RGB_MODE_SNAKE:      
+            break;
+        case RGB_MODE_KNIGHT:      
+            break; 
+        case RGB_MODE_XMAS:      
+            break; 
+        case RGB_MODE_GRADIENT:      
+            break;
+        case RGB_MODE_RGBTEST:
+            if (RGBcounter>3) RGBcounter = 1;
+            for(uint16_t i=0; i<WS2812B_LED_COUNT; i++) { // For each pixel...        
+                if (RGBcounter==1) {colors[i].red = RGBval;} else {colors[i].red = 0;}
+                if (RGBcounter==2) {colors[i].green = RGBval;} else {colors[i].green = 0;}
+                if (RGBcounter==3) {colors[i].blue = RGBval;} else {colors[i].blue = 0;}
+                pixels.setPixelColor(i, colors[i].red, colors[i].green, colors[i].blue); 
+            }  
+            RGBcounter++;    
+            break;              
+        default:
+            // unknown mode.  switch to mode 0
+            for(int i=0; i<WS2812B_LED_COUNT; i++) { // For each pixel...
+                pixels.setPixelColor(i, 0, 0, 0); 
+            }
+            break;
     }
-    break;
-case 1:                         // RAINBOW
-    
-    for(uint16_t i=0; i<WS2812B_LED_COUNT; i++) { // For each pixel...
-        byte x = (time >> 2) - (i << 3);
-        colors[i] = hsvToRgb((uint32_t)x * 359 / 256, 255, RGBval);
-        pixels.setPixelColor(i, colors[i].red, colors[i].green, colors[i].blue); 
-    }
-    break;
-default:
-    // unknown mode.  switch to mode 0
-    for(int i=0; i<WS2812B_LED_COUNT; i++) { // For each pixel...
-         pixels.setPixelColor(i, 0, 0, 0); 
-    }
-    break;
-}
-
-
-
+  pixels.setBrightness(RGBval);
   pixels.show();   // Send the updated pixel colors to the hardware.
 }
 
@@ -116,4 +142,3 @@ void suspendRGB(void)
   pixels.show();   // Send the updated pixel colors to the hardware.
 }
 
-#endif

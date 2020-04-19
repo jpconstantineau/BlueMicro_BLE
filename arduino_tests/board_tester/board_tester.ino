@@ -13,7 +13,7 @@
 *********************************************************************/
 #include <bluefruit.h>
 
-#define D3      17  //
+#define D3      18  // 17//18
 #define D2      7   //
 #define D1      25  //sda
 #define D0      26  //scl

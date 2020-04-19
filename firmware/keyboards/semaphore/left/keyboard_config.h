@@ -34,7 +34,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 #define MANUFACTURER_NAME                   "JPConstantineau.com"                      /**< Manufacturer. Will be passed to Device Information Service. */
 
-#define BLE_LIPO_MONITORING 1
+
 /* HARDWARE DEFINITION*/
 /* key matrix size */
 #define MATRIX_ROWS 5

@@ -18,13 +18,26 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 */
 #include "advanced_keycodes.h"
-
+#include "hid_keycodes.h"
 #ifndef KEY_STATE
 #define KEY_STATE
 
-#define DOUBLETAP_TIME_LIMIT 700
-#define TIME_TILL_HOLD 600
-#define TIME_TILL_RELEASE 80
+
+#include "keyboard_config.h"
+#include "firmware_config.h"
+
+
+
+
+#ifndef DOUBLETAP_TIME_LIMIT
+  #define DOUBLETAP_TIME_LIMIT 300
+#endif
+#ifndef TIME_TILL_HOLD
+  #define TIME_TILL_HOLD 300
+#endif
+#ifndef TIME_TILL_RELEASE
+  #define TIME_TILL_RELEASE 80
+#endif
 
 enum class Method {
     PRESS = 0,

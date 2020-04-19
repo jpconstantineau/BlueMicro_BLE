@@ -33,22 +33,37 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "LedRGB.h"
 #include "gpio.h"
 
-void setupMatrix(void);
-void scanMatrix(void);
-void sendKeyPresses(void);
 
-void keyscantimer_callback(TimerHandle_t _handle);
-void monitoringtimer_callback(TimerHandle_t _handle);
-void batterytimer_callback(TimerHandle_t _handle);
-void RGBtimer_callback(TimerHandle_t _handle);
-enum states_monitor_modes {
-  STATE_BOOT_INITIALIZE = 0x00,
-  STATE_BOOT_MODE,
-  STATE_BOOT_CLEAR_BONDS,
-  STATE_BOOT_SERIAL_DFU,
-  STATE_BOOT_WIRELESS_DFU,
-  STATE_MONITOR_MODE,
-  STATE_BOOT_UNKNOWN,
-  };
+    typedef struct { 
+        bool    ledbacklight;  
+        bool    ledrgb;    
+        uint32_t timerkeyscaninterval;
+        uint32_t timerbatteryinterval;     
+  
+    } PersistentState;
+
+    typedef struct { 
+          uint32_t timestamp;
+          uint32_t lastupdatetime;
+
+          bool helpmode;
+  
+    } DynamicState;
+
+    void setupConfig(void);
+    void setupMatrix(void);
+    void scanMatrix(void);
+    void sendKeyPresses(void);
+
+    void keyscantimer_callback(TimerHandle_t _handle);
+    void batterytimer_callback(TimerHandle_t _handle);
+    void RGBtimer_callback(TimerHandle_t _handle);
+    void addStringToQueue(const char* str);
+    void addKeycodeToQueue(const uint16_t keycode);
+    void process_keyboard_function(uint16_t keycode);
+    #ifndef USER_MACRO_FUNCTION  
+    #define USER_MACRO_FUNCTION 1  
+    void process_user_macros(uint16_t macroid);
+    #endif
 
 #endif /* FIRMWARE_H */

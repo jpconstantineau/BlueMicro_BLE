@@ -88,42 +88,57 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define BLE_PERIPHERAL 0
 #endif /* KEYBOARD_MODE */
 
-#ifndef BOOT_MODE_COMMANDS
-#define BOOT_MODE_COMMANDS {{KC_SPACE, STATE_MONITOR_MODE},{ KC_B,  STATE_BOOT_CLEAR_BONDS },{ KC_F, STATE_BOOT_SERIAL_DFU},{ KC_W, STATE_BOOT_WIRELESS_DFU}}
-#define BOOT_MODE_COMMANDS_COUNT 4
-#endif
-
-#ifndef BOOT_MODE_DELAY
-#define BOOT_MODE_DELAY  500
-#endif
-
 #ifndef DEBOUNCETIME 
 #define DEBOUNCETIME 10
 #endif
 
 #ifndef HIDREPORTINGINTERVAL
-#define HIDREPORTINGINTERVAL 1
+#define HIDREPORTINGINTERVAL 10
 #endif
 
 // Battery Service definitions.
 
-#ifndef BLE_LIPO_MONITORING
-#define BLE_LIPO_MONITORING 0
+#ifndef BATTERY_TYPE
+#define BATTERY_TYPE BATT_UNKNOWN
 #endif
-
-
 
 #define SLEEPING_DELAY 30000              // when it's not connected, 30 seconds is good.
 #define SLEEPING_DELAY_CONNECTED 600000   // 2 minutes is way too fast and really ennoying. making it 10 minutes
 #define SLEEP_ACTIVE 1                    // 1 = it will go to sleep. 0 = sleep will not be activated.
 
+#ifndef DEFAULT_PWM_MAX_VALUE 
+#define DEFAULT_PWM_MAX_VALUE 0x7FFF      // PWM max intensity
+#endif
+
 #ifndef DEFAULT_PWM_VALUE 
-#define DEFAULT_PWM_VALUE 1500            // PWM intensity
+#define DEFAULT_PWM_VALUE 0x7FFF          // PWM default intensity
+#endif
+
+#ifndef BACKLIGHT_LED_PIN
+#define BACKLIGHT_LED_PIN 0          
+#endif
+
+#ifndef WS2812B_LED_PIN
+#define WS2812B_LED_PIN 0          
+#endif
+
+#ifndef WS2812B_LED_COUNT
+#define WS2812B_LED_COUNT 0          
+#endif
+
+#ifndef WS2812B_LED_ON
+#define WS2812B_LED_ON 0          
+#endif
+
+#ifndef BACKLIGHT_PWM_ON
+#define BACKLIGHT_PWM_ON 0          
 #endif
 
 #define PWM_TOUCH_INTERVAL 1000           // detection time since last keypress.
+#ifndef VBAT_PIN
+   #define VBAT_PIN          (A7)
+#endif
 
-#define VBAT_PIN          (A7)
 #define VBAT_MV_PER_LSB   (0.73242188F)   // 3.0V ADC range and 12-bit ADC resolution = 3000mV/4096
 #ifdef ARDUINO_NRF52840_FEATHER           // these settings are specific to the NRF52840_FEATHER not the NRF52840 Chip.
   #define VBAT_DIVIDER      (0.5F)          // 150K + 150K voltage divider on VBAT

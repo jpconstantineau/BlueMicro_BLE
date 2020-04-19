@@ -29,14 +29,17 @@ void setup()
 {
 
   Bluefruit.begin();
-  Bluefruit.setTxPower(4);
-  Bluefruit.setName("BlueMicro840");
-  bledis.setManufacturer("jpconstantineau.com");
-  bledis.setModel("BlueMicro Tester");
-  bledis.begin();
-  blehid.begin();
-  startAdv();
-
+//  Bluefruit.setTxPower(4);
+//  Bluefruit.setName("BlueMicro840");
+//  bledis.setManufacturer("jpconstantineau.com");
+ // bledis.setModel("BlueMicro Tester");
+ // bledis.begin();
+ // blehid.begin();
+ // startAdv();
+  for (int i = 0; i< PINCOUNT1; i++ )
+  {
+    pinMode(pinlist1[i], OUTPUT);
+  }
 
 }
 
@@ -58,10 +61,6 @@ void startAdv(void)
   Bluefruit.Advertising.setFastTimeout(30);      // number of seconds in fast mode
   Bluefruit.Advertising.start(0);                // 0 = Don't stop advertising after n seconds
 
-  for (int i = 0; i< PINCOUNT1; i++ )
-  {
-    pinMode(pinlist1[i], OUTPUT);
-  }
   
 }
 
