@@ -23,8 +23,8 @@ These defines map the AVR-based ports of the Arduino Pro to the NRF52832 GPIO pi
 This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
 */
 
-#ifndef AVR_MAPPING_H
-#define AVR_MAPPING_H
+#ifndef BREAKOUT_MAPPING_H
+#define BREAKOUT_MAPPING_H
 
 // AVAILABLE OPTIONS - IDs defined in Hardware_variants.h
 // FEATHERNRF52832 Not an AVR/Pro Micro Footprint
@@ -303,4 +303,4 @@ This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
     #endif
 #endif
 
-#endif /* AVR_MAPPING_H */
+#endif /* BREAKOUT_MAPPING_H */

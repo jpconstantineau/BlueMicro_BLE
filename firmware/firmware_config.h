@@ -22,7 +22,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define FIRMWARE_CONFIG_H
 #include "hardware_variants.h"
 #include "keyboard_config.h"
-#include "avr_mapping.h"
+#include "breakout_mapping.h"
 #if KEYBOARD_SIDE == LEFT
 #define BLE_PAIRS 1
 #define PERIPHERAL_COUNT 1
