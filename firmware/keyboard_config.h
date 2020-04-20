@@ -21,7 +21,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define KEYBOARD_CONFIG_H
 #include "hardware_variants.h"
 #define HARDWARE_MAPPING  BLUEMICRO840V1_0  // note only the BlueMicro840 fits on the corne.
-#include "avr_mapping.h"
+#include "breakout_mapping.h"
 
 #define KEYBOARD_SIDE LEFT
 //#define KEYBOARD_SIDE RIGHT
