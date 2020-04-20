@@ -3,7 +3,7 @@
 A Keyboard Firmware for nRF52832 and nRF52840 Boards
 
 ## Build Status
-| Branch  | Windows Build  | Docker Build nrf52832 | Docker Build nrf52840 | Adafruit BSP Version  |
+| Branch  | Windows Build nrf52832 | Docker Build nrf52832 | Docker Build nrf52840 | Adafruit BSP Version  |
 |---|---|---|---|---|
 | Master  |  ![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE-master) |  ![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE-master-Docker-nrf52832)|  ![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE-master-Docker-nrf52840) |![Adafruit Library for releases](https://img.shields.io/github/release/adafruit/Adafruit_nRF52_Arduino.svg)  |
 | Develop |![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE-develop) | ![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE-develop-Docker-nrf52832) | ![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE-develop-Docker-nrf52840) | ![Adafruit Library for releases](https://img.shields.io/github/release/adafruit/Adafruit_nRF52_Arduino.svg)   |
