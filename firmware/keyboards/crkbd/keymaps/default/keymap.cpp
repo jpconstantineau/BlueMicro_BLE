@@ -45,7 +45,7 @@ void setupKeymap() {
 
 std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
     {KEYMAP(
-        KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,  
+        KC_NO,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,  
         KC_ESC,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,  
         KC_LSFT,   KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,  
                                   L_EXTRAL, L_LOWER,   KC_SPC
@@ -53,7 +53,20 @@ std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
 
  
 void setupKeymap() {
-
+    uint32_t qwerty_taph[MATRIX_ROWS][MATRIX_COLS] =
+        KEYMAP( \
+        KC_TAB, KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  \
+        KC_NO  ,KC_NO  ,KC_NO  ,KC_NO  ,KC_NO  ,KC_NO  ,    \
+        KC_NO , KC_NO  ,KC_NO  ,KC_NO  ,KC_NO  ,KC_NO ,   \
+                                KC_NO,  KC_NO,  KC_NO \
+        );
+    uint32_t qwerty_hold[MATRIX_ROWS][MATRIX_COLS] =
+        KEYMAP( \
+        KC_LCTL, KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  \
+        KC_NO   ,KC_NO  ,KC_NO  ,KC_NO  ,KC_NO  ,KC_NO  ,    \
+        KC_NO ,  KC_NO  ,KC_NO  ,KC_NO  ,KC_NO  ,KC_NO ,   \
+                                 KC_NO,  KC_NO,  KC_NO \
+        );
 
     uint32_t lower[MATRIX_ROWS][MATRIX_COLS] =
         KEYMAP( \
@@ -128,6 +141,9 @@ void setupKeymap() {
     {
         for (int col = 0; col < MATRIX_COLS; ++col)
         {
+            matrix[row][col].addActivation(_QWERTY, Method::MT_TAP,  qwerty_taph[row][col]);
+            matrix[row][col].addActivation(_QWERTY, Method::MT_HOLD, qwerty_hold[row][col]);
+
             matrix[row][col].addActivation(_LOWER,  Method::PRESS,   lower[row][col]);
             matrix[row][col].addActivation(_RAISE,  Method::PRESS,   raise[row][col]);
             matrix[row][col].addActivation(_ADJUST, Method::PRESS,  adjust[row][col]);
