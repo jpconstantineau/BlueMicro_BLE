@@ -59,6 +59,7 @@ This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
         #define B3      14  //miso
         #define B2      13  //mosi
         #define B6      11
+        #define NC      24 
         
     #elif HARDWARE_MAPPING == BLUEMICROV1_1
         #define BATTERY_TYPE BATT_CR2032
@@ -81,6 +82,7 @@ This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
         #define B3      14  //miso
         #define B2      13  //mosi
         #define B6      11
+        #define NC      24 
 
  #elif HARDWARE_MAPPING == BLUEMICROV2_0
         #define BATTERY_TYPE BATT_LIPO
@@ -104,6 +106,7 @@ This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
         #define B3      14  //miso
         #define B2      13  //mosi
         #define B6      11
+        #define NC      24 
 
     #elif HARDWARE_MAPPING == BLUEMICROV2_0B
         #define BATTERY_TYPE BATT_LIPO
@@ -127,6 +130,7 @@ This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
         #define B3      14  //miso
         #define B2      13  //mosi
         #define B6      11
+        #define NC      24 
     #elif HARDWARE_MAPPING == BLUEMICROV2_0C
         #define BATTERY_TYPE BATT_LIPO
         #define VBAT_PIN  31
@@ -149,6 +153,7 @@ This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
         #define B3      14  //miso
         #define B2      13  //mosi
         #define B6      11
+        #define NC      24 
     #elif HARDWARE_MAPPING == BLUEMICROV2_1A
         #define BATTERY_TYPE BATT_LIPO
         #define VBAT_PIN  31
@@ -171,6 +176,7 @@ This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
         #define B3      14  //miso
         #define B2      13  //mosi
         #define B6      11
+        #define NC      24 
     #elif HARDWARE_MAPPING == BLUENANO1_0
         #define BATTERY_TYPE BATT_UNKNOWN
         #define VBAT_PIN  31
@@ -193,6 +199,7 @@ This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
         #define B3      14  //miso
         #define B2      13  //mosi
         #define B6      18
+        #define NC      24 
     #elif HARDWARE_MAPPING == BLUENANO2_0
         #define BATTERY_TYPE BATT_LIPO
         #define VBAT_PIN  31
@@ -215,6 +222,7 @@ This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
         #define B3      13  
         #define B2      14
         #define B6      18
+        #define NC      24 
     #else // use elseif  Use BlueMicro V2.0c config details as default.
         #define BATTERY_TYPE BATT_LIPO
         #define VBAT_PIN  31
@@ -237,6 +245,7 @@ This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
         #define B3      14  //miso
         #define B2      13  //mosi
         #define B6      11
+        #define NC      24 
     #endif
 #endif
 
@@ -263,7 +272,7 @@ This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
         #define B3      3
         #define B2      28
         #define B6      43 //1.11 = 32+11
-
+        #define NC      32 //1.00 = 32+0 // NC is for not connected....
 
     #elif HARDWARE_MAPPING == NICE_NANOV0_2
         #define BATTERY_TYPE BATT_LIPO
@@ -287,6 +296,31 @@ This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
         #define B3      43 //1.11 = 32+11
         #define B2      38 //1.06 = 32+6
         #define B6      36 //1.04 = 32+4
+        #define NC      33 //1.01 = 32+1 // NC is for not connected....
+        #elif HARDWARE_MAPPING == NRFMICROV0_3
+        #define BATTERY_TYPE BATT_UNKNOWN
+        #define VBAT_PIN  26
+        #define D3      6  
+        #define D2      8   
+        #define D1      15  
+        #define D0      17  
+        #define D4      20
+        #define C6      13
+        #define D7      24
+        #define E6      9
+        #define B4      10
+        #define B5      38 //1.06  = 32+6
+
+        #define F4      30
+        #define F5      31 
+        #define F6      29
+        #define F7      2 
+        #define B1      45 //1.13  = 32+13
+        #define B3      3 
+        #define B2      28 
+        #define B6      43 //1.11 = 32+11
+        #define NC      32 //1.00 = 32+0 // NC is for not connected....
+
   #else // setup defaults for AVR mapping default.
         #define BATTERY_TYPE BATT_LIPO
         #define VBAT_PIN  31
