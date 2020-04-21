@@ -19,18 +19,20 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 #ifndef KEYBOARD_CONFIG_H
 #define KEYBOARD_CONFIG_H
+#include "hardware_variants.h"
+#define HARDWARE_MAPPING  NRFMICROV0_3 
 #include "breakout_mapping.h"
 
 #define KEYBOARD_SIDE MASTER
 
 
-#define DEVICE_NAME_R                         "25_BLE_R"                         /**< Name of device. Will be included in the advertising data. */
-#define DEVICE_NAME_L                         "25_BLE_L"                         /**< Name of device. Will be included in the advertising data. */
-#define DEVICE_NAME_M                         "25_BLE"                           /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME_R                         "BlueMicro_R"                         /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME_L                         "BlueMicro_L"                         /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME_M                         "BlueMicro"                           /**< Name of device. Will be included in the advertising data. */
 
-#define DEVICE_MODEL                        "25_V1"                          /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_MODEL                        "BM"                          /**< Name of device. Will be included in the advertising data. */
 
-#define MANUFACTURER_NAME                   "40Percent.Club"         /**< Manufacturer. Will be passed to Device Information Service. */
+#define MANUFACTURER_NAME                   "BlueMicro Firmware"         /**< Manufacturer. Will be passed to Device Information Service. */
 
 
 /* HARDWARE DEFINITION*/
