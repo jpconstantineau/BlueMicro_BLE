@@ -28,10 +28,10 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "keymap.h"
 #include "sleep.h"
 #include "bluetooth.h"
-#include "battery.h"
+#include "nrf52battery.h"
 #include "LedPwm.h"
 #include "LedRGB.h"
-#include "gpio.h"
+#include "nrf52gpio.h"
 
 
     typedef struct { 

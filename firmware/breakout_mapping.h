@@ -84,6 +84,7 @@ This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
 
  #elif HARDWARE_MAPPING == BLUEMICROV2_0
         #define BATTERY_TYPE BATT_LIPO
+        #define VBAT_PIN  31
         #define D3      17  //
         #define D2      7   //
         #define D1      25  //sda
@@ -106,6 +107,7 @@ This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
 
     #elif HARDWARE_MAPPING == BLUEMICROV2_0B
         #define BATTERY_TYPE BATT_LIPO
+        #define VBAT_PIN  31
         #define D3      17  //
         #define D2      7   //
         #define D1      25  //sda
@@ -127,6 +129,7 @@ This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
         #define B6      11
     #elif HARDWARE_MAPPING == BLUEMICROV2_0C
         #define BATTERY_TYPE BATT_LIPO
+        #define VBAT_PIN  31
         #define D3      6  //
         #define D2      8   //
         #define D1      25  //sda
@@ -148,6 +151,7 @@ This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
         #define B6      11
     #elif HARDWARE_MAPPING == BLUEMICROV2_1A
         #define BATTERY_TYPE BATT_LIPO
+        #define VBAT_PIN  31
         #define D3      18  // NOTE on board serial
         #define D2      7   // NOTE on board serial
         #define D1      25  //sda
@@ -169,6 +173,7 @@ This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
         #define B6      11
     #elif HARDWARE_MAPPING == BLUENANO1_0
         #define BATTERY_TYPE BATT_UNKNOWN
+        #define VBAT_PIN  31
         #define D3      5  //
         #define D2      4   //
         #define D1      25  //sda
@@ -190,6 +195,7 @@ This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
         #define B6      18
     #elif HARDWARE_MAPPING == BLUENANO2_0
         #define BATTERY_TYPE BATT_LIPO
+        #define VBAT_PIN  31
         #define D3      5  //
         #define D2      4   //
         #define D1      3  
@@ -211,6 +217,7 @@ This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
         #define B6      18
     #else // use elseif  Use BlueMicro V2.0c config details as default.
         #define BATTERY_TYPE BATT_LIPO
+        #define VBAT_PIN  31
         #define D3      6  //
         #define D2      8   //
         #define D1      25  //sda
@@ -236,6 +243,7 @@ This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
 #ifdef ARDUINO_NRF52840_PCA10056
   #if HARDWARE_MAPPING == BLUEMICRO840V1_0
         #define BATTERY_TYPE BATT_LIPO
+        #define VBAT_PIN  31
         #define D3      6  
         #define D2      8   
         #define D1      15  
@@ -281,6 +289,7 @@ This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
         #define B6      36 //1.04 = 32+4
   #else // setup defaults for AVR mapping default.
         #define BATTERY_TYPE BATT_LIPO
+        #define VBAT_PIN  31
         #define D3      6  
         #define D2      8   
         #define D1      15  

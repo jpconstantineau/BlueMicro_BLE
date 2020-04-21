@@ -22,7 +22,12 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define GPIO_H
 
 #include <bluefruit.h>
+#include "keyboard_config.h"
+#include "firmware_config.h"
+#include "nrf52gpio.h"
 
 void setupGpio();
+void setupPWM(uint8_t ledpin);
+void sendPWM(uint16_t value);
 
 #endif

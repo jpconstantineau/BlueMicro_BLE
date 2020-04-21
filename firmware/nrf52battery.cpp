@@ -18,7 +18,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 */
 
-#include "battery.h"
+#include "nrf52battery.h"
 
 /**************************************************************************************************************************/
   BLEBas blebas;                                                                    // Battery Service

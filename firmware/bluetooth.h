@@ -26,7 +26,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #undef max
 
 #include "KeyScanner.h"
-#include "battery.h"
+#include "nrf52battery.h"
 
     typedef struct {      // Payload for BLE messages between split boards. Intended for slave to master
         // BLE messages have a size limit of 20 bytes. Any extra and we have to do some ATT_MTU magic...
