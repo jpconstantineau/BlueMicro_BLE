@@ -26,8 +26,10 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #ifndef KEY_H
 #define KEY_H
 
-using ActArray = std::array<std::array<uint16_t, 5>, 6>;
-using DurArray = std::array<std::array<Duration, 5>, 6>;
+#define MAX_NO_LAYERS 10 //6
+
+using ActArray = std::array<std::array<uint16_t, 5>, MAX_NO_LAYERS>;
+using DurArray = std::array<std::array<Duration, 5>, MAX_NO_LAYERS>;
 
 class Key {
     public:

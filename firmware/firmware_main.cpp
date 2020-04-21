@@ -70,7 +70,7 @@ void setup() {
 
   if(keyboardconfig.ledbacklight)
   {
-    setupPWM();
+    setupPWM(BACKLIGHT_LED_PIN);
   }
 
   if(keyboardconfig.ledrgb)
