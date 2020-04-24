@@ -17,37 +17,25 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-#ifndef KEYBOARD_CONFIG_H
-#define KEYBOARD_CONFIG_H
+#include <stdint.h>
+#include "hid_keycodes.h"
 #include "hardware_variants.h"
-#define HARDWARE_MAPPING  NRFMICROV0_3 
-#include "breakout_mapping.h"
+#include "keyboard_config.h"
+#include "advanced_keycodes.h"
+#include "Key.h"
+#include <array>
+#ifndef KEYMAP_H
+#define KEYMAP_H
 
-#define KEYBOARD_SIDE MASTER
+#define KC_CAP_D MOD(MOD_LSHIFT, KC_D)
+
+#define _QWERTY 0
+#define _L1  1
+#define _L2  2
+
+void setupKeymap();
+extern std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix;
 
 
-#define DEVICE_NAME_R                         "BlueMicro_R"                         /**< Name of device. Will be included in the advertising data. */
-#define DEVICE_NAME_L                         "BlueMicro_L"                         /**< Name of device. Will be included in the advertising data. */
-#define DEVICE_NAME_M                         "BlueMicro"                           /**< Name of device. Will be included in the advertising data. */
 
-#define DEVICE_MODEL                        "BM"                          /**< Name of device. Will be included in the advertising data. */
-
-#define MANUFACTURER_NAME                   "BlueMicro Firmware"         /**< Manufacturer. Will be passed to Device Information Service. */
-
-
-/* HARDWARE DEFINITION*/
-/* key matrix size */
-#define MATRIX_ROWS 1
-#define MATRIX_COLS 18
-
-#define MATRIX_ROW_PINS { NC }
-#define MATRIX_COL_PINS { D3, D2, D1, D0, D4, C6, D7, E6, B4, B5, F4, F5, F6, F7, B1, B3, B2, B6 }
-#define UNUSED_PINS {}
-
-/* COL2ROW or ROW2COL */
-#define DIODE_DIRECTION ROW2COL
-
-#define KEYMAP(  K00,   K01,   K02,   K03,  K04,  K05,   K06,   K07,  K08, K09,   K10,   K11,   K12,  K13,  K14,   K15,   K16,  K17  ) { \
-	           { K00,   K01,   K02,   K03,  K04,  K05,   K06,   K07,  K08, K09,   K10,   K11,   K12,  K13,  K14,   K15,   K16,  K17  } } 
-
-#endif /* KEYBOARD_CONFIG_H */
+#endif
