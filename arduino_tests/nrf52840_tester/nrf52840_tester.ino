@@ -29,13 +29,13 @@ void setup()
 {
 
   Bluefruit.begin();
-//  Bluefruit.setTxPower(4);
-//  Bluefruit.setName("BlueMicro840");
-//  bledis.setManufacturer("jpconstantineau.com");
- // bledis.setModel("BlueMicro Tester");
- // bledis.begin();
- // blehid.begin();
- // startAdv();
+  Bluefruit.setTxPower(4);
+  Bluefruit.setName("BlueMicro840");
+  bledis.setManufacturer("jpconstantineau.com");
+  bledis.setModel("BlueMicro Tester");
+  bledis.begin();
+  blehid.begin();
+  startAdv();
   for (int i = 0; i< PINCOUNT1; i++ )
   {
     pinMode(pinlist1[i], OUTPUT);
@@ -80,10 +80,10 @@ void loop()
   {
     flashpin(pinlist2[i]);
   }*/ 
-  for (int i = 0; i< PINCOUNT3; i++ )
-  {
-    flashpin(pinlist3[i]);
-  } 
+//  for (int i = 0; i< PINCOUNT3; i++ )
+ // {
+  //  flashpin(pinlist3[i]);
+  //} 
 
 
  
