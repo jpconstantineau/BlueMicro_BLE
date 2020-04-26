@@ -69,7 +69,7 @@ One such example is the [Blue Ortho](https://imgur.com/a/p3ZXnPM#wDFujG6).
 
 ### NRF52840
 
-This is a relatively new chip that supports on-chip USB.  There is more Flash (1Mb), more RAM (256kb), more GPIOs (48 instead of 32), can run with 5V, and also has a USB 2.0 controller.  It's not clear if wired HID functionality will be available.  There are very few modules currently available.  Adafruit is currently working on developping the NRF52840.  Until they release their hardware and updated NRF52 libraries to support this chip, we will not be able to use the BlueMicro firmware with the NRF52840.
+This is a relatively new chip that supports on-chip USB.  There is more Flash (1Mb), more RAM (256kb), more GPIOs (48 instead of 32), can run with 5V, and also has a USB 2.0 controller.   Wired HID functionality will be available through the use of the TinyUSB Library.  Adafruit has a couple of versions hardware that uses this chip.  They have extended the library to support this new chip.
 
 
 ### NRF52810
@@ -80,3 +80,14 @@ This chip is very similar to the NRF52832 but has less features, flash space and
 ### NRF51822
 
 The NRF51822 is an older device that uses a 32-bit ARM Cortex M0 CPU core.  Adafruit does have a NRF51 feather, however, it does not support the NRF52 libraries.  The NRF51 based Bluefruit boards run as modules that you connect to via an external MCU sending AT style commands over SPI or UART. 
+
+
+### NRF52833
+
+This is a new chip that sits between the 832 and 840.  It's extended temperature range makes it attractive for commercial and industrial applications. Due to comparable features with the nrf52840 and their availabilities, most will select the NRF52840 instead of the NRF52833.
+
+
+### NRF5340
+
+This is the newest chip from Nordic Semicomductors.  It has been announced November 2019.  Unlike previous generation chips, it has 2 cores: A 64 MHz network core for handling radio communications and an 64MHz or 128 MHz application core.  Both cores are ARM Cortex M33.  Chips aren't available for sale yet.
+

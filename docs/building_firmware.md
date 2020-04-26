@@ -41,16 +41,16 @@ Has been tested on Windows 7 and 10.
 
 - Press the windows key, type "powershell", right click "Windows PowerShell", select "Run as Administrator", enter the command "Set-ExecutionPolicy Bypass" and select Yes
 - Run PowerShell and navigate to the build directory
-- Run ./build-windows keyboard:keymap:target
+- Run ./build.ps1 keyboard:keymap:target
 - You can replace either keyboard, keymap or target with "all" as a wildcard
-- Optional switches are -verbose and -continueOnError
+- Optional switches are -verbose, -continueOnError, and -nrf52840
 
 Examples
 
-- ./build-windows all
-- ./build-windows ErgoTravel -verbose
-- ./build-windows gherkin:default -continueOnError
-- ./build-windows iris:default:left
+- ./build.ps1 all
+- ./build.ps1 ErgoTravel -verbose
+- ./build.ps1 gherkin:default -continueOnError
+- ./build.ps1 iris:default:left
 
 ## Building from macOS shell script
 
@@ -87,3 +87,5 @@ Usage is the same as detailed in the windows and mac sections.
 # Need to flash the bootloader?
 
 Follow the instructions on the Flashing the Bootloader page for the [Adafruit nRF52 Feather](https://learn.adafruit.com/bluefruit-nrf52-feather-learning-guide/flashing-the-bootloader).  You will need a j-link and connect it to the SWD lines of the hardware.
+
+Note that the newest bootloader allows to flash an updated bootloader through serial; without the need for a jlink.
