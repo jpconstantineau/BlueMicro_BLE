@@ -1,2 +1,6 @@
 .vscode/*
+.build
+.build-cache
 output/*
+arduino-cli/*
+!.vscode/tasks.json
