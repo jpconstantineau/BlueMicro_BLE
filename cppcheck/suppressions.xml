@@ -1,15 +1,25 @@
 <?xml version="1.0"?>
 <suppressions>
     <suppress>
+        <id>noExplicitConstructor</id>
         <fileName>/src/workspace/BlueMicro_BLE-develop-Docker-CppCheck/firmware/Adafruit_NeoPixel.h</fileName>
     </suppress>
     <suppress>
+        <id>redundantAssignment</id>
+        <lineNumber>1448</lineNumber>
         <fileName>/src/workspace/BlueMicro_BLE-develop-Docker-CppCheck/firmware/Adafruit_NeoPixel.cpp</fileName>
     </suppress>
     <suppress>
+        <id>redundantAssignment</id>
+        <lineNumber>1451</lineNumber>
+        <fileName>/src/workspace/BlueMicro_BLE-develop-Docker-CppCheck/firmware/Adafruit_NeoPixel.cpp</fileName>
+    </suppress>
+    <suppress>                     
+        <id>unusedFunction</id>
         <fileName>/src/workspace/BlueMicro_BLE-master-Docker-nrf52832/arduino_tests/I2S_tester/WS2812.cpp</fileName>
     </suppress>
     <suppress>
+        <id>unusedFunction</id>
         <fileName>/src/workspace/BlueMicro_BLE-develop-Docker-CppCheck/arduino_tests/I2S_tester/I2S.cpp</fileName>
     </suppress>    
 </suppressions>
