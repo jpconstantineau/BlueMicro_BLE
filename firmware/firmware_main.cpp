@@ -55,6 +55,7 @@ void setupConfig() {
 /**************************************************************************************************************************/
 // put your setup code here, to run once:
 /**************************************************************************************************************************/
+// cppcheck-suppress unusedFunction
 void setup() {
  setupConfig();
  Serial.begin(115200);
@@ -106,8 +107,7 @@ void setupMatrix(void) {
 // Keyboard Scanning
 /**************************************************************************************************************************/
 void scanMatrix() {
-  uint32_t pindata0 = 0;
-  uint32_t pindata1 = 0;
+
   keyboardstate.timestamp  = millis();   // lets call it once per scan instead of once per key in the matrix
   
     
@@ -119,7 +119,9 @@ void scanMatrix() {
         #endif
   }
 
-  for(int j = 0; j < MATRIX_ROWS; ++j) {                             
+  for(int j = 0; j < MATRIX_ROWS; ++j) {  
+      uint32_t pindata0;
+      uint32_t pindata1;                           
     //set the current row as OUPUT and LOW
     pinMode(rows[j], OUTPUT);
     #if DIODE_DIRECTION == COL2ROW                                         
@@ -509,6 +511,7 @@ void sendKeyPresses() {
 /**************************************************************************************************************************/
 // put your main code here, to run repeatedly:
 /**************************************************************************************************************************/
+// cppcheck-suppress unusedFunction
 void loop() {};  // loop is now empty and no longer being called.
 // keyscantimer is being called instead
 /**************************************************************************************************************************/
@@ -556,6 +559,7 @@ void batterytimer_callback(TimerHandle_t _handle)
 //* Idle Task - runs when there is nothing to do                                             *//
 //* Any impact of placing code here on current consumption?                                  *//
 //********************************************************************************************//
+// cppcheck-suppress unusedFunction  
 extern "C" void vApplicationIdleHook(void) {
   // Don't call any other FreeRTOS blocking API()
   // Perform background task(s) here
