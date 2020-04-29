@@ -70,9 +70,9 @@ class KeyScanner {
         static void resetReport();
         static void updateBuffer();
         static bool updateLayer();
-        static bool updateModifiers();
+
         static void copyRemoteReport();
-        static void resetRemoteReport();
+
         static bool processingmacros;
         static uint8_t getlayer(uint16_t layers);
 

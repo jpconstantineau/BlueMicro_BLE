@@ -148,7 +148,7 @@ uint16_t cie_lightness(uint16_t v) {
                            if (v <= 26214)
                             return (v*8/5-23190);
                             else {
-                             if (v <= 26214)
+                             if (v <= 30044)
                        return (v*49/25-32864);
                         else {
                         return (v*59/25-44880); 

@@ -95,17 +95,6 @@ void KeyScanner::updateRemoteReport(uint8_t data0, uint8_t data1, uint8_t data2,
 }
 
 
-/**************************************************************************************************************************/
-void KeyScanner::resetRemoteReport()
-{
-    remoteReport[0]= 0;
-    remoteReport[1]= 0;
-    remoteReport[2]= 0;
-    remoteReport[3]= 0;
-    remoteReport[4]= 0;
-    remoteReport[5]= 0;
-    remoteReport[6]= 0;
-}
 
 
 /**************************************************************************************************************************/
@@ -237,12 +226,14 @@ uint8_t layer = getlayer(detectedlayerkeys);
      * oneshot buffer if a non-oneshot
      * key has been pressed
      */
+    // TODO Replace with std::copy
     for (auto activation : toggleBuffer) 
     {
         activeKeys.push_back(activation);
     }
     if (emptyOneshot) 
     {
+        // TODO Replace with std::copy
         for (auto activation : oneshotBuffer) 
         {
             activeKeys.push_back(activation);
@@ -303,39 +294,6 @@ bool KeyScanner::updateLayer()
 
     layerChanged = (prevlayer != localLayer);
     return layerChanged;
-}
-
-/**************************************************************************************************************************/
-// Update Mods - can be done before or after rest of matrix
-// All 8 modifiers are handled through a 8-bit byte.  This is the standard HID implementation
-/**************************************************************************************************************************/
-bool KeyScanner::updateModifiers()
-{
-    bool changed = false;                                // indicates "changed" mods
-
-    for (auto keycode : activeKeys)
-    {
-        //seperate the keycode into the hid keycode and the additional modifiers
-        auto extraModifiers = static_cast<uint8_t>((keycode & 0xFF00) >> 8);
-        auto hidKeycode = static_cast<uint8_t>(keycode & 0x00FF);
-
-        //check if the hid keycode contains a modifier
-        switch (hidKeycode) { 
-            case KC_LCTRL:  currentMod |= 1;   changed = true; break;
-            case KC_LSHIFT: currentMod |= 2;   changed = true; break;
-            case KC_LALT:   currentMod |= 4;   changed = true; break;
-            case KC_LGUI:   currentMod |= 8;   changed = true; break;
-            case KC_RCTRL:  currentMod |= 16;  changed = true; break;
-            case KC_RSHIFT: currentMod |= 32;  changed = true; break;
-            case KC_RALT:   currentMod |= 64;  changed = true; break;
-            case KC_RGUI:   currentMod |= 128; changed = true; break;
-        }
-
-        //add all of the extra modifiers into the curren modifier 
-        currentMod |= extraModifiers;
-    }
-
-    return changed;
 }
 
 
