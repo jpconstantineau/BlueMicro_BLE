@@ -4,14 +4,20 @@
         <id>noExplicitConstructor</id>
         <fileName>/src/workspace/BlueMicro_BLE-develop-Docker-CppCheck/firmware/Adafruit_NeoPixel.h</fileName>
     </suppress>
+        <suppress>
+        <id>ConfigurationNotChecked</id>
+        <fileName>/src/workspace/BlueMicro_BLE-develop-Docker-CppCheck/firmware/Adafruit_NeoPixel.cpp</fileName>
+    </suppress>
     <suppress>
-        <id>redundantAssignment</id>
-        <lineNumber>1448</lineNumber>
+        <id>unusedFunction</id>
         <fileName>/src/workspace/BlueMicro_BLE-develop-Docker-CppCheck/firmware/Adafruit_NeoPixel.cpp</fileName>
     </suppress>
     <suppress>
         <id>redundantAssignment</id>
-        <lineNumber>1451</lineNumber>
+        <fileName>/src/workspace/BlueMicro_BLE-develop-Docker-CppCheck/firmware/Adafruit_NeoPixel.cpp</fileName>
+    </suppress>
+    <suppress>
+        <id>knownConditionTrueFalse</id>
         <fileName>/src/workspace/BlueMicro_BLE-develop-Docker-CppCheck/firmware/Adafruit_NeoPixel.cpp</fileName>
     </suppress>
     <suppress>                     
