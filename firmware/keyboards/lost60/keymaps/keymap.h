@@ -18,24 +18,31 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 */
 
-#ifndef SLEEP_H
-#define SLEEP_H
-#include <Arduino.h>
-#include <bluefruit.h>
+
+/*
+Working keyboard config for LOST60 V1.0 hardware (no shift registers)
+and for LOST60 V2.0 hardware (shift registers for scanning columns)
+NOTE: uses modified "Variant.cpp" for adafruit_feather_nrf52840 to fix pin mappings
+*/
+
+
+#include <stdint.h>
+#include "hid_keycodes.h"
+#include "hardware_variants.h"
 #include "keyboard_config.h"
-#include "firmware_config.h"
-// Keyboard Matrix
-extern byte rows[]  ;      // Contains the GPIO Pin Numbers defined in keyboard_config.h
-extern byte columns[] ;     // Contains the GPIO Pin Numbers defined in keyboard_config.h  
+#include "advanced_keycodes.h"
+#include "Key.h"
+#include <array>
 
-void setupWakeUp(void);
-void gotoSleep(unsigned long timesincelastkeypress,bool connected);
+#ifndef KEYMAP_H
+#define KEYMAP_H
 
+#define _QWERTY 0
+#define _L1  1
+#define _L2  2
+//#define _L3  3
 
-#if defined(SHIFT_REGISTER_KEYBOARD)
-void shiftOutToMakeColumnHigh2(int column);
-void shiftOutToMakeAllColumsLow2();
-void shiftOutToMakeAllColumnsHigh2();
-#endif
+void setupKeymap();
+extern std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix;
 
-#endif
+#endif /* KEYMAP_H */

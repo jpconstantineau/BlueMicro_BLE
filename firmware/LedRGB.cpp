@@ -52,10 +52,16 @@ rgb_color hsvToRgb(uint16_t h, uint8_t s, uint8_t v)
 
 void setupRGB(void)
 {
+   #if defined(WS2812B_LED_LOAD_SWITCH) 
+        pinMode(WS2812B_LED_LOAD_SWITCH_PIN, OUTPUT);
+        digitalWrite(WS2812B_LED_LOAD_SWITCH_PIN, HIGH);
+   #endif
+
    pixels.begin(); // INITIALIZE NeoPixel strip object (REQUIRED)
    pixels.setPin(WS2812B_LED_PIN);
    pixels.updateLength(WS2812B_LED_COUNT);
 }
+
 void updateRGBmode(uint32_t mode)
 {
    rgb_mode = mode;
@@ -136,9 +142,14 @@ switch (rgb_mode)
 void suspendRGB(void)
 {
     pixels.clear();
-  for(int i=0; i<WS2812B_LED_COUNT; i++) { // For each pixel...
-    pixels.setPixelColor(i, 0, 0, 0); 
-  }
-  pixels.show();   // Send the updated pixel colors to the hardware.
+
+    for(int i=0; i<WS2812B_LED_COUNT; i++) { // For each pixel...
+        pixels.setPixelColor(i, 0, 0, 0); 
+    }
+    pixels.show();   // Send the updated pixel colors to the hardware.
+
+    #if defined(WS2812B_LED_LOAD_SWITCH) 
+        digitalWrite(WS2812B_LED_LOAD_SWITCH_PIN, LOW);
+    #endif
 }
 

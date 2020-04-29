@@ -66,4 +66,10 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
     void process_user_macros(uint16_t macroid);
     #endif
 
+    #if defined(SHIFT_REGISTER_KEYBOARD)
+    void shiftOutToMakeColumnHigh(int column);
+    void shiftOutToMakeAllColumsLow();
+    void shiftOutToMakeAllColumnsHigh();
+    #endif
+
 #endif /* FIRMWARE_H */

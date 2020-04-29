@@ -19,6 +19,9 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 #include "sleep.h"
 #include "LedRGB.h"
+
+
+#if !defined(SHIFT_REGISTER_KEYBOARD)
 /**************************************************************************************************************************/
 // Prepare sense pins for waking up from complete shutdown
 /**************************************************************************************************************************/
@@ -42,6 +45,27 @@ void setupWakeUp() {
       #endif
   }
 }
+#endif 
+
+
+#if defined(SHIFT_REGISTER_KEYBOARD)
+/**************************************************************************************************************************/
+// Prepare sense pins for waking up from complete shutdown
+/**************************************************************************************************************************/
+void setupWakeUp() {
+  uint32_t pindata = 0;
+
+  //make all column shift registers high - we want all buttons to wait for any one button press
+  shiftOutToMakeAllColumnsHigh2();
+
+  //loops thru all of the rows
+  for (int i = 0; i < MATRIX_ROWS; ++i) {
+        pinMode(rows[i], INPUT_PULLDOWN_SENSE);            // 'enables' the column High Value on the diode; becomes "LOW" when pressed - Sense makes it wake up when sleeping
+  }
+
+}
+#endif
+
 
 /**************************************************************************************************************************/
 void gotoSleep(unsigned long timesincelastkeypress,bool connected)
@@ -68,3 +92,50 @@ void gotoSleep(unsigned long timesincelastkeypress,bool connected)
     sd_power_system_off();
   } 
 }
+ 
+
+//********************************************************************************************//
+//* Helper functions for Keyboards using Shift Registers to drive columns high in order to   *//
+//* save I/O on nrf52840                                                                     *//
+//* Shift register code is currently setup to use                                            *//
+//********************************************************************************************//
+#if defined(SHIFT_REGISTER_KEYBOARD)
+ 
+    //makes a specific "pin"
+    void shiftOutToMakeColumnHigh2(int column){
+
+        uint16_t shiftValue = pow(2, column);
+        uint8_t shiftValLow = shiftValue & 0xFF;
+        uint8_t shiftValHigh = (shiftValue & 0xFF00) >> 8;
+
+        digitalWrite(SER_LATCH, LOW);
+        shiftOut(SER_DATA, SER_CLK, MSBFIRST, shiftValHigh); //first number to 255
+        shiftOut(SER_DATA, SER_CLK, MSBFIRST, shiftValLow); //second number to 255
+        digitalWrite(SER_LATCH, HIGH);
+    }
+
+
+    void shiftOutToMakeAllColumsLow2(){
+
+        uint8_t shiftValLow = 0x00;
+        uint8_t shiftValHigh = 0x00;
+
+        digitalWrite(SER_LATCH, LOW);
+        shiftOut(SER_DATA, SER_CLK, LSBFIRST, shiftValHigh); //first number to 255
+        shiftOut(SER_DATA, SER_CLK, LSBFIRST, shiftValLow); //second number to 255
+        digitalWrite(SER_LATCH, HIGH);
+    }
+
+
+    void shiftOutToMakeAllColumnsHigh2(){
+
+        uint8_t shiftValLow = 0xFF;
+        uint8_t shiftValHigh = 0xFF;
+
+        digitalWrite(SER_LATCH, LOW);
+        shiftOut(SER_DATA, SER_CLK, LSBFIRST, shiftValHigh); //first number to 255
+        shiftOut(SER_DATA, SER_CLK, LSBFIRST, shiftValLow); //second number to 255
+        digitalWrite(SER_LATCH, HIGH);
+    }
+
+#endif 

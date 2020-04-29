@@ -37,6 +37,8 @@ This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
 // BLUENANO2_0     LiPo     RAW connected to LiPo Charger.
 // BLUEMICRO840V1  LiPo     To Come... Currently being designed.
 
+
+
 #ifdef ARDUINO_NRF52832_FEATHER
     #if HARDWARE_MAPPING == BLUEMICROV1_0
         #define BATTERY_TYPE BATT_CR2032
@@ -302,5 +304,6 @@ This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
         #define B6      43 //1.11 = 32+11
     #endif
 #endif
+
 
 #endif /* AVR_MAPPING_H */
