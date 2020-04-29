@@ -4,7 +4,7 @@
         <id>noExplicitConstructor</id>
         <fileName>/src/workspace/BlueMicro_BLE-develop-Docker-CppCheck/firmware/Adafruit_NeoPixel.h</fileName>
     </suppress>
-        <suppress>
+    <suppress>
         <id>ConfigurationNotChecked</id>
         <fileName>/src/workspace/BlueMicro_BLE-develop-Docker-CppCheck/firmware/Adafruit_NeoPixel.cpp</fileName>
     </suppress>
@@ -18,6 +18,14 @@
     </suppress>
     <suppress>
         <id>knownConditionTrueFalse</id>
+        <fileName>/src/workspace/BlueMicro_BLE-develop-Docker-CppCheck/firmware/Adafruit_NeoPixel.cpp</fileName>
+    </suppress>
+    <suppress>
+        <id>variableScope</id>
+        <fileName>/src/workspace/BlueMicro_BLE-develop-Docker-CppCheck/firmware/Adafruit_NeoPixel.cpp</fileName>
+    </suppress>
+    <suppress>
+        <id>unusedVariable</id>
         <fileName>/src/workspace/BlueMicro_BLE-develop-Docker-CppCheck/firmware/Adafruit_NeoPixel.cpp</fileName>
     </suppress>
     <suppress>                     
