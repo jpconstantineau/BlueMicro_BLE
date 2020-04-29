@@ -23,7 +23,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 // Prepare sense pins for waking up from complete shutdown
 /**************************************************************************************************************************/
 void setupWakeUp() {
-  uint32_t pindata = 0;
+  uint32_t pindata;
   for(int j = 0; j < MATRIX_ROWS; ++j) {                             
     //set the current row as OUPUT and LOW
     pinMode(rows[j], OUTPUT);

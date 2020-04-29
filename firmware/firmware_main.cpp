@@ -179,15 +179,12 @@ void scanMatrix() {
 void addStringToQueue(const char* str)
 {
   auto it = stringbuffer.begin();
-  uint8_t modifier;
-  uint8_t keycode;
-  uint16_t keyreport;
   char ch;
   while( (ch = *str++) != 0 )
   {
-    modifier = ( hid_ascii_to_keycode[(uint8_t)ch][0] ) ? KEYBOARD_MODIFIER_LEFTSHIFT : 0;
-    keycode = hid_ascii_to_keycode[(uint8_t)ch][1];
-    keyreport = MOD( modifier << 8 , keycode);
+    uint8_t modifier = ( hid_ascii_to_keycode[(uint8_t)ch][0] ) ? KEYBOARD_MODIFIER_LEFTSHIFT : 0;
+    uint8_t keycode = hid_ascii_to_keycode[(uint8_t)ch][1];
+    uint16_t keyreport = MOD( modifier << 8 , keycode);
     it = stringbuffer.insert(it, keyreport);
   }
 

@@ -420,7 +420,7 @@ void sendKeys(uint8_t currentReport[8])
 {
     #if BLE_HID == 1  
         uint8_t keycode[6];
-        uint8_t layer = 0;
+     //   uint8_t layer = 0;
         uint8_t mods = 0;
         mods = currentReport[0];                                                 // modifiers
         keycode[0] = currentReport[1];                                           // Buffer 
@@ -429,7 +429,7 @@ void sendKeys(uint8_t currentReport[8])
         keycode[3] = currentReport[4];                                           // Buffer 
         keycode[4] = currentReport[5];                                           // Buffer 
         keycode[5] = currentReport[6];                                           // Buffer 
-        layer = currentReport[7];                                                // Layer
+    //    layer = currentReport[7];                                                // Layer
         blehid.keyboardReport(hid_conn_hdl,mods,  keycode); 
         LOG_LV2("HID","Sending blehid.keyboardReport " );
     #endif

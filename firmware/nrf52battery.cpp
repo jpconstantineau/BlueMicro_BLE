@@ -33,11 +33,12 @@ uint32_t Battery::analogReadVDD()
 {
   // thanks to vladkozlov69 on github.
   // from https://gist.github.com/vladkozlov69/2500a27cd93245d71573164cda789539
-    uint32_t pin = SAADC_CH_PSELP_PSELP_VDD;
-    uint32_t resolution;
+
+   // uint32_t pin = SAADC_CH_PSELP_PSELP_VDD;
+    //uint32_t resolution;
     int16_t value;
 
-    resolution = 10;
+    //resolution = 10;
 
 
     NRF_SAADC->RESOLUTION = SAADC_RESOLUTION_VAL_10bit;
