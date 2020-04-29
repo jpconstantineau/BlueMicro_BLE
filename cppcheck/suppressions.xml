@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<suppressions>
+    <suppress>
+        <fileName>/src/workspace/BlueMicro_BLE-develop-Docker-CppCheck/firmware/Adafruit_NeoPixel.h</fileName>
+    </suppress>
+    <suppress>
+        <fileName>/src/workspace/BlueMicro_BLE-develop-Docker-CppCheck/firmware/Adafruit_NeoPixel.cpp</fileName>
+    </suppress>
+    <suppress>
+        <fileName>/src/workspace/BlueMicro_BLE-master-Docker-nrf52832/arduino_tests/I2S_tester/WS2812.cpp</fileName>
+    </suppress>
+    <suppress>
+        <fileName>/src/workspace/BlueMicro_BLE-develop-Docker-CppCheck/arduino_tests/I2S_tester/I2S.cpp</fileName>
+    </suppress>    
+</suppressions>
+
