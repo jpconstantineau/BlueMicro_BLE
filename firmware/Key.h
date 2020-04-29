@@ -33,14 +33,13 @@ using DurArray = std::array<std::array<Duration, 5>, MAX_NO_LAYERS>;
 
 class Key {
     public:
+    // cppcheck-suppress noExplicitConstructor     // cannot make this an explicit constructor as we are relying on conversion of keycodes to uint32_t
+        Key(uint32_t activation);
+
         void press(unsigned long currentMillis);
         void clear(unsigned long currentMillis);
-
         void addActivation(const uint8_t layer, const Method method, const uint32_t activation);
-
         std::pair<uint16_t, Duration> getActiveActivation(uint8_t layer);
-
-        Key(uint32_t activation);
 
     private:
         Method lastMethod;
