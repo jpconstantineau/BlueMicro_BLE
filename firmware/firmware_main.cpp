@@ -120,8 +120,7 @@ void scanMatrix() {
   }
 
   for(int j = 0; j < MATRIX_ROWS; ++j) {  
-      uint32_t pindata0;
-      uint32_t pindata1;                           
+                         
     //set the current row as OUPUT and LOW
     pinMode(rows[j], OUTPUT);
     #if DIODE_DIRECTION == COL2ROW                                         
@@ -131,8 +130,10 @@ void scanMatrix() {
     #endif
 
         nrfx_coredep_delay_us(1);   // need for the GPIO lines to settle down electrically before reading.
-
+        uint32_t pindata0;
+       
         #ifdef NRF52840_XXAA        // This is chip dependent and not on the board.  As such, we need this to also support the nrf52840 feather which remaps the numbers of the GPIOs to Pins numbers.
+          uint32_t pindata1; 
           pindata0 = NRF_P0->IN;                                         // read all pins at once
           pindata1 = NRF_P1->IN;                                         // read all pins at once
           for (int i = 0; i < MATRIX_COLS; ++i) {
@@ -433,9 +434,7 @@ void process_user_special_keys()
 // Communication with computer and other boards
 /**************************************************************************************************************************/
 void sendKeyPresses() {
-  uint8_t report[8] = {0, 0, 0 ,0, 0, 0, 0, 0}; ;
-  uint16_t keyreport;
-  uint16_t lookahead_keyreport;
+
 
    KeyScanner::getReport();                                            // get state data - Data is in KeyScanner::currentReport 
 
@@ -449,8 +448,9 @@ void sendKeyPresses() {
       KeyScanner::macro = 0;
   } 
   if (!stringbuffer.empty()) // if the macro buffer isn't empty, send the first character of the buffer... which is located at the back of the queue
-  {
-    keyreport = stringbuffer.back();
+  {  
+    uint8_t report[8] = {0, 0, 0 ,0, 0, 0, 0, 0}; ;
+    uint16_t keyreport = stringbuffer.back();
     stringbuffer.pop_back();
     
     report[0] = static_cast<uint8_t>((keyreport & 0xFF00) >> 8);// mods
@@ -466,7 +466,8 @@ void sendKeyPresses() {
     }
     else
     {
-      lookahead_keyreport = stringbuffer.back();
+      
+      uint16_t lookahead_keyreport = stringbuffer.back();
       if (lookahead_keyreport == keyreport) // if the next key is the same, make sure to send a key release before sending it again...
       {
         report[0] = 0;
