@@ -30,11 +30,11 @@
     </suppress>
     <suppress>                     
         <id>unusedFunction</id>
-        <fileName>arduino_tests/I2S_tester/WS2812.cpp</fileName>
+        <fileName>/src/workspace/BlueMicro_BLE-develop-Docker-CppCheck/arduino_tests/I2S_tester/WS2812.cpp</fileName>
     </suppress>
     <suppress>
         <id>unusedFunction</id>
-        <fileName>arduino_tests/I2S_tester/I2S.cpp</fileName>
+        <fileName>/src/workspace/BlueMicro_BLE-develop-Docker-CppCheck/arduino_tests/I2S_tester/I2S.cpp</fileName>
     </suppress>    
 </suppressions>
 
