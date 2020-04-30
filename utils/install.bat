@@ -4,6 +4,7 @@ SET OUTPUT='%~dp0..\arduino-cli\arduino-cli_latest_Windows_64bit.zip'
 SET TARGET='%~dp0..\arduino-cli'
 
 del /Q %~dp0\..\arduino-cli 
+mkdir %~dp0\..\arduino-cli 
 echo "Downloading Arduino-cli to %OUTPUT%"
 powershell -c "(New-Object Net.WebClient).DownloadFile(%URL%,%OUTPUT%)"
 echo "Uncompressing Arduino-cli zip"
