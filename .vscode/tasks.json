@@ -25,7 +25,7 @@
             "label": "Build BlueMicro single",
             "type": "shell",
             "windows": {
-                "command": "./utils/compile832.ps1"
+                "command": "./utils/compile.bat"
             },
             "linux": {
                 "command": "./build/build-ubuntu all"
