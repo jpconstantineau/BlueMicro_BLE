@@ -226,18 +226,20 @@ uint8_t layer = getlayer(detectedlayerkeys);
      * oneshot buffer if a non-oneshot
      * key has been pressed
      */
-    // TODO Replace with std::copy
-    for (auto activation : toggleBuffer) 
+
+    std::copy(toggleBuffer.begin(), toggleBuffer.end(), activeKeys.begin());
+   /* for (auto activation : toggleBuffer) 
     {
         activeKeys.push_back(activation);
-    }
+    }*/
+
     if (emptyOneshot) 
     {
-        // TODO Replace with std::copy
-        for (auto activation : oneshotBuffer) 
+        std::copy(oneshotBuffer.begin(), oneshotBuffer.end(), activeKeys.begin());
+       /* for (auto activation : oneshotBuffer) 
         {
             activeKeys.push_back(activation);
-        }
+        }*/
         
         oneshotBuffer.clear();
         oneshotLayer = 0;
