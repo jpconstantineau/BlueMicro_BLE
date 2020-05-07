@@ -19,10 +19,11 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 #ifndef KEYBOARD_CONFIG_H
 #define KEYBOARD_CONFIG_H
-#include "avr_mapping.h"
+#include "hardware_variants.h"
+#define HARDWARE_MAPPING  BLUEMICROV2_0C
+#include "breakout_mapping.h"
 
 #define KEYBOARD_SIDE LEFT
-//#define KEYBOARD_SIDE RIGHT
 // CHANGE THIS FOR THE KEYBOARD TO MATCH WHAT IS BEING FLASHED. OPTIONS: LEFT  RIGHT  MASTER
 
 #define DEVICE_NAME_R                         "ErgoTravelBLE_R"                          /**< Name of device. Will be included in the advertising data. */
@@ -45,7 +46,9 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW
-
+#define BACKLIGHT_LED_PIN B5 
+#define DEFAULT_PWM_VALUE 10000            // PWM intensity  max is 10000
+#define BACKLIGHT_PWM_ON 1   
 
 
 

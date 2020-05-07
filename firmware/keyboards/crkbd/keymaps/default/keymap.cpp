@@ -24,7 +24,7 @@ std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
             KC_1,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,
             KC_2,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,
             KC_3,  KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,
-            KC_NO,  KC_NO,  KC_NO,   KC_4,    KC_5,    KC_6
+                                     KC_4,    KC_5,    KC_6
     )};
 
 void setupKeymap() {
@@ -57,7 +57,7 @@ std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
         KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,     KC_T, 
         KC_LCTL,  KC_A,    KC_S,    KC_D,    KC_F,     KC_G,
         KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,     KC_B,
-        KC_NO,   KC_NO,   KC_NO,   KC_LGUI, LAYER_1,  KC_SPC
+                                 KC_LGUI, LAYER_1,  KC_SPC
     )};
 
  
@@ -79,7 +79,7 @@ void setupKeymap() {
               KC_ESC,   KC_1,    KC_2,    KC_3,    KC_4,    KC_5, \
               KC_LCTL,  KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO, \
               KC_LSFT,  KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO, \
-              KC_NO,    KC_NO,   KC_NO,   KC_LGUI, LAYER_1, KC_SPC \
+                                         KC_LGUI, LAYER_1, KC_SPC \
         );
 
     /* Layer 2 (lower)
@@ -98,7 +98,7 @@ void setupKeymap() {
               KC_ESC,  KC_EXLM, KC_AT,  KC_HASH, KC_DLR,  KC_PERC, \
               KC_LCTL, KC_NO,   KC_NO,  KC_NO,   KC_NO,   KC_NO, \
               KC_LSFT, KC_NO,   KC_NO,  KC_NO,   KC_NO,   KC_NO, \
-              KC_NO,   KC_NO,   KC_NO,  KC_LGUI, LAYER_1, KC_SPC \
+                                        KC_LGUI, LAYER_1, KC_SPC \
         );
     /*
      * add the other layers on the regular presses.
@@ -107,8 +107,8 @@ void setupKeymap() {
     {
         for (int col = 0; col < MATRIX_COLS; ++col)
         {
-            matrix[row][col].addActivation(_L1, _PRESS, layer1[row][col]);
-            matrix[row][col].addActivation(_L2, _PRESS, layer2[row][col]);
+            matrix[row][col].addActivation(_L1, Method::PRESS, layer1[row][col]);
+            matrix[row][col].addActivation(_L2, Method::PRESS, layer2[row][col]);
         }
     }
 
@@ -139,7 +139,7 @@ std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
             KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,      KC_BSPACE, 
             KC_H,    KC_J,    KC_K,    KC_L,    KC_SCOLON, KC_QUOTE,
             KC_N,    KC_M,    KC_COMMA,KC_DOT,  KC_SLSH,   KC_RSFT,
-            KC_ENT,  LAYER_2, KC_RALT, KC_NO,   KC_NO,   KC_NO
+            KC_ENT,  LAYER_2, KC_RALT
     )};
 
 void setupKeymap() {
@@ -160,7 +160,7 @@ void setupKeymap() {
               KC_6,    KC_7,    KC_8,    KC_9,     KC_0,    KC_BSPC, \
               KC_LEFT, KC_DOWN, KC_UP,   KC_RIGHT, KC_NO,   KC_NO, \
               KC_NO,   KC_NO,   KC_NO,   KC_NO,    KC_NO,   KC_NO, \
-              KC_SPC,  LAYER_2, KC_RALT, KC_NO,    KC_NO,   KC_NO \
+              KC_SPC,  LAYER_2, KC_RALT  \
         );
 
     /* Layer 2 (lower)
@@ -179,7 +179,7 @@ void setupKeymap() {
                 KC_CIRC,  KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_BSPC, \
                 KC_MINS,  KC_EQL,  KC_LCBR, KC_RCBR, KC_PIPE, KC_GRV, \
                 KC_UNDS,  KC_PLUS, KC_LBRC, KC_RBRC, KC_BSLS, KC_TILD, \
-                KC_ENT,   LAYER_2, KC_RALT, KC_NO,   KC_NO, KC_NO \
+                KC_ENT,   LAYER_2, KC_RALT  \
         );
     /*
      * add the other layers
@@ -188,8 +188,8 @@ void setupKeymap() {
     {
         for (int col = 0; col < MATRIX_COLS; ++col)
         {
-            matrix[row][col].addActivation(_L1, _PRESS, layer1[row][col]);
-            matrix[row][col].addActivation(_L2, _PRESS, layer2[row][col]);
+            matrix[row][col].addActivation(_L1, Method::PRESS, layer1[row][col]);
+            matrix[row][col].addActivation(_L2, Method::PRESS, layer2[row][col]);
         }
     }
 

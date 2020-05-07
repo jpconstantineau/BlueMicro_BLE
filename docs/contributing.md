@@ -1,3 +1,3 @@
 # Contributing to BlueMicro_BLE
 
-To Do
+Feel free to clone the repo, make your changes and make a pull request. 

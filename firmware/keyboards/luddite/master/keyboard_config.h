@@ -26,7 +26,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define DEVICE_MODEL                        "LudditeBLE_v1"                          /**< Name of device. Will be included in the advertising data. */
 #define MANUFACTURER_NAME                   "di0id"                      /**< Manufacturer. Will be passed to Device Information Service. */
 
-#define BLE_LIPO_MONITORING 1
+
 
 /* HARDWARE DEFINITION*/
 /* key matrix size */

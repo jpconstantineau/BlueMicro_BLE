@@ -17,6 +17,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 #include <stdint.h>
 #include "hid_keycodes.h"
+#include "hardware_variants.h"
 #include "keyboard_config.h"
 #include "advanced_keycodes.h"
 #include "Key.h"
@@ -32,18 +33,13 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 #define _QWERTY 0
 #define _L1  1
-#define _PRESS 0
-#define _MT_TAP 1
-#define _MT_HOLD 2
-#define _DT_TAP 3
-#define _DT_DOUBLETAP 4
 
 using layer_t = std::array<std::array<uint32_t, MATRIX_COLS>, MATRIX_ROWS>;
 using main_layer_t = std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS>;
 
 extern std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix;
 
-inline void addLayers(const std::vector<std::tuple<uint8_t, uint8_t, layer_t>>& layers) 
+inline void addLayers(const std::vector<std::tuple<uint8_t, Method, layer_t>>& layers) 
 {
     for (int row = 0; row < MATRIX_ROWS; ++row)
     { 

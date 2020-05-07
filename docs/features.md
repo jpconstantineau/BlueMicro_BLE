@@ -17,8 +17,8 @@ TODO
 |                   |            |            |
 | Low Power Functions |          |            |
 |  * Programmable radio power | Yes | (?) |
-|  * Variable Keyboard Scanning Rate | Planned    |   n/a         |
-|  * Timed low-power mode | Planned    |   n/a         |
+|  * Variable Keyboard Scanning Rate | Possible    |   n/a         |
+|  * Timed low-power mode | Yes    |   n/a         |
 |  * Low Battery low-power mode | Planned    |   n/a         |
 |                   |            |            |
 | Split Keyboards   | Yes (supports >2 halves) | yes - 2 halves only |
@@ -29,10 +29,10 @@ TODO
 |                   |            |            |
 | Advanced Keycodes | Partial    | Yes  |
 | * Layers          | Yes        | Yes  |
-| * Momentary Keys  | Future     | Yes  |
-| * One Shot Keys   | Future     | Yes  |
-| * Toggle Keys     | Future     | Yes  |
-| * Mod-Tap Keys    | Future     | Yes  |
+| * Momentary Keys  | Yes     | Yes  |
+| * One Shot Keys   | Yes     | Yes  |
+| * Toggle Keys     | Yes     | Yes  |
+| * Mod-Tap Keys    | Yes     | Yes  |
 |                   |            |            |
 | Audio             | No         | Yes  |
 |                   |            |            |
@@ -41,7 +41,7 @@ TODO
 |                   |            |            |
 | Backlight LEDs    | Tested     | Yes  |
 |                   |            |            |
-| Boot Magic        | Boot Mode  | Yes  |
+| Boot Magic        | Special Functions available  | Yes  |
 |                   |            |            |
 | Dynamic Macros    | Future     | Yes  |
 |                   |            |            |
@@ -53,26 +53,26 @@ TODO
 |                   |            |            |
 | Leader Key        | Future     | Yes  |
 |                   |            |            |
-| Pre-programmed Macros | Future | Yes  |
+| Pre-programmed Macros | Yes | Yes  |
 |                   |            |            |
-| Mouse Keys        | Depends on Library | Yes  |
+| Mouse Keys        | Yes | Yes  |
 |                   |            |            |
 | Pointing Device   | Depends on Library | Yes  |
 |                   |            |            |
 | PS2 Mouse         | No         | Yes  |
 |                   |            |            |
-| RGB Light         | Future     | Yes  |
+| RGB Light         | Yes     | Yes  |
 |                   |            |            |
 | RGB Matrix        | Future     | Yes  |
 |                   |            |            |
-| Space Cadet       | Future(?)  | Yes  |
+| Space Cadet       | Tap/Hold   | Yes  |
 |                   |            |            |
-| Stenography       | No         | Yes  |
+| Stenography       | Partial No NKRO.  | Yes  |
 |                   |            |            |
 | Swap Hands        | No         | Yes  |
 |                   |            |            |
-| Tap Dance         | Key Timing | Yes  |
-|                   | Required   |            |
+| Tap Dance         | Tap/Double Tap | Yes  |
+|                   | Tap/Hold   |            |
 |                   |            |            |
 | Terminal          | No         | Yes  |
 |                   |            |            |

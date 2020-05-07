@@ -50,7 +50,7 @@ void setupKeymap()
     {
         for (int col = 0; col < MATRIX_COLS; ++col)
         {
-            matrix[row][col].addActivation(_L1, _PRESS, layer1[row][col]);
+            matrix[row][col].addActivation(_L1, Method::PRESS, layer1[row][col]);
         }
     }
 
@@ -58,8 +58,8 @@ void setupKeymap()
      * add special, single activations with the 
      * layer, activation method and activation
      */
-    matrix[2][3].addActivation(_QWERTY, _MT_TAP, KC_Y);
-    matrix[1][1].addActivation(_QWERTY, _MT_TAP, TG(KC_LSHIFT));
+    matrix[2][3].addActivation(_QWERTY, Method::MT_TAP, KC_Y);
+    matrix[1][1].addActivation(_QWERTY, Method::MT_TAP, TG(KC_LSHIFT));
 }
 
 #else
@@ -92,7 +92,7 @@ void setupKeymap()
     {
         for (int col = 0; col < MATRIX_COLS; ++col)
         {
-            matrix[row][col].addActivation(_L1, _PRESS, layer1[row][col]);
+            matrix[row][col].addActivation(_L1, Method::PRESS, layer1[row][col]);
         }
     }
 
@@ -100,8 +100,8 @@ void setupKeymap()
      * add special, single activations with the 
      * layer, activation method and activation
      */
-    matrix[2][3].addActivation(_QWERTY, _MT_TAP, KC_Y);
-    matrix[1][1].addActivation(_QWERTY, _MT_TAP, TG(KC_LSHIFT));
+    matrix[2][3].addActivation(_QWERTY, Method::MT_TAP, KC_Y);
+    matrix[1][1].addActivation(_QWERTY, Method::MT_TAP, TG(KC_LSHIFT));
 }
 
 

@@ -16,6 +16,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 */
 #include "keymap.h"
+#include "hardware_variants.h"
 
 #if KEYBOARD_SIDE == LEFT
 
@@ -91,8 +92,8 @@ void setupKeymap() {
     {
         for (int col = 0; col < MATRIX_COLS; ++col)
         {
-            matrix[row][col].addActivation(_LOWER, _PRESS, lower[row][col]);
-            matrix[row][col].addActivation(_RAISE, _PRESS, raise[row][col]);
+            matrix[row][col].addActivation(_LOWER, Method::PRESS, lower[row][col]);
+            matrix[row][col].addActivation(_RAISE, Method::PRESS, raise[row][col]);
         }
     }
 
@@ -140,8 +141,8 @@ void setupKeymap() {
     {
         for (int col = 0; col < MATRIX_COLS; ++col)
         {
-            matrix[row][col].addActivation(_LOWER, _PRESS, lower[row][col]);
-            matrix[row][col].addActivation(_RAISE, _PRESS, raise[row][col]);
+            matrix[row][col].addActivation(_LOWER, Method::PRESS, lower[row][col]);
+            matrix[row][col].addActivation(_RAISE, Method::PRESS, raise[row][col]);
         }
     }
 

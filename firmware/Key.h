@@ -18,6 +18,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 */
 #include "KeyState.h"
+#include "advanced_keycodes.h"
 #include "hid_keycodes.h"
 #include <array>
 #include <utility>
@@ -25,22 +26,24 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #ifndef KEY_H
 #define KEY_H
 
-using ActArray = std::array<std::array<uint16_t, 5>, 2>;
-using DurArray = std::array<std::array<uint8_t, 5>, 2>;
+#define MAX_NO_LAYERS 10 //6
+
+using ActArray = std::array<std::array<uint16_t, 5>, MAX_NO_LAYERS>;
+using DurArray = std::array<std::array<Duration, 5>, MAX_NO_LAYERS>;
 
 class Key {
     public:
-        void press(unsigned long currentMillis);
-        void clear(unsigned long currentMillis);
-
-        void addActivation(const uint8_t layer, const uint8_t method, const uint32_t activation);
-
-        std::pair<uint16_t, uint8_t> getPair(uint8_t layer);
-
+    // cppcheck-suppress noExplicitConstructor     // cannot make this an explicit constructor as we are relying on conversion of keycodes to uint32_t
         Key(uint32_t activation);
 
+        void press(unsigned long currentMillis);
+        void clear(unsigned long currentMillis);
+        void addActivation(const uint8_t layer, const Method method, const uint32_t activation);
+        std::pair<uint16_t, Duration> getActiveActivation(uint8_t layer);
+
     private:
-        uint8_t lastMethod;
+        Method lastMethod;
+        std::pair<uint16_t, Duration> lastActivation;
         KeyState state;
 
         ActArray activations;

@@ -17,7 +17,7 @@ flash() {
     printf "Flashing ${keyboard}:${keymap}:${target}\n\n"
     nrfjprog --family NRF52 --recover
 	nrfjprog --family NRF52 --eraseall
-	nrfjprog --family NRF52 --program ${nrf52PackagePath}/0.11.1/bootloader/feather_nrf52832/feather_nrf52832_bootloader-0.2.11_s132_6.1.1.hex
+	nrfjprog --family NRF52 --program ${nrf52PackagePath}/0.18.0/bootloader/feather_nrf52832/feather_nrf52832_bootloader-0.3.0_s132_6.1.1.hex
 	nrfjprog --family NRF52 --program ../../output/${keyboard}/${keyboard}-${keymap}-${target}.hex
 	nrfjprog --family NRF52 --program app_valid_setting_apply_nRF52832.hex
 	nrfjprog --family NRF52 --reset

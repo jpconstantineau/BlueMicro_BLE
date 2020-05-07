@@ -8,7 +8,7 @@ if exist ..\..\output\%~1\%~1-%~2-%~3.hex (
 	goto flash
 ) else (
 	@echo Compiled hex not found: running build script first.
-	powershell ./build-windows-BSP.ps1 %~1 %~2 %~3
+	powershell ./build-BSP.ps1 %~1 %~2 %~3
 
 	if exist ..\..\output\%~1\%~1-%~2-%~3.hex (
 		goto flash
@@ -26,7 +26,7 @@ if exist ..\..\output\%~1\%~1-%~2-%~3.hex (
    	echo Flashing %~1-%~2-%~3
 	nrfjprog --family NRF52 --recover
 	nrfjprog --family NRF52 --eraseall
-	nrfjprog --family NRF52 --program %localappdata%\Arduino15\packages\adafruit\hardware\nrf52\0.14.6\bootloader\feather_nrf52832\feather_nrf52832_bootloader-0.2.13_s132_6.1.1.hex
+	nrfjprog --program %localappdata%\Arduino15\packages\adafruit\hardware\nrf52\0.18.0\bootloader\feather_nrf52832\feather_nrf52832_bootloader-0.3.0_s132_6.1.1.hex -f nrf52 --chiperase --reset 
 	nrfjprog --family NRF52 --program ..\..\output\%~1\%~1-%~2-%~3.hex
 	nrfjprog --family NRF52 --program ..\app_valid_setting_apply_nRF52832.hex
 	nrfjprog --family NRF52 --reset

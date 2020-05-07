@@ -76,7 +76,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
      /* Useful Tools
       * 
       * http://www.keyboardtester.com/
-      * 
+      * https://config.qmk.fm/#/test
       * http://gadzikowski.com/nkeyrollover.html
       * 
       */

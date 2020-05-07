@@ -19,7 +19,9 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 #ifndef KEYBOARD_CONFIG_H
 #define KEYBOARD_CONFIG_H
-#include "avr_mapping.h"
+#include "hardware_variants.h"
+#define HARDWARE_MAPPING  BLUEMICROV2_0C
+#include "breakout_mapping.h"
 
 #define KEYBOARD_SIDE MASTER
 //#define KEYBOARD_SIDE RIGHT
@@ -54,7 +56,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
       k00, k01, k02, k03, k04, k05, k06, \
       k10, k11, k12, k13, k14, k15, k16, \
       k20, k21, k22, k23, k24, k25, k26, \
-      k30, k31, k32, k33, k34, k35,  k36 \
+      k30, k31, k32, k33, k34, k35, k36 \
 ) \
 { \
     { k06, k05, k04, k03, k02, k01, k00 }, \
@@ -67,7 +69,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
       k00, k01, k02, k03, k04, k05, k06, \
       k10, k11, k12, k13, k14, k15, k16, \
       k20, k21, k22, k23, k24, k25, k26, \
-      k30, k31, k32, k33, k34, k35,  k36 \
+      k30, k31, k32, k33, k34, k35, k36 \
 ) \
 { \
     { k00, k01, k02, k03, k04, k05, k06 }, \
