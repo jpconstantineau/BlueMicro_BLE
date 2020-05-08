@@ -19,7 +19,9 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 #ifndef KEYBOARD_CONFIG_H
 #define KEYBOARD_CONFIG_H
-
+#include "hardware_variants.h"
+#define HARDWARE_MAPPING  BLUEMICROV2_1A  // note only the BlueMicro840 fits on the corne.
+#include "breakout_mapping.h"
 #define KEYBOARD_SIDE MASTER
 
 #define DEVICE_NAME_M                         "LudditeBLE"                          /**< Name of device. Will be included in the advertising data. */
