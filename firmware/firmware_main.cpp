@@ -106,60 +106,76 @@ void setupMatrix(void) {
 /**************************************************************************************************************************/
 // Keyboard Scanning
 /**************************************************************************************************************************/
+
+#if DIODE_DIRECTION == COL2ROW
+#define writeRow(r) digitalWrite(r,LOW)
+#define modeCol(c) pinMode(c, INPUT_PULLUP)
+#ifdef NRF52840_XXAA
+#define gpioIn (((uint64_t)(NRF_P1->IN)^0xffffffff)<<32)|(NRF_P0->IN)^0xffffffff
+#else
+#define gpioIn (NRF_GPIO->IN)^0xffffffff
+#endif
+#else
+#define writeRow(r) digitalWrite(r,HIGH)
+#define modeCol(c) pinMode(c, INPUT_PULLDOWN)
+#ifdef NRF52840_XXAA
+#define gpioIn (((uint64_t)NRF_P1->IN)<<32)|(NRF_P0->IN)
+#else
+#define gpioIn NRF_GPIO->IN
+#endif
+#endif
+
+/**************************************************************************************************************************/
+// Better scanning with debounce Keyboard Scanning
+/**************************************************************************************************************************/
 void scanMatrix() {
 
-  keyboardstate.timestamp  = millis();   // lets call it once per scan instead of once per key in the matrix
-  
-    
-  for (int i = 0; i < MATRIX_COLS; ++i) {                               // Setting columns before scanning.
-        #if DIODE_DIRECTION == COL2ROW                                         
-        pinMode(columns[i], INPUT_PULLUP);                              // 'enables' the column High Value on the diode; becomes "LOW" when pressed 
-        #else
-        pinMode(columns[i], INPUT_PULLDOWN);                            // 'enables' the column High Value on the diode; becomes "LOW" when pressed
-        #endif
-  }
-
-  for(int j = 0; j < MATRIX_ROWS; ++j) {  
-                         
-    //set the current row as OUPUT and LOW
-    pinMode(rows[j], OUTPUT);
-    #if DIODE_DIRECTION == COL2ROW                                         
-    digitalWrite(rows[j], LOW);                                       // 'enables' a specific row to be "low" 
+    keyboardstate.timestamp  = millis();   // lets call it once per scan instead of once per key in the matrix
+    //take care when selecting debouncetime - each row has a delay of 1ms inbetween - so if you have 5 rows, setting debouncetime to 2 is at least 5ms...
+    #ifdef NRF52840_XXAA
+    static uint64_t pindata[MATRIX_ROWS][DEBOUNCETIME];
+    uint64_t pinreg;
     #else
-    digitalWrite(rows[j], HIGH);                                       // 'enables' a specific row to be "HIGH"
+    static uint32_t pindata[MATRIX_ROWS][DEBOUNCETIME];
+    uint32_t pinreg;
     #endif
 
-        nrfx_coredep_delay_us(1);   // need for the GPIO lines to settle down electrically before reading.
-        uint32_t pindata0;
-       
-        #ifdef NRF52840_XXAA        // This is chip dependent and not on the board.  As such, we need this to also support the nrf52840 feather which remaps the numbers of the GPIOs to Pins numbers.
-          uint32_t pindata1; 
-          pindata0 = NRF_P0->IN;                                         // read all pins at once
-          pindata1 = NRF_P1->IN;                                         // read all pins at once
-          for (int i = 0; i < MATRIX_COLS; ++i) {
-            int ulPin = g_ADigitalPinMap[columns[i]];                               // This maps the Board Pin to the GPIO.
-            if (ulPin<32)
-            {
-              KeyScanner::scanMatrix((pindata0>>(ulPin))&1, keyboardstate.timestamp, j, i);       // This function processes the logic values and does the debouncing 
-            } else
-            {
-              KeyScanner::scanMatrix((pindata1>>(ulPin-32))&1, keyboardstate.timestamp, j, i);    // This function processes the logic values and does the debouncing 
-            }
-          } 
-        #else
-          pindata0 = NRF_GPIO->IN;                                                // read all pins at once
-          for (int i = 0; i < MATRIX_COLS; ++i) {
-            int ulPin = g_ADigitalPinMap[columns[i]];                             // This maps the Board Pin to the GPIO. Added to ensure compatibility with potential new nrf52832 boards
-            KeyScanner::scanMatrix((pindata0>>(ulPin))&1, keyboardstate.timestamp, j, i);       // This function processes the logic values and does the debouncing
-          }
-        #endif
-    pinMode(rows[j], INPUT);                                          //'disables' the row that was just scanned
-   }                                                                  // done scanning the matrix
+    static uint8_t head = 0; // points us to the head of the debounce array;
 
-  for (int i = 0; i < MATRIX_COLS; ++i) {                             //Scanning done, disabling all columns
-    pinMode(columns[i], INPUT);                                     
-  }
-};
+    for (int i = 0; i < MATRIX_COLS; ++i){
+        modeCol(columns[i]);
+    }
+
+    for (int j = 0; j < MATRIX_ROWS; ++j){
+        // set the current row as OUPUT and LOW
+        pinreg = 0;
+
+        pinMode(rows[j], OUTPUT);
+        writeRow(rows[j]);
+
+        nrfx_coredep_delay_us(1);   // need for the GPIO lines to settle down electrically before reading.
+        pindata[j][head] = gpioIn;  // press is active high regardless of diode dir
+
+        //debounce happens here - we want to press a button as soon as possible, and release it only when all bounce has left
+        for (int d = 0; d < DEBOUNCETIME; ++d)
+            pinreg |= pindata[j][d];
+        
+        for (int i = 0; i < MATRIX_COLS; ++i){
+            if((pinreg>>columns[i])&1)  KeyScanner::press(keyboardstate.timestamp, j, i);
+            else                        KeyScanner::release(keyboardstate.timestamp, j, i);
+            pinMode(columns[i], INPUT);                                            // 'disables' the column that just got looped thru
+        }
+
+        pinMode(rows[j], INPUT);                                                   // 'disables' the row that was just scanned
+    }
+    for (int i = 0; i < MATRIX_COLS; ++i) {                             //Scanning done, disabling all columns
+        pinMode(columns[i], INPUT);                                     
+    }
+
+    head++;
+    if(head >= DEBOUNCETIME) head = 0; // reset head to 0 when we reach the end of our buffer
+}
+
 
 /**************************************************************************************************************************/
 /**************************************************************************************************************************/
