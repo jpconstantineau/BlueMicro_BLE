@@ -30,38 +30,38 @@ std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
 void setupKeymap() {
 
         uint32_t press[MATRIX_ROWS][MATRIX_COLS] = KEYMAP(
-        KC_NO,    KC_8,    KC_9,   KC_NO,
-        KC_4,    KC_5,    KC_6,    KC_NO,
-        KC_1,    KC_2,    KC_3,    KC_KP_MINUS,
-        KC_0,    KC_0,    KC_DOT,  KC_KP_PLUS 
+        KC_7,    KC_8,    KC_9,    KC_A,
+        KC_4,    KC_5,    KC_6,    KC_B,
+        KC_1,    KC_2,    KC_3,    KC_C,
+        KC_NO,   KC_0,    KC_DOT,  KC_NO 
         );
 
 
     uint32_t tap[MATRIX_ROWS][MATRIX_COLS] =
         KEYMAP(
-    KC_LBRACKET,    KC_NO,    KC_NO,    KC_RBRACKET,    
+    KC_NO,    KC_NO,    KC_NO,    KC_NO,    
     KC_NO,    KC_NO,    KC_NO,    KC_NO,  
     KC_NO,    KC_NO,    KC_NO,    KC_NO,    
-    KC_NO,    KC_NO,    KC_NO,    KC_NO);
+    KC_LPRN,  KC_NO,    KC_NO,    KC_RPRN);
 
     uint32_t hold[MATRIX_ROWS][MATRIX_COLS] =
         KEYMAP(
-    KC_LCBR,    KC_NO,    KC_NO,    KC_RCBR,    
+    KC_NO,    KC_NO,    KC_NO,    KC_NO,    
     KC_NO,    KC_NO,    KC_NO,    KC_NO,  
     KC_NO,    KC_NO,    KC_NO,    KC_NO,    
-    KC_NO,    KC_NO,    KC_NO,    KC_NO);
+    KC_LSHIFT,KC_NO,    KC_NO,    KC_RSHIFT);
 
     uint32_t singletap[MATRIX_ROWS][MATRIX_COLS] =
         KEYMAP(
     KC_NO,    KC_NO,    KC_NO,    KC_NO,    
-    KC_NO,    KC_NO,    KC_NO,    KC_QUOTE,  
+    KC_NO,    KC_NO,    KC_NO,    KC_NO,  
     KC_NO,    KC_NO,    KC_NO,    KC_NO,    
     KC_NO,    KC_NO,    KC_NO,    KC_NO);
 
     uint32_t doubletap[MATRIX_ROWS][MATRIX_COLS] =
         KEYMAP(
     KC_NO,    KC_NO,    KC_NO,    KC_NO,    
-    KC_NO,    KC_NO,    KC_NO,    KC_DQUO,  
+    KC_NO,    KC_NO,    KC_NO,    KC_NO,  
     KC_NO,    KC_NO,    KC_NO,    KC_NO,    
     KC_NO,    KC_NO,    KC_NO,    KC_NO);
 
