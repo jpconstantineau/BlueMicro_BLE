@@ -161,9 +161,9 @@ void scanMatrix() {
             pinreg |= pindata[j][d];
         
         for (int i = 0; i < MATRIX_COLS; ++i){
-            if((pinreg>>columns[i])&1)  KeyScanner::press(keyboardstate.timestamp, j, i);
-            else                        KeyScanner::release(keyboardstate.timestamp, j, i);
-            pinMode(columns[i], INPUT);                                            // 'disables' the column that just got looped thru
+            int ulPin = g_ADigitalPinMap[columns[i]]; 
+            if((pinreg>>ulPin)&1)  KeyScanner::press(keyboardstate.timestamp, j, i);
+            else                   KeyScanner::release(keyboardstate.timestamp, j, i);
         }
 
         pinMode(rows[j], INPUT);                                                   // 'disables' the row that was just scanned
