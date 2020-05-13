@@ -5,7 +5,7 @@ if ["%~2"]==[""] goto usage
 if ["%~3"]==[""] goto usage
 
 
-	powershell ./build.ps1 %~1 %~2 %~3 -nrf52840
+	powershell ./build.ps1 %~1:%~2:%~3 -nrf52840
 
 	if exist ..\..\output\%~1\%~1-%~2-%~3.hex (
 		goto flash
