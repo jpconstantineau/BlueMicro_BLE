@@ -16,6 +16,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 */
 #include "keymap.h"
+#include "hardware_variants.h"
 
 
 
@@ -71,9 +72,9 @@ KEYMAP(
     {
         for (int col = 0; col < MATRIX_COLS; ++col)
         {
-            matrix[row][col].addActivation(_L1, _PRESS, layer1[row][col]);
-            matrix[row][col].addActivation(_L2, _PRESS, layer2[row][col]);
-            matrix[row][col].addActivation(_L3, _PRESS, layer3[row][col]);
+            matrix[row][col].addActivation(_L1, Method::PRESS, layer1[row][col]);
+            matrix[row][col].addActivation(_L2, Method::PRESS, layer2[row][col]);
+            matrix[row][col].addActivation(_L3, Method::PRESS, layer3[row][col]);
         }
     }
 
@@ -128,9 +129,9 @@ KEYMAP(
     {
         for (int col = 0; col < MATRIX_COLS; ++col)
         {
-            matrix[row][col].addActivation(_L1, _PRESS, layer1[row][col]);
-            matrix[row][col].addActivation(_L2, _PRESS, layer2[row][col]);
-            matrix[row][col].addActivation(_L3, _PRESS, layer3[row][col]);
+            matrix[row][col].addActivation(_L1, Method::PRESS, layer1[row][col]);
+            matrix[row][col].addActivation(_L2, Method::PRESS, layer2[row][col]);
+            matrix[row][col].addActivation(_L3, Method::PRESS, layer3[row][col]);
         }
     }
 

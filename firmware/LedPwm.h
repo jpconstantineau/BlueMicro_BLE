@@ -23,8 +23,19 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include <Arduino.h>
 #include "keyboard_config.h"
 #include "firmware_config.h"
+#include "nrf52gpio.h"
 
-void setupPWM(void);
+
+void updatePWM(int mode, unsigned long timesincelastkeypress);
 void updatePWM(unsigned long timesincelastkeypress);
 
+
+void setPWMMode(int mode);
+uint16_t cie_lightness(uint16_t v);
+void PWMSetMaxVal();
+void decPWMMaxVal();
+void incPWMMaxVal();
+void decPWMStepSize();
+void incPWMStepSize();
+void stepPWMMode();
 #endif

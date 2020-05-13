@@ -19,7 +19,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 #ifndef KEYBOARD_CONFIG_H
 #define KEYBOARD_CONFIG_H
-#include "avr_mapping.h"
+#include "breakout_mapping.h"
 
 #define KEYBOARD_SIDE MASTER
 
@@ -31,7 +31,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define DEVICE_MODEL                        "GherkinBLE_V1"                          /**< Name of device. Will be included in the advertising data. */
 
 #define MANUFACTURER_NAME                   "40Percent.Club"                      /**< Manufacturer. Will be passed to Device Information Service. */
-
+#define TIME_TILL_HOLD 300
 
 /* HARDWARE DEFINITION*/
 /* key matrix size */
@@ -41,7 +41,9 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define MATRIX_ROW_PINS {2, 12, 14, 13, 11 }
 #define MATRIX_COL_PINS {15, 30, 29, 28, 27,26 }
 #define UNUSED_PINS {}
+#define BACKLIGHT_LED_PIN B5 
 
+#define BACKLIGHT_PWM_ON 1   
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW
 

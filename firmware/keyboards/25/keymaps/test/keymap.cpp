@@ -18,6 +18,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "keymap.h"
 
 
+
 std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
     {{
         {KC_1,    KC_2,    KC_3,    KC_4,  KC_5,},
@@ -44,7 +45,7 @@ void setupKeymap() {
     {
         for (int col = 0; col < MATRIX_COLS; ++col)
         {
-            matrix[row][col].addActivation(_L1, _PRESS, layer1[row][col]);
+            matrix[row][col].addActivation(_L1, Method::PRESS, layer1[row][col]);
         }
     }
 

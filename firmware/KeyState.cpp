@@ -23,18 +23,18 @@ KeyState::KeyState() {
     state = State::RELEASED;
     lastChanged = 0;
     canDoubletap = false;
-    checkDT = false;
-    checkMT = false;
+    checkDoubleTap = false;
+    checkModTap = false;
 }
 
-void KeyState::addMethod(uint8_t method)
+void KeyState::addMethod(Method method)
 {
-    if (method == 1 || method == 2) {
-        checkMT = true;
+    if (method == Method::MT_TAP || method == Method::MT_HOLD) {
+        checkModTap = true;
     }
-    else if (method == 3 || method == 4) 
+    else if (method == Method::DT_TAP || method == Method::DT_DOUBLETAP) 
     {
-        checkDT = true;
+        checkDoubleTap = true;
     }
 }
 
@@ -49,14 +49,14 @@ void KeyState::press(unsigned long currentMillis)
      * if the previous state isn't pressed, then set it to 
      * pressed now and update the change time
      */
-    if (state == State::PRESSED && timeElapsed > TIME_TILL_HOLD && checkMT) 
+    if (state == State::PRESSED && timeElapsed > TIME_TILL_HOLD && checkModTap) 
     {
         state = State::MT_HELD;
         lastChanged = currentMillis;
     }
     else if ((state == State::RELEASED || state == State::MT_TAPPED))
     {
-        if (canDoubletap && checkDT) 
+        if (canDoubletap && checkDoubleTap) 
         {
             state = State::DT_DOUBLETAPPED;
             canDoubletap = false;
@@ -78,12 +78,12 @@ void KeyState::clear(unsigned long currentMillis)
 
     // if the previous state was pressed, then set the state to 
     // tapped, otherwise set it to released
-    if (state == State::PRESSED && checkMT)
+    if (state == State::PRESSED && checkModTap)
     {
         state = State::MT_TAPPED;
         lastChanged = currentMillis;
     }
-    else if (timeElapsed > DOUBLETAP_TIME_LIMIT && canDoubletap && checkDT) 
+    else if (timeElapsed > DOUBLETAP_TIME_LIMIT && canDoubletap && checkDoubleTap) 
     {
         state = State::DT_TAPPED;
         lastChanged = currentMillis;

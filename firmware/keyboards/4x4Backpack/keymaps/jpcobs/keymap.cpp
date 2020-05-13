@@ -42,7 +42,7 @@ void setupKeymap() {
     {
         for (int col = 0; col < MATRIX_COLS; ++col)
         {
-            matrix[row][col].addActivation(_L1, _PRESS, layer1[row][col]);
+            matrix[row][col].addActivation(_L1, Method::PRESS, layer1[row][col]);
         }
     }
 
