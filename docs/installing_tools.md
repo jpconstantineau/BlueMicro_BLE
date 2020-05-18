@@ -8,9 +8,9 @@
 $ brew cask install arduino
 ```
 
-Open Arduino, add `https://www.adafruit.com/package_adafruit_index.json` as an 'Additional Board Manager URL' in Preferences, then restart Arduino IDE.
+Open Arduino, add `https://www.adafruit.com/package_adafruit_index.json` as an `Additional Board Manager URL` in Preferences, then restart Arduino IDE.
 
-Install some required packages from `Tools -> Board: "some boardName" -> Boards manger`.
+Install required packages from `Tools -> Board: "some boardName" -> Boards manger`.
 
 * Adafruit nRF52
 * Arduino SAMD Boards 
