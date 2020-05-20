@@ -1,3 +1,6 @@
 [submodule "firmware/libraries/NeoPixel"]
 	path = firmware/libraries/NeoPixel
 	url = https://github.com/adafruit/Adafruit_NeoPixel.git
+[submodule "firmware/libraries/u8g2"]
+	path = firmware/libraries/u8g2
+	url = https://github.com/olikraus/u8g2.git
