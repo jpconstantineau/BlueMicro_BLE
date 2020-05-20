@@ -23,7 +23,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include <Arduino.h>
 #include "keyboard_config.h"
 #include "firmware_config.h"
-#include "Adafruit_NeoPixel.h"
+#include "src\Adafruit_NeoPixel.h"
 #include "hid_keycodes.h"
 #include "advanced_keycodes.h"
 
