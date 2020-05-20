@@ -22,7 +22,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "firmware.h"
 #include <Adafruit_LittleFS.h>
 #include <InternalFileSystem.h>
-
+#include "src\U8g2lib.h"
+#include <Wire.h>
 using namespace Adafruit_LittleFS_Namespace;
 /**************************************************************************************************************************/
 // Keyboard Matrix
@@ -36,7 +37,9 @@ static DynamicState keyboardstate;
 
 KeyScanner keys;
 Battery batterymonitor;
-
+TwoWire  Wire2(NRF_TWIM0, NRF_TWIS0, SPIM0_SPIS0_TWIM0_TWIS0_SPI0_TWI0_IRQn, 15, 17);
+//Display oled(&Wire2);
+U8G2_SSD1306_128X32_UNIVISION_F_HW_I2C u8g2(U8G2_R1, /* reset=*/ U8X8_PIN_NONE);  // Adafruit ESP8266/32u4/ARM Boards + FeatherWing OLED
 static std::vector<uint16_t> stringbuffer; // buffer for macros to type into...
 //static bool helpmode = false;
 
@@ -57,9 +60,11 @@ void setupConfig() {
 /**************************************************************************************************************************/
 // cppcheck-suppress unusedFunction
 void setup() {
+   Wire = Wire2;
  setupConfig();
  Serial.begin(115200);
  // while ( !Serial ) delay(10);   // for nrf52840 with native usb this makes the nrf52840 stall and wait for a serial connection.  Something not wanted for a keyboard...
+u8g2.begin();
 
   LOG_LV1("BLEMIC","Starting %s" ,DEVICE_NAME);
 
@@ -541,6 +546,11 @@ void keyscantimer_callback(TimerHandle_t _handle) {
   if(keyboardconfig.ledrgb)
   {
      updateRGB(timesincelastkeypress);
+       u8g2.clearBuffer();					// clear the internal memory
+  u8g2.setFont(u8g2_font_t0_12_mf);	// choose a suitable font
+  u8g2.drawStr(0,8,"Hello");	// write something to the internal memory
+  u8g2.drawStr(0,18,"World!");  // write something to the internal memory
+  u8g2.sendBuffer();					// transfer internal memory to the display
   }
 
 }

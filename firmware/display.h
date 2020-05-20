@@ -1,5 +1,5 @@
 /*
-Copyright 2018 <Pierre Constantineau>
+Copyright 2020 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -17,54 +17,22 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-#ifndef FIRMWARE_H
-#define FIRMWARE_H
-#undef min
-#undef max
-#include "hardware_variants.h"
-#include "firmware_config.h"
-#include "bluetooth_config.h"
-#include "KeyScanner.h"
-#include "keymap.h"
-#include "sleep.h"
-#include "bluetooth.h"
-#include "nrf52battery.h"
-#include "LedPwm.h"
-#include "LedRGB.h"
-#include "nrf52gpio.h"
-#include "display.h"
 
+#ifndef DISPLAY_H
+#define DISPLAY_H
+#include <Wire.h>
+#include "src\U8g2lib.h"
 
-    typedef struct { 
-        bool    ledbacklight;  
-        bool    ledrgb;    
-        uint32_t timerkeyscaninterval;
-        uint32_t timerbatteryinterval;     
-  
-    } PersistentState;
+/*
+class Display
+{
+    public:
+    Display(TwoWire *twi=&Wire);
+    begin(void);
+    update(void);
+    private:
+    U8GLIB *u8g2;
 
-    typedef struct { 
-          uint32_t timestamp;
-          uint32_t lastupdatetime;
-
-          bool helpmode;
-  
-    } DynamicState;
-
-    void setupConfig(void);
-    void setupMatrix(void);
-    void scanMatrix(void);
-    void sendKeyPresses(void);
-
-    void keyscantimer_callback(TimerHandle_t _handle);
-    void batterytimer_callback(TimerHandle_t _handle);
-    void RGBtimer_callback(TimerHandle_t _handle);
-    void addStringToQueue(const char* str);
-    void addKeycodeToQueue(const uint16_t keycode);
-    void process_keyboard_function(uint16_t keycode);
-    #ifndef USER_MACRO_FUNCTION  
-    #define USER_MACRO_FUNCTION 1  
-    void process_user_macros(uint16_t macroid);
-    #endif
-
-#endif /* FIRMWARE_H */
+};
+*/
+#endif
