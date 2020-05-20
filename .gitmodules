@@ -7,3 +7,6 @@
 [submodule "firmware/libraries/Adafruit_NeoPixel"]
 	path = firmware/libraries/Adafruit_NeoPixel
 	url = https://github.com/adafruit/Adafruit_NeoPixel.git
+[submodule "firmware/libraries/tinyusb"]
+	path = firmware/libraries/tinyusb
+	url = https://github.com/hathach/tinyusb.git
