@@ -22,17 +22,19 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define DISPLAY_H
 #include <Wire.h>
 #include "src\U8g2lib.h"
+#include "datastructures.h"
+#include <stdio.h>
 
-/*
+
 class Display
 {
     public:
-    Display(TwoWire *twi=&Wire);
-    begin(void);
-    update(void);
+    Display(uint8_t sda, uint8_t scl);
+    bool begin(uint8_t data);
+    bool update(DynamicState keyboardstate);
     private:
-    U8GLIB *u8g2;
+    static U8G2_SSD1306_128X32_UNIVISION_F_HW_I2C u8g2;
 
 };
-*/
+
 #endif

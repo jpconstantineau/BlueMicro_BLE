@@ -17,26 +17,30 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 
 #include "display.h"
-/*
-Display::Display(TwoWire *twi=&Wire) 
+
+Display::Display(uint8_t sda, uint8_t scl) 
 {
 
-Wire = twi;
-U8G2_SSD1306_128X32_UNIVISION_F_HW_I2C u8g2(U8G2_R1, U8X8_PIN_NONE);
 
 }
 
-Display::begin(void)
-{
-    u8g2  = 
-    u8g2.begin();
+bool Display::begin(uint8_t data)
+{   
+   u8g2.begin();
+   return true;
 }
 
-Display::update(void)
+bool Display::update(DynamicState keyboardstate)
 {
+  char buffer [50];
   u8g2.clearBuffer();					// clear the internal memory
   u8g2.setFont(u8g2_font_t0_12_mf);	// choose a suitable font
   u8g2.drawStr(0,8,"Hello");	// write something to the internal memory
   u8g2.drawStr(0,18,"World!");  // write something to the internal memory
+  sprintf(buffer, "%d", keyboardstate.timestamp/100);
+  u8g2.drawStr(0,28,buffer);
   u8g2.sendBuffer();					// transfer internal memory to the display
-}*/
+  return true;
+}
+
+U8G2_SSD1306_128X32_UNIVISION_F_HW_I2C Display::u8g2(U8G2_R1, U8X8_PIN_NONE);
