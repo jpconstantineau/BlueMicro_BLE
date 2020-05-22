@@ -44,8 +44,6 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
     void sendKeyPresses(void);
 
     void keyscantimer_callback(TimerHandle_t _handle);
-    void batterytimer_callback(TimerHandle_t _handle);
-    void RGBtimer_callback(TimerHandle_t _handle);
     void addStringToQueue(const char* str);
     void addKeycodeToQueue(const uint16_t keycode);
     void process_keyboard_function(uint16_t keycode);

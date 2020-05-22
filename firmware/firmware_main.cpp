@@ -30,10 +30,10 @@ using namespace Adafruit_LittleFS_Namespace;
 byte rows[] MATRIX_ROW_PINS;        // Contains the GPIO Pin Numbers defined in keyboard_config.h
 byte columns[] MATRIX_COL_PINS;     // Contains the GPIO Pin Numbers defined in keyboard_config.h  
 //uint32_t lastupdatetime =0;
-SoftwareTimer keyscantimer, batterytimer;
+SoftwareTimer keyscantimer;//, batterytimer;
 
-static PersistentState keyboardconfig;
-static DynamicState keyboardstate;
+ PersistentState keyboardconfig;
+ DynamicState keyboardstate;
 
 KeyScanner keys;
 Battery batterymonitor;
@@ -49,10 +49,11 @@ void setupConfig() {
   keyboardconfig.ledbacklight=BACKLIGHT_PWM_ON;
   keyboardconfig.ledrgb=WS2812B_LED_ON;
   keyboardconfig.timerkeyscaninterval=HIDREPORTINGINTERVAL;
-  keyboardconfig.timerbatteryinterval=30*1000;
+  keyboardconfig.timerbatteryinterval=1000/HIDREPORTINGINTERVAL;
 
   keyboardstate.helpmode = false;
   keyboardstate.timestamp = millis();
+  keyboardstate.batterytimer=keyboardconfig.timerbatteryinterval;
 }
 
 
@@ -65,7 +66,7 @@ void setup() {
  setupConfig();
  Serial.begin(115200);
  // while ( !Serial ) delay(10);   // for nrf52840 with native usb this makes the nrf52840 stall and wait for a serial connection.  Something not wanted for a keyboard...
-//u8g2.begin();
+
 oled.begin(1);
 
   LOG_LV1("BLEMIC","Starting %s" ,DEVICE_NAME);
@@ -73,7 +74,7 @@ oled.begin(1);
   setupGpio();                                                                // checks that NFC functions on GPIOs are disabled.
 
   keyscantimer.begin(keyboardconfig.timerkeyscaninterval, keyscantimer_callback);
-  batterytimer.begin(keyboardconfig.timerbatteryinterval, batterytimer_callback);
+
   setupBluetooth();
 
   if(keyboardconfig.ledbacklight)
@@ -90,7 +91,7 @@ oled.begin(1);
   setupMatrix();
   startAdv(); 
   keyscantimer.start();
-  batterytimer.start();
+  
   suspendLoop(); // this commands suspends the main loop.  We are no longer using the loop but scheduling things using the timers.
   stringbuffer.clear();
 };
@@ -361,32 +362,32 @@ void process_keyboard_function(uint16_t keycode)
       if ( keyboardstate.helpmode) {addStringToQueue("RGB_SPD");}
       break;    
     case PRINT_BATTERY:
-      intval = batterymonitor.vbat_per;
+      intval = keyboardstate.vbat_per;
 
-      switch (batterymonitor.batt_type)
+      switch (keyboardstate.batt_type)
       {
         case BATT_UNKNOWN:
-            snprintf (buffer, sizeof(buffer), "VDD = %.0f mV, VBatt = %.0f mV", batterymonitor.vbat_vdd*1.0, batterymonitor.vbat_mv*1.0);
+            snprintf (buffer, sizeof(buffer), "VDD = %.0f mV, VBatt = %.0f mV", keyboardstate.vbat_vdd*1.0, keyboardstate.vbat_mv*1.0);
         break;
         case BATT_CR2032:
             if (intval>99)
             {
-              snprintf (buffer, sizeof(buffer), "VDD = %.0f mV (%4d %%)", batterymonitor.vbat_mv*1.0, intval);
+              snprintf (buffer, sizeof(buffer), "VDD = %.0f mV (%4d %%)", keyboardstate.vbat_mv*1.0, intval);
             }
             else
             {
-              snprintf (buffer, sizeof(buffer), "VDD = %.0f mV (%3d %%)", batterymonitor.vbat_mv*1.0, intval);
+              snprintf (buffer, sizeof(buffer), "VDD = %.0f mV (%3d %%)", keyboardstate.vbat_mv*1.0, intval);
             }
             
         break;
         case BATT_LIPO:
             if (intval>99)
             {
-              sprintf (buffer, "LIPO = %.0f mV (%4d %%)", batterymonitor.vbat_mv*1.0, intval);
+              sprintf (buffer, "LIPO = %.0f mV (%4d %%)", keyboardstate.vbat_mv*1.0, intval);
             }
             else
             {
-              sprintf (buffer, "LIPO = %.0f mV (%3d %%)", batterymonitor.vbat_mv*1.0, intval);
+              sprintf (buffer, "LIPO = %.0f mV (%3d %%)", keyboardstate.vbat_mv*1.0, intval);
             }   
         break;
       }
@@ -444,7 +445,7 @@ void sendKeyPresses() {
 
 
    KeyScanner::getReport();                                            // get state data - Data is in KeyScanner::currentReport 
-
+keyboardstate.layer = KeyScanner::effectiveLayer;
   if (KeyScanner::special_key > 0){
       process_user_special_keys();
       KeyScanner::special_key = 0;
@@ -487,6 +488,7 @@ void sendKeyPresses() {
   else if ((KeyScanner::reportChanged))  //any new key presses anywhere?
   {                                                                              
         sendKeys(KeyScanner::currentReport);
+        
         LOG_LV1("MXSCAN","SEND: %i %i %i %i %i %i %i %i %i " ,keyboardstate.timestamp,KeyScanner::currentReport[0], KeyScanner::currentReport[1],KeyScanner::currentReport[2],KeyScanner::currentReport[3], KeyScanner::currentReport[4],KeyScanner::currentReport[5], KeyScanner::currentReport[6],KeyScanner::currentReport[7] );        
   } else if (KeyScanner::specialfunction > 0)
   {
@@ -507,6 +509,7 @@ void sendKeyPresses() {
     if(KeyScanner::layerChanged || (keyboardstate.timestamp-keyboardstate.lastupdatetime > 1000))     //layer comms
     {   
         keyboardstate.lastupdatetime = keyboardstate.timestamp;
+        keyboardstate.layer = KeyScanner::localLayer;
         sendlayer(KeyScanner::localLayer);
         LOG_LV1("MXSCAN","Layer %i  %i" ,keyboardstate.timestamp,KeyScanner::localLayer);
         KeyScanner::layerChanged = false;                                      // mark layer as "not changed" since last update
@@ -530,6 +533,7 @@ void keyscantimer_callback(TimerHandle_t _handle) {
    unsigned long timesincelastkeypress = keyboardstate.timestamp - KeyScanner::getLastPressed();
 
   #if SLEEP_ACTIVE == 1
+  
     gotoSleep(timesincelastkeypress,Bluefruit.connected());
   #endif
 
@@ -548,22 +552,22 @@ void keyscantimer_callback(TimerHandle_t _handle) {
   if(keyboardconfig.ledrgb)
   {
      updateRGB(timesincelastkeypress);
-     /*
-       u8g2.clearBuffer();					// clear the internal memory
-  u8g2.setFont(u8g2_font_t0_12_mf);	// choose a suitable font
-  u8g2.drawStr(0,8,"Hello");	// write something to the internal memory
-  u8g2.drawStr(0,18,"World!");  // write something to the internal memory
-  u8g2.sendBuffer();					// transfer internal memory to the display*/
-  oled.update(keyboardstate);
+
   }
 
-}
-//********************************************************************************************//
-//* Battery Monitoring Task - runs infrequently                                              *//
-//********************************************************************************************//
-void batterytimer_callback(TimerHandle_t _handle)
-{ 
-      batterymonitor.updateBattery();
+ // keyboardstate=batterymonitor.updateBattery(keyboardstate);
+
+  if (keyboardstate.batterytimer<1)
+  {
+    keyboardstate=batterymonitor.updateBattery(keyboardstate);
+    keyboardstate.batterytimer= keyboardconfig.timerbatteryinterval;
+  } else
+  {
+    keyboardstate.batterytimer--;/* code */
+  }
+  
+  oled.update(keyboardstate);
+
 }
 
 

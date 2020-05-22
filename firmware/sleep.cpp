@@ -19,6 +19,9 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 #include "sleep.h"
 #include "LedRGB.h"
+#include "display.h"
+
+extern Display oled;
 /**************************************************************************************************************************/
 // Prepare sense pins for waking up from complete shutdown
 /**************************************************************************************************************************/
@@ -49,6 +52,7 @@ void gotoSleep(unsigned long timesincelastkeypress,bool connected)
   if ((timesincelastkeypress>SLEEPING_DELAY)&&(!connected))
   {
     LOG_LV2("SLEEP","Not Connected Sleep %i", timesincelastkeypress);
+    oled.sleep();
     #if WS2812B_LED_ON == 1 
     suspendRGB();
     #endif
@@ -60,6 +64,7 @@ void gotoSleep(unsigned long timesincelastkeypress,bool connected)
   if ((timesincelastkeypress>SLEEPING_DELAY_CONNECTED)&&(connected))
   {
     LOG_LV2("SLEEP","Connected Sleep %i", timesincelastkeypress);
+    oled.sleep();
     #if WS2812B_LED_ON == 1 
     suspendRGB();
     #endif

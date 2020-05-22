@@ -32,8 +32,18 @@ class Display
     Display(uint8_t sda, uint8_t scl);
     bool begin(uint8_t data);
     bool update(DynamicState keyboardstate);
+    void sleep(void);
+
     private:
     static U8G2_SSD1306_128X32_UNIVISION_F_HW_I2C u8g2;
+        void clear();
+        void battery(uint8_t data);
+        void printline(int8_t data);
+        void printline(uint8_t data);
+        void printline(uint16_t data);
+        void printline(uint32_t data);
+        void printline(char* data);
+        uint8_t row;
 
 };
 

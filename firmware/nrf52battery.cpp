@@ -85,6 +85,64 @@ uint32_t Battery::analogReadVDD()
 
     return value; 
 }
+#ifdef NRF52840_XXAA 
+uint32_t Battery::analogReadVDDH()
+{
+  // thanks to vladkozlov69 on github.
+  // from https://gist.github.com/vladkozlov69/2500a27cd93245d71573164cda789539
+
+   // uint32_t pin = SAADC_CH_PSELP_PSELP_VDD;
+    //uint32_t resolution;
+    int16_t value;
+
+    //resolution = 10;
+
+
+    NRF_SAADC->RESOLUTION = SAADC_RESOLUTION_VAL_10bit;
+
+    NRF_SAADC->ENABLE = (SAADC_ENABLE_ENABLE_Enabled << SAADC_ENABLE_ENABLE_Pos);
+    for (int i = 0; i < 8; i++) 
+    {
+        NRF_SAADC->CH[i].PSELN = SAADC_CH_PSELP_PSELP_NC;
+        NRF_SAADC->CH[i].PSELP = SAADC_CH_PSELP_PSELP_NC;
+    }
+    NRF_SAADC->CH[0].CONFIG =   ((SAADC_CH_CONFIG_RESP_Bypass     << SAADC_CH_CONFIG_RESP_Pos)   & SAADC_CH_CONFIG_RESP_Msk)
+                                | ((SAADC_CH_CONFIG_RESP_Bypass     << SAADC_CH_CONFIG_RESN_Pos)   & SAADC_CH_CONFIG_RESN_Msk)
+                                | ((SAADC_CH_CONFIG_GAIN_Gain1_2    << SAADC_CH_CONFIG_GAIN_Pos)   & SAADC_CH_CONFIG_GAIN_Msk)
+                                | ((SAADC_CH_CONFIG_REFSEL_Internal << SAADC_CH_CONFIG_REFSEL_Pos) & SAADC_CH_CONFIG_REFSEL_Msk)
+                                | ((SAADC_CH_CONFIG_TACQ_3us        << SAADC_CH_CONFIG_TACQ_Pos)   & SAADC_CH_CONFIG_TACQ_Msk)
+                                | ((SAADC_CH_CONFIG_MODE_SE         << SAADC_CH_CONFIG_MODE_Pos)   & SAADC_CH_CONFIG_MODE_Msk);
+    NRF_SAADC->CH[0].PSELN = SAADC_CH_PSELP_PSELP_VDDHDIV5;
+    NRF_SAADC->CH[0].PSELP = SAADC_CH_PSELP_PSELP_VDDHDIV5;
+
+
+    NRF_SAADC->RESULT.PTR = (uint32_t)&value;
+    NRF_SAADC->RESULT.MAXCNT = 1; // One sample
+
+    NRF_SAADC->TASKS_START = 0x01UL;
+
+    while (!NRF_SAADC->EVENTS_STARTED);
+    NRF_SAADC->EVENTS_STARTED = 0x00UL;
+
+    NRF_SAADC->TASKS_SAMPLE = 0x01UL;
+
+    while (!NRF_SAADC->EVENTS_END);
+    NRF_SAADC->EVENTS_END = 0x00UL;
+    NRF_SAADC->TASKS_STOP = 0x01UL;
+
+    while (!NRF_SAADC->EVENTS_STOPPED);
+    NRF_SAADC->EVENTS_STOPPED = 0x00UL;
+
+    if (value < 0) 
+    {
+        value = 0;
+    }
+
+    NRF_SAADC->ENABLE = (SAADC_ENABLE_ENABLE_Disabled << SAADC_ENABLE_ENABLE_Pos);
+
+    return value; 
+}
+#endif
 /**************************************************************************************************************************/
 uint32_t Battery::readVBAT(void) {
   analogReference(AR_INTERNAL_3_0); // Set the analog reference to 3.0V (default = 3.6V)
@@ -121,39 +179,60 @@ uint8_t Battery::mvToPercent(uint32_t mvolts)
   } 
 }
 /**************************************************************************************************************************/
-void Battery::updateBattery(void)
+DynamicState Battery::updateBattery(DynamicState data)
 {
+  vbat_vdd =  analogReadVDD()*3600/1024; // returns a uint32_t value of the mV. 0.6V*6/10bits
+  #ifdef NRF52840_XXAA 
+  vbat_vddh = analogReadVDDH()*3600/1024;//vbat_vdd;
+  #else
+  vbat_vddh = vbat_vdd;
+  #endif
+  vbat_raw = readVBAT(); 
+  vbat_mv = vbat_raw * VBAT_MV_PER_LSB * VBAT_DIVIDER_COMP;
   switch (batt_type)
   {
+    
     case BATT_UNKNOWN:
-        vbat_vdd =  analogReadVDD()*3600/1024; // returns a uint32_t value of the mV. 0.6V*6/10bits
+       // vbat_vdd =  analogReadVDD()*3600/1024; // returns a uint32_t value of the mV. 0.6V*6/10bits
         if (vbat_vdd<3000) batt_type=BATT_CR2032;
-        vbat_raw = readVBAT();                                // Get a raw ADC reading
-        vbat_mv = vbat_raw * VBAT_MV_PER_LSB * VBAT_DIVIDER_COMP;
+      //  vbat_raw = readVBAT();                                // Get a raw ADC reading
+      //  vbat_mv = vbat_raw * VBAT_MV_PER_LSB * VBAT_DIVIDER_COMP;
         if (vbat_mv>3400) batt_type=BATT_LIPO;
     break;
     case BATT_CR2032:
-        vbat_vdd =  analogReadVDD()*3600/1024; // returns a uint32_t value of the mV. 0.6V*6/10bits
+       // vbat_vdd =  analogReadVDD()*3600/1024; // returns a uint32_t value of the mV. 0.6V*6/10bits
+       if (vbat_mv>3400) batt_type=BATT_LIPO;
         vbat_mv = vbat_vdd;
     break;
     case BATT_LIPO:
-        vbat_raw = readVBAT();                                // Get a raw ADC reading
+       // vbat_raw = readVBAT();                                // Get a raw ADC reading
                 // Convert the raw value to compensated mv, taking the resistor-
                 // divider into account (providing the actual LIPO voltage)
                 // ADC range is 0..3000mV and resolution is 12-bit (0..4095),
                 // VBAT voltage divider is 2M + 0.806M, which needs to be added back
-        vbat_mv = vbat_raw * VBAT_MV_PER_LSB * VBAT_DIVIDER_COMP;
+      //  vbat_mv = vbat_raw * VBAT_MV_PER_LSB * VBAT_DIVIDER_COMP;
     break;
   }
     
   vbat_per = mvToPercent(vbat_mv);       // Convert from raw mv to percentage (based on LIPO chemistry)
   blebas.notify(vbat_per);                                  // update the Battery Service.  Use notify instead of write to ensure that subscribers receive the new value.
+
+data.vbat_raw = vbat_raw;
+data.vbat_per = vbat_per;
+data.vbat_mv = vbat_mv;
+data.vbat_vdd = vbat_vdd;
+data.vbat_vddh = vbat_vddh;
+data.batt_type = batt_type;
+
+return data;
+
 }
 /**************************************************************************************************************************/
 
 uint32_t Battery::vbat_raw = 0;
 uint32_t Battery::vbat_mv = 0;
 uint32_t Battery::vbat_vdd = 0;
+uint32_t Battery::vbat_vddh = 0;
 uint8_t Battery::vbat_per = 0;
 uint8_t Battery::batt_type = BATT_UNKNOWN;
 

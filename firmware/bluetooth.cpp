@@ -23,7 +23,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 BLEDis bledis;                                                                    // Device Information Service
 extern KeyScanner keys;
-extern Battery batterymonitor;
+extern DynamicState keyboardstate;
 
  #if BLE_HID == 1
  uint16_t hid_conn_hdl;
@@ -62,7 +62,7 @@ void setupBluetooth(void)
   Bluefruit.configServiceChanged(true);                                       // helps troubleshooting...
   Bluefruit.setAppearance(BLE_APPEARANCE_HID_KEYBOARD);                       // How the device appears once connected
   //********Bluefruit.setConnInterval(9, 12);                                 // 0.10.1: not needed for master...
-
+  Bluefruit.setRssiCallback(rssi_changed_callback);
   // Configure and Start Device Information Service
   bledis.setManufacturer(MANUFACTURER_NAME);                                  // Defined in keyboard_config.h
   bledis.setModel(DEVICE_MODEL);                                              // Defined in keyboard_config.h
@@ -211,7 +211,12 @@ void startAdv(void)
 }
 
 
-
+void rssi_changed_callback(uint16_t conn_hdl, int8_t rssi)
+{
+  (void) conn_hdl;
+  keyboardstate.rssipairs = std::make_pair(conn_hdl, rssi);
+ // keyboardstate.rssi=rssi;
+}
 /**************************************************************************************************************************/
 // This callback is called when a Notification update even occurs (This occurs on the client)
 /**************************************************************************************************************************/
@@ -249,6 +254,14 @@ void notify_callback(BLEClientCharacteristic* chr, uint8_t* data, uint16_t len)
  #if BLE_PERIPHERAL == 1
 void cccd_callback(uint16_t conn_hdl, BLECharacteristic* chr, uint16_t cccd_value)    
 {
+// this is called on the slave board...
+  char peer_name[32] = { 0 };
+  BLEConnection* connection = Bluefruit.Connection(conn_hdl);
+  connection->getPeerName(peer_name, sizeof(peer_name));
+  LOG_LV1("CENTRL","Connected to %i %s",conn_hdl,peer_name );
+  connection->monitorRssi(10);
+strcpy (keyboardstate.peer_name,peer_name);
+
     LOG_LV1("CBCCCD","notify_callback: %i " ,cccd_value);
     
     // Check the characteristic this CCCD update is associated with in case
@@ -305,15 +318,16 @@ void scan_callback(ble_gap_evt_adv_report_t* report)
 }
 
 /**************************************************************************************************************************/
-// This callback is called when the master connects to a slave
+// This callback is called when the master connects to the computer
 /**************************************************************************************************************************/
 void prph_connect_callback(uint16_t conn_handle)
-{
+{ 
 char peer_name[32] = { 0 };
 BLEConnection* connection = Bluefruit.Connection(conn_handle);
 connection->getPeerName(peer_name, sizeof(peer_name));
 LOG_LV1("PRPH","Connected to %i %s",conn_handle,peer_name  );
-
+connection->monitorRssi(10);
+strcpy (keyboardstate.peer_name,peer_name);
 // if HID then save connection handle to HID_connection handle
 #if BLE_HID == 1
 hid_conn_hdl = conn_handle;
@@ -339,11 +353,13 @@ hid_conn_hdl = 0;
 // This callback is called when the central connects to a peripheral
 /**************************************************************************************************************************/
 void cent_connect_callback(uint16_t conn_handle)
-{
+{// this runs on the master but when connecting to a slave.
   char peer_name[32] = { 0 };
   BLEConnection* connection = Bluefruit.Connection(conn_handle);
   connection->getPeerName(peer_name, sizeof(peer_name));
   LOG_LV1("CENTRL","Connected to %i %s",conn_handle,peer_name );
+ // connection->monitorRssi(10);
+//strcpy (keyboardstate.peer_name,peer_name);
   if (KBLinkClientService.discover(conn_handle )) // validating that KBLink service is available to this connection
   {
     if (KBLinkClientChar_Layers.discover()) {
@@ -391,6 +407,7 @@ void set_keyboard_led(uint16_t conn_handle, uint8_t led_bitmap)
   (void) conn_handle;
   // light up Red Led if any bits is set
   // RED LED is on P0.17 and is not being used on the standard BlueMicro
+  keyboardstate.statusled = led_bitmap;
   if ( led_bitmap )
   {
     ledOn( LED_RED );
@@ -445,7 +462,7 @@ void sendKeys(uint8_t currentReport[8])
           Linkdata.command = 0;
           Linkdata.timesync = 0;
           Linkdata.specialkeycode = 0;
-          Linkdata.batterylevel = batterymonitor.vbat_per;
+          Linkdata.batterylevel = keyboardstate.vbat_per;
           LOG_LV1("KB-P2C"," KBLinkChar_Buffer.notify sendKeys sending %i [1] %i",sizeof(Linkdata),Linkdata.report[1]);
           KBLinkChar_Buffer.notify(&Linkdata, sizeof(Linkdata));    
     #endif
@@ -489,7 +506,7 @@ void sendMouseKey(uint16_t keycode)
           Linkdata.command = 0;
           Linkdata.timesync = 0;
           Linkdata.specialkeycode = keycode;
-          Linkdata.batterylevel = batterymonitor.vbat_per;
+          Linkdata.batterylevel = keyboardstate.vbat_per;
           LOG_LV1("KB-P2C"," KBLinkChar_Buffer.notify sendMouseKey");
           KBLinkChar_Buffer.notify(&Linkdata, sizeof(Linkdata));    
     #endif
@@ -558,7 +575,7 @@ uint16_t usagecode = 0;
           Linkdata.command = 0;
           Linkdata.timesync = 0;
           Linkdata.specialkeycode = keycode;
-          Linkdata.batterylevel = batterymonitor.vbat_per;
+          Linkdata.batterylevel = keyboardstate.vbat_per;
           LOG_LV1("KB-P2C"," KBLinkChar_Buffer.notify sendMediaKey");
           KBLinkChar_Buffer.notify(&Linkdata, sizeof(Linkdata));    
     #endif

@@ -29,18 +29,87 @@ bool Display::begin(uint8_t data)
    u8g2.begin();
    return true;
 }
+void Display::clear()
+{
+ u8g2.clearBuffer();					// clear the internal memory
+ row = 2;
+
+}
+void Display::battery(uint8_t data)
+{
+    char buffer [50];
+    u8g2.setFont(u8g2_font_battery19_tn);	// choose a suitable font
+    sprintf(buffer, "%d", (data+5)/20);
+    u8g2.drawStr(22,19,buffer);
+}
+
+void Display::printline(char* data)
+{
+  u8g2.setFont(u8g2_font_u8glib_4_tf);	// choose a suitable font
+  u8g2.drawStr(0,8+10*row,data);
+  row++;
+}
+void Display::printline(uint8_t data)
+{
+    char buffer [50];
+    sprintf(buffer, "%d", data);
+  u8g2.setFont(u8g2_font_t0_12_mf);	// choose a suitable font
+  u8g2.drawStr(0,8+10*row,buffer);
+  row++;
+}
+void Display::printline(int8_t data)
+{
+    char buffer [50];
+    sprintf(buffer, "%d", data);
+  u8g2.setFont(u8g2_font_t0_12_mf);	// choose a suitable font
+  u8g2.drawStr(0,8+10*row,buffer);
+  row++;
+}
+void Display::printline(uint16_t data)
+{
+    char buffer [50];
+    sprintf(buffer, "%d", data);
+  u8g2.setFont(u8g2_font_t0_12_mf);	// choose a suitable font
+  u8g2.drawStr(0,8+10*row,buffer);
+  row++;
+}
+void Display::printline(uint32_t data)
+{
+    char buffer [50];
+    sprintf(buffer, "%d", data);
+  u8g2.setFont(u8g2_font_t0_12_mf);	// choose a suitable font
+  u8g2.drawStr(0,8+10*row,buffer);
+  row++;
+}
 
 bool Display::update(DynamicState keyboardstate)
 {
-  char buffer [50];
-  u8g2.clearBuffer();					// clear the internal memory
-  u8g2.setFont(u8g2_font_t0_12_mf);	// choose a suitable font
-  u8g2.drawStr(0,8,"Hello");	// write something to the internal memory
-  u8g2.drawStr(0,18,"World!");  // write something to the internal memory
-  sprintf(buffer, "%d", keyboardstate.timestamp/100);
-  u8g2.drawStr(0,28,buffer);
+  
+    clear();
+    battery(keyboardstate.vbat_per);
+  //  printline(keyboardstate.batt_type);
+ //   printline(keyboardstate.vbat_per);
+ //   printline(keyboardstate.vbat_vdd);
+  //  printline(keyboardstate.vbat_vddh);
+    printline(keyboardstate.vbat_mv);
+  //  printline(keyboardstate.vbat_raw);
+  //  printline(keyboardstate.batterytimer);
+ // printline(keyboardstate.rssi);
+ printline(keyboardstate.peer_name);
+ printline(keyboardstate.rssipairs.second);
+
+char buffer [50];
+  u8g2.setFont(u8g2_font_fub20_t_symbol);	// choose a suitable font
+  sprintf(buffer, "%d", keyboardstate.layer);
+  u8g2.drawStr(0,128,buffer);
   u8g2.sendBuffer();					// transfer internal memory to the display
   return true;
 }
 
+ void Display::sleep(void)
+ {
+     u8g2.clearBuffer();
+     u8g2.sendBuffer();
+     u8g2.setPowerSave(1);
+ }
 U8G2_SSD1306_128X32_UNIVISION_F_HW_I2C Display::u8g2(U8G2_R1, U8X8_PIN_NONE);

@@ -24,6 +24,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
     #include <bluefruit.h>
     #include "firmware_config.h"
     #include "keyboard_config.h"
+    #include "datastructures.h"
   
   enum BatteryType {
     BATT_UNKNOWN = 0,
@@ -34,17 +35,21 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
   class Battery {
     public:
         Battery();  
-        static uint8_t vbat_per;
-        static uint32_t vbat_mv;
-        static uint32_t vbat_vdd;
-        static uint8_t batt_type;
-        static void updateBattery(void);
+
+        static DynamicState updateBattery(DynamicState data);
         static uint32_t readVBAT(void);
         static uint8_t mvToPercent(uint32_t mvolts);
     private:
         static uint32_t analogReadVDD();
+        #ifdef NRF52840_XXAA 
+        static uint32_t analogReadVDDH();
+        #endif
         static uint32_t vbat_raw;
-
+        static uint8_t vbat_per;
+        static uint32_t vbat_mv;
+        static uint32_t vbat_vdd;
+        static uint32_t vbat_vddh;
+        static uint8_t batt_type;
   };
 
 #endif
