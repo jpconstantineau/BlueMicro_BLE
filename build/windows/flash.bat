@@ -25,7 +25,7 @@ if exist ..\..\output\%~1\%~1-%~2-%~3.hex (
 :flash
 
    	set prefix=%localappdata%\Arduino15\packages\adafruit\hardware\nrf52\
-   	set postfix=tools\adafruit-nrfutil\win32\adafruit-nrfutil.exe --verbose dfu serial -pkg ..\..\output\%~1\%~1-%~2-%~3.zip -p %~4 -b 115200 --singlebank
+   	set postfix=tools\adafruit-nrfutil\win32\adafruit-nrfutil.exe --verbose dfu serial -pkg ..\..\output\%~1\%~1-%~2-%~3.zip -p %~4 -b 115200 --singlebank 
    	set search_cmd="dir /b %prefix%"
    	FOR /F "tokens=*" %%i IN (' %search_cmd% ') DO SET ver=%%i
 	set bootloaderprefix=%prefix%\%ver%\bootloader\feather_nrf52832\
