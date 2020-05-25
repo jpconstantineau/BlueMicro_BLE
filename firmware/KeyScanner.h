@@ -47,6 +47,8 @@ class KeyScanner {
         KeyScanner();
  
         static bool scanMatrix(const int& currentState,unsigned long millis, const int& row, const int& col);
+        static void press(unsigned long millis, const int& row, const int& col);
+        static void release(unsigned long millis, const int& row, const int& col);
         static void updateRemoteReport(uint8_t data0 , uint8_t data1, uint8_t data2,uint8_t data3, uint8_t data4, uint8_t data5,uint8_t data6);
         static void updateRemoteLayer(uint8_t data0);
         static void process_for_tri_layers(uint8_t if_layer1, uint8_t and_layer2, uint8_t use_layer3);

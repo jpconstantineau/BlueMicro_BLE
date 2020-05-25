@@ -70,6 +70,20 @@ bool KeyScanner::scanMatrix(const int& currentState,unsigned long currentMillis,
         }
 }
 
+/**************************************************************************************************************************/
+// KEYPRESS - THIS ROUTINE ENACTS A KEYPRESS - DEBOUNCE SHOULD BE HANDLED BY CALLER
+/**************************************************************************************************************************/
+void KeyScanner::press(unsigned long currentMillis, const int& row, const int& col){
+    matrix[row][col].press(currentMillis);
+    lastPressed = currentMillis;
+}
+
+/**************************************************************************************************************************/
+// KEYRELEASE - THIS ROUTINE ENACTS A KEYRELEASE - DEBOUNCE SHOULD BE HANDLED BY CALLER
+/**************************************************************************************************************************/
+void KeyScanner::release(unsigned long currentMillis, const int& row, const int& col){
+    matrix[row][col].clear(currentMillis);
+}
 
 /**************************************************************************************************************************/
 // Called by callback function when remote data is received
