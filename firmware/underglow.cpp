@@ -1,4 +1,4 @@
-/*
+    /*
 Copyright 2019 <Pierre Constantineau>
 
 3-Clause BSD License
@@ -18,43 +18,41 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 */
 
-#ifndef HARDWAREVARIANTS_H
-#define HARDWAREVARIANTS_H
-
 /*
-The following can be selected from the Tools->Boards Arduino Menu when compiling
-NRF52832_FEATHER
-NRF52840_FEATHER
-NRF52840_ITSYBITSY
-NRF52840_CIRCUITPLAY
-NRF52840_METRO
-NRF52840_PCA10056
+Underglow files / library added by Coyt Barringer
 */
 
-#define FEATHERNRF52832 0  // don't do any avr mapping
-#define FEATHERNRF52840 0  // don't do any avr mapping
+#include "underglow.h"
+#if UNDERGLOW_LED_ON == 0 
+    //do nothing
+#else
 
-#define BLUEMICROV1_0   1
-#define BLUEMICROV1_1   2
-#define BLUEMICROV2_0   3
-#define BLUEMICROV2_0B  4
-#define BLUEMICROV2_0C  5
-#define BLUENANO1_0     6
-#define BLUENANO2_0     7
-#define BLUEMICROV2_1A  8
-#define BLUEMICRO840V1_0 9  // Needs ARDUINO_NRF52840_PCA10056 on the Arduino IDE
+void setupUnderglow(){
+  
+      //underlighting leds
+      //setup transistor I/O pins as outputs and turn all OFF
+      pinMode(ULED_ROW1, OUTPUT);
+      pinMode(ULED_ROW2, OUTPUT);
+      pinMode(ULED_ROW3, OUTPUT);
+      pinMode(ULED_ROW4, OUTPUT);
+      pinMode(ULED_ROW5, OUTPUT);
 
+      digitalWrite(ULED_ROW1, LOW);
+      digitalWrite(ULED_ROW2, LOW);
+      digitalWrite(ULED_ROW3, LOW);
+      digitalWrite(ULED_ROW4, LOW);
+      digitalWrite(ULED_ROW5, LOW);
 
+      //setup latch and blank for led driver ic
+      pinMode(ULED_LATCH, OUTPUT);
+      pinMode(ULED_BLANK, OUTPUT);
+      pinMode(ULED_SIN, OUTPUT);
+      pinMode(ULED_CLK, OUTPUT);
 
-#define COL2ROW       0
-#define ROW2COL       1
+      digitalWrite(ULED_LATCH, LOW);
+      digitalWrite(ULED_BLANK, HIGH);
+      digitalWrite(ULED_SIN, LOW);
+      digitalWrite(ULED_CLK, LOW);
 
-#define READ_ON_ROWS       1
-#define READ_ON_COLS       0
-
-#define TEST 0
-#define LEFT 1
-#define RIGHT 2
-#define MASTER 3
-
-#endif  /*HARDWAREVARIANTS_H*/
+}    
+#endif

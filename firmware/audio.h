@@ -18,43 +18,17 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 */
 
-#ifndef HARDWAREVARIANTS_H
-#define HARDWAREVARIANTS_H
-
 /*
-The following can be selected from the Tools->Boards Arduino Menu when compiling
-NRF52832_FEATHER
-NRF52840_FEATHER
-NRF52840_ITSYBITSY
-NRF52840_CIRCUITPLAY
-NRF52840_METRO
-NRF52840_PCA10056
+audio files / library added by Coyt Barringer
 */
 
-#define FEATHERNRF52832 0  // don't do any avr mapping
-#define FEATHERNRF52840 0  // don't do any avr mapping
+#ifndef AUDIO_H
+#define AUDIO_H
 
-#define BLUEMICROV1_0   1
-#define BLUEMICROV1_1   2
-#define BLUEMICROV2_0   3
-#define BLUEMICROV2_0B  4
-#define BLUEMICROV2_0C  5
-#define BLUENANO1_0     6
-#define BLUENANO2_0     7
-#define BLUEMICROV2_1A  8
-#define BLUEMICRO840V1_0 9  // Needs ARDUINO_NRF52840_PCA10056 on the Arduino IDE
+#include <Arduino.h>
+#include "keyboard_config.h"
+#include "firmware_config.h"
 
+void setupAudio();
 
-
-#define COL2ROW       0
-#define ROW2COL       1
-
-#define READ_ON_ROWS       1
-#define READ_ON_COLS       0
-
-#define TEST 0
-#define LEFT 1
-#define RIGHT 2
-#define MASTER 3
-
-#endif  /*HARDWAREVARIANTS_H*/
+#endif

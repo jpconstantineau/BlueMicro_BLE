@@ -134,6 +134,14 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define BACKLIGHT_PWM_ON 0          
 #endif
 
+#ifndef UNDERGLOW_LED_ON
+#define UNDERGLOW_LED_ON 0          
+#endif
+
+#ifndef AUDIO_ON
+#define AUDIO_ON 0          
+#endif
+
 #define PWM_TOUCH_INTERVAL 1000           // detection time since last keypress.
 #ifndef VBAT_PIN
    #define VBAT_PIN          (A7)

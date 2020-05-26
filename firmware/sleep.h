@@ -25,17 +25,11 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "keyboard_config.h"
 #include "firmware_config.h"
 // Keyboard Matrix
-extern byte rows[]  ;      // Contains the GPIO Pin Numbers defined in keyboard_config.h
-extern byte columns[] ;     // Contains the GPIO Pin Numbers defined in keyboard_config.h  
+
+extern byte gpioReadIn[]  ;      // Contains the GPIO Pin Numbers defined in keyboard_config.h
+extern byte gpioBias[] ;     // Contains the GPIO Pin Numbers defined in keyboard_config.h  
 
 void setupWakeUp(void);
 void gotoSleep(unsigned long timesincelastkeypress,bool connected);
-
-
-#if defined(SHIFT_REGISTER_KEYBOARD)
-void shiftOutToMakeColumnHigh2(int column);
-void shiftOutToMakeAllColumsLow2();
-void shiftOutToMakeAllColumnsHigh2();
-#endif
 
 #endif

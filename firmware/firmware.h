@@ -32,12 +32,17 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "LedPwm.h"
 #include "LedRGB.h"
 #include "gpio.h"
+#include "gpioExtension.h"
+#include "audio.h"
+#include "underglow.h"
 
 
     typedef struct { 
           
         bool    ledbacklight;  
-        bool    ledrgb;    
+        bool    ledrgb;
+        bool    ledunderglow;
+        bool    audio;    
         uint32_t timerkeyscaninterval;
         uint32_t timerbatteryinterval;     
   
@@ -64,12 +69,6 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
     #ifndef USER_MACRO_FUNCTION  
     #define USER_MACRO_FUNCTION 1  
     void process_user_macros(uint16_t macroid);
-    #endif
-
-    #if defined(SHIFT_REGISTER_KEYBOARD)
-    void shiftOutToMakeColumnHigh(int column);
-    void shiftOutToMakeAllColumsLow();
-    void shiftOutToMakeAllColumnsHigh();
     #endif
 
 #endif /* FIRMWARE_H */

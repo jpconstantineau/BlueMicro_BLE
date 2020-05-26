@@ -23,12 +23,18 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include <Adafruit_LittleFS.h>
 #include <InternalFileSystem.h>
 
+
 using namespace Adafruit_LittleFS_Namespace;
 /**************************************************************************************************************************/
-// Keyboard Matrix
-byte rows[] MATRIX_ROW_PINS;        // Contains the GPIO Pin Numbers defined in keyboard_config.h
 
-byte columns[] MATRIX_COL_PINS;     // Contains the GPIO Pin Numbers defined in keyboard_config.h  
+// Keyboard Matrix
+#if READ_DIRECTION == READ_ON_COLS
+  byte gpioBias[] MATRIX_ROW_PINS;       // Contains the GPIO Pin Numbers defined in keyboard_config.h
+  byte gpioReadIn[] MATRIX_COL_PINS;     // Contains the GPIO Pin Numbers defined in keyboard_config.h 
+#else //READ_DIRECTION == READ_ON_ROWS
+  byte gpioReadIn[] MATRIX_ROW_PINS;     // Contains the GPIO Pin Numbers defined in keyboard_config.h
+  byte gpioBias[] MATRIX_COL_PINS;       // Contains the GPIO Pin Numbers defined in keyboard_config.h
+#endif
 
 //uint32_t lastupdatetime =0;
 SoftwareTimer keyscantimer, batterytimer;
@@ -46,6 +52,8 @@ static std::vector<uint16_t> stringbuffer; // buffer for macros to type into...
 void setupConfig() {
   keyboardconfig.ledbacklight=BACKLIGHT_PWM_ON;
   keyboardconfig.ledrgb=WS2812B_LED_ON;
+  keyboardconfig.ledunderglow=UNDERGLOW_LED_ON;
+  keyboardconfig.audio=AUDIO_ON;
   keyboardconfig.timerkeyscaninterval=HIDREPORTINGINTERVAL;
   keyboardconfig.timerbatteryinterval=30*1000;
 
@@ -69,10 +77,17 @@ void setup() {
   keyscantimer.begin(keyboardconfig.timerkeyscaninterval, keyscantimer_callback);
   batterytimer.begin(keyboardconfig.timerbatteryinterval, batterytimer_callback);
 
-  //Serial.println("***** ENTERING BLE SETUP ***** ");
-  //delay(500);
-
   setupBluetooth();
+
+  if(keyboardconfig.audio)
+  {
+    setupAudio();
+  }
+
+  if(keyboardconfig.ledunderglow)
+  {
+    setupUnderglow();
+  }
 
   if(keyboardconfig.ledbacklight)
   {
@@ -95,113 +110,33 @@ void setup() {
 
   batterytimer.start();
 
-  //Serial.println("***** SUSPENDING MAIN LOOP ***** ");
-  //delay(500);
-
   suspendLoop(); // this commands suspends the main loop.  We are no longer using the loop but scheduling things using the timers.
   stringbuffer.clear();
 };
 
-
-#if !defined(SHIFT_REGISTER_KEYBOARD)
-/**************************************************************************************************************************/
-// Standard setupMatrix() fnc for normal direct I/O connected boards
-/**************************************************************************************************************************/
-void setupMatrix(void) {
-    //inits all the columns as INPUT
-   for (const auto& column : columns) {
-      LOG_LV2("BLEMIC","Setting to INPUT Column: %i" ,column);
-      pinMode(column, INPUT);
-    }
-
-   //inits all the rows as INPUT_PULLUP
-   for (const auto& row : rows) {
-      LOG_LV2("BLEMIC","Setting to INPUT_PULLUP Row: %i" ,row);
-      pinMode(row, INPUT_PULLUP);
-    }
-
-   //setup other peripherals / pins
-
-      //underlighting leds
-      //setup transistor I/O pins as outputs and turn all OFF
-      pinMode(ULED_ROW1, OUTPUT);
-      pinMode(ULED_ROW2, OUTPUT);
-      pinMode(ULED_ROW3, OUTPUT);
-      pinMode(ULED_ROW4, OUTPUT);
-      pinMode(ULED_ROW5, OUTPUT);
-
-      digitalWrite(ULED_ROW1, LOW);
-      digitalWrite(ULED_ROW2, LOW);
-      digitalWrite(ULED_ROW3, LOW);
-      digitalWrite(ULED_ROW4, LOW);
-      digitalWrite(ULED_ROW5, LOW);
-
-};
-#endif
-
-
-#if defined(SHIFT_REGISTER_KEYBOARD)
 /**************************************************************************************************************************/
 // setupMatrix fuc for keybards using shift registers as I/O expanders to drive columns high during the scanning of keys. 
 /**************************************************************************************************************************/
 void setupMatrix(void) {
 
-    //inits all the ROWS INPUT
-   for (const auto& row : rows) {
-      LOG_LV2("BLEMIC","Setting to INPUT ROW: %i" ,row);
-      pinMode(row, INPUT);
+  //inits gpio as INPUT
+  for (const auto& gpioToRead : gpioReadIn) {
+    LOG_LV2("BLEMIC","Setting to INPUT GPIO: %i" ,gpioToRead);
+    pinMode(gpioToRead, INPUT);
+  }
+
+  #if defined(SHIFT_REGISTER_KEYBOARD)
+    setupShiftRegisters();
+  #else
+    //inits gpio as INPUT_PULLUP
+    for (const auto& gpioToBias : gpioBias) {
+        LOG_LV2("BLEMIC","Setting to INPUT_PULLUP GPIO: %i" ,gpioToBias);
+        pinMode(gpioToBias, INPUT_PULLUP);
     }
-
-    //inits the shift register pins as outputs and makes them low
-    pinMode(SER_LATCH, OUTPUT);
-    pinMode(SER_DATA, OUTPUT);
-    pinMode(SER_CLK, OUTPUT);
-
-    digitalWrite(SER_LATCH, HIGH);
-    digitalWrite(SER_DATA, LOW);
-    digitalWrite(SER_CLK, LOW);
-
-    //setup other peripherals / pins
-
-
-      //underlighting leds
-      //setup transistor I/O pins as outputs and turn all OFF
-      pinMode(ULED_ROW1, OUTPUT);
-      pinMode(ULED_ROW2, OUTPUT);
-      pinMode(ULED_ROW3, OUTPUT);
-      pinMode(ULED_ROW4, OUTPUT);
-      pinMode(ULED_ROW5, OUTPUT);
-
-      digitalWrite(ULED_ROW1, LOW);
-      digitalWrite(ULED_ROW2, LOW);
-      digitalWrite(ULED_ROW3, LOW);
-      digitalWrite(ULED_ROW4, LOW);
-      digitalWrite(ULED_ROW5, LOW);
-
-      //setup latch and blank for led driver ic
-      pinMode(ULED_LATCH, OUTPUT);
-      pinMode(ULED_BLANK, OUTPUT);
-      pinMode(ULED_SIN, OUTPUT);
-      pinMode(ULED_CLK, OUTPUT);
-
-      digitalWrite(ULED_LATCH, LOW);
-      digitalWrite(ULED_BLANK, HIGH);
-      digitalWrite(ULED_SIN, LOW);
-      digitalWrite(ULED_CLK, LOW);
-
-      //speaker(s)
-      //setup speaker pins
-      pinMode(SPEAKER_A, OUTPUT);
-      pinMode(SPEAKER_B, OUTPUT);
-
-      digitalWrite(SPEAKER_A, LOW);
-      digitalWrite(SPEAKER_B, LOW);
+  #endif
 
 };
-#endif
 
-
-#if !defined(SHIFT_REGISTER_KEYBOARD)
 /**************************************************************************************************************************/
 // Keyboard Scanning
 /**************************************************************************************************************************/
@@ -209,126 +144,93 @@ void scanMatrix() {
   uint32_t pindata0 = 0;
   uint32_t pindata1 = 0;
   keyboardstate.timestamp  = millis();   // lets call it once per scan instead of once per key in the matrix
-  
-  //Notes: this sets all COLS to input pulldown
-    
-  for (int i = 0; i < MATRIX_COLS; ++i) {                               // Setting columns before scanning.
-        #if DIODE_DIRECTION == COL2ROW                                         
-        pinMode(columns[i], INPUT_PULLUP);                              // 'enables' the column High Value on the diode; becomes "LOW" when pressed 
-        #else
-        pinMode(columns[i], INPUT_PULLDOWN);                            // 'enables' the column High Value on the diode; becomes "LOW" when pressed
-        #endif
+  int matrixOutsideLoop; //holds number of pins scanned during outside loop
+  int matrixInsideLoop;  //holds number of pins scanned during inside loop
+
+  //handle read direction - we have option to read in / poll keypresses on either the cols or the rows
+  #if READ_DIRECTION == READ_ON_COLS
+    matrixOutsideLoop = MATRIX_ROWS;
+    matrixInsideLoop = MATRIX_COLS;
+  #else //READ_DIRECTION == READ_ON_ROWS
+    matrixOutsideLoop = MATRIX_COLS;
+    matrixInsideLoop = MATRIX_ROWS;
+  #endif
+
+  //sets all io used to "read in" a keypress value to an input & handles DIODE_DIRECTION
+  for (int i = 0; i < matrixInsideLoop; ++i) {                               
+          #if DIODE_DIRECTION == COL2ROW                                         
+          pinMode(gpioReadIn[i], INPUT_PULLUP);                               
+          #else
+          pinMode(gpioReadIn[i], INPUT_PULLDOWN);                            
+          #endif
   }
 
+  //outside loop scans through either rows or cols - sets their 'BIAS' appropriately in preparation for inside loop which "gpio Reads" the pins
+  for(int j = 0; j < matrixOutsideLoop; ++j) {    
 
-  //loop that scans through "ROWS"
-  for(int j = 0; j < MATRIX_ROWS; ++j) {                             
-    //set the current row as OUPUT and LOW
-    pinMode(rows[j], OUTPUT);
-    #if DIODE_DIRECTION == COL2ROW                                         
-    digitalWrite(rows[j], LOW);                                       // 'enables' a specific row to be "low" 
-    
-
-    #elif defined(SHIFT_REGISTER_KEYBOARD)
-    //SET ROWS TO LOW w/ shift register 
-    
-
-    #else
-    digitalWrite(rows[j], HIGH);                                       // 'enables' a specific row to be "HIGH"
-    #endif
-
-        nrfx_coredep_delay_us(1);   // need for the GPIO lines to settle down electrically before reading.
-
-        #ifdef NRF52840_XXAA        // This is chip dependent and not on the board.  As such, we need this to also support the nrf52840 feather which remaps the numbers of the GPIOs to Pins numbers.
-          
-          
-          pindata0 = NRF_P0->IN;                                         // read all pins at once
-          pindata1 = NRF_P1->IN;                                         // read all pins at once
-          
-
-          //loop that scans through "COLS"
-          for (int i = 0; i < MATRIX_COLS; ++i) {
-            int ulPin = g_ADigitalPinMap[columns[i]];                               // This maps the Board Pin to the GPIO.
-            if (ulPin<32)
-            {
-              KeyScanner::scanMatrix((pindata0>>(ulPin))&1, keyboardstate.timestamp, j, i);       // This function processes the logic values and does the debouncing 
-            } else
-            {
-              KeyScanner::scanMatrix((pindata1>>(ulPin-32))&1, keyboardstate.timestamp, j, i);    // This function processes the logic values and does the debouncing 
-            }
-          }
-          
-           
-
-
-        #else
-          pindata0 = NRF_GPIO->IN;                                                // read all pins at once
-          for (int i = 0; i < MATRIX_COLS; ++i) {
-            int ulPin = g_ADigitalPinMap[columns[i]];                             // This maps the Board Pin to the GPIO. Added to ensure compatibility with potential new nrf52832 boards
-            KeyScanner::scanMatrix((pindata0>>(ulPin))&1, keyboardstate.timestamp, j, i);       // This function processes the logic values and does the debouncing
-          }
-        #endif
-    pinMode(rows[j], INPUT);                                          //'disables' the row that was just scanned
-   }                                                                  // done scanning the matrix
-
-  for (int i = 0; i < MATRIX_COLS; ++i) {                             //Scanning done, disabling all columns
-    pinMode(columns[i], INPUT);                                     
-  }
-};
-#endif
-
-
-#if defined(SHIFT_REGISTER_KEYBOARD)
-/**************************************************************************************************************************/
-// Keyboard Scanning for SHIFT REGISTER Keyboards
-/**************************************************************************************************************************/
-void scanMatrix() {
-  uint32_t pindata0 = 0;
-  uint32_t pindata1 = 0;
-  keyboardstate.timestamp  = millis();   // lets call it once per scan instead of once per key in the matrix
-  
-
-  //Notes: this sets all ROWS to input pulldown
-  //ROWS must be inputs because shift register outputs are wired to COLS and can only be set to "OUTPUTs"
-  for (int i = 0; i < MATRIX_ROWS; ++i) {                   // Setting rows before scanning.
-        pinMode(rows[i], INPUT_PULLDOWN);                   // 'enables' the row High Value on the diode; becomes "LOW" when pressed
-  }
-
-
-  //loop that scans through "COLS"
-  for(int j = 0; j < MATRIX_COLS; ++j) {        
-
-    //set the current COL as OUTPUT and HIGH using the shift register
-    shiftOutToMakeColumnHigh(j);
+      //set the current COL as OUPUT - handle each case thereafter
+      #if DIODE_DIRECTION == COL2ROW && !defined(SHIFT_REGISTER_KEYBOARD)     
+      pinMode(gpioBias[j], OUTPUT);                                   
+      digitalWrite(gpioBias[j], LOW);                                         // 'enables' a specific pin to be "low" 
+      #elif DIODE_DIRECTION == ROW2COL && !defined(SHIFT_REGISTER_KEYBOARD)
+      pinMode(gpioBias[j], OUTPUT);
+      digitalWrite(gpioBias[j], HIGH);                                        // 'enables' a specific pin to be "high"
+      #elif DIODE_DIRECTION == COL2ROW && defined(SHIFT_REGISTER_KEYBOARD)                                        
+      shiftOutToMakePinLow(j);                                                // 'enables' a specific pin to be "low" but using a shift register
+      #else //DIODE_DIRECTION == ROW2COL && defined(SHIFT_REGISTER_KEYBOARD)
+      shiftOutToMakePinHigh(j);                                               // 'enables' a specific pin to be "high" but using a shift register
+      #endif   
 
       nrfx_coredep_delay_us(1);   // need for the GPIO lines to settle down electrically before reading.
 
-      pindata0 = NRF_P0->IN;                                         // read all pins at once
-      pindata1 = NRF_P1->IN;                                         // read all pins at once
-      
-      //loop that scans through "ROWS"
-      for (int i = 0; i < MATRIX_ROWS; ++i) {
-        int ulPin = g_ADigitalPinMap[rows[i]];                               // This maps the Board Pin to the GPIO.
-        if (ulPin<32)
-        {
-          KeyScanner::scanMatrix((pindata0>>(ulPin))&1, keyboardstate.timestamp, i, j);       // This function processes the logic values and does the debouncing 
-        } else
-        {
-          KeyScanner::scanMatrix((pindata1>>(ulPin-32))&1, keyboardstate.timestamp, i, j);    // This function processes the logic values and does the debouncing 
-        }
-      }
-      
-      shiftOutToMakeAllColumsLow();
-   }                                                                  // done scanning the matrix
+          #ifdef NRF52840_XXAA        // This is chip dependent and not on the board.  As such, we need this to also support the nrf52840 feather which remaps the numbers of the GPIOs to Pins numbers.
+              
+              pindata0 = NRF_P0->IN;                                         // read all pins at once
+              pindata1 = NRF_P1->IN;                                         // read all pins at once
+              
+              //loop that scans through "COLS"
+              for (int i = 0; i < matrixInsideLoop; ++i) {
+              int ulPin = g_ADigitalPinMap[gpioReadIn[i]];                               // This maps the Board Pin to the GPIO.
+                if (ulPin<32)
+                {
+                  #if READ_DIRECTION == READ_ON_COLS
+                    KeyScanner::scanMatrix((pindata0>>(ulPin))&1, keyboardstate.timestamp, j, i);       // This function processes the logic values and does the debouncing
+                  #else
+                    KeyScanner::scanMatrix((pindata0>>(ulPin))&1, keyboardstate.timestamp, i, j);       // This function processes the logic values and does the debouncing
+                  #endif
+                } else
+                {
+                  #if READ_DIRECTION == READ_ON_COLS
+                    KeyScanner::scanMatrix((pindata1>>(ulPin-32))&1, keyboardstate.timestamp, j, i);    // This function processes the logic values and does the debouncing
+                  #else
+                    KeyScanner::scanMatrix((pindata1>>(ulPin-32))&1, keyboardstate.timestamp, i, j);    // This function processes the logic values and does the debouncing
+                  #endif
+                }
+              }
 
+          #else
+              pindata0 = NRF_GPIO->IN;                                                // read all pins at once
+              for (int i = 0; i < matrixInsideLoop; ++i) {
+              int ulPin = g_ADigitalPinMap[gpioReadIn[i]];                             // This maps the Board Pin to the GPIO. Added to ensure compatibility with potential new nrf52832 boards
+              KeyScanner::scanMatrix((pindata0>>(ulPin))&1, keyboardstate.timestamp, j, i);       // This function processes the logic values and does the debouncing
+              }
+          #endif
 
-  for (int i = 0; i < MATRIX_ROWS; ++i) {                             //Scanning done, disabling all rows
-    pinMode(rows[i], INPUT);                                          
+      #if !defined(SHIFT_REGISTER_KEYBOARD)
+      pinMode(gpioBias[j], INPUT);                                          //'disables' the pin that was just scanned
+      #elif DIODE_DIRECTION == COL2ROW && defined(SHIFT_REGISTER_KEYBOARD)                                        
+      shiftOutToMakeAllLow();                                    
+      #else //DIODE_DIRECTION == ROW2COL && defined(SHIFT_REGISTER_KEYBOARD)
+      shiftOutToMakeAllHigh();                                     
+      #endif
+
+  }                                                                   // done scanning the matrix
+
+  for (int i = 0; i < matrixInsideLoop; ++i) {                             //Scanning done, disabling all columns
+      pinMode(gpioReadIn[i], INPUT);                                     
   }
+ 
 };
-#endif
-
-
 /**************************************************************************************************************************/
 /**************************************************************************************************************************/
 #if USER_MACRO_FUNCTION == 1  
@@ -735,51 +637,3 @@ extern "C" void vApplicationIdleHook(void) {
     sd_power_mode_set(NRF_POWER_MODE_LOWPWR);
     sd_app_evt_wait();  // puts the nrf52 to sleep when there is nothing to do.  You need this to reduce power consumption. (removing this will increase current to 8mA)
 };
-
-
-
-//********************************************************************************************//
-//* Helper functions for Keyboards using Shift Registers to drive columns high in order to   *//
-//* save I/O on nrf52840                                                                     *//
-//* Shift register code is currently setup to use                                            *//
-//********************************************************************************************//
-#if defined(SHIFT_REGISTER_KEYBOARD)
- 
-    //makes a specific "pin"
-    void shiftOutToMakeColumnHigh(int column){
-
-        uint16_t shiftValue = pow(2, column);
-        uint8_t shiftValLow = shiftValue & 0xFF;
-        uint8_t shiftValHigh = (shiftValue & 0xFF00) >> 8;
-
-        digitalWrite(SER_LATCH, LOW);
-        shiftOut(SER_DATA, SER_CLK, MSBFIRST, shiftValHigh); //first number to 255
-        shiftOut(SER_DATA, SER_CLK, MSBFIRST, shiftValLow); //second number to 255
-        digitalWrite(SER_LATCH, HIGH);
-    }
-
-
-    void shiftOutToMakeAllColumsLow(){
-
-        uint8_t shiftValLow = 0x00;
-        uint8_t shiftValHigh = 0x00;
-
-        digitalWrite(SER_LATCH, LOW);
-        shiftOut(SER_DATA, SER_CLK, LSBFIRST, shiftValHigh); //first number to 255
-        shiftOut(SER_DATA, SER_CLK, LSBFIRST, shiftValLow); //second number to 255
-        digitalWrite(SER_LATCH, HIGH);
-    }
-
-
-    void shiftOutToMakeAllColumnsHigh(){
-
-        uint8_t shiftValLow = 0xFF;
-        uint8_t shiftValHigh = 0xFF;
-
-        digitalWrite(SER_LATCH, LOW);
-        shiftOut(SER_DATA, SER_CLK, LSBFIRST, shiftValHigh); //first number to 255
-        shiftOut(SER_DATA, SER_CLK, LSBFIRST, shiftValLow); //second number to 255
-        digitalWrite(SER_LATCH, HIGH);
-    }
-
-#endif 

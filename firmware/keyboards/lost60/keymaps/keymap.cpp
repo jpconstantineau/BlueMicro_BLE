@@ -37,7 +37,7 @@ std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
     {KC_TAB,    KC_Q,    KC_W,    KC_E,   KC_R,    KC_T,     KC_Y,    KC_U,      KC_I,    KC_O,     KC_P,     KC_LBRC,    KC_RBRACKET,    KC_BSLASH},
     {LAYER_1,   KC_A,    KC_S,    KC_D,   KC_F,    KC_G,     KC_H,    KC_J,      KC_K,    KC_L,     KC_SCLN,  KC_QUOT,    KC_NO,          KC_ENTER},
     {KC_LSFT,   KC_NO,   KC_Z,    KC_X,   KC_C,    KC_V,     KC_B,    KC_N,      KC_M,    KC_COMMA, KC_DOT,   KC_SLASH,   KC_NO,          KC_RSFT},
-    {KC_LCTL,   KC_LGUI, KC_LALT, KC_NO,  KC_NO,   KC_SPACE, KC_NO,   KC_NO,     KC_NO,   KC_NO,    KC_LEFT,  KC_RIGHT,   KC_DOWN,        KC_UP}
+    {KC_LCTL,   KC_LGUI, KC_LALT, KC_NO,  KC_NO,   KC_SPACE, KC_NO,   KC_NO,     KC_NO,   KC_ESC,    KC_LEFT,  KC_RIGHT,   KC_DOWN,        KC_UP}
 }};
 
 
@@ -85,7 +85,6 @@ void setupKeymap() {
     KC_TRNS,    RGB_RMOD,   RGB_HUD,    RGB_SAD,    RGB_VAD,    RGB_SPD,    RGB_M_SN,   RGB_M_K,    RGB_M_X,    RGB_M_G,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    \
     KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS     \
     );
-    
 
     /*
      * add the other layers
