@@ -66,6 +66,12 @@ void setup() {
  setupConfig();
  Serial.begin(115200);
  // while ( !Serial ) delay(10);   // for nrf52840 with native usb this makes the nrf52840 stall and wait for a serial connection.  Something not wanted for a keyboard...
+// power on Vcc to external devices\
+
+#ifdef VCC_ENABLE_GPIO
+pinMode(VCC_ENABLE_GPIO, OUTPUT);
+digitalWrite(VCC_ENABLE_GPIO, HIGH); 
+#endif
 
 oled.begin(1);
 

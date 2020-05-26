@@ -253,6 +253,7 @@ This makes it simpler to migrate from the Arduino Pro Micro to the BlueMicro.
   #if HARDWARE_MAPPING == BLUEMICRO840V1_0
         #define BATTERY_TYPE BATT_LIPO
         #define VBAT_PIN  31
+        #define VCC_ENABLE_GPIO 12
         #define D3      6  
         #define D2      8   
         #define D1      15  
