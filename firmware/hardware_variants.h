@@ -43,8 +43,9 @@ NRF52840_PCA10056
 #define BLUENANO2_0     7
 #define BLUEMICROV2_1A  8
 #define BLUEMICRO840V1_0 9  // Needs ARDUINO_NRF52840_PCA10056 on the Arduino IDE
-#define NICE_NANOV0_2  10
+#define NICE_NANOV1_0  10
 #define NRFMICROV0_3   11
+
 
 
 #define COL2ROW       0
