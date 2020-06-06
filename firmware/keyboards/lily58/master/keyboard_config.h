@@ -20,7 +20,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #ifndef KEYBOARD_CONFIG_H
 #define KEYBOARD_CONFIG_H
 #include "hardware_variants.h"
-#define HARDWARE_MAPPING  NICE_NANOV0_2  // note only the BlueMicro840 or NiceNano fits on the lily58.
+#define HARDWARE_MAPPING  NICE_NANOV1_0  // note only the BlueMicro840 or NiceNano fits on the lily58.
 #include "breakout_mapping.h"
 
 #define KEYBOARD_SIDE MASTER
