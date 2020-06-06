@@ -63,7 +63,7 @@ class KeyScanner {
        // static uint8_t layerMode;
         static uint16_t remotespecialkeycode;
         static uint8_t currentReport[8];
-       
+        
         static uint8_t bufferposition;
 
     private:
@@ -73,9 +73,9 @@ class KeyScanner {
 
         static void copyRemoteReport();
 
-        static bool processingmacros;
+       
         static uint8_t getlayer(uint16_t layers);
-
+        static bool processingmacros;
         static uint16_t oneshotLayer;
         static uint8_t remoteReport[8];
         static uint8_t previousReport[8];

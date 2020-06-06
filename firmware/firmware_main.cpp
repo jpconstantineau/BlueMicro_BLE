@@ -446,6 +446,7 @@ void sendKeyPresses() {
   if (KeyScanner::macro > 0){
       process_user_macros(KeyScanner::macro);
       KeyScanner::macro = 0;
+      
   } 
   if (!stringbuffer.empty()) // if the macro buffer isn't empty, send the first character of the buffer... which is located at the back of the queue
   {  
@@ -476,6 +477,7 @@ void sendKeyPresses() {
         delay(keyboardconfig.timerkeyscaninterval);
       }
     }
+   // KeyScanner::processingmacros=0;
   }
   else if ((KeyScanner::reportChanged))  //any new key presses anywhere?
   {                                                                              

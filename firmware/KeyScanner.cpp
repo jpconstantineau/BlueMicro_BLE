@@ -359,6 +359,8 @@ bool KeyScanner::getReport()
     currentReport[0] = currentMod;
     currentReport[7] = localLayer;
 
+if (activeKeys.empty() && processingmacros) {processingmacros = false;}
+
    if((currentReport[0] != previousReport[0])
         | (currentReport[1] != previousReport[1])
          | (currentReport[2] != previousReport[2])
@@ -380,7 +382,9 @@ bool KeyScanner::getReport()
             {processingmacros=false; macro=0; specialfunction=0; consumer=0; mouse=0;}
     }
     else
-    {reportChanged = false;}
+    {reportChanged = false;
+    
+    }
 
     return reportChanged;
 }
