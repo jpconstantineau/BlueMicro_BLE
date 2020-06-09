@@ -65,7 +65,7 @@ uint32_t layer0_left[MATRIX_ROWS][MATRIX_COLS] =
  * ,------------------------------------------------.
  * |   =  |   Y  |   U  |   I  |   O  |   P  | Bksp |
  * |------+------+------+------+------+-------------|
- * |   ]  |   H  |   J  |   K  |   L  |   ;  |  '   |
+ * |   \  |   H  |   J  |   K  |   L  |   ;  |  '   |
  * |------+------+------+------+------+------|------|
  * | Space|   N  |   M  |   ,  |   .  |   /  |Enter |
  * `------+------+------+------+------+------+------|
@@ -76,7 +76,7 @@ uint32_t layer0_left[MATRIX_ROWS][MATRIX_COLS] =
 uint32_t layer0_right[MATRIX_ROWS][MATRIX_COLS] =
     KEYMAP(
         KC_EQUAL, KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,      KC_BSPACE, 
-        KC_RBRC,  KC_H,    KC_J,    KC_K,    KC_L,    KC_SCOLON, KC_QUOTE,
+        KC_BSLS,  KC_H,    KC_J,    KC_K,    KC_L,    KC_SCOLON, KC_QUOTE,
         KC_SPC,   KC_N,    KC_M,    KC_COMMA,KC_DOT,  KC_SLSH,   KC_ENT,
         _______,  KC_SPC,  LAYER_2, KC_LEFT, KC_UP,   KC_DOWN,   KC_RIGHT
     );
