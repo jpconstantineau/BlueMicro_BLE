@@ -17,7 +17,25 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 #include "keymap.h"
 
+#if KEYBOARD_SIDE == MASTER
+std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
+    {KEYMAP(
+        KC_1,  KC_2,    KC_3,    KC_4,    KC_5,    KC_6,  
+        KC_A,  KC_B,    KC_C,    KC_D,    KC_E,    KC_F,  
+        KC_G,  KC_H,    KC_I,    KC_J,    KC_K,    KC_L,  
+        KC_M,  KC_N,    KC_O,    KC_P,    KC_Q,    KC_R,  
+        KC_S,  KC_T,    KC_U,    KC_V,    KC_W,    KC_X 
+    )};
 
+void setupKeymap() {
+
+   // no layers for master keymap
+   // this is a keymap that's used for testing that each key is responding properly to key presses
+   // flash this keymap to both left and right to test whether each half works properly.
+   // once tested, you can flash the left and right to their respective halves.
+
+}
+#endif
 
 #if KEYBOARD_SIDE == LEFT
 
