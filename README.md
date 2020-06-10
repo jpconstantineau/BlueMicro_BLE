@@ -26,6 +26,7 @@ Top Row: 5x5Backpack, 4x4Backpack
 Bottom Row: BlueMicro V2.0,  BlueMicro V1.0, BlueNano V2.0, BlueNano V1.0, Pro Micro (For Reference)
 
 | Board Name | Description | Chip | Bootloader |
+|---|---|---|---|
 | [Adafruit nRF52 Feather](https://www.adafruit.com/product/3406) | The original! | nRF52832 | nrf52832 feather |
 | [BlueMicro V1.0](https://github.com/jpconstantineau/NRF52-Board/tree/master/EByte_E73) | Serial TX/RX routed through D2 and D3; Designed for the ErgoTravel; Tested and Gerber available | nRF52832 | nrf52832 feather |
 | [BlueMicro V1.1](https://github.com/jpconstantineau/NRF52-Board/tree/master/EByte_E73)  | Compatible with more Keyboards - Serial TX/RX are routed separately; Tested and Gerber available | nRF52832 | nrf52832 feather |
