@@ -25,24 +25,24 @@ Top Row: 5x5Backpack, 4x4Backpack
 
 Bottom Row: BlueMicro V2.0,  BlueMicro V1.0, BlueNano V2.0, BlueNano V1.0, Pro Micro (For Reference)
 
-* [Adafruit nRF52 Feather](https://www.adafruit.com/product/3406) (Software compatible)
-* [BlueMicro V1.0](https://github.com/jpconstantineau/NRF52-Board/tree/master/EByte_E73)  Serial TX/RX routed through D2 and D3; Designed for the ErgoTravel; Tested and Gerber available
-* [BlueMicro V1.1](https://github.com/jpconstantineau/NRF52-Board/tree/master/EByte_E73)  Compatible with more Keyboards - Serial TX/RX are routed separately; Tested and Gerber available
-* [BlueMicro V2.0b](https://github.com/jpconstantineau/NRF52-Board/tree/master/EByte_E73_Batt) Compatible with more Keyboards - Serial TX/RX are routed separately, LiPo Charger on board; Tested and Gerber available 
-* [BlueMicro V2.0c](https://github.com/jpconstantineau/NRF52-Board/tree/master/EByte_E73_Batt_ErgoTravel) Serial TX/RX routed through D2 and D3; Designed for the ErgoTravel. LiPo Charger on Board with battery connection connected to RAW pin. Tested and Gerber available.
-* [BlueMicro840]() Bluemicro based on the design of the nrfmicro.  Still being worked on...
+| Board Name | Description | Chip | Bootloader |
+|---|---|---|---|
+| [Adafruit nRF52 Feather](https://www.adafruit.com/product/3406) | The original from Adafruit! | nRF52832 | nrf52832 feather |
+| [BlueMicro V1.0](https://github.com/jpconstantineau/NRF52-Board/tree/master/EByte_E73) | Serial TX/RX routed through D2 and D3; Designed for the ErgoTravel; Tested and Gerber available | nRF52832 | nrf52832 feather |
+| [BlueMicro V1.1](https://github.com/jpconstantineau/NRF52-Board/tree/master/EByte_E73)  | Compatible with more Keyboards - Serial TX/RX are routed separately; Tested and Gerber available | nRF52832 | nrf52832 feather |
+| [BlueMicro V2.0b](https://github.com/jpconstantineau/NRF52-Board/tree/master/EByte_E73_Batt) | Compatible with more Keyboards - Serial TX/RX are routed separately, LiPo Charger on board; Tested and Gerber available | nRF52832 | nrf52832 feather |
+| [BlueMicro V2.0c](https://github.com/jpconstantineau/NRF52-Board/tree/master/EByte_E73_Batt_ErgoTravel) | Serial TX/RX routed through D2 and D3; Designed for the ErgoTravel. LiPo Charger on Board with battery connection connected to RAW pin. Tested and Gerber available. | nRF52832 | nrf52832 feather |
+| [4x4 Backpack](https://github.com/jpconstantineau/NRF52-Board/tree/master/4x4_backpack/4x4_backpack) | For use with [40percent.club 4x4 Boards](https://www.40percent.club/2018/01/4x4x4x4x4.html). Uses a CR2032 Battery. | nRF52832 | nrf52832 feather |
+| [4x4 Platform](https://github.com/jpconstantineau/NRF52-Board/tree/master/4x4_backpack/4x4_platform) | For use with [40percent.club 4x4 Boards](https://www.40percent.club/2018/01/4x4x4x4x4.html). Uses a rechargeable Battery, has a single RGB on board and has a few status LEDs and PWM driven LEDs. Has serial on board too! | nRF52832 | nrf52832 feather |
+| [4x4 Backpack840](https://github.com/jpconstantineau/NRF52-Board/tree/master/4x4_backpack/4x4_backpack_nrf52840) | For use with [40percent.club 4x4 Boards](https://www.40percent.club/2018/01/4x4x4x4x4.html). Uses a rechargeable  Battery, has a single RGB on board and has a few status LEDs and PWM driven LEDs.  Most importantly, it uses a nrf52840 module instead of a nrf52832 module. | nRF52832 | nrf52832 feather |
+| [5x5 Backpack](https://github.com/jpconstantineau/NRF52-Board/tree/master/5x5_backpack/5x5_backpack) | For use with [40percent.club 5x5 Boards](https://www.40percent.club/2018/04/5x5.html). Uses a CR2032 Battery. | nRF52832 | nrf52832 feather |
+| BLE Phage   |    (Compatible with even more Keyboards due to its small size - Serial USB and PoLi Charger on board) | nRF52832 | nrf52832 feather |
+| [BLE Phage Basic](https://southpawdesign.net/products/blue-phage-basic?variant=8958741545020) | (Compatible with even more Keyboards due to its small size - Serial TX/RX are routed separately) | nRF52832 | nrf52832 feather |
+| [Adafruit nRF52840 Feather](https://www.adafruit.com/product/3406) | The updated nrf52 feather from Adafruit! | nRF52840 | nrf52840 feather express |
+| [BlueMicro840]() | Bluemicro based on the design of the nrfmicro.  Still being worked on... | nRF52840 | PCA10056 |
+| [nice!nano](https://docs.nicekeyboards.com/#/nice!nano/) | uses the nRF52840 chip. Same size as the Pro Micro.  | nRF52840 | nice_nano |
 
-* [4x4 Backpack](https://github.com/jpconstantineau/NRF52-Board/tree/master/4x4_backpack/4x4_backpack) For use with [40percent.club 4x4 Boards](https://www.40percent.club/2018/01/4x4x4x4x4.html). Uses a CR2032 Battery.
-* [4x4 Platform](https://github.com/jpconstantineau/NRF52-Board/tree/master/4x4_backpack/4x4_platform) For use with [40percent.club 4x4 Boards](https://www.40percent.club/2018/01/4x4x4x4x4.html). Uses a rechargeable Battery, has a single RGB on board and has a few status LEDs and PWM driven LEDs. Has serial on board too!
-* [4x4 Backpack840](https://github.com/jpconstantineau/NRF52-Board/tree/master/4x4_backpack/4x4_backpack_nrf52840) For use with [40percent.club 4x4 Boards](https://www.40percent.club/2018/01/4x4x4x4x4.html). Uses a rechargeable  Battery, has a single RGB on board and has a few status LEDs and PWM driven LEDs.  Most importantly, it uses a nrf52840 module instead of a nrf52832 module.
-
-* [5x5 Backpack](https://github.com/jpconstantineau/NRF52-Board/tree/master/5x5_backpack/5x5_backpack) For use with [40percent.club 5x5 Boards](https://www.40percent.club/2018/04/5x5.html). Uses a CR2032 Battery.
-
-* BLE Phage       (Compatible with even more Keyboards due to its small size - Serial USB and PoLi Charger on board)
-* [BLE Phage Basic](https://southpawdesign.net/products/blue-phage-basic?variant=8958741545020) (Compatible with even more Keyboards due to its small size - Serial TX/RX are routed separately)
-
-
-We need your help in bringing support for the nrf52840.  Contact us and let us know how you want to help!
+We need your help in bringing improved support for the nrf52840.  Contact us and let us know how you want to help!
 
 Maintainer: [/u/jpconstantineau](https://github.com/jpconstantineau)  
 
