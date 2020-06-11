@@ -184,7 +184,7 @@ void setupKeymap() {
   KC_PLUS,    KC_6,    KC_7,    KC_8,    KC_9,     KC_0,      KC_DEL,  \
   KC_RCBR,    KC_F6,   KC_MINS, KC_EQL,  KC_LBRC,  KC_RBRC,   KC_BSLS,   \
   KC_SPC,  KC_F12,  KC_NUHS, KC_NUBS, _______,  _______,   _______,  \
-  _______, KC_SPC,   LAYER_1, KC_LEFT, KC_UP,   KC_DOWN,   KC_RIGHT \
+  _______, KC_SPC,   LAYER_2, KC_LEFT, KC_UP,   KC_DOWN,   KC_RIGHT \
 );
 
     /* Layer 2 (lower)
@@ -203,7 +203,7 @@ void setupKeymap() {
   KC_PLUS,   KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_DEL,  \
   KC_RPRN,   KC_F6,   KC_UNDS, KC_PLUS, KC_LCBR, KC_RCBR, KC_PIPE,   \
   KC_SPC,    KC_F12,  KC_NUTL, KC_NUPI,_______, _______, _______,  \
-  _______,   KC_SPC,  LAYER_1, KC_LEFT, KC_UP,   KC_DOWN, KC_RIGHT \
+  _______,   KC_SPC,  LAYER_2, KC_LEFT, KC_UP,   KC_DOWN, KC_RIGHT \
 );
 
     /* Layer 3
@@ -222,7 +222,7 @@ void setupKeymap() {
   _______,   KC_F6,    KC_F7,    KC_F8,    KC_F9,    KC_F10,   KC_INS,  \
   _______,   _______,  _______,  _______,  _______,  _______,  _______,   \
   KC_SPC ,   _______,  _______,  _______,  _______,  _______,  _______,  \
-  _______,   KC_SPC,   LAYER_1,  KC_LEFT,  KC_UP,    KC_DOWN,  KC_RIGHT \
+  _______,   KC_SPC,   LAYER_2,  KC_LEFT,  KC_UP,    KC_DOWN,  KC_RIGHT \
 );
 
     /*
