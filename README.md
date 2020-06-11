@@ -40,7 +40,7 @@ Bottom Row: BlueMicro V2.0,  BlueMicro V1.0, BlueNano V2.0, BlueNano V1.0, Pro M
 | [BLE Phage Basic](https://southpawdesign.net/products/blue-phage-basic?variant=8958741545020) | (Compatible with even more Keyboards due to its small size - Serial TX/RX are routed separately) | nRF52832 | nrf52832 feather |
 | [Adafruit nRF52840 Feather](https://www.adafruit.com/product/3406) | The updated nrf52 feather from Adafruit! | nRF52840 | nrf52840 feather express |
 | [BlueMicro840]() | Bluemicro based on the design of the nrfmicro.  Still being worked on... | nRF52840 | PCA10056 |
-| [nice!nano](https://docs.nicekeyboards.com/#/nice!nano/) | uses the nRF52840 chip. Same size as the Pro Micro.  | nRF52840 | nicenano |
+| [nice!nano](https://docs.nicekeyboards.com/#/nice!nano/) | uses the nRF52840 chip. Same size as the Pro Micro.  | nRF52840 | nice_nano |
 
 We need your help in bringing improved support for the nrf52840.  Contact us and let us know how you want to help!
 
