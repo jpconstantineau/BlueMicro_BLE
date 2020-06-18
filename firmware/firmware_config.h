@@ -89,11 +89,11 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #endif /* KEYBOARD_MODE */
 
 #ifndef DEBOUNCETIME 
-#define DEBOUNCETIME 10
+#define DEBOUNCETIME 5
 #endif
 
 #ifndef HIDREPORTINGINTERVAL
-#define HIDREPORTINGINTERVAL 10
+#define HIDREPORTINGINTERVAL 8
 #endif
 
 // Battery Service definitions.
@@ -147,5 +147,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
   #define VBAT_DIVIDER      (0.71275837F)   // 2M + 0.806M voltage divider on VBAT = (2M / (0.806M + 2M))
   #define VBAT_DIVIDER_COMP (1.403F)        // Compensation factor for the VBAT divider
 #endif
+
+
 
 #endif /* FIRMWARE_CONFIG_H */

@@ -54,15 +54,16 @@ StatePayload  statedata;
 /**************************************************************************************************************************/
 void setupBluetooth(void)
 {
+  Bluefruit.configPrphBandwidth(BANDWIDTH_MAX);
   Bluefruit.begin(PERIPHERAL_COUNT,CENTRAL_COUNT);                            // Defined in firmware_config.h
-  Bluefruit.autoConnLed(false);                                               // make sure the BlueFruit connection LED is not toggled.
+  Bluefruit.autoConnLed(BLE_LED_ACTIVE);                                               // make sure the BlueFruit connection LED is not toggled.
   Bluefruit.setTxPower(DEVICE_POWER);                                         // Defined in bluetooth_config.h
   Bluefruit.setName(DEVICE_NAME);                                             // Defined in keyboard_config.h
   Bluefruit.configUuid128Count(UUID128_COUNT);                                // Defined in bluetooth_config.h
   Bluefruit.configServiceChanged(true);                                       // helps troubleshooting...
   Bluefruit.setAppearance(BLE_APPEARANCE_HID_KEYBOARD);                       // How the device appears once connected
   //********Bluefruit.setConnInterval(9, 12);                                 // 0.10.1: not needed for master...
-
+Bluefruit.Periph.setConnInterval(6, 12); // 7.5 - 15 ms
   // Configure and Start Device Information Service
   bledis.setManufacturer(MANUFACTURER_NAME);                                  // Defined in keyboard_config.h
   bledis.setModel(DEVICE_MODEL);                                              // Defined in keyboard_config.h
@@ -152,7 +153,7 @@ void setupBluetooth(void)
   Bluefruit.Periph.setDisconnectCallback(prph_disconnect_callback);  
   Bluefruit.Scanner.setRxCallback(scan_callback);
   Bluefruit.Scanner.restartOnDisconnect(true);
-  Bluefruit.Scanner.filterRssi(-80);                                              // limits very far away devices - reduces load
+  Bluefruit.Scanner.filterRssi(FILTER_RSSI_BELOW_STRENGTH);                                              // limits very far away devices - reduces load
   Bluefruit.Scanner.filterUuid(BLEUART_UUID_SERVICE, UUID128_SVC_KEYBOARD_LINK);  // looks specifically for these 2 services (A OR B) - reduces load
   Bluefruit.Scanner.setInterval(160, 80);                                         // in unit of 0.625 ms  Interval = 100ms, Window = 50 ms
   Bluefruit.Scanner.useActiveScan(false);                                         // If true, will fetch scan response data
