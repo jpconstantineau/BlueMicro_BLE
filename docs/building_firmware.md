@@ -44,6 +44,7 @@ Has been tested on Windows 7 and 10.
 - Run ./build.ps1 keyboard:keymap:target
 - You can replace either keyboard, keymap or target with "all" as a wildcard
 - Optional switches are -verbose, -continueOnError, and -nrf52840
+- *If you're using an nRF52840 based board like the BlueMicro840 or nice!nano make sure to use -nrf52840*
 
 Examples
 
@@ -51,6 +52,7 @@ Examples
 - ./build.ps1 ErgoTravel -verbose
 - ./build.ps1 gherkin:default -continueOnError
 - ./build.ps1 iris:default:left
+- ./build.ps1 lily58:default:all
 
 ## Building from macOS shell script
 
