@@ -52,7 +52,7 @@ Examples
 - ./build.ps1 ErgoTravel -verbose
 - ./build.ps1 gherkin:default -continueOnError
 - ./build.ps1 iris:default:left
-- ./build.ps1 lily58:default:all
+- ./build.ps1 lily58:default:all -nrf52840
 
 ## Building from macOS shell script
 
