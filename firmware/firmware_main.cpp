@@ -415,7 +415,14 @@ void process_keyboard_function(uint16_t keycode)
       addKeycodeToQueue(KC_ENTER);
       sprintf(buffer,"Device Power   : %f", DEVICE_POWER*1.0);
       addStringToQueue(buffer);
-      break;      
+      break;   
+    case BLE_INFO:  
+      sprintf(buffer,"Device Power   : %f", DEVICE_POWER*1.0);
+      addStringToQueue(buffer);
+      addKeycodeToQueue(KC_ENTER);
+      // connected to 
+      // rssi 
+      break; 
   }
 }
 

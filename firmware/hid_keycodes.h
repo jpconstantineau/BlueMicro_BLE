@@ -448,8 +448,9 @@ enum hid_keyboard_keypad_usage {
 
 #define PRINT_BATTERY       KB(KC_F4)
 #define PRINT_INFO          KB(KC_F5)
+#define BLE_INFO            KB(KC_F6)
 
-#define HELP_MODE           KB(KC_F6)
+#define HELP_MODE           KB(KC_F12)
 
 // Power Control
 #define KC_SYSTEM_POWER      MK(KC_A) //HID_USAGE_CONSUMER_POWER  

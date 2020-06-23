@@ -1,4 +1,7 @@
 #!/bin/bash
+# Called by jenkins docker job BlueMicro_BLE-develop-Docker-nrf52840 on docker:8080
+# Called by jenkins docker job BlueMicro_BLE-master-Docker-nrf52840 on docker:8080
+
 set -e
 cd -- "$(dirname "$BASH_SOURCE")"
 
