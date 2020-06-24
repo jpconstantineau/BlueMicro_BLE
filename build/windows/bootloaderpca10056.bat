@@ -1,5 +1,5 @@
 @echo off 
-@echo Flashing Bootloader for pca10056 - nRF52840
+@echo Flashing Bootloader for pca10056 - nRF52840 using jlink
 
 IF EXIST C:\Users\pierre\Documents\Arduino\hardware\Adafruit\Adafruit_nRF52_Arduino (
 set prefix=C:\Users\pierre\Documents\Arduino\hardware\Adafruit\Adafruit_nRF52_Arduino
@@ -7,11 +7,11 @@ set prefix=C:\Users\pierre\Documents\Arduino\hardware\Adafruit\Adafruit_nRF52_Ar
 set prefix=%localappdata%\Arduino15\packages\adafruit\hardware\nrf52
 )
 
-IF EXIST C:\Program Files (x86)\Nordic Semiconductor\nrf5x\bin (
-echo Found nrfjprog.exe from Nordic Semiconductor
-) ELSE (
-echo  nrfjprog.exe not found!
-echo  you will need to download it from https://www.nordicsemi.com/Software-and-tools/Development-Tools/nRF-Command-Line-Tools/Download 
+if exist "C:\Program Files (x86)\Nordic Semiconductor\nrf5x\bin\nrfjprog.exe" (
+    @echo Found nrfjprog.exe from Nordic Semiconductor
+) else (
+    @echo  nrfjprog.exe not found!
+    @echo  you will need to download it from https://www.nordicsemi.com/Software-and-tools/Development-Tools/nRF-Command-Line-Tools/Download 
 )
 
 set search_cmd="dir /b %prefix%"
