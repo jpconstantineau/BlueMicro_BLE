@@ -23,6 +23,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 BLEDis bledis;                                                                    // Device Information Service
 extern KeyScanner keys;
+extern DynamicState keyboardstate;
 extern Battery batterymonitor;
 
  #if BLE_HID == 1
@@ -64,8 +65,10 @@ void setupBluetooth(void)
   Bluefruit.configUuid128Count(UUID128_COUNT);                                // Defined in bluetooth_config.h
   Bluefruit.configServiceChanged(true);                                       // helps troubleshooting...
   Bluefruit.setAppearance(BLE_APPEARANCE_HID_KEYBOARD);                       // How the device appears once connected
+  Bluefruit.setRssiCallback(rssi_changed_callback);
   //********Bluefruit.setConnInterval(9, 12);                                 // 0.10.1: not needed for master...
-Bluefruit.Periph.setConnInterval(6, 12); // 7.5 - 15 ms
+  Bluefruit.Periph.setConnInterval(6, 12); // 7.5 - 15 ms
+
   // Configure and Start Device Information Service
   bledis.setManufacturer(MANUFACTURER_NAME);                                  // Defined in keyboard_config.h
   bledis.setModel(DEVICE_MODEL);                                              // Defined in keyboard_config.h
@@ -213,7 +216,22 @@ void startAdv(void)
   Bluefruit.Advertising.start(0);                // 0 = Don't stop advertising after n seconds
 }
 
-
+void rssi_changed_callback(uint16_t conn_hdl, int8_t rssi)
+{
+  if (conn_hdl == keyboardstate.conn_handle_prph)
+  {
+    keyboardstate.rssi_prph = rssi;
+  } else
+  if (conn_hdl == keyboardstate.conn_handle_cent)
+  {
+    keyboardstate.rssi_cent = rssi;
+  } else
+  if (conn_hdl == keyboardstate.conn_handle_cccd)
+  {
+    keyboardstate.rssi_cccd = rssi;
+  }  
+     
+}
 
 /**************************************************************************************************************************/
 // This callback is called when a Notification update even occurs (This occurs on the client)
@@ -252,6 +270,14 @@ void notify_callback(BLEClientCharacteristic* chr, uint8_t* data, uint16_t len)
  #if BLE_PERIPHERAL == 1
 void cccd_callback(uint16_t conn_hdl, BLECharacteristic* chr, uint16_t cccd_value)    
 {
+// this is called on the slave board...
+  char peer_name[32] = { 0 };
+  BLEConnection* connection = Bluefruit.Connection(conn_hdl);
+  connection->getPeerName(peer_name, sizeof(peer_name));
+  LOG_LV1("CENTRL","Connected to %i %s",conn_hdl,peer_name );
+  connection->monitorRssi(6);
+  strcpy (keyboardstate.peer_name_cccd,peer_name);
+  keyboardstate.conn_handle_cccd = conn_hdl;
     LOG_LV1("CBCCCD","notify_callback: %i " ,cccd_value);
     
     // Check the characteristic this CCCD update is associated with in case
@@ -316,6 +342,9 @@ char peer_name[32] = { 0 };
 BLEConnection* connection = Bluefruit.Connection(conn_handle);
 connection->getPeerName(peer_name, sizeof(peer_name));
 LOG_LV1("PRPH","Connected to %i %s",conn_handle,peer_name  );
+connection->monitorRssi(6);
+strcpy (keyboardstate.peer_name_prph,peer_name);
+keyboardstate.conn_handle_prph = conn_handle;
 
 // if HID then save connection handle to HID_connection handle
 #if BLE_HID == 1
@@ -342,11 +371,15 @@ hid_conn_hdl = 0;
 // This callback is called when the central connects to a peripheral
 /**************************************************************************************************************************/
 void cent_connect_callback(uint16_t conn_handle)
-{
+{// this runs on the master but when connecting to a slave.
   char peer_name[32] = { 0 };
   BLEConnection* connection = Bluefruit.Connection(conn_handle);
   connection->getPeerName(peer_name, sizeof(peer_name));
   LOG_LV1("CENTRL","Connected to %i %s",conn_handle,peer_name );
+  connection->monitorRssi(6);
+strcpy (keyboardstate.peer_name_cent,peer_name);
+keyboardstate.conn_handle_cent = conn_handle;
+
   if (KBLinkClientService.discover(conn_handle )) // validating that KBLink service is available to this connection
   {
     if (KBLinkClientChar_Layers.discover()) {

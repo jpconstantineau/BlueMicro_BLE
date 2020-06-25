@@ -32,7 +32,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 // Set max power. Accepted values are: -40, -30, -20, -16, -12, -8, -4, 0, 4
 #define DEVICE_POWER                        4                                          // Use 0.  This uses less power and allows for a longer battery life.
 
-#define FILTER_RSSI_BELOW_STRENGTH -80
+#define FILTER_RSSI_BELOW_STRENGTH -90
 
 #define BLE_LED_ACTIVE false
 

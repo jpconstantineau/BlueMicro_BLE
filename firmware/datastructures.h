@@ -1,5 +1,5 @@
 /*
-Copyright 2018 <Pierre Constantineau>
+Copyright 2020 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -16,38 +16,45 @@ A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR C
 LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-*/
-#ifndef FIRMWARE_H
-#define FIRMWARE_H
-#undef min
-#undef max
-#include "hardware_variants.h"
-#include "firmware_config.h"
-#include "bluetooth_config.h"
-#include "KeyScanner.h"
-#include "keymap.h"
-#include "sleep.h"
-#include "bluetooth.h"
-#include "nrf52battery.h"
-#include "LedPwm.h"
-#include "LedRGB.h"
-#include "nrf52gpio.h"
-#include "datastructures.h"
+*/    
+#ifndef DATASTRUCTURES_H
+#define DATASTRUCTURES_H
+#include <array>
 
-    void setupConfig(void);
-    void setupMatrix(void);
-    void scanMatrix(void);
-    void sendKeyPresses(void);
+    typedef struct { 
+        bool    ledbacklight;  
+        bool    ledrgb;    
+        uint32_t timerkeyscaninterval;
+        uint32_t timerbatteryinterval;     
+  
+    } PersistentState;
 
-    void keyscantimer_callback(TimerHandle_t _handle);
-    void batterytimer_callback(TimerHandle_t _handle);
-    void RGBtimer_callback(TimerHandle_t _handle);
-    void addStringToQueue(const char* str);
-    void addKeycodeToQueue(const uint16_t keycode);
-    void process_keyboard_function(uint16_t keycode);
-    #ifndef USER_MACRO_FUNCTION  
-    #define USER_MACRO_FUNCTION 1  
-    void process_user_macros(uint16_t macroid);
-    #endif
+    typedef struct { 
+        uint32_t timestamp;
+        uint32_t lastupdatetime;
+        uint16_t layer;
+        uint8_t statusled;
 
-#endif /* FIRMWARE_H */
+        bool helpmode;
+        uint32_t vbat_raw;
+        uint32_t vbat_mv;
+        uint32_t vbat_vdd;
+        uint32_t vbat_vddh;
+        uint8_t  vbat_per;
+        uint8_t  batt_type;
+        uint32_t batterytimer;
+
+        char peer_name_prph[32];
+        uint16_t conn_handle_prph;
+        int8_t rssi_prph;
+
+        char peer_name_cent[32];
+        uint16_t conn_handle_cent;
+        int8_t rssi_cent;
+
+        char peer_name_cccd[32];
+        uint16_t conn_handle_cccd;
+        int8_t rssi_cccd;
+    } DynamicState;
+
+    #endif 
