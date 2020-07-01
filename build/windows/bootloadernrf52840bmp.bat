@@ -21,7 +21,7 @@ if exist %bmpprefix% (
 set search_cmd="dir /b %prefix%"
 FOR /F "tokens=*" %%i IN (' %search_cmd% ') DO SET ver=%%i
 
-set bootloaderprefix=%prefix%\%ver%\bootloader\feather_nrf52832
+set bootloaderprefix=%prefix%\%ver%\bootloader\pca10056
 @echo Found it here: %bootloaderprefix%
 
 set searchbootloader_cmd="dir  %bootloaderprefix%\*.hex /b"
