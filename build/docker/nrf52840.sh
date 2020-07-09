@@ -32,6 +32,7 @@ boardParam=$1
 blueMicroPath=$GITHUB_WORKSPACE #(cd $scriptPath/../.. && pwd)
 #firmwarePath="${blueMicroPath}/firmware"
 firmwarePath=`readlink -f firmware`
+echo $firmwarePath
 outputPath="${blueMicroPath}/output"
 outputTempPath="/tmp"
 buildPath="${outputTempPath}/.build"
