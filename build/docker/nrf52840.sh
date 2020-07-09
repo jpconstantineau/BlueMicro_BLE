@@ -30,7 +30,8 @@ boardParam=$1
 #arduinoAvrPath="$arduinoPath/hardware/arduino/avr"
 
 blueMicroPath=$GITHUB_WORKSPACE #(cd $scriptPath/../.. && pwd)
-firmwarePath="${blueMicroPath}/firmware"
+#firmwarePath="${blueMicroPath}/firmware"
+firmwarePath=`readlink -f firmware`
 outputPath="${blueMicroPath}/output"
 outputTempPath="/tmp"
 buildPath="${outputTempPath}/.build"
