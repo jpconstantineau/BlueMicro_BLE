@@ -2,7 +2,7 @@ name: Compile firmwares
 
 on:
   push:
-    branches: [ githubActions ]
+    branches: [ fqbn-builds ]
 
 jobs:
   nrf52832:
