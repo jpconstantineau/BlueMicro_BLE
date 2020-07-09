@@ -1,0 +1,15 @@
+name: Compile firmwares
+
+on:
+  push:
+    branches: [ githubActions ]
+
+jobs:
+  nrf52832:
+    runs-on: ubuntu-latest
+    container: jpconstantineau/arduino-cli-bluefruit-nrf52
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the firmwares
+      run: ./build/docker/nrf52xxx.sh all:all:all:all:all -verbose
+      
