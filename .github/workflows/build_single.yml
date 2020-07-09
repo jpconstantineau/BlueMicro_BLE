@@ -9,11 +9,11 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build the firmwares
-      run: ./build/docker/nrf.sh nrf52832:all:all:all
+      run: sudo ./build/docker/nrf.sh nrf52832:all:all:all
   nrf52840:
     runs-on: ubuntu-latest
     container: bluetoothkeyboard/arduino-cli-bluefruit-nrf52
     steps:
     - uses: actions/checkout@v2
     - name: Build the firmwares
-      run: ./build/docker/nrf.sh nrf52840:all:all:all
+      run: sudo ./build/docker/nrf.sh nrf52840:all:all:all

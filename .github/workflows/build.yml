@@ -11,5 +11,5 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build the firmwares
-      run: bash ./build/docker/nrf52xxx.sh all:all:all:all:all -verbose
+      run: sudo ./build/docker/nrf52xxx.sh all:all:all:all:all -verbose
       
