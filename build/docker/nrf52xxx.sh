@@ -18,12 +18,12 @@ shift $(($OPTIND - 1))
 boardParam=$1
 
 arduinoPath="/usr/share/arduino"
-arduinoDataPath=$(cd ~/.arduino15 & pwd)
-nrf52PackagePath="/home/$USER/.arduino15/packages/adafruit/hardware/nrf52"
+#arduinoDataPath=$(cd ~/.arduino15 & pwd)
+#nrf52PackagePath="/home/$USER/.arduino15/packages/adafruit/hardware/nrf52"
 
-scriptPath="$(dirname "$BASH_SOURCE")"
-echo $scriptPath
-echo $GITHUB_WORKSPACE
+#scriptPath="$(dirname "$BASH_SOURCE")"
+#echo $scriptPath
+#echo $GITHUB_WORKSPACE
 
 #replace this variable with path to your avr installation
 #arduinoAvrPath="$arduinoPath/hardware/arduino/avr"
@@ -75,7 +75,7 @@ arduino_compile() {
    #sleep 2
 
    #Compile
-   cmdCompile="/arduino-cli compile -v --fqbn adafruit:nrf52:$fqbn --build-path $buildPath --build-cache-path $buildCachePath $sourcePath/firmware.ino  -o $buildPath/firmware"
+   cmdCompile="arduino-cli compile -v --fqbn adafruit:nrf52:$fqbn --build-path $buildPath --build-cache-path $buildCachePath $sourcePath/firmware.ino  -o $buildPath/firmware"
     if $verbose; then 
       $cmdCompile
     else
