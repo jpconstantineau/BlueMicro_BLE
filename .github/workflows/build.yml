@@ -1,4 +1,4 @@
-name: Compile firmwares
+name: Compile firmwares - fqbn
 
 on:
   push:
@@ -11,5 +11,5 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build the firmwares
-      run: sudo ./build/docker/nrf52xxx.sh all:all:all:all:all -verbose
+      run: ./build/docker/nrf52xxx.sh all:all:all:all:all -verbose
       
