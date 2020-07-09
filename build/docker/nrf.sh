@@ -181,6 +181,7 @@ printf -- "-----------------------------------------------------\n"
 rm -rf $sourcePath
 mkdir -p $sourcePath
 cp -r $firmwarePath/* $sourcePath
+ls $sourcePath
 
 for keyboard in $sourcePath/keyboards/*/
 do
