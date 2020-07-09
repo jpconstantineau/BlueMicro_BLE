@@ -5,11 +5,11 @@ on:
     branches: [ fqbn-builds ]
 
 jobs:
-  nrf52832:
+  fqbn-build:
     runs-on: ubuntu-latest
     container: jpconstantineau/arduino-cli-bluefruit-nrf52
     steps:
     - uses: actions/checkout@v2
     - name: Build the firmwares
-      run: ./build/docker/nrf52xxx.sh all:all:all:all:all -verbose
+      run: ls
       
