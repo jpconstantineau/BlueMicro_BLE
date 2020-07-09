@@ -24,11 +24,12 @@ nrf52PackagePath="/home/$USER/.arduino15/packages/adafruit/hardware/nrf52"
 scriptPath="$(dirname "$BASH_SOURCE")"
 echo $scriptPath
 echo $GITHUB_WORKSPACE
-ls /root/.arduino15
-#replace this variable with path to your avr installation
-arduinoAvrPath="$arduinoPath/hardware/arduino/avr"
 
-blueMicroPath=$(cd $scriptPath/../.. && pwd)
+#replace this variable with path to your avr installation
+#arduinoAvrPath="$arduinoPath/hardware/arduino/avr"
+
+#blueMicroPath=$(cd $scriptPath/../.. && pwd)
+blueMicroPath=$GITHUB_WORKSPACE
 firmwarePath="${blueMicroPath}/firmware"
 outputPath="${blueMicroPath}/output"
 outputTempPath="/tmp"
