@@ -22,7 +22,7 @@ arduinoDataPath=$(cd ~/.arduino15 & pwd)
 nrf52PackagePath="/home/$USER/.arduino15/packages/adafruit/hardware/nrf52"
 
 scriptPath="$(dirname "$BASH_SOURCE")"
-
+echo $scriptPath
 #replace this variable with path to your avr installation
 arduinoAvrPath="$arduinoPath/hardware/arduino/avr"
 
