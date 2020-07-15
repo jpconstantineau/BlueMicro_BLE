@@ -1,8 +1,13 @@
 name: Compile firmwares - split
-
-on: [push, pull_request]
-  branches: [ master ]
-
+on:
+  # Trigger the workflow on push or pull request,
+  # but only for the master branch
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master  
 jobs:
   nrf52832:
     runs-on: ubuntu-latest
@@ -17,4 +22,4 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build the firmwares
-      run: ./build/docker/nrf.sh nrf52840:all:all:all
+      run: ./build/docker/nrf.sh nr52840:all:all:all
