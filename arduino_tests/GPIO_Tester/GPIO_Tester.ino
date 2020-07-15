@@ -110,12 +110,6 @@ Serial.println("i\tGPIO\tGPIO\tFloat \tP.Up \tP.Down\tstatus");
     Serial.println("\t"); 
     
   }
-<<<<<<< HEAD
-delay(5);
-=======
 delay(10);
->>>>>>> develop
-
-    
 
 }
