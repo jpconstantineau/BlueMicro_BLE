@@ -102,6 +102,10 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define BATTERY_TYPE BATT_UNKNOWN
 #endif
 
+#ifndef BATTERYINTERVAL
+#define BATTERYINTERVAL 30000
+#endif
+
 #define SLEEPING_DELAY 30000              // when it's not connected, 30 seconds is good.
 #define SLEEPING_DELAY_CONNECTED 600000   // 2 minutes is way too fast and really ennoying. making it 10 minutes
 #define SLEEP_ACTIVE 1                    // 1 = it will go to sleep. 0 = sleep will not be activated.

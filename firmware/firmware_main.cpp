@@ -31,8 +31,8 @@ byte columns[] MATRIX_COL_PINS;     // Contains the GPIO Pin Numbers defined in 
 //uint32_t lastupdatetime =0;
 SoftwareTimer keyscantimer, batterytimer;
 
-static PersistentState keyboardconfig;
-static DynamicState keyboardstate;
+static PersistentState keyboardconfig = {BACKLIGHT_PWM_ON, WS2812B_LED_ON, HIDREPORTINGINTERVAL, BATTERYINTERVAL};
+static DynamicState keyboardstate = {0,0,false};
 
 KeyScanner keys;
 Battery batterymonitor;
@@ -45,10 +45,11 @@ void setupConfig() {
   keyboardconfig.ledbacklight=BACKLIGHT_PWM_ON;
   keyboardconfig.ledrgb=WS2812B_LED_ON;
   keyboardconfig.timerkeyscaninterval=HIDREPORTINGINTERVAL;
-  keyboardconfig.timerbatteryinterval=30*1000;
+  keyboardconfig.timerbatteryinterval=BATTERYINTERVAL;
 
   keyboardstate.helpmode = false;
   keyboardstate.timestamp = millis();
+  keyboardstate.lastupdatetime = keyboardstate.timestamp;
 }
 
 
