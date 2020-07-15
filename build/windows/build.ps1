@@ -112,21 +112,30 @@ Function Compile-Board($keyboard, $target, $keymap) {
 	
     # Run compile
     $cmdCompile832 = 
-        '& "$BuilderExe" -compile -logger=machine -warnings "none" -verbose -ide-version "10807" -debug-level 1 ' + 
-        '-hardware "$ArduinoDir\hardware" -hardware "$ArduinoDataDir\packages" ' + 
-        '-tools "$ArduinoDir\tools-builder" -tools "$ArduinoDir\hardware\tools\avr" -tools "$ArduinoDataDir\packages" ' +
-        '-built-in-libraries "$ArduinoDir\libraries"' +
-        '-fqbn "adafruit:nrf52:feather52832:softdevice=s132v6,debug=l0" ' +
-        '-build-path "$BuildDir" -build-cache "$BuildCacheDir" '
-        #'-prefs "build.warn_data_percentage=75" -prefs "runtime.tools.nrfjprog.path=$ArduinoDataDir\packages\adafruit\tools\nrfjprog\9.4.0" -prefs "runtime.tools.gcc-arm-none-eabi.path=$ArduinoDataDir\packages\adafruit\tools\gcc-arm-none-eabi\5_2-2015q4" '
+    '& "$BuilderExe" -compile -logger=machine -warnings=all  -verbose -ide-version=10813 -vid-pid=0000_0000 -debug-level 1 ' + 
+    '-hardware "$ArduinoDir\hardware" -hardware "$ArduinoDataDir\packages" ' + 
+    '-tools "$ArduinoDir\tools-builder" -tools "$ArduinoDir\hardware\tools\avr" -tools "$ArduinoDataDir\packages" ' +
+    '-built-in-libraries "$ArduinoDir\libraries"' +
+    '-fqbn "adafruit:nrf52:feather52832:softdevice=s132v6,debug=l0" ' +
+    '-build-path "$BuildDir" -build-cache "$BuildCacheDir" ' +
+    '-prefs "build.warn_data_percentage=75" ' +
+    '-prefs "runtime.tools.nrfjprog.path=$ArduinoDataDir\packages\adafruit\tools\nrfjprog\9.4.0" ' +
+    '-prefs "runtime.tools.nrfjprog-9.4.0.path=$ArduinoDataDir\packages\adafruit\tools\nrfjprog\9.4.0" ' +
+    '-prefs "runtime.tools.arm-none-eabi-gcc.path=$ArduinoDataDir\packages\adafruit\tools\arm-none-eabi-gcc\9-2019q4" ' +
+    '-prefs "runtime.tools.arm-none-eabi-gcc-9-2019q4.path=$ArduinoDataDir\packages\adafruit\tools\arm-none-eabi-gcc\9-2019q4" '
 
     $cmdCompile840 = 
-        '& "$BuilderExe" -compile -logger=machine -warnings "none" -verbose -ide-version "10807" -debug-level 1 ' + 
-        '-hardware "$ArduinoDir\hardware" -hardware "$ArduinoDataDir\packages" ' + 
-        '-tools "$ArduinoDir\tools-builder" -tools "$ArduinoDir\hardware\tools\avr" -tools "$ArduinoDataDir\packages" ' +
-        '-built-in-libraries "$ArduinoDir\libraries"' +
-        '-fqbn "adafruit:nrf52:pca10056:softdevice=s140v6,debug=l0" ' +
-        '-build-path "$BuildDir" -build-cache "$BuildCacheDir" '
+    '& "$BuilderExe" -compile -logger=machine -warnings=all  -verbose -ide-version=10813 -vid-pid=0000_0000 -debug-level 1 ' + 
+    '-hardware "$ArduinoDir\hardware" -hardware "$ArduinoDataDir\packages" ' + 
+    '-tools "$ArduinoDir\tools-builder" -tools "$ArduinoDir\hardware\tools\avr" -tools "$ArduinoDataDir\packages" ' +
+    '-built-in-libraries "$ArduinoDir\libraries"' +
+    '-fqbn "adafruit:nrf52:pca10056:softdevice=s140v6,debug=l0" ' +
+    '-build-path "$BuildDir" -build-cache "$BuildCacheDir" ' +
+    '-prefs "build.warn_data_percentage=75" ' +
+    '-prefs "runtime.tools.nrfjprog.path=$ArduinoDataDir\packages\adafruit\tools\nrfjprog\9.4.0" ' +
+    '-prefs "runtime.tools.nrfjprog-9.4.0.path=$ArduinoDataDir\packages\adafruit\tools\nrfjprog\9.4.0" ' +
+    '-prefs "runtime.tools.arm-none-eabi-gcc.path=$ArduinoDataDir\packages\adafruit\tools\arm-none-eabi-gcc\9-2019q4" ' +
+    '-prefs "runtime.tools.arm-none-eabi-gcc-9-2019q4.path=$ArduinoDataDir\packages\adafruit\tools\arm-none-eabi-gcc\9-2019q4" '
 
     if ($nrf52840) 
     {$cmdCompile = $cmdCompile840} 
