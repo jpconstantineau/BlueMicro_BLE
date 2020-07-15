@@ -4,3 +4,8 @@
 output/*
 arduino-cli/*
 !.vscode/tasks.json
+firmware/keyboards/nyquist/keymaps/.DS_Store
+firmware/keyboards/nyquist/.DS_Store
+firmware/keyboards/.DS_Store
+firmware/.DS_Store
+.DS_Store
