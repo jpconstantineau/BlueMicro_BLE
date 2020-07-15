@@ -1,5 +1,5 @@
 /*
-Copyright 2018 <Pierre Constantineau, Julian Komaromy>
+Copyright 2018-2020 <Pierre Constantineau, Julian Komaromy>
 
 3-Clause BSD License
 
@@ -47,6 +47,8 @@ class KeyScanner {
         KeyScanner();
  
         static bool scanMatrix(const int& currentState,unsigned long millis, const int& row, const int& col);
+        static void press(unsigned long millis, const int& row, const int& col);
+        static void release(unsigned long millis, const int& row, const int& col);
         static void updateRemoteReport(uint8_t data0 , uint8_t data1, uint8_t data2,uint8_t data3, uint8_t data4, uint8_t data5,uint8_t data6);
         static void updateRemoteLayer(uint8_t data0);
         static void process_for_tri_layers(uint8_t if_layer1, uint8_t and_layer2, uint8_t use_layer3);
@@ -64,7 +66,7 @@ class KeyScanner {
        // static uint8_t layerMode;
         static uint16_t remotespecialkeycode;
         static uint8_t currentReport[8];
-       
+        
         static uint8_t bufferposition;
 
     private:
@@ -74,9 +76,9 @@ class KeyScanner {
 
         static void copyRemoteReport();
 
-        static bool processingmacros;
+       
         static uint8_t getlayer(uint16_t layers);
-
+        static bool processingmacros;
         static uint16_t oneshotLayer;
         static uint8_t remoteReport[8];
         static uint8_t previousReport[8];

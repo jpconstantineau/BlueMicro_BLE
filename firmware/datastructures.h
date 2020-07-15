@@ -32,21 +32,29 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
     typedef struct { 
         uint32_t timestamp;
         uint32_t lastupdatetime;
-         uint16_t layer;
-         uint8_t statusled;
+        uint16_t layer;
+        uint8_t statusled;
 
         bool helpmode;
         uint32_t vbat_raw;
         uint32_t vbat_mv;
         uint32_t vbat_vdd;
         uint32_t vbat_vddh;
-        uint8_t vbat_per;
-        uint8_t batt_type;
+        uint8_t  vbat_per;
+        uint8_t  batt_type;
         uint32_t batterytimer;
-        std::pair<uint16_t, int8_t> rssipairs;
-       // std::pair<uint16_t, peer_name[32]> peerspairs;
-     //   int8_t rssi;
-        char peer_name[32];
+
+        char peer_name_prph[32];
+        uint16_t conn_handle_prph;
+        int8_t rssi_prph;
+
+        char peer_name_cent[32];
+        uint16_t conn_handle_cent;
+        int8_t rssi_cent;
+
+        char peer_name_cccd[32];
+        uint16_t conn_handle_cccd;
+        int8_t rssi_cccd;
     } DynamicState;
 
     #endif 

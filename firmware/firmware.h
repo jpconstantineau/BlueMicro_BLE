@@ -1,5 +1,5 @@
 /*
-Copyright 2018 <Pierre Constantineau>
+Copyright 2018-2020 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -35,9 +35,12 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "datastructures.h"
 #include "display.h"
 
-
-
-
+// need to add this to resolve an issue when linking.
+// see https://forum.arduino.cc/index.php?topic=319795.0
+namespace std {
+  void __throw_length_error(char const*) {
+  }
+}
     void setupConfig(void);
     void setupMatrix(void);
     void scanMatrix(void);

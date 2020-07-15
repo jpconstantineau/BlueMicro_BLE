@@ -1,5 +1,5 @@
 /*
-Copyright 2018 <Pierre Constantineau>
+Copyright 2018-2020 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -28,7 +28,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #ifndef KEYMAP_H
 #define KEYMAP_H
 
-#define _QWERTY 0
+#define _L0  0
 #define _L1  1
 #define _L2  2
 #define _L3  3

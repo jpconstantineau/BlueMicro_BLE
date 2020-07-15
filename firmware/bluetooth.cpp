@@ -1,5 +1,5 @@
 /*
-Copyright 2018 <Pierre Constantineau>
+Copyright 2018-2020 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -24,6 +24,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 BLEDis bledis;                                                                    // Device Information Service
 extern KeyScanner keys;
 extern DynamicState keyboardstate;
+extern Battery batterymonitor;
 
  #if BLE_HID == 1
  uint16_t hid_conn_hdl;
@@ -54,15 +55,20 @@ StatePayload  statedata;
 /**************************************************************************************************************************/
 void setupBluetooth(void)
 {
+  //Bluefruit.configPrphBandwidth(BANDWIDTH_MAX); // OK for nrf52840
+  Bluefruit.configPrphBandwidth(BANDWIDTH_HIGH);
+ // Bluefruit.configCentralBandwidth(BANDWIDTH_HIGH);
   Bluefruit.begin(PERIPHERAL_COUNT,CENTRAL_COUNT);                            // Defined in firmware_config.h
-  Bluefruit.autoConnLed(false);                                               // make sure the BlueFruit connection LED is not toggled.
+  Bluefruit.autoConnLed(BLE_LED_ACTIVE);                                               // make sure the BlueFruit connection LED is not toggled.
   Bluefruit.setTxPower(DEVICE_POWER);                                         // Defined in bluetooth_config.h
   Bluefruit.setName(DEVICE_NAME);                                             // Defined in keyboard_config.h
   Bluefruit.configUuid128Count(UUID128_COUNT);                                // Defined in bluetooth_config.h
   Bluefruit.configServiceChanged(true);                                       // helps troubleshooting...
   Bluefruit.setAppearance(BLE_APPEARANCE_HID_KEYBOARD);                       // How the device appears once connected
-  //********Bluefruit.setConnInterval(9, 12);                                 // 0.10.1: not needed for master...
   Bluefruit.setRssiCallback(rssi_changed_callback);
+  //********Bluefruit.setConnInterval(9, 12);                                 // 0.10.1: not needed for master...
+  Bluefruit.Periph.setConnInterval(6, 12); // 7.5 - 15 ms
+
   // Configure and Start Device Information Service
   bledis.setManufacturer(MANUFACTURER_NAME);                                  // Defined in keyboard_config.h
   bledis.setModel(DEVICE_MODEL);                                              // Defined in keyboard_config.h
@@ -152,7 +158,7 @@ void setupBluetooth(void)
   Bluefruit.Periph.setDisconnectCallback(prph_disconnect_callback);  
   Bluefruit.Scanner.setRxCallback(scan_callback);
   Bluefruit.Scanner.restartOnDisconnect(true);
-  Bluefruit.Scanner.filterRssi(-80);                                              // limits very far away devices - reduces load
+  Bluefruit.Scanner.filterRssi(FILTER_RSSI_BELOW_STRENGTH);                                              // limits very far away devices - reduces load
   Bluefruit.Scanner.filterUuid(BLEUART_UUID_SERVICE, UUID128_SVC_KEYBOARD_LINK);  // looks specifically for these 2 services (A OR B) - reduces load
   Bluefruit.Scanner.setInterval(160, 80);                                         // in unit of 0.625 ms  Interval = 100ms, Window = 50 ms
   Bluefruit.Scanner.useActiveScan(false);                                         // If true, will fetch scan response data
@@ -210,13 +216,23 @@ void startAdv(void)
   Bluefruit.Advertising.start(0);                // 0 = Don't stop advertising after n seconds
 }
 
-
 void rssi_changed_callback(uint16_t conn_hdl, int8_t rssi)
 {
-  (void) conn_hdl;
-  keyboardstate.rssipairs = std::make_pair(conn_hdl, rssi);
- // keyboardstate.rssi=rssi;
+  if (conn_hdl == keyboardstate.conn_handle_prph)
+  {
+    keyboardstate.rssi_prph = rssi;
+  } else
+  if (conn_hdl == keyboardstate.conn_handle_cent)
+  {
+    keyboardstate.rssi_cent = rssi;
+  } else
+  if (conn_hdl == keyboardstate.conn_handle_cccd)
+  {
+    keyboardstate.rssi_cccd = rssi;
+  }  
+     
 }
+
 /**************************************************************************************************************************/
 // This callback is called when a Notification update even occurs (This occurs on the client)
 /**************************************************************************************************************************/
@@ -259,9 +275,9 @@ void cccd_callback(uint16_t conn_hdl, BLECharacteristic* chr, uint16_t cccd_valu
   BLEConnection* connection = Bluefruit.Connection(conn_hdl);
   connection->getPeerName(peer_name, sizeof(peer_name));
   LOG_LV1("CENTRL","Connected to %i %s",conn_hdl,peer_name );
-  connection->monitorRssi(10);
-strcpy (keyboardstate.peer_name,peer_name);
-
+  connection->monitorRssi(6);
+  strcpy (keyboardstate.peer_name_cccd,peer_name);
+  keyboardstate.conn_handle_cccd = conn_hdl;
     LOG_LV1("CBCCCD","notify_callback: %i " ,cccd_value);
     
     // Check the characteristic this CCCD update is associated with in case
@@ -326,8 +342,10 @@ char peer_name[32] = { 0 };
 BLEConnection* connection = Bluefruit.Connection(conn_handle);
 connection->getPeerName(peer_name, sizeof(peer_name));
 LOG_LV1("PRPH","Connected to %i %s",conn_handle,peer_name  );
-connection->monitorRssi(10);
-strcpy (keyboardstate.peer_name,peer_name);
+connection->monitorRssi(6);
+strcpy (keyboardstate.peer_name_prph,peer_name);
+keyboardstate.conn_handle_prph = conn_handle;
+
 // if HID then save connection handle to HID_connection handle
 #if BLE_HID == 1
 hid_conn_hdl = conn_handle;
@@ -358,8 +376,10 @@ void cent_connect_callback(uint16_t conn_handle)
   BLEConnection* connection = Bluefruit.Connection(conn_handle);
   connection->getPeerName(peer_name, sizeof(peer_name));
   LOG_LV1("CENTRL","Connected to %i %s",conn_handle,peer_name );
- // connection->monitorRssi(10);
-//strcpy (keyboardstate.peer_name,peer_name);
+  connection->monitorRssi(6);
+strcpy (keyboardstate.peer_name_cent,peer_name);
+keyboardstate.conn_handle_cent = conn_handle;
+
   if (KBLinkClientService.discover(conn_handle )) // validating that KBLink service is available to this connection
   {
     if (KBLinkClientChar_Layers.discover()) {

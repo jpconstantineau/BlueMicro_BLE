@@ -1,5 +1,5 @@
 /*
-Copyright 2018 <Pierre Constantineau, Julian Komaromy>
+Copyright 2018-2020 <Pierre Constantineau, Julian Komaromy>
 
 3-Clause BSD License
 
@@ -70,6 +70,20 @@ bool KeyScanner::scanMatrix(const int& currentState,unsigned long currentMillis,
         }
 }
 
+/**************************************************************************************************************************/
+// KEYPRESS - THIS ROUTINE ENACTS A KEYPRESS - DEBOUNCE SHOULD BE HANDLED BY CALLER
+/**************************************************************************************************************************/
+void KeyScanner::press(unsigned long currentMillis, const int& row, const int& col){
+    matrix[row][col].press(currentMillis);
+    lastPressed = currentMillis;
+}
+
+/**************************************************************************************************************************/
+// KEYRELEASE - THIS ROUTINE ENACTS A KEYRELEASE - DEBOUNCE SHOULD BE HANDLED BY CALLER
+/**************************************************************************************************************************/
+void KeyScanner::release(unsigned long currentMillis, const int& row, const int& col){
+    matrix[row][col].clear(currentMillis);
+}
 
 /**************************************************************************************************************************/
 // Called by callback function when remote data is received
@@ -227,8 +241,8 @@ effectiveLayer = detectedlayerkeys;
      * oneshot buffer if a non-oneshot
      * key has been pressed
      */
-
-    std::copy(toggleBuffer.begin(), toggleBuffer.end(), activeKeys.begin());
+    
+    std::copy(toggleBuffer.begin(), toggleBuffer.end(), back_inserter(activeKeys));
    /* for (auto activation : toggleBuffer) 
     {
         activeKeys.push_back(activation);
@@ -236,7 +250,7 @@ effectiveLayer = detectedlayerkeys;
 
     if (emptyOneshot) 
     {
-        std::copy(oneshotBuffer.begin(), oneshotBuffer.end(), activeKeys.begin());
+        std::copy(oneshotBuffer.begin(), oneshotBuffer.end(), back_inserter(activeKeys));
        /* for (auto activation : oneshotBuffer) 
         {
             activeKeys.push_back(activation);
@@ -360,6 +374,8 @@ bool KeyScanner::getReport()
     currentReport[0] = currentMod;
     currentReport[7] = localLayer;
 
+if (activeKeys.empty() && processingmacros) {processingmacros = false;}
+
    if((currentReport[0] != previousReport[0])
         | (currentReport[1] != previousReport[1])
          | (currentReport[2] != previousReport[2])
@@ -381,7 +397,9 @@ bool KeyScanner::getReport()
             {processingmacros=false; macro=0; specialfunction=0; consumer=0; mouse=0;}
     }
     else
-    {reportChanged = false;}
+    {reportChanged = false;
+    
+    }
 
     return reportChanged;
 }
