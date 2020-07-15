@@ -7,7 +7,8 @@ if exist C:\Users\pierre\Documents\Arduino\hardware\Adafruit\Adafruit_nRF52_Ardu
     set prefix=%localappdata%\Arduino15\packages\adafruit\hardware\nrf52
 )
 
-set bmpprefix=%localappdata%\Arduino15\packages\arduino\tools\arm-none-eabi-gcc\7-2017q4\bin\arm-none-eabi-gdb.exe
+REM set bmpprefix=%localappdata%\Arduino15\packages\arduino\tools\arm-none-eabi-gcc\7-2017q4\bin\arm-none-eabi-gdb.exe
+set bmpprefix=%localappdata%\Arduino15\packages\adafruit\tools\arm-none-eabi-gcc\9-2019q4\bin\arm-none-eabi-gdb.exe
 
 if exist %bmpprefix% (
     @echo Found arm-none-eabi-gdb.exe
