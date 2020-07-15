@@ -95,8 +95,8 @@ bool Display::update(DynamicState keyboardstate)
   //  printline(keyboardstate.vbat_raw);
   //  printline(keyboardstate.batterytimer);
  // printline(keyboardstate.rssi);
- printline(keyboardstate.peer_name);
- printline(keyboardstate.rssipairs.second);
+ printline(keyboardstate.peer_name_prph);
+ printline(keyboardstate.rssi_prph);
 
 char buffer [50];
   u8g2.setFont(u8g2_font_fub20_t_symbol);	// choose a suitable font
