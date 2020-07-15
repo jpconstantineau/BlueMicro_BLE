@@ -112,6 +112,4 @@ Serial.println("i\tGPIO\tGPIO\tFloat \tP.Up \tP.Down\tstatus");
   }
 delay(10);
 
-    
-
 }

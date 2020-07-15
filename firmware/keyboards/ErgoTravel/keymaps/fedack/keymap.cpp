@@ -55,7 +55,7 @@ void setupKeymap() {
 
 uint32_t layer0_left[MATRIX_ROWS][MATRIX_COLS] =
     KEYMAP(
-        KC_ESC,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,  KC_Y, 
+        PRINT_BLE,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,  KC_Y, 
         KC_TAB,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,  KC_H,
         KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,  KC_SPC,
         KC_LCTL, KC_LGUI, KC_LALT, LAYER_3, LAYER_1, KC_SPC,_______
@@ -75,7 +75,7 @@ uint32_t layer0_left[MATRIX_ROWS][MATRIX_COLS] =
 
 uint32_t layer0_right[MATRIX_ROWS][MATRIX_COLS] =
     KEYMAP(
-        KC_EQUAL, KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,      KC_BSPACE, 
+        KC_EQUAL, KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,      PRINT_BLE, 
         KC_BSLS,  KC_H,    KC_J,    KC_K,    KC_L,    KC_SCOLON, KC_QUOTE,
         KC_SPC,   KC_N,    KC_M,    KC_COMMA,KC_DOT,  KC_SLSH,   KC_ENT,
         _______,  KC_SPC,  LAYER_2, KC_LEFT, KC_UP,   KC_DOWN,   KC_RIGHT
