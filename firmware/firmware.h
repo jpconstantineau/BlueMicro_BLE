@@ -33,7 +33,12 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "LedRGB.h"
 #include "nrf52gpio.h"
 #include "datastructures.h"
-
+// need to add this to resolve an issue when linking.
+// see https://forum.arduino.cc/index.php?topic=319795.0
+namespace std {
+  void __throw_length_error(char const*) {
+  }
+}
     void setupConfig(void);
     void setupMatrix(void);
     void scanMatrix(void);
