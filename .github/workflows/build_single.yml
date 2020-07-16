@@ -5,19 +5,21 @@ on:
   push:
     branches:
       - master
+      - develop
   pull_request:
     branches:
-      - master  
+      - master
+      - develop  
 jobs:
   nrf52832:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     container: jpconstantineau/arduino-cli-bluefruit-nrf52
     steps:
     - uses: actions/checkout@v2
     - name: Build the firmwares
       run: ./build/docker/nrf.sh nrf52832:all:all:all
   nrf52840:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     container: jpconstantineau/arduino-cli-bluefruit-nrf52
     steps:
     - uses: actions/checkout@v2
