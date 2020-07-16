@@ -134,6 +134,8 @@ void scanMatrix() {
     keyboardstate.timestamp  = millis();   // lets call it once per scan instead of once per key in the matrix
     //take care when selecting debouncetime - each row has a delay of 1ms inbetween - so if you have 5 rows, setting debouncetime to 2 is at least 5ms...
     #ifdef NRF52840_XXAA
+    //todo: Not sure if this 64bit uint is what causes the linker warning: Warning: changing start of section .bss by 4 bytes.  We need to see if this a 840 issue only or not.
+    // 64bits may be less efficient too: http://download.mikroe.com/documents/compilers/mikroc/arm/help/arm_m4_specifics.htm
     static uint64_t pindata[MATRIX_ROWS][DEBOUNCETIME];
     uint64_t pinreg;
     #else
