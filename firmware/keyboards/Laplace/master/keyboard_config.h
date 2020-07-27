@@ -20,14 +20,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #ifndef KEYBOARD_CONFIG_H
 #define KEYBOARD_CONFIG_H
 
-#define COL2ROW       1
-#define ROW2COL       0
 
-#define LEFT 0
-#define RIGHT 1
-#define MASTER 2
-
-#define KEYBOARD_SIDE MASTER
+#define KEYBOARD_SIDE SINGLE
 
 #if   KEYBOARD_SIDE == RIGHT
 #define DEVICE_NAME                         "LaplaceBLE_R"                          /**< Name of device. Will be included in the advertising data. */

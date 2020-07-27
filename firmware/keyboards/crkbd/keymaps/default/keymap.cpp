@@ -18,7 +18,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "keymap.h"
 
 
-#if KEYBOARD_SIDE == MASTER
+#if KEYBOARD_SIDE == SINGLE
 std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
     {KEYMAP(
             KC_1,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,
@@ -29,7 +29,7 @@ std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
 
 void setupKeymap() {
 
-   // no layers for master keymap
+   // no layers for SINGLE keymap
    // this is a keymap that's used for testing that each key is responding properly to key presses
    // flash this keymap to both left and right to test whether each half works properly.
    // once tested, you can flash the left and right to their respective halves.

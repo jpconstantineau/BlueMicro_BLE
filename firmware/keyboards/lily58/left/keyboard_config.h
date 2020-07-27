@@ -23,9 +23,9 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define HARDWARE_MAPPING  NICE_NANOV1_0  // note only the BlueMicro840 or NiceNano fits on the lily58.
 #include "breakout_mapping.h"
 
-//#define KEYBOARD_SIDE MASTER
+//#define KEYBOARD_SIDE SINGLE
 #define KEYBOARD_SIDE LEFT
-// CHANGE THIS FOR THE KEYBOARD TO MATCH WHAT IS BEING FLASHED. OPTIONS: LEFT  RIGHT  MASTER
+// CHANGE THIS FOR THE KEYBOARD TO MATCH WHAT IS BEING FLASHED. OPTIONS: LEFT  RIGHT  SINGLE
 
 #define DEVICE_NAME_R                        "Lily58_R"                          /**< Name of device. Will be included in the advertising data. */
 #define DEVICE_NAME_L                        "Lily58_L"                          /**< Name of device. Will be included in the advertising data. */

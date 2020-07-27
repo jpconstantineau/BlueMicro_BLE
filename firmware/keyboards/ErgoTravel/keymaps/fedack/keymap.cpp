@@ -29,11 +29,11 @@ std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
 
 void setupKeymap() {
 
-   // no layers for master keymap
+   // no layers for SINGLE keymap
    // this is a keymap that's used for testing that each key is responding properly to key presses
    // flash this keymap to both left and right to test whether each half works properly.
    // once tested, you can flash the left and right to their respective halves.
-   uint32_t layer0_master[MATRIX_ROWS][MATRIX_COLS] = KEYMAP(
+   uint32_t layer0_single[MATRIX_ROWS][MATRIX_COLS] = KEYMAP(
         KC_1,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,  KC_Y, 
         KC_2,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,  KC_H,
         KC_3,  KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,  KC_N,
@@ -203,8 +203,8 @@ uint32_t layer0_right[MATRIX_ROWS][MATRIX_COLS] =
     {
         for (int col = 0; col < MATRIX_COLS; ++col)
         {
-            #if KEYBOARD_SIDE == MASTER
-                matrix[row][col].addActivation(_L0, Method::PRESS, layer0_master[row][col]);
+            #if KEYBOARD_SIDE == SINGLE
+                matrix[row][col].addActivation(_L0, Method::PRESS, layer0_single[row][col]);
             #endif
             #if KEYBOARD_SIDE == LEFT
                 matrix[row][col].addActivation(_L0, Method::PRESS, layer0_left[row][col]);

@@ -23,28 +23,30 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "hardware_variants.h"
 #include "keyboard_config.h"
 #include "breakout_mapping.h"
-#if KEYBOARD_SIDE == LEFT
-#define BLE_PAIRS 1
-#define PERIPHERAL_COUNT 1
+
 #define MATRIX_SCAN 1
 #define SEND_KEYS 1
+
+#if KEYBOARD_SIDE == LEFT
+#define BLE_HID 1
+#define BLE_CENTRAL 1
+#define CENTRAL_COUNT 1
+#define PERIPHERAL_COUNT 1 //1  
+#define BLE_PERIPHERAL 0
 #define DEVICE_NAME DEVICE_NAME_L
 #elif KEYBOARD_SIDE == RIGHT
-#define BLE_PAIRS 1
-#define PERIPHERAL_COUNT 1
+#define BLE_HID 0
+#define BLE_CENTRAL 0
 #define CENTRAL_COUNT 0
-#define MATRIX_SCAN 1
-#define SEND_KEYS 1
+#define PERIPHERAL_COUNT 1 //1  
+#define BLE_PERIPHERAL 1
 #define DEVICE_NAME DEVICE_NAME_R
-#elif KEYBOARD_SIDE == MASTER
-#define BLE_PAIRS 0
+#elif KEYBOARD_SIDE == SINGLE
 #define BLE_HID 1
-#ifndef PERIPHERAL_COUNT
-  #define PERIPHERAL_COUNT 1
-#endif
+#define BLE_CENTRAL 0
 #define CENTRAL_COUNT 0
-#define MATRIX_SCAN 1
-#define SEND_KEYS 1
+#define PERIPHERAL_COUNT 1 //1  
+#define BLE_PERIPHERAL 0
 #define DEVICE_NAME DEVICE_NAME_M
 #elif KEYBOARD_SIDE == TEST
 #define BLE_CENTRAL 0  /// 
@@ -53,40 +55,9 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define BLE_HID 1 //1 //  
 #define PERIPHERAL_COUNT 1 //1  
 #define CENTRAL_COUNT 0
-#define MATRIX_SCAN 1 // 1 
-#define SEND_KEYS 1 // 1 //
 #define DEVICE_NAME DEVICE_NAME_M
 #endif
 
-//set default modes for the halves
-#ifndef KEYBOARD_MODE 
-
-#if KEYBOARD_SIDE == LEFT
-#define KEYBOARD_MODE DEFAULT //LEFT defaults to central (DEFAULT)
-#elif KEYBOARD_SIDE == RIGHT
-#define KEYBOARD_MODE SLAVE //RIGHT defaults to peripheral (SLAVE) 
-#elif KEYBOARD_SIDE == MASTER
-#define KEYBOARD_MODE MASTER //MASTER defaults to master (only one keyboard) 
-#endif
-
-#endif /* ifndef KEYBOARD_MODE */
-
-#if KEYBOARD_MODE == DEFAULT
-#define BLE_HID 1
-#define BLE_CENTRAL 1
-#define CENTRAL_COUNT 1
-#define BLE_PERIPHERAL 0
-#elif KEYBOARD_MODE == SLAVE
-#define BLE_HID 0
-#define BLE_CENTRAL 0
-#define CENTRAL_COUNT 0
-#define BLE_PERIPHERAL 1
-#elif KEYBOARD_MODE == MASTER
-#define BLE_HID 1
-#define BLE_CENTRAL 0
-#define CENTRAL_COUNT 0
-#define BLE_PERIPHERAL 0
-#endif /* KEYBOARD_MODE */
 
 #ifndef DEBOUNCETIME 
 #define DEBOUNCETIME 5
