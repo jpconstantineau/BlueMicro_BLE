@@ -24,7 +24,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 #define KEYBOARD_SIDE LEFT
 //#define KEYBOARD_SIDE RIGHT
-// CHANGE THIS FOR THE KEYBOARD TO MATCH WHAT IS BEING FLASHED. OPTIONS: LEFT  RIGHT  MASTER
+// CHANGE THIS FOR THE KEYBOARD TO MATCH WHAT IS BEING FLASHED. OPTIONS: LEFT  RIGHT  SINGLE
 
 #define DEVICE_NAME_R                         "IrisBLE_R"                          /**< Name of device. Will be included in the advertising data. */
 #define DEVICE_NAME_L                         "IrisBLE_L"                          /**< Name of device. Will be included in the advertising data. */
@@ -55,7 +55,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #endif /* KEYBOARD_CONFIG_H */
 
 
-    #if KEYBOARD_SIDE == MASTER
+    #if KEYBOARD_SIDE == SINGLE
 
 #define KEYMAP( \
    K00,   K01,   K02,   K03,   K04,   K05,   \

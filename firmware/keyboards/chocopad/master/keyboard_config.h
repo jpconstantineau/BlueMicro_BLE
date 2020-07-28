@@ -20,14 +20,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #ifndef KEYBOARD_CONFIG_H
 #define KEYBOARD_CONFIG_H
 
-#define COL2ROW       1
-#define ROW2COL       0
 
-#define LEFT 0
-#define RIGHT 1
-#define MASTER 2
-
-#define KEYBOARD_SIDE MASTER
+#define KEYBOARD_SIDE SINGLE
 
 #if   KEYBOARD_SIDE == RIGHT
 #define DEVICE_NAME                         "Chocopad_R"                          /**< Name of device. Will be included in the advertising data. */
@@ -41,41 +35,6 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 #define MANUFACTURER_NAME                   "Keebio"                      /**< Manufacturer. Will be passed to Device Information Service. */
 
-// Set max power. Accepted values are: -40, -30, -20, -16, -12, -8, -4, 0, 4
-//#define DEVICE_POWER 0
-//#define PNP_ID_VENDOR_ID_SOURCE             0x02                                       /**< Vendor ID Source. */
-//#define PNP_ID_VENDOR_ID                    0x1915                                     /**< Vendor ID. */
-//#define PNP_ID_PRODUCT_ID                   0xEEEE                                     /**< Product ID. */
-//#define PNP_ID_PRODUCT_VERSION              0x0001                                     /**< Product Version. */
-
-/*
-#define DEBUG_SERIAL 0
-
-#if KEYBOARD_SIDE == LEFT
-#define BLE_HID 1
-#define BLE_CENTRAL 1
-#define BLE_PERIPHERAL 0
-#define BLE_PAIRS 1
-#define PERIPHERAL_COUNT 1
-#define CENTRAL_COUNT 1
-#endif
-#if KEYBOARD_SIDE == RIGHT
-#define BLE_HID 0
-#define BLE_CENTRAL 0
-#define BLE_PERIPHERAL 1
-#define BLE_PAIRS 1
-#define PERIPHERAL_COUNT 1
-#define CENTRAL_COUNT 0
-#endif
-#if KEYBOARD_SIDE == MASTER
-#define BLE_CENTRAL 0
-#define BLE_PERIPHERAL 0
-#define BLE_PAIRS 0
-#define BLE_HID 1
-#define PERIPHERAL_COUNT 1
-#define CENTRAL_COUNT 0
-#endif
-*/
 
 /* HARDWARE DEFINITION*/
 /* key matrix size */
