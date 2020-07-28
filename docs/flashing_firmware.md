@@ -87,3 +87,19 @@ Usage is the same as detailed in the windows and mac sections.
 # Need to flash the bootloader?
 
 Follow the instructions on the Flashing the Bootloader page for the [Adafruit nRF52 Feather](https://learn.adafruit.com/bluefruit-nrf52-feather-learning-guide/flashing-the-bootloader).  You will need a j-link and connect it to the SWD lines of the hardware.
+
+In the case that you are customizing your bootloader, or progamming a non-feather board using SWD, the following steps should be taken (provided by [reschue](https://forums.adafruit.com/viewtopic.php?f=57&t=167184#wrap))  Read this post in details if you need to follow these steps.
+
+These are specific to the nRF52832 but can be adapted to the 840 as well. Note that with a custom bootloader, the 'Burn Bootloader' feature in the Arduino IDE needs to be used at least once if you're starting with a blank chip.
+
+- Open up Arduino, select the "Adafruit Feather nrf52832" board under "Tools"
+- Also under "Tools", select "Programmer: J-Link for Bluefruit nrf52"
+- Connect the Segger J-Link to your computer
+- Connect the J-Link to your board, and power it up.
+- Select "Burn Bootloader" under "Tools". It should complete without errors. At this point the red LED (GPIO 17) should begin the dim-bright-dim cycle. This is the idle loop of the bootloader waiting for a application program to be loaded.
+- Install the Segger JLink command line tools, if you've not already done so.
+- In a DOS "Command Prompt" window enter the command: nrfjprog --memwr 0x7F000 --val 0x01
+- Now, back in the Arduino IDE, select "Upload Using Programmer" and you should be good to go.
+
+You can make changes to your sketch and repeat the Upload Using Programmer as many times as you wish without having to execute any of the "nrfjprog" commands.
+
