@@ -18,8 +18,6 @@ if exist %bmpprefix% (
 
 %bmpprefix% --batch -ex "target extended-remote \\.\%1" -ex "mon tpwr enable" -ex "mon swdp_scan" -ex "att 2" -ex "mon erase_mass" -ex "mon tpwr disable"
 
-%bmpprefix% --batch -ex "target extended-remote \\.\%1" -ex "mon tpwr enable" -ex "mon swdp_scan" -ex "att 1" -ex "mon erase_mass" -ex "mon tpwr disable"
-
 set search_cmd="dir /b %prefix%"
 FOR /F "tokens=*" %%i IN (' %search_cmd% ') DO SET ver=%%i
 
