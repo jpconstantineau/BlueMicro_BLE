@@ -22,7 +22,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "firmware.h"
 #include <Adafruit_LittleFS.h>
 #include <InternalFileSystem.h>
-#include "src\U8g2lib.h"
+#include "src/U8g2lib.h"
 #include <Wire.h>
 using namespace Adafruit_LittleFS_Namespace;
 /**************************************************************************************************************************/

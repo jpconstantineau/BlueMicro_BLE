@@ -55,7 +55,7 @@ arduino_compile() {
    configFile="$keyboardsPath/$keyboard/$target/keyboard_config.h"
 
    cp -f $keymapFile $sourcePath/
-#   cp -f $keymapcppFile $sourcePath/
+   cp -f $keymapcppFile $sourcePath/
    cp -f $configFile $sourcePath/
 
    if $continueOnError; then

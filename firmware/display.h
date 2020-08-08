@@ -21,7 +21,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #ifndef DISPLAY_H
 #define DISPLAY_H
 #include <Wire.h>
-#include "src\U8g2lib.h"
+#include "src/U8g2lib.h"
 #include "datastructures.h"
 #include <stdio.h>
 
