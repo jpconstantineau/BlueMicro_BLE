@@ -29,4 +29,4 @@ FOR /F "tokens=*" %%i IN (' %searchbootloader_cmd% ') DO SET bootloader=%%i
 
 set bootloaderfullname=%bootloaderprefix%\%bootloader%
 @echo %bootloaderfullname%
-%bmpprefix% %bootloaderfullname% --batch -ex "target extended-remote \\.\%1" -ex "mon tpwr enable" -ex "mon swdp_scan" -ex "att 1" -ex "load " -ex "kill" -ex "quit"
+%bmpprefix% %bootloaderfullname% --batch -ex "target extended-remote \\.\%1" -ex "mon tpwr enable" -ex "mon swdp_scan" -ex "att 1" -ex "load "  -ex "quit"
