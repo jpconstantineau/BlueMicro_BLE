@@ -6,10 +6,10 @@ on:
 
 jobs:
   fqbn-build:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     container: jpconstantineau/arduino-cli-bluefruit-nrf52
     steps:
     - uses: actions/checkout@v2
-    - name: Build the firmwares
+    - name: Build all firmwares
       run: ./build/docker/nrf52xxx.sh all:all:all:all:all 
       
