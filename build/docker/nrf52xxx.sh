@@ -63,8 +63,8 @@ arduino_compile() {
    #sleep 2
 
    #Compile
-  whereis arduino-cli
-   cmdCompile="arduino-cli compile -v --fqbn adafruit:nrf52:$fqbn --build-path $buildPath --build-cache-path $buildCachePath $sourcePath/firmware.ino"
+
+   cmdCompile="/arduino-cli compile -v --fqbn adafruit:nrf52:$fqbn --build-path $buildPath --build-cache-path $buildCachePath $sourcePath/firmware.ino"
  
     if $verbose; then 
       $cmdCompile
