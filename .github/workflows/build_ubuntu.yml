@@ -20,9 +20,9 @@ jobs:
             pip3 install adafruit-nrfutil
             echo "::add-path::~/.local/bin"
             # make all our directories we need for files and libraries
-            rm -r $HOME/.arduino15; mkdir $HOME/.arduino15
+            mkdir $HOME/.arduino15
             mkdir $HOME/.arduino15/packages
-            rm -r $HOME/Arduino; mkdir $HOME/Arduino
+            mkdir $HOME/Arduino
             mkdir $HOME/Arduino/libraries
             curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
             echo "::add-path::$GITHUB_WORKSPACE/bin"
