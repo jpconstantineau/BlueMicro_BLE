@@ -16,6 +16,7 @@ jobs:
         - name: Install Arduino CLI and Tools
           run: |
             pip3 install adafruit-nrfutil
+            echo "::add-path::~/.local/bin"
             # make all our directories we need for files and libraries
             rm -r $HOME/.arduino15; mkdir $HOME/.arduino15
             mkdir $HOME/.arduino15/packages
