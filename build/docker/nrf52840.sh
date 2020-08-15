@@ -29,7 +29,7 @@ boardParam=$1
 #replace this variable with path to your avr installation
 #arduinoAvrPath="$arduinoPath/hardware/arduino/avr"
 
-blueMicroPath=$GITHUB_WORKSPACE #(cd $scriptPath/../.. && pwd)
+blueMicroPath=$(cd $scriptPath/../.. && pwd)
 #firmwarePath="${blueMicroPath}/firmware"
 firmwarePath=`readlink -f firmware`
 echo $firmwarePath

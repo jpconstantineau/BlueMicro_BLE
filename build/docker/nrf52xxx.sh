@@ -17,7 +17,7 @@ done
 shift $(($OPTIND - 1))
 boardParam=$1
 
-blueMicroPath=$GITHUB_WORKSPACE
+blueMicroPath=$(cd $scriptPath/../.. && pwd)
 firmwarePath="${blueMicroPath}/firmware"
 outputPath="${blueMicroPath}/output"
 outputTempPath="/tmp"

@@ -26,7 +26,7 @@ scriptPath="$(dirname "$BASH_SOURCE")"
 #replace this variable with path to your avr installation
 #arduinoAvrPath="$arduinoPath/hardware/arduino/avr"
 
-blueMicroPath=$GITHUB_WORKSPACE
+blueMicroPath=$(cd $scriptPath/../.. && pwd)
 firmwarePath="${blueMicroPath}/firmware"
 outputPath="${blueMicroPath}/output"
 outputTempPath="/tmp"

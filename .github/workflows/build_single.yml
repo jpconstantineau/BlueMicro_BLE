@@ -17,11 +17,11 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build nrf52832
-      run: ./build/docker/nrf.sh nrf52832:all:all:all
+      run: ./build/docker/gha-nrf.sh nrf52832:all:all:all
   nrf52840:
     runs-on: self-hosted
     container: jpconstantineau/arduino-cli-bluefruit-nrf52
     steps:
     - uses: actions/checkout@v2
     - name: Build nr52840
-      run: ./build/docker/nrf.sh nr52840:all:all:all
+      run: ./build/docker/gha-nrf.sh nr52840:all:all:all

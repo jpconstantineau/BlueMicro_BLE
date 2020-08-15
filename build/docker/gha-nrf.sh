@@ -1,7 +1,4 @@
 #!/bin/bash
-# Called by jenkins docker job BlueMicro_BLE-develop-Docker-nrf52832 on docker:8080
-# Called by jenkins docker job BlueMicro_BLE-master-Docker-nrf52832 on docker:8080
-
 set -e
 cd -- "$(dirname "$BASH_SOURCE")"
 
@@ -24,12 +21,12 @@ boardParam=$1
 #arduinoDataPath=$(cd ~/.arduino15 & pwd)
 #nrf52PackagePath="/home/$USER/.arduino15/packages/adafruit/hardware/nrf52"
 
-#scriptPath="$(dirname "$BASH_SOURCE")"
+scriptPath="$(dirname "$BASH_SOURCE")"
 
 #replace this variable with path to your avr installation
 #arduinoAvrPath="$arduinoPath/hardware/arduino/avr"
 
-blueMicroPath=$(cd $scriptPath/../.. && pwd)
+blueMicroPath=$GITHUB_WORKSPACE
 firmwarePath="${blueMicroPath}/firmware"
 outputPath="${blueMicroPath}/output"
 outputTempPath="/tmp"
@@ -68,11 +65,12 @@ arduino_compile() {
       set +e
    fi
 
-
+   #Need to sleep between compile calls else arduino-builder does not recognise changes
+   #sleep 2
 
    #Compile
-   cmdCompile832="/arduino-cli compile -v --fqbn adafruit:nrf52:feather52832 --build-path $buildPath --build-cache-path $buildCachePath $sourcePath/firmware.ino"
-   cmdCompile840="/arduino-cli compile -v --fqbn adafruit:nrf52:pca10056 --build-path $buildPath --build-cache-path $buildCachePath $sourcePath/firmware.ino"
+   cmdCompile832="/arduino-cli compile -v --fqbn adafruit:nrf52:feather52832 --build-path $buildPath --build-cache-path $buildCachePath $sourcePath/firmware.ino  "
+   cmdCompile840="/arduino-cli compile -v --fqbn adafruit:nrf52:pca10056 --build-path $buildPath --build-cache-path $buildCachePath $sourcePath/firmware.ino  "
     if $verbose; then 
       $cmdCompile832
     else
@@ -85,18 +83,38 @@ arduino_compile() {
    
    if $failed; then
      failedBuilds832=$((failedBuilds832+1))
-     printf "${RED}Failed${NC} \n"
+     printf "${RED}Failed${NC} "
    else
      [[ -d $outputPath/$keyboard ]] || mkdir $outputPath/$keyboard
-
+   
      cp -f $buildPath/firmware.ino.zip $outputPath/$keyboard/$keyboard-$keymap-$target.nrf52832.zip
      cp -f $buildPath/firmware.ino.hex $outputPath/$keyboard/$keyboard-$keymap-$target.nrf52832.hex
 
      successfulBuilds832=$((successfulBuilds832+1))
-     printf "${GREEN}OK${NC} \n"
+     printf "${GREEN}OK${NC} "
    fi
-      #Need to sleep between compile calls else arduino-builder does not recognise changes
-   #sleep 2
+   if $verbose; then 
+      $cmdCompile840
+    else
+       $cmdCompile840 > /dev/null
+    fi
+
+   (($? != 0)) && failed=true || failed=false
+
+   set -e
+   
+   if $failed; then
+     failedBuilds840=$((failedBuilds840+1))
+     printf "${RED}Failed${NC}\n"
+   else
+     [[ -d $outputPath/$keyboard ]] || mkdir $outputPath/$keyboard
+   
+     cp -f $buildPath/firmware.ino.zip $outputPath/$keyboard/$keyboard-$keymap-$target.nrf52840.zip
+     cp -f $buildPath/firmware.ino.hex $outputPath/$keyboard/$keyboard-$keymap-$target.nrf52840.hex
+
+     successfulBuilds840=$((successfulBuilds840+1))
+     printf "${GREEN}OK${NC}\n"
+   fi
 }
 
 printf "\n"
@@ -157,12 +175,13 @@ printf "Building $selectedKeyboard:$selectedKeymap:$selectedTarget\n"
 [[ -d $buildCachePath ]] || mkdir $buildCachePath
 
 printf "\n"
-printf "Compiling keyboard:keymap:target  nRF52832 \n"
+printf "Compiling keyboard:keymap:target  nRF52832  nRF52840\n"
 printf -- "-----------------------------------------------------\n"
 
 rm -rf $sourcePath
 mkdir -p $sourcePath
 cp -r $firmwarePath/* $sourcePath
+ls $sourcePath
 
 for keyboard in $sourcePath/keyboards/*/
 do
@@ -216,6 +235,7 @@ fi
 
 printf "\n"
 printf "nRF52832 Successful: ${successfulBuilds832} Failed: ${failedBuilds832}\n"
+printf "nRF52840 Successful: ${successfulBuilds840} Failed: ${failedBuilds840}\n"
 printf "\n"
 printf "Binaries can be found in ${outputPath}\n"
 printf "\n"
