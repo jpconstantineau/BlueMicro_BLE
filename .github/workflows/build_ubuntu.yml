@@ -40,7 +40,7 @@ jobs:
             arduino-cli lib list
 
         - name: Compile some things...
-          run: bash build/docker/gha-nrf52xxx.sh ErgoTravel
+          run: bash build/docker/gha-ubuntu-nrf52xxx.sh ErgoTravel
 
         - name: clean up
           run: |
