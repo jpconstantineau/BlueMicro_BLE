@@ -30,15 +30,24 @@ Function Locate-Dir($searchList) {
 Function Locate-Arduino-Dir { 
     Write-Host -NoNewline "Arduino Installation... "
 
-    $arduinoDir = Locate-Dir($ArduinoDirSearchList)
+    $arduinoDir = Get-ItemProperty -Path HKLM:\SOFTWARE\WOW6432Node\Arduino -ErrorAction SilentlyContinue | Select-Object Install_Dir -ExpandProperty Install_Dir
+    
+    if ([string]::IsNullOrEmpty($arduinoDir))
+    {
+        Write-Host -ForegroundColor Yellow Warning
+        Write-Host -ForegroundColor Yellow "Could not find Arduino installation from registry, searching common locations"
+        Write-Host -NoNewline "Arduino Installation... "
 
-    if ([string]::IsNullOrEmpty($arduinoDir)) {
-        Write-Host -ForegroundColor Red "Failed"
-        Write-Host
-        Write-Host -ForegroundColor Yellow "Could not find Arduino installation directory"
-        Write-Host -ForegroundColor Yellow "Download and install the Arduino IDE from https://www.arduino.cc/en/main/software"
-        Write-Host
-        exit 1
+        $arduinoDir = Locate-Dir($ArduinoDirSearchList)
+
+        if ([string]::IsNullOrEmpty($arduinoDir)) {
+            Write-Host -ForegroundColor Red "Failed"
+            Write-Host
+            Write-Host -ForegroundColor Yellow "Could not find Arduino installation directory"
+            Write-Host -ForegroundColor Yellow "Download and install the Arduino IDE from https://www.arduino.cc/en/main/software"
+            Write-Host
+            exit 1
+        }
     }
 
     Write-Host -ForegroundColor Green "OK"
