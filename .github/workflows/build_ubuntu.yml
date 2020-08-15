@@ -39,6 +39,6 @@ jobs:
             # Library summary
             arduino-cli lib list
 
-        - name: Install BSP and Libraries
-          run: arduino-cli help 
+        - name: Compile some things...
+          run: bash build/docker/gha-nrf52xxx.sh ErgoTravel
             
