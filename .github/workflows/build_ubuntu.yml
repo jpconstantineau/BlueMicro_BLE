@@ -47,5 +47,5 @@ jobs:
             arduino-cli lib list
 
         - name: Install BSP and Libraries
-          run: arduino-cli help
+          run: arduino-cli help 
             
