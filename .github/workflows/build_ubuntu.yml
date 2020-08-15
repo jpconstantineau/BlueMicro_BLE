@@ -1,4 +1,4 @@
-name: Build
+name: Build on Ubuntu
 
 on: [pull_request, push]
 
@@ -9,12 +9,7 @@ jobs:
 
     runs-on: self-hosted
 
-    steps:
-        - name: Setup Python
-          uses: actions/setup-python@v1
-          with:
-            python-version: '3.x'
-            
+    steps:  
         - name: Checkout code
           uses: actions/checkout@v2
     
