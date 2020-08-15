@@ -45,4 +45,7 @@ jobs:
             arduino-cli lib install "Adafruit TinyUSB Library" "Adafruit NeoPixel"
             # Library summary
             arduino-cli lib list
+
+        - name: Install BSP and Libraries
+          run: arduino-cli help
             
