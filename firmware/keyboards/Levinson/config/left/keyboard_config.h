@@ -22,7 +22,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define KEYBOARD_CONFIG_H
 #include "hardware_config.h"
 
-#include "breakout_mapping.h"
+
 
 //#define KEYBOARD_SIDE MASTER
 #define KEYBOARD_SIDE LEFT
@@ -38,24 +38,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define MANUFACTURER_NAME   "Keebio"          /**< Manufacturer. Will be passed to Device Information Service. */
 
 
-/* HARDWARE DEFINITION*/
-/* key matrix size */
-#define MATRIX_ROWS 4
-#define MATRIX_COLS 6
 
-// Levinson on Arduino
-#define MATRIX_ROW_PINS { D4, D7, E6, B4 }
-#define MATRIX_COL_PINS { F6, F7, B1, B3, B2, B6 }
-
-#define UNUSED_PINS {}
-
-/* COL2ROW or ROW2COL */
-#define DIODE_DIRECTION COL2ROW
-
-#define PERIPHERAL_COUNT 2 // more than 1 doesn't work yet... 
-#define DEBOUNCETIME 15
-
-#endif /* KEYBOARD_CONFIG_H */
 
 
 #if KEYBOARD_SIDE == LEFT
@@ -87,3 +70,5 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
   }
 
 #endif
+
+#endif /* KEYBOARD_CONFIG_H */

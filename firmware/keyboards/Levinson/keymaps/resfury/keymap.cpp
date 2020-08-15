@@ -16,7 +16,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 */
 #include "keymap.h"
-#include "hardware_variants.h"
+
 
 #if KEYBOARD_SIDE == LEFT
 

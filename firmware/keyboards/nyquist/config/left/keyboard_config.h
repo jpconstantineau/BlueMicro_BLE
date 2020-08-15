@@ -20,10 +20,9 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #ifndef KEYBOARD_CONFIG_H
 #define KEYBOARD_CONFIG_H
 #include "hardware_config.h"
-
-
 #define KEYBOARD_SIDE LEFT
-// CHANGE THIS FOR THE KEYBOARD TO MATCH WHAT IS BEING FLASHED. OPTIONS: LEFT  RIGHT  MASTER
+
+// CHANGE THIS FOR THE KEYBOARD TO MATCH WHAT IS BEING FLASHED. OPTIONS: LEFT  RIGHT  SINGLE
 
 #define DEVICE_NAME_R       "NyquistBLE_R"   /**< Name of device. Will be included in the advertising data. */
 #define DEVICE_NAME_L       "NyquistBLE_L"   /**< Name of device. Will be included in the advertising data. */
@@ -68,4 +67,4 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 #endif
 
-#endif
+#endif /* KEYBOARD_CONFIG_H */

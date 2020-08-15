@@ -21,15 +21,11 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define KEYBOARD_CONFIG_H
 #include "hardware_config.h"
 
-#define KEYBOARD_SIDE MASTER
+#define KEYBOARD_SIDE SINGLE
 
-#if   KEYBOARD_SIDE == RIGHT
-#define DEVICE_NAME                         "LaplaceBLE_R"                          /**< Name of device. Will be included in the advertising data. */
-#elif KEYBOARD_SIDE == LEFT
-#define DEVICE_NAME                         "LaplaceBLE_L"                          /**< Name of device. Will be included in the advertising data. */
-#else
+#define DEVICE_NAME_R                         "LaplaceBLE_R"                          /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME_L                        "LaplaceBLE_L"                          /**< Name of device. Will be included in the advertising data. */
 #define DEVICE_NAME_M                         "LaplaceBLE"                          /**< Name of device. Will be included in the advertising data. */
-#endif
 
 #define DEVICE_MODEL                        "LaplaceBLE_v1"                          /**< Name of device. Will be included in the advertising data. */
 

@@ -22,11 +22,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define KEYBOARD_CONFIG_H
 #include "hardware_config.h"
 
-#include "breakout_mapping.h"
-
 #define KEYBOARD_SIDE LEFT
-//#define KEYBOARD_SIDE RIGHT
-// CHANGE THIS FOR THE KEYBOARD TO MATCH WHAT IS BEING FLASHED. OPTIONS: LEFT  RIGHT  MASTER
+// CHANGE THIS FOR THE KEYBOARD TO MATCH WHAT IS BEING FLASHED. OPTIONS: LEFT  RIGHT  SINGLE
 
 #define DEVICE_NAME_R                         "LetsSplit_R"                          /**< Name of device. Will be included in the advertising data. */
 #define DEVICE_NAME_L                         "LetsSplit_L"                          /**< Name of device. Will be included in the advertising data. */
@@ -37,32 +34,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define MANUFACTURER_NAME                   "Wootpatoot"                      /**< Manufacturer. Will be passed to Device Information Service. */
 
 
-/* HARDWARE DEFINITION*/
-/* key matrix size */
-#define MATRIX_ROWS 4
-#define MATRIX_COLS 6
-
-#define NRF52_HARDWARE  BLUENANO
-
-#if NRF52_HARDWARE == BLUEMICRO
-  #define MATRIX_ROW_PINS { D7, E6, B4, B5 }
-  #define MATRIX_COL_PINS { F6, F7, B1, B3, B2, B6 }
-#endif
-#if NRF52_HARDWARE == BLUENANO
-  #define MATRIX_ROW_PINS { 30, 29, 28, 27 }
-  #define MATRIX_COL_PINS { 10, 11, 12, 14, 13, 18 }
-#endif
-
-#define UNUSED_PINS {}
-
-/* COL2ROW or ROW2COL */
-#define DIODE_DIRECTION COL2ROW
-
-#endif /* KEYBOARD_CONFIG_H */
-
-
 #if KEYBOARD_SIDE == RIGHT
-
     #define KEYMAP( \
        K00,   K01,   K02,   K03,   K04,   K05,   \
        K10,   K11,   K12,   K13 ,  K14,   K15,   \
@@ -90,3 +62,5 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 }
 
 #endif
+
+#endif /* KEYBOARD_CONFIG_H */

@@ -22,8 +22,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define KEYBOARD_CONFIG_H
 #include "hardware_config.h"
 
-#define KEYBOARD_SIDE MASTER
-
+#define KEYBOARD_SIDE SINGLE
+// CHANGE THIS FOR THE KEYBOARD TO MATCH WHAT IS BEING FLASHED. OPTIONS: LEFT  RIGHT  SINGLE
 
 #define DEVICE_NAME_R                         "IrisBLE_R"                          /**< Name of device. Will be included in the advertising data. */
 #define DEVICE_NAME_L                         "IrisBLE_L"                          /**< Name of device. Will be included in the advertising data. */
@@ -34,6 +34,40 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define MANUFACTURER_NAME                   "Keebio"                      /**< Manufacturer. Will be passed to Device Information Service. */
 
 
+#if KEYBOARD_SIDE == SINGLE
+
+#define KEYMAP( \
+   K00,   K01,   K02,   K03,   K04,   K05,   \
+   K10,   K11,   K12,   K13 ,  K14,   K15,   \
+   K20,   K21,   K22,   K23,   K24,   K25,   \
+   K30,   K31 ,  K32,   K33,   K34,   K35,   K42,  \
+                               K43,   K44,   K45   \
+) { \
+  { K00,   K01,   K02,   K03,   K04,   K05 }, \
+  { K10,   K11,   K12,   K13,   K14,   K15 }, \
+  { K20,   K21,   K22,   K23,   K24,   K25 }, \
+  { K30,   K31,   K32,   K33,   K34,   K35 }, \
+  { KC_NO, KC_NO, K42,   K43,   K44,   K45 }  \
+}
+#endif
+
+#if KEYBOARD_SIDE == LEFT
+
+#define KEYMAP( \
+   K00,   K01,   K02,   K03,   K04,   K05,   \
+   K10,   K11,   K12,   K13 ,  K14,   K15,   \
+   K20,   K21,   K22,   K23,   K24,   K25,   \
+   K30,   K31 ,  K32,   K33,   K34,   K35,   K42,  \
+                               K43,   K44,   K45   \
+) { \
+  { K00,   K01,   K02,   K03,   K04,   K05 }, \
+  { K10,   K11,   K12,   K13,   K14,   K15 }, \
+  { K20,   K21,   K22,   K23,   K24,   K25 }, \
+  { K30,   K31,   K32,   K33,   K34,   K35 }, \
+  { KC_NO, KC_NO, K42,   K43,   K44,   K45 }  \
+}
+
+#else
 
 #define KEYMAP( \
        K00,   K01,   K02,   K03,   K04,   K05,   \
@@ -50,5 +84,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 }
 
 
+
+#endif 
 
 #endif /* KEYBOARD_CONFIG_H */

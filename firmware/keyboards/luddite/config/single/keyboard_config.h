@@ -20,8 +20,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #ifndef KEYBOARD_CONFIG_H
 #define KEYBOARD_CONFIG_H
 #include "hardware_config.h"
-
-#define KEYBOARD_SIDE MASTER
+#define KEYBOARD_SIDE SINGLE
 
 #define DEVICE_NAME_M                         "LudditeBLE"                          /**< Name of device. Will be included in the advertising data. */
 #define DEVICE_MODEL                        "LudditeBLE_v1"                          /**< Name of device. Will be included in the advertising data. */

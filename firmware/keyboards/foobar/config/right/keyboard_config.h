@@ -22,8 +22,9 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define KEYBOARD_CONFIG_H
 #include "hardware_config.h"
 
-#define KEYBOARD_SIDE RIGHT
-// CHANGE THIS FOR THE KEYBOARD TO MATCH WHAT IS BEING FLASHED. OPTIONS: LEFT  RIGHT  MASTER
+#define KEYBOARD_SIDE LEFT
+//#define KEYBOARD_SIDE RIGHT
+// CHANGE THIS FOR THE KEYBOARD TO MATCH WHAT IS BEING FLASHED. OPTIONS: LEFT  RIGHT  SINGLE
 
 #define DEVICE_NAME_R                         "bar"                          /**< Name of device. Will be included in the advertising data. */
 #define DEVICE_NAME_L                         "foo"                          /**< Name of device. Will be included in the advertising data. */
@@ -32,9 +33,6 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define DEVICE_MODEL                        "Foobar"                          /**< Name of device. Will be included in the advertising data. */
 
 #define MANUFACTURER_NAME                   "di0id"                      /**< Manufacturer. Will be passed to Device Information Service. */
-
-
-
 
 
 

@@ -22,7 +22,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 #include "hardware_config.h"
 
-#define KEYBOARD_SIDE MASTER
+#define KEYBOARD_SIDE SINGLE
 
 
 #define DEVICE_NAME_R                         "BlueMicro_R"                         /**< Name of device. Will be included in the advertising data. */

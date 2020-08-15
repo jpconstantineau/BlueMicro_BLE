@@ -21,7 +21,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define KEYBOARD_CONFIG_H
 #include "hardware_config.h"
 
-#define KEYBOARD_SIDE MASTER
+#define KEYBOARD_SIDE SINGLE
 
 #if   KEYBOARD_SIDE == RIGHT
 #define DEVICE_NAME                         "Chocopad_R"                          /**< Name of device. Will be included in the advertising data. */
@@ -34,6 +34,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define DEVICE_MODEL                        "Chocopad_v1"                          /**< Name of device. Will be included in the advertising data. */
 
 #define MANUFACTURER_NAME                   "Keebio"                      /**< Manufacturer. Will be passed to Device Information Service. */
+
+
 
 
 #define KEYMAP( \

@@ -54,7 +54,7 @@ NRF52840_PCA10056
 #define TEST 0
 #define LEFT 1
 #define RIGHT 2
-#define MASTER 3
+#define SINGLE 3
 
 // putting this here since it's called in every ketboard_config and we need this for all the keymaps.
 #define KEYMAP2ARRAY(OTHERMACROHERE) {OTHERMACROHERE}

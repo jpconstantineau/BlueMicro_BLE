@@ -86,7 +86,7 @@ function render() {
 }
 
 Function Compile-Board($keyboard, $target, $keymap, $fqbn, $hardware) {
-    Write-Host -NoNewline "$keyboard`:$keymap`:$target`:$hardware`:$fqbn... "
+    Write-Host -NoNewline "$keyboard`:$keymap`:$target`:$fqbn`:$hardware... "
     Write-Verbose
     Write-Verbose
 
@@ -123,6 +123,31 @@ Function Compile-Board($keyboard, $target, $keymap, $fqbn, $hardware) {
     $fqbnstr = $fqbn
     
     # Run compile
+    $cmdCompile832 = 
+    '& "$BuilderExe" -compile -logger=machine -warnings=all  -verbose -ide-version=10813 -vid-pid=0000_0000 -debug-level 1 ' + 
+    '-hardware "$ArduinoDir\hardware" -hardware "$ArduinoDataDir\packages" ' + 
+    '-tools "$ArduinoDir\tools-builder" -tools "$ArduinoDir\hardware\tools\avr" -tools "$ArduinoDataDir\packages" ' +
+    '-built-in-libraries "$ArduinoDir\libraries"' +
+    '-fqbn "adafruit:nrf52:feather52832:softdevice=s132v6,debug=l0" ' +
+    '-build-path "$BuildDir" -build-cache "$BuildCacheDir" ' +
+    '-prefs "build.warn_data_percentage=75" ' +
+    '-prefs "runtime.tools.nrfjprog.path=$ArduinoDataDir\packages\adafruit\tools\nrfjprog\9.4.0" ' +
+    '-prefs "runtime.tools.nrfjprog-9.4.0.path=$ArduinoDataDir\packages\adafruit\tools\nrfjprog\9.4.0" ' +
+    '-prefs "runtime.tools.arm-none-eabi-gcc.path=$ArduinoDataDir\packages\adafruit\tools\arm-none-eabi-gcc\9-2019q4" ' +
+    '-prefs "runtime.tools.arm-none-eabi-gcc-9-2019q4.path=$ArduinoDataDir\packages\adafruit\tools\arm-none-eabi-gcc\9-2019q4" '
+
+    $cmdCompile840 = 
+    '& "$BuilderExe" -compile -logger=machine -warnings=all  -verbose -ide-version=10813 -vid-pid=0000_0000 -debug-level 1 ' + 
+    '-hardware "$ArduinoDir\hardware" -hardware "$ArduinoDataDir\packages" ' + 
+    '-tools "$ArduinoDir\tools-builder" -tools "$ArduinoDir\hardware\tools\avr" -tools "$ArduinoDataDir\packages" ' +
+    '-built-in-libraries "$ArduinoDir\libraries"' +
+    '-fqbn "adafruit:nrf52:pca10056:softdevice=s140v6,debug=l0" ' +
+    '-build-path "$BuildDir" -build-cache "$BuildCacheDir" ' +
+    '-prefs "build.warn_data_percentage=75" ' +
+    '-prefs "runtime.tools.nrfjprog.path=$ArduinoDataDir\packages\adafruit\tools\nrfjprog\9.4.0" ' +
+    '-prefs "runtime.tools.nrfjprog-9.4.0.path=$ArduinoDataDir\packages\adafruit\tools\nrfjprog\9.4.0" ' +
+    '-prefs "runtime.tools.arm-none-eabi-gcc.path=$ArduinoDataDir\packages\adafruit\tools\arm-none-eabi-gcc\9-2019q4" ' +
+    '-prefs "runtime.tools.arm-none-eabi-gcc-9-2019q4.path=$ArduinoDataDir\packages\adafruit\tools\arm-none-eabi-gcc\9-2019q4" '
 
     $cmdCompile = 
         '& "$BuilderExe" -compile -logger=machine -warnings "none" -verbose -ide-version "10807" -debug-level 1 ' + 
@@ -207,7 +232,7 @@ Write-Verbose ("Powershell Version: " + $PSVersionTable.PSVersion)
 if ($BoardParam -eq "ask") {
 	Write-Host
 	Write-Host "This script can be run with parameters"
-	Write-Host "./build-windows.ps1 <keyboard>:<keymap>:<keyboard_config>:<hardware>:<fqbn> -verbose -continueOnError"
+	Write-Host "./build-windows.ps1 <keyboard>:<keymap>:<target> -verbose -continueOnError"
 
     $SelectedKeyboard = "all"
     $SelectedKeymap = "all"
@@ -257,19 +282,19 @@ if ($BoardParam -eq "ask") {
     }
 
     if ($BoardParamSplit.Count -ge 4) {
-        $SelectedHardware = $BoardParamSplit[3];
-    } else {
-        $SelectedHardware = "all"
-    }
-    if ($BoardParamSplit.Count -ge 5) {
-        $Selectedfqbn = $BoardParamSplit[4];
+        $Selectedfqbn = $BoardParamSplit[3];
     } else {
         $Selectedfqbn = "all"
+    }
+    if ($BoardParamSplit.Count -ge 5) {
+        $SelectedHardware = $BoardParamSplit[4];
+    } else {
+        $SelectedHardware = "all"
     }
 }
 
 Write-Host
-Write-Host "Building: $SelectedKeyboard`:$SelectedKeymap`:$SelectedTarget`:$SelectedHardware`:$Selectedfqbn"
+Write-Host "Building: $SelectedKeyboard`:$SelectedKeymap`:$SelectedTarget`:$Selectedfqbn`:$SelectedHardware"
 Write-Host 
 Write-Host "Checking file locations"
 Write-Host -----------------------------------

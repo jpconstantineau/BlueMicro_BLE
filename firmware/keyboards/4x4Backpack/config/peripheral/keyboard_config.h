@@ -23,7 +23,6 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 #define KEYBOARD_SIDE RIGHT
 
-
 #define DEVICE_NAME_R                         "4x4Numpad_R"                         /**< Name of device. Will be included in the advertising data. */
 #define DEVICE_NAME_L                         "4x4Numpad_L"                         /**< Name of device. Will be included in the advertising data. */
 #define DEVICE_NAME_M                         "4x4Numpad"                           /**< Name of device. Will be included in the advertising data. */

@@ -19,15 +19,19 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 #ifndef HARDWARE_CONFIG_H
 #define HARDWARE_CONFIG_H
-#include "hardware_variants.h"
 
-#include "breakout_mapping.h"
+#define KEYBOARD_SIDE SINGLE
 
+#define DEVICE_NAME_R                         "4x4Backpack840_R"                         /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME_L                         "4x4Backpack840_L"                         /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME_M                         "4x4Backpack840"                           /**< Name of device. Will be included in the advertising data. */
+
+#define DEVICE_MODEL                          "4x4Backpack840_V1"                          /**< Name of device. Will be included in the advertising data. */
 
 /* HARDWARE DEFINITION*/
 /* key matrix size */
-#define MATRIX_ROWS 4
-#define MATRIX_COLS 4
+	#define MATRIX_ROWS 4
+	#define MATRIX_COLS 4
 
 	#define MATRIX_ROW_PINS {43, 3, 28, 45}
 	#define MATRIX_COL_PINS {2, 29, 30,  26} // last 4: 6, 5, 8, 41, 22, 13, 20, 17,10, 38, 9, 24

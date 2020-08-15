@@ -25,7 +25,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define DEVICE_MODEL "Megatreus - The Original" /**< Name of device. Will be included in the advertising data. */
 #define MANUFACTURER_NAME "jturcotte" /**< Manufacturer. Will be passed to Device Information Service. */
 
-#define KEYBOARD_SIDE MASTER
+#define KEYBOARD_SIDE SINGLE
 
 
 #define KEYMAP( \

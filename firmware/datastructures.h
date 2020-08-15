@@ -16,25 +16,45 @@ A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR C
 LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-*/
-#ifndef HARDWARE_CONFIG_H
-#define HARDWARE_CONFIG_H
-    #include "hardware_variants.h"
-    #define HARDWARE_MAPPING  BLUEMICROV2_0C
-    #include "breakout_mapping.h"
+*/    
+#ifndef DATASTRUCTURES_H
+#define DATASTRUCTURES_H
+#include <array>
 
-/* HARDWARE DEFINITION*/
-/* key matrix size */
-#define MATRIX_ROWS 4
-#define MATRIX_COLS 6
+    typedef struct { 
+        bool    ledbacklight;  
+        bool    ledrgb;    
+        uint32_t timerkeyscaninterval;
+        uint32_t timerbatteryinterval;     
+  
+    } PersistentState;
 
-// Levinson on Arduino
-#define MATRIX_ROW_PINS { D4, D7, E6, B4 }
-#define MATRIX_COL_PINS { F6, F7, B1, B3, B2, B6 }
+    typedef struct { 
+        uint32_t timestamp;
+        uint32_t lastupdatetime;
+        uint16_t layer;
+        uint8_t statusled;
 
-#define UNUSED_PINS {}
+        bool helpmode;
+        uint32_t vbat_raw;
+        uint32_t vbat_mv;
+        uint32_t vbat_vdd;
+        uint32_t vbat_vddh;
+        uint8_t  vbat_per;
+        uint8_t  batt_type;
+        uint32_t batterytimer;
 
-/* COL2ROW or ROW2COL */
-#define DIODE_DIRECTION COL2ROW
-    
-#endif /* HARDWARE_CONFIG_H */
+        char peer_name_prph[32];
+        uint16_t conn_handle_prph;
+        int8_t rssi_prph;
+
+        char peer_name_cent[32];
+        uint16_t conn_handle_cent;
+        int8_t rssi_cent;
+
+        char peer_name_cccd[32];
+        uint16_t conn_handle_cccd;
+        int8_t rssi_cccd;
+    } DynamicState;
+
+    #endif 
