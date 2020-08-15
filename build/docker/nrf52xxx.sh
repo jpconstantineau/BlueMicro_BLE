@@ -18,6 +18,7 @@ shift $(($OPTIND - 1))
 boardParam=$1
 
 blueMicroPath=$(pwd)
+ls ${blueMicroPath}
 firmwarePath="${blueMicroPath}/firmware"
 outputPath="${blueMicroPath}/output"
 outputTempPath="/tmp"
