@@ -6,6 +6,8 @@ jobs:
   build:
     strategy:
       fail-fast: false
+      matrix:
+        keyboard: ['ErgoTravel', 'gherkin', 'luddite', 'contra', 'crkbd', 'breadboard-promicro']
 
     runs-on: self-hosted
 
@@ -41,7 +43,7 @@ jobs:
             arduino-cli lib list
 
         - name: Compile some things...
-          run: bash build/docker/gha-ubuntu-nrf52xxx.sh ErgoTravel
+          run: bash build/docker/gha-ubuntu-nrf52xxx.sh ${{ matrix.keyboard }}
 
         - name: clean up
           run: |
