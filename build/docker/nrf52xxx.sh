@@ -16,9 +16,8 @@ done
 
 shift $(($OPTIND - 1))
 boardParam=$1
-
-blueMicroPath=$(pwd)
-ls ${blueMicroPath}
+scriptPath="$(dirname "$BASH_SOURCE")"
+blueMicroPath=$(cd $scriptPath/../.. && pwd)
 firmwarePath="${blueMicroPath}/firmware"
 outputPath="${blueMicroPath}/output"
 outputTempPath="/tmp"
