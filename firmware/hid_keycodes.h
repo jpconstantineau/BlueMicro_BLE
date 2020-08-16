@@ -397,6 +397,7 @@ enum hid_keyboard_keypad_usage {
 #define EEP_RST             EEPROM_RESET
 #define DFU                 KB(KC_D)
 #define SERIAL_DFU          KB(KC_E)
+#define UF2_DFU             KB(KC_ESC)
 #define CLEAR_BONDS         KB(KC_F)
 
 #define BL_TOGG             KB(KC_G)

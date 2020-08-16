@@ -243,6 +243,9 @@ void process_keyboard_function(uint16_t keycode)
     case SERIAL_DFU:
       enterSerialDfu();
       break;
+    case UF2_DFU:
+      enterUf2Dfu();
+      break;
 
     case HELP_MODE:
        keyboardstate.helpmode = ! keyboardstate.helpmode;
