@@ -149,14 +149,14 @@ else
       selectedTarget="all"
    fi
    
-   selectedFqbn="${boardParamSplit[3]}"
-   if [ -z "$selectedFqbn" ]; then
-      selectedFqbn="all"
-   fi
-   
-   selectedHardware="${boardParamSplit[4]}"
+   selectedHardware="${boardParamSplit[3]}"
    if [ -z "$selectedHardware" ]; then
       selectedHardware="all"
+   fi
+
+   selectedFqbn="${boardParamSplit[4]}"
+   if [ -z "$selectedFqbn" ]; then
+      selectedFqbn="all"
    fi
 
 fi
