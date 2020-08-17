@@ -13,8 +13,8 @@ jobs:
 
     steps:
         - name: Fix Permissions
-          run: chown -R $USER:$USER /home/pierre/actions-runner/_work/BlueMicro_BLE
-             
+          run: echo ${{secrets.DEPLOY_PASSWORD}} | sudo -S chown -R $USER:$USER /home/pierre/actions-runner/_work/BlueMicro_BLE
+
         - name: Checkout code
           uses: actions/checkout@v2     
             
