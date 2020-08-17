@@ -11,7 +11,10 @@ jobs:
 
     runs-on: self-hosted
 
-    steps:  
+    steps:
+        - name: Fix Permissions
+          run: sudo chown -R $USER:$USER /home/github/actions-runner/_work/BlueMicro_BLE
+             
         - name: Checkout code
           uses: actions/checkout@v2     
             
