@@ -1,0 +1,15 @@
+name: Compile firmwares - fqbn
+
+on:
+  push:
+    branches: [ fqbn-builds ]
+
+jobs:
+  fqbn-build:
+    runs-on: self-hosted
+    container: jpconstantineau/arduino-cli-bluefruit-nrf52
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build all firmwares
+      run: ./build/docker/gha-docker-nrf52xxx.sh all:all:all:all:all 
+      

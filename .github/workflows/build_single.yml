@@ -1,0 +1,24 @@
+name: Compile firmwares - split
+on:
+  # Trigger the workflow on push or pull request,
+  # but only for the master branch
+  push:
+    branches:
+      - master
+      - develop
+  pull_request:
+    branches:
+      - master
+      - develop  
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        fqbn: ['feather52832', 'pca10056', 'feather52840']
+    runs-on: self-hosted
+    container: jpconstantineau/arduino-cli-bluefruit-nrf52
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build fqbn
+      run: ./build/docker/gha-docker-nrf52xxx.sh all:all:all:all:${{ matrix.fqbn }}    

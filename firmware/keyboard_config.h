@@ -19,9 +19,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 #ifndef KEYBOARD_CONFIG_H
 #define KEYBOARD_CONFIG_H
-#include "hardware_variants.h"
-#define HARDWARE_MAPPING  BLUEMICRO840V1_0
-#include "breakout_mapping.h"
+#include "hardware_config.h"
+
 
 #define KEYBOARD_SIDE RIGHT
 // CHANGE THIS FOR THE KEYBOARD TO MATCH WHAT IS BEING FLASHED. OPTIONS: LEFT  RIGHT  SINGLE
@@ -33,22 +32,6 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define DEVICE_MODEL                        "ErgoTravelBLE_V1"                          /**< Name of device. Will be included in the advertising data. */
 
 #define MANUFACTURER_NAME                   "JPConstantineau.com"                      /**< Manufacturer. Will be passed to Device Information Service. */
-
-
-/* HARDWARE DEFINITION*/
-/* key matrix size */
-#define MATRIX_ROWS 4
-#define MATRIX_COLS 7
-
-#define MATRIX_ROW_PINS {28, 29, 30, 15 }
-#define MATRIX_COL_PINS {4, 3, 2, 12, 14, 13, 11 }
-#define UNUSED_PINS {}
-
-/* COL2ROW or ROW2COL */
-#define DIODE_DIRECTION COL2ROW
-#define BACKLIGHT_LED_PIN B5 
-#define DEFAULT_PWM_VALUE 10000            // PWM intensity  max is 10000
-#define BACKLIGHT_PWM_ON 1   
 
 
 

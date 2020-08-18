@@ -45,10 +45,11 @@ void setupConfig() {
   keyboardconfig.ledbacklight=BACKLIGHT_PWM_ON;
   keyboardconfig.ledrgb=WS2812B_LED_ON;
   keyboardconfig.timerkeyscaninterval=HIDREPORTINGINTERVAL;
-  keyboardconfig.timerbatteryinterval=30*1000;
+  keyboardconfig.timerbatteryinterval=BATTERYINTERVAL;
 
   keyboardstate.helpmode = false;
   keyboardstate.timestamp = millis();
+  keyboardstate.lastupdatetime = keyboardstate.timestamp;
 }
 
 
@@ -241,6 +242,9 @@ void process_keyboard_function(uint16_t keycode)
       break;
     case SERIAL_DFU:
       enterSerialDfu();
+      break;
+    case UF2_DFU:
+      enterUf2Dfu();
       break;
 
     case HELP_MODE:

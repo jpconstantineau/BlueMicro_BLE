@@ -1,0 +1,56 @@
+name: Build on Ubuntu
+
+on: [pull_request, push]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        keyboard: ['ErgoTravel', 'gherkin', 'luddite', 'contra', 'crkbd', 'breadboard-promicro']
+
+    runs-on: self-hosted
+
+    steps:
+        - name: Fix Permissions
+          run: echo ${{secrets.DEPLOY_PASSWORD}} | sudo -S chown -R $USER:$USER /home/pierre/actions-runner/_work/BlueMicro_BLE
+
+        - name: Checkout code
+          uses: actions/checkout@v2     
+            
+        - name: Install Arduino CLI and Tools
+          run: |
+            pip3 install adafruit-nrfutil
+            echo "::add-path::~/.local/bin"
+            # make all our directories we need for files and libraries
+            mkdir $HOME/.arduino15
+            mkdir $HOME/.arduino15/packages
+            mkdir $HOME/Arduino
+            mkdir $HOME/Arduino/libraries
+            curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
+            echo "::add-path::$GITHUB_WORKSPACE/bin"
+            
+        - name: Install BSP and Libraries
+          env:
+            BSP_URL: https://adafruit.github.io/arduino-board-index/package_adafruit_index.json
+            BSP_PATH: .arduino15/packages/adafruit/hardware/nrf52
+          run: |
+            arduino-cli config init
+            arduino-cli core update-index
+            arduino-cli core update-index --additional-urls $BSP_URL
+            arduino-cli core install adafruit:nrf52 --additional-urls $BSP_URL
+            
+            # Install library dependency
+            arduino-cli lib install "Adafruit TinyUSB Library" "Adafruit NeoPixel"
+            # Library summary
+            arduino-cli lib list
+
+        - name: Compile some things...
+          run: bash build/docker/gha-ubuntu-nrf52xxx.sh ${{ matrix.keyboard }}
+
+        - name: clean up
+          run: |
+            rm -r $HOME/.arduino15
+            rm -r $HOME/Arduino
+
+            

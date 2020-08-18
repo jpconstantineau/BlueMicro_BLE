@@ -32,10 +32,9 @@ std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
 void setupKeymap() {
         ;
     }
-#endif
 
 
-    #if KEYBOARD_SIDE == LEFT
+#elif KEYBOARD_SIDE == LEFT
 
 std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
     {KEYMAP(
