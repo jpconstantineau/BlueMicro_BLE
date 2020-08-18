@@ -97,7 +97,7 @@ if [ -z "$boardParam" ]; then
 
    printf "\n"
    printf "This script can be run with paramters\n"
-   printf "./build-macos [-v] [-c] keyboard:keymap:target:fqbn:hardware\n"
+   printf "./gha-nrf52xxx.sh keyboard:keymap:target:fqbn:hardware\n"
 
    selectedKeyboard="all"
    selectedKeymap="all"
