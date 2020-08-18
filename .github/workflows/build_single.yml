@@ -21,4 +21,4 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build fqbn
-      run: ./build/docker/gha-docker-nrf52xxx.sh.sh all:all:all:all:${{ matrix.fqbn }}    
+      run: ./build/docker/gha-docker-nrf52xxx.sh all:all:all:all:${{ matrix.fqbn }}    
