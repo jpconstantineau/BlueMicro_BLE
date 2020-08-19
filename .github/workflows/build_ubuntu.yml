@@ -15,6 +15,11 @@ jobs:
         - name: Fix Permissions
           run: echo ${{secrets.DEPLOY_PASSWORD}} | sudo -S chown -R $USER:$USER /home/pierre/actions-runner/_work/BlueMicro_BLE
 
+        - name: clean up
+          run: |
+            rm -rf $HOME/.arduino15
+            rm -rf $HOME/Arduino
+            
         - name: Checkout code
           uses: actions/checkout@v2     
             
@@ -48,9 +53,6 @@ jobs:
         - name: Compile some things...
           run: bash build/docker/gha-ubuntu-nrf52xxx.sh ${{ matrix.keyboard }}
 
-        - name: clean up
-          run: |
-            rm -r $HOME/.arduino15
-            rm -r $HOME/Arduino
+
 
             

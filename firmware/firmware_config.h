@@ -22,7 +22,6 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define FIRMWARE_CONFIG_H
 #include "hardware_variants.h"
 #include "keyboard_config.h"
-#include "breakout_mapping.h"
 
 #define MATRIX_SCAN 1
 #define SEND_KEYS 1

@@ -21,7 +21,6 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define FIRMWARE_H
 #undef min
 #undef max
-#include "hardware_variants.h"
 #include "firmware_config.h"
 #include "bluetooth_config.h"
 #include "KeyScanner.h"

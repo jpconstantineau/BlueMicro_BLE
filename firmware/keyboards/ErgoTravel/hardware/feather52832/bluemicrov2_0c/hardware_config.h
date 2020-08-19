@@ -20,22 +20,20 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #ifndef HARDWARE_CONFIG_H
 #define HARDWARE_CONFIG_H
 #include "hardware_variants.h"
-#define HARDWARE_MAPPING  BLUEMICROV2_0C
-#include "breakout_mapping.h"
 
 /* HARDWARE DEFINITION*/
 /* key matrix size */
 #define MATRIX_ROWS 4
 #define MATRIX_COLS 7
 
-#define MATRIX_ROW_PINS {C6, D7, E6, B4 }
-#define MATRIX_COL_PINS {F5, F6, F7, B1, B3, B2, B6 }
+#define MATRIX_ROW_PINS {28, 29, 30, 15 } // to do check these with the schematic
+#define MATRIX_COL_PINS {4, 3, 2, 12, 14, 13, 11 } // to do check these with the schematic
 #define UNUSED_PINS {}
-#define BACKLIGHT_LED_PIN B5 
+#define BACKLIGHT_LED_PIN 16 
 #define DEFAULT_PWM_VALUE 10000            // PWM intensity
 #define BACKLIGHT_PWM_ON 1  
-/* COL2ROW or ROW2COL */
-#define DIODE_DIRECTION COL2ROW
-
+#define DIODE_DIRECTION COL2ROW            /* COL2ROW or ROW2COL */
+#define BATTERY_TYPE BATT_LIPO
+#define VBAT_PIN  31
     
 #endif /* HARDWARE_CONFIG_H */

@@ -19,16 +19,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 #ifndef HARDWARE_CONFIG_H
 #define HARDWARE_CONFIG_H
-
-#define DEVICE_NAME_R                         "4x4Platform_R"                         /**< Name of device. Will be included in the advertising data. */
-#define DEVICE_NAME_L                         "4x4Platform_L"                         /**< Name of device. Will be included in the advertising data. */
-#define DEVICE_NAME_M                         "4x4Platform"                           /**< Name of device. Will be included in the advertising data. */
-
-#define DEVICE_MODEL                        "4x4Platform_V1"                          /**< Name of device. Will be included in the advertising data. */
-
-#define MANUFACTURER_NAME                   "keyboards.jpconstantineau.com"         /**< Manufacturer. Will be passed to Device Information Service. */
-
-#include "breakout_mapping.h"
+#include "hardware_variants.h"
 
 /* HARDWARE DEFINITION*/
 /* key matrix size */
@@ -45,6 +36,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 	#define WS2812B_LED_COUNT 1
 	#define WS2812B_LED_ON 1 
 
+#define BATTERY_TYPE BATT_LIPO
+#define VBAT_PIN  31
 
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW

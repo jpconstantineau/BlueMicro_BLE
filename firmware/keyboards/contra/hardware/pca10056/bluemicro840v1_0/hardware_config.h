@@ -20,23 +20,42 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #ifndef HARDWARE_CONFIG_H
 #define HARDWARE_CONFIG_H
 #include "hardware_variants.h"
-#define HARDWARE_MAPPING  BLUEMICRO840V1_0
-#include "breakout_mapping.h"
+
 
 /* HARDWARE DEFINITION*/
 /* key matrix size */
 #define MATRIX_ROWS 4
 #define MATRIX_COLS 12
 
-#define MATRIX_ROW_PINS {F6, B3, B2, B6}
-#define MATRIX_COL_PINS {F4, F5, B5, B4, E6, D7, C6, D4, D0, D1, D2, D3} 
-
-//#define MATRIX_ROW_PINS {3, 14, 13, 11}
-//#define MATRIX_COL_PINS {5, 4, 16, 15, 30, 29, 28, 27, 26, 25, 7, 18} 
+#define MATRIX_ROW_PINS {29, 3, 28, 43}
+#define MATRIX_COL_PINS {30, 26, 38, 10, 9, 24, 13, 20, 17, 15, 8, 6} 
 
 #define UNUSED_PINS {}
 
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW
-    
+            #define BATTERY_TYPE BATT_LIPO
+        #define VBAT_PIN  31
+        #define VCC_PIN 12
+#define VCC_POLARITY_ON 1
+   /*     #define D3      6  
+        #define D2      8   
+        #define D1      15  
+        #define D0      17  
+        #define D4      20
+        #define C6      13
+        #define D7      24
+        #define E6      9
+        #define B4      10
+        #define B5      38 //1.06 = 32+6
+
+        #define F4      30
+        #define F5      26  
+        #define F6      29
+        #define F7      2
+        #define B1      45 //1.13  = 32+13
+        #define B3      3
+        #define B2      28
+        #define B6      43 //1.11 = 32+11
+        #define NC      32 //1.00 = 32+0 // NC is for not connected....*/
 #endif /* HARDWARE_CONFIG_H */

@@ -20,8 +20,6 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #ifndef HARDWARE_CONFIG_H
 #define HARDWARE_CONFIG_H
 #include "hardware_variants.h"
-#define HARDWARE_MAPPING  BLUEMICROV2_1A  // note only the BlueMicro840 fits on the corne.
-#include "breakout_mapping.h"
 
 /* HARDWARE DEFINITION*/
 /* key matrix size */
@@ -29,9 +27,9 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define MATRIX_COLS 8
 
 /* key matrix pins */
-#define MATRIX_ROW_PINS {D3, D2, D1, D0, D4, C6, D7, E6}
-#define MATRIX_COL_PINS {F4, F5, F6, F7, B1, B3, B2, B6}
-#define BACKLIGHT_LED_PIN B5 
+#define MATRIX_ROW_PINS {18, 7, 25, 26, 27, 28, 29, 30}
+#define MATRIX_COL_PINS {5, 4, 3, 2, 12, 14, 13, 11}
+#define BACKLIGHT_LED_PIN 16 
 
 #define BACKLIGHT_PWM_ON 1                                                                                                         
 
@@ -39,6 +37,27 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW
+        #define BATTERY_TYPE BATT_LIPO
+        #define VBAT_PIN  31
+  /*      #define D3      18  // NOTE on board serial
+        #define D2      7   // NOTE on board serial
+        #define D1      25  //sda
+        #define D0      26  //scl
+        #define D4      27
+        #define C6      28
+        #define D7      29
+        #define E6      30
+        #define B4      15
+        #define B5      16
 
+        #define F4      5
+        #define F5      4
+        #define F6      3
+        #define F7      2
+        #define B1      12  //sck
+        #define B3      14  //miso
+        #define B2      13  //mosi
+        #define B6      11
+        #define NC      24 */
     
 #endif /* HARDWARE_CONFIG_H */

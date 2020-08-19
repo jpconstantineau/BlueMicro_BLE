@@ -19,11 +19,9 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 #ifndef HARDWARE_CONFIG_H
 #define HARDWARE_CONFIG_H
+
+
 #include "hardware_variants.h"
-
-#include "breakout_mapping.h"
-
-
 
 /* HARDWARE DEFINITION*/
 /* key matrix size */
@@ -37,7 +35,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 	
 	#define WS2812B_LED_COUNT 1
 	#define WS2812B_LED_ON 1 
-
+#define BATTERY_TYPE BATT_LIPO
+#define VBAT_PIN  31
 
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW

@@ -19,10 +19,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 #ifndef HARDWARE_CONFIG_H
 #define HARDWARE_CONFIG_H
+
 #include "hardware_variants.h"
-
-#include "breakout_mapping.h"
-
 
 /* HARDWARE DEFINITION*/
 /* key matrix size */
@@ -32,7 +30,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 	#define MATRIX_ROW_PINS {25, 26, 27, 28}
 	#define MATRIX_COL_PINS {29, 30, 2, 3, 4, 5, 7, 9, 10, 11, 12, 13 } // last 4: 17,16,15, 14
 
-
+#define BATTERY_TYPE BATT_CR2032
+#define VBAT_PIN  31
 
 #define UNUSED_PINS {}
 

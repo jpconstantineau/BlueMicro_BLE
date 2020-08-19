@@ -541,6 +541,5 @@ enum hid_keyboard_keypad_usage {
 #define KC_MS_WH_RIGHT  MS(KC_N)
 
 
-
 #endif /* HID_KEYCODES_H */
 
