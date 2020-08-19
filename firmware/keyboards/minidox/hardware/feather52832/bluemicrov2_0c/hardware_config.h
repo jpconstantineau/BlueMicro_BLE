@@ -20,9 +20,6 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #ifndef HARDWARE_CONFIG_H
 #define HARDWARE_CONFIG_H
 #include "hardware_variants.h"
-#define HARDWARE_MAPPING  BLUEMICROV2_0C
-#include "breakout_mapping.h"
-
 
 /* HARDWARE DEFINITION*/
 /* key matrix size */
@@ -31,12 +28,33 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 // Minidox on Arduino
 
-#define MATRIX_ROW_PINS { B2, B6, B4, B5 }
-#define MATRIX_COL_PINS { F4, D3, D2, D1, D4 }
+#define MATRIX_ROW_PINS { 13, 11, 15, 16 }
+#define MATRIX_COL_PINS { 5, 6, 8, 25, 27 }
 #define UNUSED_PINS {}
 
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW
+     #define BATTERY_TYPE BATT_LIPO
+        #define VBAT_PIN  31
+    /*    #define D3      6  //
+        #define D2      8   //
+        #define D1      25  //sda
+        #define D0      26  //scl
+        #define D4      27
+        #define C6      28
+        #define D7      29
+        #define E6      30
+        #define B4      15
+        #define B5      16
 
+        #define F4      5
+        #define F5      4
+        #define F6      3
+        #define F7      2
+        #define B1      12  //sck
+        #define B3      14  //miso
+        #define B2      13  //mosi
+        #define B6      11
+        #define NC      24 */
     
 #endif /* HARDWARE_CONFIG_H */

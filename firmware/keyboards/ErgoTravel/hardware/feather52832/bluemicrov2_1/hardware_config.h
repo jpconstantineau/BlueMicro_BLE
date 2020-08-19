@@ -19,25 +19,42 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 #ifndef HARDWARE_CONFIG_H
 #define HARDWARE_CONFIG_H
-
 #include "hardware_variants.h"
 
 /* HARDWARE DEFINITION*/
 /* key matrix size */
 #define MATRIX_ROWS 4
-#define MATRIX_COLS 4
+#define MATRIX_COLS 7
 
-	#define MATRIX_ROW_PINS {43, 3, 28, 45}
-	#define MATRIX_COL_PINS {2, 29, 30,  26} // last 4: 6, 5, 8, 41, 22, 13, 20, 17,10, 38, 9, 24
-
-	#define WS2812B_LED_PIN 15
-	
-	#define WS2812B_LED_COUNT 1
-	#define WS2812B_LED_ON 1 
-#define BATTERY_TYPE BATT_LIPO
-#define VBAT_PIN  31
-
+#define MATRIX_ROW_PINS {28, 29, 30, 15 }
+#define MATRIX_COL_PINS {4, 3, 2, 12, 14, 13, 11 }
+#define UNUSED_PINS {}
+#define BACKLIGHT_LED_PIN 16 
+#define DEFAULT_PWM_VALUE 10000            // PWM intensity
+#define BACKLIGHT_PWM_ON 1  
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW
+     #define BATTERY_TYPE BATT_LIPO
+        #define VBAT_PIN  31
+    /*    #define D3      6  //
+        #define D2      8   //
+        #define D1      25  //sda
+        #define D0      26  //scl
+        #define D4      27
+        #define C6      28
+        #define D7      29
+        #define E6      30
+        #define B4      15
+        #define B5      16
 
+        #define F4      5
+        #define F5      4
+        #define F6      3
+        #define F7      2
+        #define B1      12  //sck
+        #define B3      14  //miso
+        #define B2      13  //mosi
+        #define B6      11
+        #define NC      24 */
+    
 #endif /* HARDWARE_CONFIG_H */

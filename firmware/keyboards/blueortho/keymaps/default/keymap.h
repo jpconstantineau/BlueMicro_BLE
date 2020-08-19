@@ -19,7 +19,6 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 #include <stdint.h>
 #include "hid_keycodes.h"
-#include "hardware_variants.h"
 #include "keyboard_config.h"
 #include "advanced_keycodes.h"
 #include "Key.h"

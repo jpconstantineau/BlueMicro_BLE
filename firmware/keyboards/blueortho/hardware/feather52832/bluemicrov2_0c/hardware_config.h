@@ -19,7 +19,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 #ifndef HARDWARE_CONFIG_H
 #define HARDWARE_CONFIG_H
-
+#include "hardware_variants.h"
 
 /* HARDWARE DEFINITION*/
 /* key matrix size */

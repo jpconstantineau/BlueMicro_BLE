@@ -45,7 +45,7 @@ TODO
 |                   |            |            |
 | Dynamic Macros    | Future     | Yes  |
 |                   |            |            |
-| LCD Display       | No         | Yes  |
+| LCD Display       | OLED - WIP         | Yes  |
 |                   |            |            |
 | Key Lock          | ?          | Yes  |
 |                   |            |            |

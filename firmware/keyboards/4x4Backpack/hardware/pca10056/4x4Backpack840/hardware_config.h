@@ -20,14 +20,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #ifndef HARDWARE_CONFIG_H
 #define HARDWARE_CONFIG_H
 
-#define KEYBOARD_SIDE SINGLE
-
-#define DEVICE_NAME_R                         "4x4Backpack840_R"                         /**< Name of device. Will be included in the advertising data. */
-#define DEVICE_NAME_L                         "4x4Backpack840_L"                         /**< Name of device. Will be included in the advertising data. */
-#define DEVICE_NAME_M                         "4x4Backpack840"                           /**< Name of device. Will be included in the advertising data. */
-
-#define DEVICE_MODEL                          "4x4Backpack840_V1"                          /**< Name of device. Will be included in the advertising data. */
-
+#include "hardware_variants.h"
 /* HARDWARE DEFINITION*/
 /* key matrix size */
 	#define MATRIX_ROWS 4
@@ -41,6 +34,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 	#define WS2812B_LED_COUNT 1
 	#define WS2812B_LED_ON 1 
 
+#define BATTERY_TYPE BATT_LIPO
+#define VBAT_PIN  31
 
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW
