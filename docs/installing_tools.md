@@ -23,8 +23,8 @@ Open Arduino, add `https://www.adafruit.com/package_adafruit_index.json` as an `
 Install required packages from `Tools -> Board: "some boardName" -> Boards manager`.
 
 * Adafruit nRF52
-* Arduino SAMD Boards 
-* Adafruit SAMD Boards
+* Arduino SAMD Boards (note: It's unclear if this is really needed)
+* Adafruit SAMD Boards (note: It's unclear if this is really needed)
 
 After this you are ready to build using `build-macos` in `build/macos/`
 
