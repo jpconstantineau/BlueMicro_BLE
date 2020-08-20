@@ -23,9 +23,12 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
     typedef struct { 
         bool    ledbacklight;  
-        bool    ledrgb;    
+        bool    ledrgb; 
+        bool    VCCSwitchAvailable;  
+        bool    VCCSwitchEnabled;   
         uint32_t timerkeyscaninterval;
-        uint32_t timerbatteryinterval;     
+        uint32_t timerbatteryinterval;   
+         
   
     } PersistentState;
 

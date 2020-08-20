@@ -21,13 +21,14 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #ifndef GPIO_H
 #define GPIO_H
 
+#include <Arduino.h>
 #include <bluefruit.h>
 #include "keyboard_config.h"
 #include "firmware_config.h"
-#include "nrf52gpio.h"
 
 void setupGpio();
 void setupPWM(uint8_t ledpin);
 void sendPWM(uint16_t value);
+void switchVCC(bool value);
 
 #endif

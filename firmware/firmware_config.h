@@ -122,6 +122,13 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
   #define VBAT_DIVIDER_COMP (1.403F)        // Compensation factor for the VBAT divider
 #endif
 
-
+#ifdef VCC_PIN
+  #define VCC_ENABLE_GPIO 1
+    #ifndef VCC_POLARITY_ON
+      #define VCC_POLARITY_ON 1
+    #endif
+  #else
+  #define VCC_ENABLE_GPIO 0
+#endif
 
 #endif /* FIRMWARE_CONFIG_H */

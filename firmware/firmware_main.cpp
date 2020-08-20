@@ -46,6 +46,8 @@ void setupConfig() {
   keyboardconfig.ledrgb=WS2812B_LED_ON;
   keyboardconfig.timerkeyscaninterval=HIDREPORTINGINTERVAL;
   keyboardconfig.timerbatteryinterval=BATTERYINTERVAL;
+  keyboardconfig.VCCSwitchAvailable=(VCC_ENABLE_GPIO==1);
+  keyboardconfig.VCCSwitchEnabled=true;
 
   keyboardstate.helpmode = false;
   keyboardstate.timestamp = millis();
@@ -65,6 +67,10 @@ void setup() {
   LOG_LV1("BLEMIC","Starting %s" ,DEVICE_NAME);
 
   setupGpio();                                                                // checks that NFC functions on GPIOs are disabled.
+  if(keyboardconfig.VCCSwitchAvailable)
+  {
+    switchVCC(keyboardconfig.VCCSwitchEnabled); // turn on VCC when starting up if needed.
+  }
 
   keyscantimer.begin(keyboardconfig.timerkeyscaninterval, keyscantimer_callback);
   batterytimer.begin(keyboardconfig.timerbatteryinterval, batterytimer_callback);
