@@ -10,7 +10,6 @@ TODO
 |  * HID Service    |  Yes       |    Yes     |
 |  * Device Information Service |  Yes  |  Yes |
 |  * Battery Service | Yes       |    (?)      |
-|  * Inter-keyboard communications | Yes | No |
 |  * Wireless Device Firmware Update    |    Yes        |   No    |
 |  * Central/Peripheral Communications | Yes  | No  |
 |  * Dongle free    | Yes | Depends |
@@ -19,9 +18,9 @@ TODO
 |  * Programmable radio power | Yes | (?) |
 |  * Variable Keyboard Scanning Rate | Possible    |   n/a         |
 |  * Timed low-power mode | Yes    |   n/a         |
-|  * Low Battery low-power mode | Planned    |   n/a         |
+|  * Low Battery low-power mode | Sleep after 10 minutes    |   n/a         |
 |                   |            |            |
-| Split Keyboards   | Yes (supports >2 halves) | yes - 2 halves only |
+| Split Keyboards   | Yes (future support for >2 halves) | yes - 2 halves only |
 |                   |            |            |
 | Basic HID Keycodes | Yes       | Yes        |
 |                   |            |            |

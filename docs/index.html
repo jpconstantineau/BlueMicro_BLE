@@ -128,7 +128,68 @@
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <div id="page-content-wrapper" name="page-content-wrapper">
-                    <h1 class="h2">Introduction</h1>
+                    <h1 class="h2">Introduction to the BlueMicro_BLE Firmware</h1>
+
+                    <h1 class="h2">Getting Started: in 4 simple steps</h1>
+
+                    <div class="card" style="width: 36rem;">
+                      <iframe width="572" height="320" src="https://www.youtube.com/embed/0skX6HPSZnU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                      <div class="card-body">
+                        <h5 class="card-title">1: Install Arduino IDE</h5>
+                        <p class="card-text">Watch the video above to see how to install the Arduino IDE and get the library needed.</p>
+                        <a href="http://bluemicro.jpconstantineau.com/#installing_tools.html" class="btn btn-primary">How to install tools</a>
+                      </div>
+                    </div>
+
+                    <div class="card" style="width: 36rem;">
+                      <iframe width="572" height="320" src="https://www.youtube.com/embed/0skX6HPSZnU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                      <div class="card-body">
+                        <h5 class="card-title">2: Download BlueMicro_BLE Firmware</h5>
+                        <p class="card-text">To get a copy of the firmware, you have 3 options:  (Video will be updated) </p>
+                        <ul>
+                          <li>Download the zip file</li>
+                          <li>Clone the repository localy <br> <i>git clone https://github.com/jpconstantineau/BlueMicro_BLE.git </i></li>
+                          <li>Fork the repo and download/clone locally</li>
+                        </ul>  
+                        <p class="card-text">Simplest is just to download the zip file.</p>
+                        <a href="https://github.com/jpconstantineau/BlueMicro_BLE/archive/master.zip" class="btn btn-primary">Download directly from github</a>
+                      </div>
+                    </div>
+
+                    <div class="card" style="width: 36rem;">
+                      <iframe width="572" height="320" src="https://www.youtube.com/embed/0skX6HPSZnU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                      <div class="card-body">
+                        <h5 class="card-title">3: Edit 4 Keyboard Files</h5>
+                        <p class="card-text">Open the firmware in the IDE, edit the following 4 files:  (Video will be updated) </p>
+                        <ul>
+                          <li><b>hardware_config.h:</b> for the GPIO definition of your keyboard</li>
+                          <li><b>keyboard_config.h:</b> for the BLE definition of your keyboard</li>
+                          <li><b>keymap.cpp:</b> for the keymaps definitions</li>
+                          <li><b>keymap.h:</b> to support the keymaps definitions</li>
+                        </ul>  
+                        <p class="card-text">Examples of these files for different keyboards are in the keyboards folder</p>
+                        <a href="http://bluemicro.jpconstantineau.com/#configuration_keymap.html" class="btn btn-primary">How to configure Keymaps</a>
+                      </div>
+                    </div>
+
+                    <div class="card" style="width: 36rem;">
+                      <iframe width="572" height="320" src="https://www.youtube.com/embed/0skX6HPSZnU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                      <div class="card-body">
+                        <h5 class="card-title">4: Compile and Upload </h5>
+                        <p class="card-text">(Video will be updated)</p>
+                        <ul>
+                          <li>Select appropriate "Board" in the "Tools" menu</li>
+                          <li>Compile</li>
+                          <li>Connect your keyboard with USB cable</li>
+                          <li>Select apropriate serial "Port" in the "Tools" menu</li>
+                          <li>Upload - Depending on your hardware/firmware, you may need to double-press reset to put it in DFU mode</li>
+                          <li>Go to your computer's Bluetooth connections and "add device"</li>
+                          <li>You should be able to pair your keyboard</li>
+                        </ul> 
+                        <a href="#" class="btn btn-primary">How to flash your keyboard</a>
+                      </div>
+                    </div>
+
             </div>          
           </div>
         
