@@ -1,5 +1,5 @@
 /*
-Copyright 2019-2020 <Pierre Constantineau>
+Copyright 2018 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -17,20 +17,29 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
+#include <stdint.h>
+#include "hid_keycodes.h"
+#include "keyboard_config.h"
+#include "advanced_keycodes.h"
+#include "Key.h"
+#include <array>
 
-#ifndef HARDWAREVARIANTS_H
-#define HARDWAREVARIANTS_H
+#ifndef KEYMAP_H
+#define KEYMAP_H
 
-#define COL2ROW       0
-#define ROW2COL       1
+#define KC_CAP_D MOD(MOD_LSHIFT, KC_D)
 
-#define TEST 0
-#define LEFT 1
-#define RIGHT 2
-#define SINGLE 3
+#define _L0  0
+#define _L1  1
+#define _L2  2
 
-// putting this here since it's called in every keyboard_config and we need this for all the keymaps.
-#define KEYMAP2ARRAY(OTHERMACROHERE) {OTHERMACROHERE}
-#define ADDLAYER(LAYER_INPUT,METHOD_INPUT,KEYMAP_INPUT )  for (int row = 0; row < MATRIX_ROWS; ++row) { for (int col = 0; col < MATRIX_COLS; ++col){ matrix[row][col].addActivation(LAYER_INPUT, METHOD_INPUT, KEYMAP_INPUT[row][col]);}}
+#define _PRESS 0
+#define _MT_TAP 1
+#define _MT_HOLD 2
+#define _DT_TAP 3
+#define _DT_DOUBLETAP 4
 
-#endif  /*HARDWAREVARIANTS_H*/
+void setupKeymap();
+extern std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix;
+
+#endif /* KEYMAP_H */
