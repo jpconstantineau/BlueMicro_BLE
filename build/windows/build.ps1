@@ -382,7 +382,7 @@ Get-ChildItem $KeyboardsDir | ?{ $_.PSIsContainer } | Foreach-Object {
 }
 
 if($SuccessfulBuilds -eq 0 -And $FailedBuilds -eq 0) {
-    Write-Host -ForegroundColor yellow "Did not find anything to build for $SelectedKeyboard`:$SelectedKeymap`:$SelectedTarget"
+    Write-Host -ForegroundColor yellow "Did not find anything to build for $SelectedKeyboard`:$SelectedKeymap`:$SelectedTarget`:$SelectedHardware`:$Selectedfqbn"
 }
 
 Write-Host

@@ -19,12 +19,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 #ifndef KEYBOARD_CONFIG_H
 #define KEYBOARD_CONFIG_H
-#include "hardware_variants.h"
-#define HARDWARE_MAPPING  BLUEMICRO840V1_0  // note only the BlueMicro840 fits on the corne.
-#include "breakout_mapping.h"
-
+#include "hardware_config.h"
 #define KEYBOARD_SIDE MASTER
-//#define KEYBOARD_SIDE RIGHT
 // CHANGE THIS FOR THE KEYBOARD TO MATCH WHAT IS BEING FLASHED. OPTIONS: LEFT  RIGHT  MASTER
 
 #define DEVICE_NAME_R                         "Sofle_R"                          /**< Name of device. Will be included in the advertising data. */
@@ -36,40 +32,13 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define MANUFACTURER_NAME                   "JosefAdamcik"                      /**< Manufacturer. Will be passed to Device Information Service. */
 
 
-/* HARDWARE DEFINITION*/
-/* key matrix size */
-#define MATRIX_ROWS 5
-#define MATRIX_COLS 6
-#define MATRIX_ROW_PINS { C6, D7, E6, B4, B5  }
-#define MATRIX_COL_PINS { F6, F7, B1, B3, B2, B6 }
-
-// NOT IMPLEMENTED YET; THESE ARE JUST FOR FUTURE FUNCTIONALITY. WILL PROBABLY DO THINGS VERY DIFFERENTLY...
-#define ENCODERS_PAD_A { F5 }
-#define ENCODERS_PAD_B { F4 }
-#define ENCODERS_PAD_A_RIGHT { F4 }
-#define ENCODERS_PAD_B_RIGHT { F5 }
-#define ENCODER_RESOLUTION 2
-
-#define UNUSED_PINS {}
-
-/* COL2ROW or ROW2COL */
-#define DIODE_DIRECTION COL2ROW
-
-#define PERIPHERAL_COUNT 1 // more than 1 doesn't work yet... 
-
-	#define BACKLIGHT_PWM_ON 0
-	#define WS2812B_LED_PIN NC
-	
-	#define WS2812B_LED_COUNT 0
-	#define WS2812B_LED_ON 0 
-
 #if KEYBOARD_SIDE == RIGHT
 #define KEYMAP( \
-  L00, L01, L02, L03, L04, L05,\
-  L10, L11, L12, L13, L14, L15, \
-  L20, L21, L22, L23, L24, L25,\
-  L30, L31, L32, L33, L34, L35,\
-  L40, L41, L42, L43, L44, L45\
+  R00, R01, R02, R03, R04, R05,\
+  R10, R11, R12, R13, R14, R15, \
+  R20, R21, R22, R23, R24, R25,\
+  R30, R31, R32, R33, R34, R35,\
+  R40, R41, R42, R43, R44, R45\
   ) \
   { \
     { R05, R04, R03, R02, R01, R00 }, \

@@ -20,13 +20,13 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 #if KEYBOARD_SIDE == MASTER
 std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
-    {KEYMAP(
+    KEYMAP2ARRAY(KEYMAP(
               KC_1,  KC_2,    KC_3,    KC_4,    KC_5,    KC_6,
               KC_7,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,
               KC_8,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,
               KC_9,  KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,
               KC_P,  KC_O,    KC_I,    KC_L,    KC_K,    KC_J                      
-    )};
+    ));
 
 void setupKeymap() {
 
@@ -43,12 +43,13 @@ void setupKeymap() {
 
 
 std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
-    {KEYMAP(
-        KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,     KC_T, 
-        KC_LCTL,  KC_A,    KC_S,    KC_D,    KC_F,     KC_G,
-        KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,     KC_B,
-                                 KC_LGUI, LAYER_1,  KC_SPC
-    )};
+    KEYMAP2ARRAY(KEYMAP(
+        KC_GRV,   KC_1,   KC_2,    KC_3,    KC_4,    KC_5,  \
+        KC_ESC,   KC_Q,   KC_W,    KC_E,    KC_R,    KC_T, \
+        KC_TAB,   KC_A,   KC_S,    KC_D,    KC_F,    KC_G,\
+        KC_LSFT,  KC_Z,   KC_X,    KC_C,    KC_V,    KC_B,\
+         KC_LGUI,KC_LALT,KC_LCTRL, LAYER_1, KC_ENT, KC_MUTE \
+    ));
 
  
 void setupKeymap() {
@@ -56,34 +57,31 @@ void setupKeymap() {
 
     uint32_t layer1[MATRIX_ROWS][MATRIX_COLS] =
         KEYMAP( \
-              KC_ESC,   KC_1,    KC_2,    KC_3,    KC_4,    KC_5, \
-              KC_LCTL,  KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO, \
-              KC_LSFT,  KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO, \
-                                         KC_LGUI, LAYER_1, KC_SPC \
+              _______,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5, \
+              KC_GRV,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,  \
+              _______, KC_EXLM,   KC_AT, KC_HASH,  KC_DLR, KC_PERC, \
+              _______,  KC_EQL, KC_MINS, KC_PLUS, KC_LCBR, KC_RCBR,  \
+               _______, _______, _______, _______, _______,_______\
         );
 
 
     uint32_t layer2[MATRIX_ROWS][MATRIX_COLS] =
         KEYMAP( \
-              KC_ESC,  KC_EXLM, KC_AT,  KC_HASH, KC_DLR,  KC_PERC, \
-              KC_LCTL, KC_NO,   KC_NO,  KC_NO,   KC_NO,   KC_NO, \
-              KC_LSFT, KC_NO,   KC_NO,  KC_NO,   KC_NO,   KC_NO, \
-                                        KC_LGUI, LAYER_1, KC_SPC \
+               _______, _______ , _______ , _______ , _______ , _______, \
+              _______,  KC_INS,  KC_PSCR,   KC_APP,  XXXXXXX, XXXXXXX,\
+              _______, KC_LALT,  KC_LCTL,  KC_LSFT,  XXXXXXX, KC_CAPS,\
+              _______,KC_UNDO, KC_CUT, KC_COPY, KC_PASTE, XXXXXXX,  \
+               _______, _______, _______, _______, _______,_______ \
         );
     /*
      * add the other layers on the regular presses.
      */
-    for (int row = 0; row < MATRIX_ROWS; ++row)
-    {
-        for (int col = 0; col < MATRIX_COLS; ++col)
-        {
-            matrix[row][col].addActivation(_L1, Method::PRESS, layer1[row][col]);
-            matrix[row][col].addActivation(_L2, Method::PRESS, layer2[row][col]);
-        }
-    }
-
+  
+ADDLAYER(_L1, Method::PRESS , layer1);
+ADDLAYER(_L2, Method::PRESS , layer2);
     // if you want to add Tap/Hold or Tap/Doubletap activations, then you add them below.
 
+//NOTE ROTARY ENCODERS ARE NOT IMPLEMENTED IN FIRMWARE YET
 }
 
 #endif  // left
@@ -105,12 +103,12 @@ void setupKeymap() {
  */
 
 std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
-    {KEYMAP(
-            KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,      KC_BSPACE, 
-            KC_H,    KC_J,    KC_K,    KC_L,    KC_SCOLON, KC_QUOTE,
-            KC_N,    KC_M,    KC_COMMA,KC_DOT,  KC_SLSH,   KC_RSFT,
-            KC_ENT,  LAYER_2, KC_RALT
-    )};
+    KEYMAP2ARRAY(KEYMAP( \
+             KC_6,    KC_7,    KC_8,    KC_9,    KC_0,  KC_GRV, \
+            KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,      KC_QUOTE, \
+            KC_H,    KC_J,    KC_K,    KC_L,    KC_SCOLON, KC_QUOT,\
+            KC_N,    KC_M,    KC_COMMA,KC_DOT,  KC_SLSH,   KC_RSFT,\
+            XXXXXXX, KC_SPACE,  LAYER_2, KC_RCTRL, KC_RALT, KC_RGUI ));
 
 void setupKeymap() {
 
@@ -127,10 +125,11 @@ void setupKeymap() {
  */
     uint32_t layer1[MATRIX_ROWS][MATRIX_COLS] =
         KEYMAP( \
-              KC_6,    KC_7,    KC_8,    KC_9,     KC_0,    KC_BSPC, \
-              KC_LEFT, KC_DOWN, KC_UP,   KC_RIGHT, KC_NO,   KC_NO, \
-              KC_NO,   KC_NO,   KC_NO,   KC_NO,    KC_NO,   KC_NO, \
-              KC_SPC,  LAYER_2, KC_RALT  \
+            KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,\
+            KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_F12, \
+            KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_PIPE,\
+            KC_LBRC, KC_RBRC, KC_SCLN, KC_COLN, KC_BSLS, _______,\
+            _______, _______, _______, _______, _______, _______\
         );
 
     /* Layer 2 (lower)
@@ -146,22 +145,17 @@ void setupKeymap() {
  */
     uint32_t layer2[MATRIX_ROWS][MATRIX_COLS] =
         KEYMAP( \
-                KC_CIRC,  KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_BSPC, \
-                KC_MINS,  KC_EQL,  KC_LCBR, KC_RCBR, KC_PIPE, KC_GRV, \
-                KC_UNDS,  KC_PLUS, KC_LBRC, KC_RBRC, KC_BSLS, KC_TILD, \
-                KC_ENT,   LAYER_2, KC_RALT  \
+             _______,  _______  , _______,  _______ ,  _______ ,_______,\
+            KC_PGUP, XXXXXXX,   KC_UP, XXXXXXX,XXXXXXX, KC_BSPC,\
+            KC_PGDN,  KC_LEFT, KC_DOWN, KC_RGHT,  KC_DEL, KC_BSPC, \
+            XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,   XXXXXXX, _______,\
+            _______, _______, _______, _______, _______, _______\
         );
     /*
      * add the other layers
      */
-    for (int row = 0; row < MATRIX_ROWS; ++row)
-    {
-        for (int col = 0; col < MATRIX_COLS; ++col)
-        {
-            matrix[row][col].addActivation(_L1, Method::PRESS, layer1[row][col]);
-            matrix[row][col].addActivation(_L2, Method::PRESS, layer2[row][col]);
-        }
-    }
+ADDLAYER(_L1, Method::PRESS , layer1);
+ADDLAYER(_L2, Method::PRESS , layer2);
 
 }
 
