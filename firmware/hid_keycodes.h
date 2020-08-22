@@ -397,6 +397,7 @@ enum hid_keyboard_keypad_usage {
 #define EEP_RST             EEPROM_RESET
 #define DFU                 KB(KC_D)
 #define SERIAL_DFU          KB(KC_E)
+#define UF2_DFU             KB(KC_ESC)
 #define CLEAR_BONDS         KB(KC_F)
 
 #define BL_TOGG             KB(KC_G)
@@ -448,8 +449,9 @@ enum hid_keyboard_keypad_usage {
 
 #define PRINT_BATTERY       KB(KC_F4)
 #define PRINT_INFO          KB(KC_F5)
+#define PRINT_BLE           KB(KC_F6)
 
-#define HELP_MODE           KB(KC_F6)
+#define HELP_MODE           KB(KC_F12)
 
 // Power Control
 #define KC_SYSTEM_POWER      MK(KC_A) //HID_USAGE_CONSUMER_POWER  
@@ -537,7 +539,6 @@ enum hid_keyboard_keypad_usage {
 #define KC_MS_WH_DOWN   MS(KC_L)
 #define KC_MS_WH_LEFT   MS(KC_M)
 #define KC_MS_WH_RIGHT  MS(KC_N)
-
 
 
 #endif /* HID_KEYCODES_H */

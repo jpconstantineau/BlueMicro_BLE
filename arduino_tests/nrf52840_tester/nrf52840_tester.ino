@@ -27,7 +27,19 @@ int pinlist3 [PINCOUNT3] ={ 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 15, 17, 18, 20, 
 
 void setup() 
 {
+// this is the code needed to change the default voltage from the on chip voltage regulator.
+// see https://infocenter.nordicsemi.com/pdf/nRF52840_PS_v1.0.pdf page 45
 
+if (NRF_UICR->REGOUT0 != UICR_REGOUT0_VOUT_3V3) {
+    NRF_NVMC->CONFIG = NVMC_CONFIG_WEN_Wen << NVMC_CONFIG_WEN_Pos;
+    while (NRF_NVMC->READY == NVMC_READY_READY_Busy){}
+    NRF_UICR->REGOUT0 = UICR_REGOUT0_VOUT_3V3;
+
+    NRF_NVMC->CONFIG = NVMC_CONFIG_WEN_Ren << NVMC_CONFIG_WEN_Pos;
+    while (NRF_NVMC->READY == NVMC_READY_READY_Busy){}
+        delay(500);
+        NVIC_SystemReset();
+      }
   Bluefruit.begin();
   Bluefruit.setTxPower(4);
   Bluefruit.setName("BlueMicro840");

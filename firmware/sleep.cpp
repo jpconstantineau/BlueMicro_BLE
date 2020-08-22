@@ -40,6 +40,10 @@ void setupWakeUp() {
         pinMode(columns[i], INPUT_PULLDOWN_SENSE);            // 'enables' the column High Value on the diode; becomes "LOW" when pressed - Sense makes it wake up when sleeping
       #endif
   }
+
+      #if VCC_ENABLE_GPIO ==1 
+      switchVCC(false); // turn off VCC when going to sleep. This isn't an optional thing...
+      #endif
 }
 
 /**************************************************************************************************************************/

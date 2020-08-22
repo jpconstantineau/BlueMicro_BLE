@@ -3,8 +3,8 @@
 param(
     [string]$BoardParam="ask",
     [switch]$Verbose=$false,
-    [switch]$ContinueOnError=$false,
-    [switch]$nrf52840=$false
+    [switch]$Debug=$false,
+    [switch]$ContinueOnError=$false
 )
 
 $ErrorActionPreference = "Stop"
@@ -85,8 +85,8 @@ function render() {
     "@`"`n$str`n`"@" | iex
 }
 
-Function Compile-Board($keyboard, $target, $keymap) {
-    Write-Host -NoNewline "$keyboard`:$keymap`:$target... "
+Function Compile-Board($keyboard, $target, $keymap, $fqbn, $hardware) {
+    Write-Host -NoNewline "$keyboard`:$keymap`:$target`:$hardware`:$fqbn... "
     Write-Verbose
     Write-Verbose
 
@@ -97,7 +97,8 @@ Function Compile-Board($keyboard, $target, $keymap) {
 
     $keymapFile = "$KeyboardsDir\$keyboard\keymaps\$keymap\keymap.h"
     $keymapcppFile = "$KeyboardsDir\$keyboard\keymaps\$keymap\keymap.cpp"
-    $configFile = "$KeyboardsDir\$keyboard\$target\keyboard_config.h"
+    $configFile = "$KeyboardsDir\$keyboard\config\$target\keyboard_config.h"
+    $hardwareFile = "$KeyboardsDir\$keyboard\hardware\$fqbn\$hardware\hardware_config.h"
 
     Write-Verbose "Copying keymap and target source files"
     Write-Verbose $keymapFile
@@ -106,41 +107,30 @@ Function Compile-Board($keyboard, $target, $keymap) {
     Copy-Item $keymapFile "$SourceDir\keymap.h" -Force
     Copy-Item $keymapcppFile "$SourceDir\keymap.cpp" -Force
     Copy-Item $configFile "$SourceDir\keyboard_config.h" -Force
+    Copy-Item $hardwareFile "$SourceDir\hardware_config.h" -Force
 
 	# Need to sleep between compile calls else the arduino-builder does not recognise changes
 	Start-Sleep -s 2
-	
-    # Run compile
-    $cmdCompile832 = 
-    '& "$BuilderExe" -compile -logger=machine -warnings=all  -verbose -ide-version=10813 -vid-pid=0000_0000 -debug-level 1 ' + 
-    '-hardware "$ArduinoDir\hardware" -hardware "$ArduinoDataDir\packages" ' + 
-    '-tools "$ArduinoDir\tools-builder" -tools "$ArduinoDir\hardware\tools\avr" -tools "$ArduinoDataDir\packages" ' +
-    '-built-in-libraries "$ArduinoDir\libraries"' +
-    '-fqbn "adafruit:nrf52:feather52832:softdevice=s132v6,debug=l0" ' +
-    '-build-path "$BuildDir" -build-cache "$BuildCacheDir" ' +
-    '-prefs "build.warn_data_percentage=75" ' +
-    '-prefs "runtime.tools.nrfjprog.path=$ArduinoDataDir\packages\adafruit\tools\nrfjprog\9.4.0" ' +
-    '-prefs "runtime.tools.nrfjprog-9.4.0.path=$ArduinoDataDir\packages\adafruit\tools\nrfjprog\9.4.0" ' +
-    '-prefs "runtime.tools.arm-none-eabi-gcc.path=$ArduinoDataDir\packages\adafruit\tools\arm-none-eabi-gcc\9-2019q4" ' +
-    '-prefs "runtime.tools.arm-none-eabi-gcc-9-2019q4.path=$ArduinoDataDir\packages\adafruit\tools\arm-none-eabi-gcc\9-2019q4" '
-
-    $cmdCompile840 = 
-    '& "$BuilderExe" -compile -logger=machine -warnings=all  -verbose -ide-version=10813 -vid-pid=0000_0000 -debug-level 1 ' + 
-    '-hardware "$ArduinoDir\hardware" -hardware "$ArduinoDataDir\packages" ' + 
-    '-tools "$ArduinoDir\tools-builder" -tools "$ArduinoDir\hardware\tools\avr" -tools "$ArduinoDataDir\packages" ' +
-    '-built-in-libraries "$ArduinoDir\libraries"' +
-    '-fqbn "adafruit:nrf52:pca10056:softdevice=s140v6,debug=l0" ' +
-    '-build-path "$BuildDir" -build-cache "$BuildCacheDir" ' +
-    '-prefs "build.warn_data_percentage=75" ' +
-    '-prefs "runtime.tools.nrfjprog.path=$ArduinoDataDir\packages\adafruit\tools\nrfjprog\9.4.0" ' +
-    '-prefs "runtime.tools.nrfjprog-9.4.0.path=$ArduinoDataDir\packages\adafruit\tools\nrfjprog\9.4.0" ' +
-    '-prefs "runtime.tools.arm-none-eabi-gcc.path=$ArduinoDataDir\packages\adafruit\tools\arm-none-eabi-gcc\9-2019q4" ' +
-    '-prefs "runtime.tools.arm-none-eabi-gcc-9-2019q4.path=$ArduinoDataDir\packages\adafruit\tools\arm-none-eabi-gcc\9-2019q4" '
-
-    if ($nrf52840) 
-    {$cmdCompile = $cmdCompile840} 
+    if ($Debug) 
+    {$cmdDebug = "l1"} 
     else
-    {$cmdCompile = $cmdCompile832} 
+    {$cmdDebug = "l0"}
+
+    if ($fqbn -eq "feather52832") 
+    {$cmdfqbn = "s132v6"} 
+    else
+    {$cmdfqbn = "s140v6"}
+    $fqbnstr = $fqbn
+    
+    # Run compile
+
+    $cmdCompile = 
+        '& "$BuilderExe" -compile -logger=machine -warnings "none" -verbose -ide-version "10807" -debug-level 1 ' + 
+        '-hardware "$ArduinoDir\hardware" -hardware "$ArduinoDataDir\packages" ' + 
+        '-tools "$ArduinoDir\tools-builder" -tools "$ArduinoDir\hardware\tools\avr" -tools "$ArduinoDataDir\packages" ' +
+        '-built-in-libraries "$ArduinoDir\libraries" ' +
+        '-fqbn "adafruit:nrf52`:$fqbn`:softdevice=$cmdfqbn,debug=$cmdDebug" ' +
+        '-build-path "$BuildDir" -build-cache "$BuildCacheDir" '
 
     if ($Verbose) {
         #$cmdCompile += '-verbose '
@@ -169,7 +159,7 @@ Function Compile-Board($keyboard, $target, $keymap) {
 
         Write-Host -ForegroundColor Red "Failed"
         Write-Host 
-        Write-Host -ForegroundColor Yellow "Arduio build failed with exit code $LastExitCode"
+        Write-Host -ForegroundColor Yellow "Arduino build failed with exit code $LastExitCode"
         Write-Host 
         Write-Host -ForegroundColor Yellow "$error"
         Write-Host
@@ -187,8 +177,8 @@ Function Compile-Board($keyboard, $target, $keymap) {
         New-Item -Path $keyboardOutputDir -ItemType Directory >$null 2>&1
     }
 
-    Copy-Item "$BuildDir\firmware.ino.zip" "$keyboardOutputDir\$keyboard-$keymap-$target.zip" -force
-    Copy-Item "$BuildDir\firmware.ino.hex" "$keyboardOutputDir\$keyboard-$keymap-$target.hex" -force
+    Copy-Item "$BuildDir\firmware.ino.zip" "$keyboardOutputDir\$keyboard-$fqbn-$hardware-$keymap-$target.zip" -force
+    Copy-Item "$BuildDir\firmware.ino.hex" "$keyboardOutputDir\$keyboard-$fqbn-$hardware-$keymap-$target.hex" -force
 
     Write-Host -ForegroundColor Green "OK"
     Write-Verbose
@@ -217,16 +207,24 @@ Write-Verbose ("Powershell Version: " + $PSVersionTable.PSVersion)
 if ($BoardParam -eq "ask") {
 	Write-Host
 	Write-Host "This script can be run with parameters"
-	Write-Host "./build-windows.ps1 <keyboard>:<keymap>:<target> -verbose -continueOnError"
+	Write-Host "./build-windows.ps1 <keyboard>:<keymap>:<keyboard_config>:<hardware>:<fqbn> -verbose -continueOnError"
 
     $SelectedKeyboard = "all"
     $SelectedKeymap = "all"
     $SelectedTarget = "all"
+    $Selectedfqbn = "all"
+    $SelectedHardware = "all"
 
     Write-Host
     $SelectedKeyboard = Read-Host -Prompt "Keyboard name (eg ErgoTravel) [all]"
     if ([string]::IsNullOrEmpty($SelectedKeyboard)) {
         $SelectedKeyboard = "all"
+    }
+    if ([string]::IsNullOrEmpty($Selectedfqbn)) {
+        $Selectedfqbn = "all"
+    }
+    if ([string]::IsNullOrEmpty($SelectedHardware)) {
+        $SelectedHardware = "all"
     }
 
     if ($SelectedKeyboard -ne "all") {
@@ -245,20 +243,33 @@ if ($BoardParam -eq "ask") {
 } else {
     $BoardParamSplit = $BoardParam.Split(":")
     $SelectedKeyboard = $BoardParamSplit[0];
+
     if ($BoardParamSplit.Count -ge 2) {
         $SelectedKeymap = $BoardParamSplit[1];
     } else {
         $SelectedKeymap = "all"
     }
+
     if ($BoardParamSplit.Count -ge 3) {
         $SelectedTarget = $BoardParamSplit[2];
     } else {
         $SelectedTarget = "all"
     }
+
+    if ($BoardParamSplit.Count -ge 4) {
+        $SelectedHardware = $BoardParamSplit[3];
+    } else {
+        $SelectedHardware = "all"
+    }
+    if ($BoardParamSplit.Count -ge 5) {
+        $Selectedfqbn = $BoardParamSplit[4];
+    } else {
+        $Selectedfqbn = "all"
+    }
 }
 
 Write-Host
-Write-Host "Building: $SelectedKeyboard`:$SelectedKeymap`:$SelectedTarget"
+Write-Host "Building: $SelectedKeyboard`:$SelectedKeymap`:$SelectedTarget`:$SelectedHardware`:$Selectedfqbn"
 Write-Host 
 Write-Host "Checking file locations"
 Write-Host -----------------------------------
@@ -321,9 +332,14 @@ Get-ChildItem $KeyboardsDir | ?{ $_.PSIsContainer } | Foreach-Object {
     Write-Verbose
     Write-Verbose "Discovering $keyboard targets"
     $targets = @()
-    Get-ChildItem "$KeyboardsDir\$keyboard" -Exclude "keymaps" | ?{ $_.PSIsContainer } | Foreach-Object {
+    Get-ChildItem "$KeyboardsDir\$keyboard\config" | ?{ $_.PSIsContainer } | Foreach-Object {
         $targets += $_.Name
     }
+    $fqbns = @()
+    Get-ChildItem "$KeyboardsDir\$keyboard\hardware" | ?{ $_.PSIsContainer } | Foreach-Object {
+        $fqbns += $_.Name
+    }
+
 
     Write-Verbose "Discovering $keyboard keymaps"
     $keymaps = @()
@@ -345,8 +361,22 @@ Get-ChildItem $KeyboardsDir | ?{ $_.PSIsContainer } | Foreach-Object {
             if ($SelectedTarget -ne "all" -and $SelectedTarget -ne $target) {
                 continue
             }
+            foreach ($fqbn in $fqbns) {
+                if ($Selectedfqbn -ne "all" -and $Selectedfqbn -ne $fqbn) {
+                    continue
+                }
+                $hardwares = @()
+                Get-ChildItem "$KeyboardsDir\$keyboard\hardware\$fqbn" | ?{ $_.PSIsContainer } | Foreach-Object {
+                    $hardwares += $_.Name
+                }
+                foreach ($hardware in $hardwares) {
+                    if ($SelectedHardware -ne "all" -and $SelectedHardware -ne $hardware) {
+                        continue
+                    }
 
-            Compile-Board $keyboard $target $keymap
+                    Compile-Board $keyboard $target $keymap $fqbn $hardware
+                }
+            }
         }
     }
 }

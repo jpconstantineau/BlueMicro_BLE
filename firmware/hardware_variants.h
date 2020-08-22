@@ -21,42 +21,15 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #ifndef HARDWAREVARIANTS_H
 #define HARDWAREVARIANTS_H
 
-/*
-The following can be selected from the Tools->Boards Arduino Menu when compiling
-NRF52832_FEATHER
-NRF52840_FEATHER
-NRF52840_ITSYBITSY
-NRF52840_CIRCUITPLAY
-NRF52840_METRO
-NRF52840_PCA10056
-*/
-
-#define FEATHERNRF52832 0  // don't do any avr mapping
-#define FEATHERNRF52840 0  // don't do any avr mapping
-
-#define BLUEMICROV1_0   1
-#define BLUEMICROV1_1   2
-#define BLUEMICROV2_0   3
-#define BLUEMICROV2_0B  4
-#define BLUEMICROV2_0C  5
-#define BLUENANO1_0     6
-#define BLUENANO2_0     7
-#define BLUEMICROV2_1A  8
-#define BLUEMICRO840V1_0 9  // Needs ARDUINO_NRF52840_PCA10056 on the Arduino IDE
-#define NICE_NANOV1_0  10
-#define NRFMICROV0_3   11
-
-
-
 #define COL2ROW       0
 #define ROW2COL       1
 
 #define TEST 0
 #define LEFT 1
 #define RIGHT 2
-#define MASTER 3
+#define SINGLE 3
 
-// putting this here since it's called in every ketboard_config and we need this for all the keymaps.
+// putting this here since it's called in every keyboard_config and we need this for all the keymaps.
 #define KEYMAP2ARRAY(OTHERMACROHERE) {OTHERMACROHERE}
 
 #endif  /*HARDWAREVARIANTS_H*/

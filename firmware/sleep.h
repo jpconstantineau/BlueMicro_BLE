@@ -24,6 +24,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include <bluefruit.h>
 #include "keyboard_config.h"
 #include "firmware_config.h"
+#include "nrf52gpio.h"
 // Keyboard Matrix
 extern byte rows[]  ;      // Contains the GPIO Pin Numbers defined in keyboard_config.h
 extern byte columns[] ;     // Contains the GPIO Pin Numbers defined in keyboard_config.h  

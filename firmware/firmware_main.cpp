@@ -31,8 +31,8 @@ byte columns[] MATRIX_COL_PINS;     // Contains the GPIO Pin Numbers defined in 
 //uint32_t lastupdatetime =0;
 SoftwareTimer keyscantimer, batterytimer;
 
-static PersistentState keyboardconfig;
-static DynamicState keyboardstate;
+PersistentState keyboardconfig;
+DynamicState keyboardstate;
 
 KeyScanner keys;
 Battery batterymonitor;
@@ -45,10 +45,13 @@ void setupConfig() {
   keyboardconfig.ledbacklight=BACKLIGHT_PWM_ON;
   keyboardconfig.ledrgb=WS2812B_LED_ON;
   keyboardconfig.timerkeyscaninterval=HIDREPORTINGINTERVAL;
-  keyboardconfig.timerbatteryinterval=30*1000;
+  keyboardconfig.timerbatteryinterval=BATTERYINTERVAL;
+  keyboardconfig.VCCSwitchAvailable=(VCC_ENABLE_GPIO==1);
+  keyboardconfig.VCCSwitchEnabled=true;
 
   keyboardstate.helpmode = false;
   keyboardstate.timestamp = millis();
+  keyboardstate.lastupdatetime = keyboardstate.timestamp;
 }
 
 
@@ -64,6 +67,10 @@ void setup() {
   LOG_LV1("BLEMIC","Starting %s" ,DEVICE_NAME);
 
   setupGpio();                                                                // checks that NFC functions on GPIOs are disabled.
+  if(keyboardconfig.VCCSwitchAvailable)
+  {
+    switchVCC(keyboardconfig.VCCSwitchEnabled); // turn on VCC when starting up if needed.
+  }
 
   keyscantimer.begin(keyboardconfig.timerkeyscaninterval, keyscantimer_callback);
   batterytimer.begin(keyboardconfig.timerbatteryinterval, batterytimer_callback);
@@ -124,7 +131,11 @@ void setupMatrix(void) {
 #define gpioIn NRF_GPIO->IN
 #endif
 #endif
-
+#ifdef NRF52840_XXAA
+#define PINDATATYPE uint64_t
+#else
+#define PINDATATYPE uint32_t
+#endif
 /**************************************************************************************************************************/
 // Better scanning with debounce Keyboard Scanning
 /**************************************************************************************************************************/
@@ -132,13 +143,8 @@ void scanMatrix() {
 
     keyboardstate.timestamp  = millis();   // lets call it once per scan instead of once per key in the matrix
     //take care when selecting debouncetime - each row has a delay of 1ms inbetween - so if you have 5 rows, setting debouncetime to 2 is at least 5ms...
-    #ifdef NRF52840_XXAA
-    static uint64_t pindata[MATRIX_ROWS][DEBOUNCETIME];
-    uint64_t pinreg;
-    #else
-    static uint32_t pindata[MATRIX_ROWS][DEBOUNCETIME];
-    uint32_t pinreg;
-    #endif
+    
+    static PINDATATYPE pindata[MATRIX_ROWS][DEBOUNCETIME];
 
     static uint8_t head = 0; // points us to the head of the debounce array;
 
@@ -148,7 +154,7 @@ void scanMatrix() {
 
     for (int j = 0; j < MATRIX_ROWS; ++j){
         // set the current row as OUPUT and LOW
-        pinreg = 0;
+        PINDATATYPE pinreg = 0;
 
         pinMode(rows[j], OUTPUT);
         writeRow(rows[j]);
@@ -242,6 +248,9 @@ void process_keyboard_function(uint16_t keycode)
       break;
     case SERIAL_DFU:
       enterSerialDfu();
+      break;
+    case UF2_DFU:
+      enterUf2Dfu();
       break;
 
     case HELP_MODE:
@@ -414,7 +423,18 @@ void process_keyboard_function(uint16_t keycode)
       addStringToQueue(buffer);
       addKeycodeToQueue(KC_ENTER);
       sprintf(buffer,"Device Power   : %f", DEVICE_POWER*1.0);
-      addStringToQueue(buffer);
+      addStringToQueue(buffer); addKeycodeToQueue(KC_ENTER);
+      break;  
+    case PRINT_BLE:
+      addStringToQueue("Keyboard Name: " DEVICE_NAME " "); addKeycodeToQueue(KC_ENTER);
+      sprintf(buffer,"Device Power : %i", DEVICE_POWER); addStringToQueue(buffer);  addKeycodeToQueue(KC_ENTER);
+      sprintf(buffer,"Filter RSSI  : %i", FILTER_RSSI_BELOW_STRENGTH); addStringToQueue(buffer);  addKeycodeToQueue(KC_ENTER); 
+      addStringToQueue("Type\t RSSI\t name"); addKeycodeToQueue(KC_ENTER); 
+      sprintf(buffer,"cent\t %i\t %s",keyboardstate.rssi_cent, keyboardstate.peer_name_cent);addStringToQueue(buffer); addKeycodeToQueue(KC_ENTER); 
+      sprintf(buffer,"prph\t %i\t %s",keyboardstate.rssi_prph, keyboardstate.peer_name_prph);addStringToQueue(buffer); addKeycodeToQueue(KC_ENTER);
+      sprintf(buffer,"cccd\t %i\t %s",keyboardstate.rssi_cccd, keyboardstate.peer_name_cccd);addStringToQueue(buffer); addKeycodeToQueue(KC_ENTER);
+
+
       break;      
   }
 }
@@ -473,13 +493,13 @@ void sendKeyPresses() {
     report[0] = static_cast<uint8_t>((keyreport & 0xFF00) >> 8);// mods
     report[1] = static_cast<uint8_t>(keyreport & 0x00FF);
     sendKeys(report);
-    delay(keyboardconfig.timerkeyscaninterval);
+    delay(keyboardconfig.timerkeyscaninterval*3);
     if (stringbuffer.empty()) // make sure to send an empty report when done...
     { 
       report[0] = 0;
       report[1] = 0;
       sendKeys(report);
-      delay(keyboardconfig.timerkeyscaninterval);
+      delay(keyboardconfig.timerkeyscaninterval*3);
     }
     else
     {
@@ -490,7 +510,7 @@ void sendKeyPresses() {
         report[0] = 0;
         report[1] = 0;
         sendKeys(report);
-        delay(keyboardconfig.timerkeyscaninterval);
+        delay(keyboardconfig.timerkeyscaninterval*3);
       }
     }
    // KeyScanner::processingmacros=0;

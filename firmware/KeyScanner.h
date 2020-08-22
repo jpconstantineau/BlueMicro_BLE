@@ -29,9 +29,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "keymap.h"
 #include "KeyState.h"
 
-
 #include "advanced_keycodes.h"
-#include "Key.h"
+#include "Key.h" //already included through keymap.h do we need it here?
 
 #ifndef KEYSCANNER_H
 #define KEYSCANNER_H
