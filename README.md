@@ -62,7 +62,13 @@ You can contribute to the documentation by editing the markdown files located in
 
 We're very happy to have your contributions in BlueMicro_BLE Firmware
 
-**Contributing Code**: First, make sure you've run a full set of builds for all boards if adding new functionality. This will ensure that the new functionality doesn't break the build of other keyboards.  Then, make a pull request to this repo. Thanks!
+**Contributing New Features**: First, make sure you've run a full set of builds for all boards if adding new functionality (./build.ps1 all). This will ensure that the new functionality doesn't break the build of other keyboards.  Then, make a pull request to this repo. Thanks!
+
+**Adding a new keyboard**: First, add your new keyboard to the folder structure.  You will need to create the apropriate folders and place the 4 necessary keyboard files.  Then, make sure you've run a build for all keymaps applicable to your keyboard (./build.ps1 keyboardname). This will ensure that your keymap can support future hardware configurations.  Then, make a pull request to this repo. Thanks!
+
+**Adding your keymaps**: First, make sure you've run a build for all keymaps applicable to your keyboard (./build.ps1 keyboardname). This will ensure that your keymap can support other hardware configurations.  Then, make a pull request to this repo. Thanks!
+
+**Looking for a feature**: Lots of features are already available; however, not everything is documented yet.  Join in on the [Discord server](https://discord.gg/8pZsrxP) and ask if it's already available, or if anyone is working on what you are looking for.  If you are willing to help adding or testing a new feature, join the team!
 
 **Filing an issue**: Submit issues to the [GitHub Issues](https://github.com/jpconstantineau/BlueMicro_BLE/issues) page.
 
