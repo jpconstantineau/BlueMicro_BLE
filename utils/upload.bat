@@ -21,20 +21,28 @@ IF "%1%"=="feather52840" (
     SET fqbn="feather52840"
 )
 
+IF "%2%"=="" (
+    ECHO Serial Port not set.
+    GOTO :options
+)
+
+
 IF NOT DEFINED fqbn (
     ECHO ERROR FQBN not set.
     GOTO :options
 )
 
 IF EXIST %EXE% (
-    %EXE% compile  --fqbn adafruit:nrf52:%fqbn% --build-path %buildPath% --build-cache-path %buildCachePath% %sourcePath%/firmware.ino  --output-dir %buildPath%/firmware
+    %EXE% upload --fqbn adafruit:nrf52:%fqbn%  %sourcePath%/firmware.ino  --input-dir %buildPath%/firmware --port %2
 ) ELSE (
-    ECHO arduino-cli not found. Run install.bat first
+    ECHO arduino-cli not found. Run install.bat first, then run compile.bat
 )
 GOTO :end
 :options
     ECHO Usage:
-    ECHO compile.bat fqbn
+    ECHO compile.bat fqbn com_port
     ECHO fqbn options: nrf52832, pca10056, feather52840
+    ECHO com_port options:
+    %EXE% board list
 
 :end
