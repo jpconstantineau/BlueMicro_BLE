@@ -15,12 +15,6 @@ A Keyboard Firmware for nRF52832 and nRF52840 Boards
 | Develop |![GH - Develop - Docker](https://github.com/jpconstantineau/BlueMicro_BLE/workflows/Compile%20firmwares%20-%20split/badge.svg?branch=develop) | ![GH - Develop - Ubuntu](https://github.com/jpconstantineau/BlueMicro_BLE/workflows/Build%20on%20Ubuntu/badge.svg?branch=develop) | ![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE-develop) |
 
 
-
-
-
-
-[![GitHub license](https://img.shields.io/github/license/jpconstantineau/BlueMicro_BLE.svg)](https://github.com/jpconstantineau/BlueMicro_BLE)
-
 [![Current Version](https://img.shields.io/github/tag/jpconstantineau/BlueMicro_BLE.svg)](https://github.com/jpconstantineau/BlueMicro_BLE/tags)
 
 [![GitHub forks](https://img.shields.io/github/forks/jpconstantineau/BlueMicro_BLE.svg)](https://github.com/jpconstantineau/BlueMicro_BLE/network)[![GitHub pull requests](https://img.shields.io/github/issues-pr/jpconstantineau/BlueMicro_BLE.svg)](https://github.com/jpconstantineau/BlueMicro_BLE)[![GitHub issues](https://img.shields.io/github/issues/jpconstantineau/BlueMicro_BLE.svg)](https://github.com/jpconstantineau/BlueMicro_BLE/issues)
@@ -64,19 +58,33 @@ See the pages [Here](http://bluemicro.jpconstantineau.com/#)
 You can contribute to the documentation by editing the markdown files located in the docs folder of the repository.
 
 
-# Want to help?
-Contact /u/jpconstantineau on reddit.
+# Contributing
+
+We're very happy to have your contributions in BlueMicro_BLE Firmware
+
+**Contributing Code**: First, make sure you've run a full set of builds for all boards if adding new functionality. This will ensure that the new functionality doesn't break the build of other keyboards.  Then, make a pull request to this repo. Thanks!
+
+**Filing an issue**: Submit issues to the [GitHub Issues](https://github.com/jpconstantineau/BlueMicro_BLE/issues) page.
+
+ **Want to help**: take one of issues in the list [here](https://github.com/jpconstantineau/BlueMicro_BLE/issues) where you think you could help. Comment on it as you start work and join in on the [Discord server](https://discord.gg/8pZsrxP) for a live discussion.
 
 
 # Credits
 
-The firmware uses the same Arduino Core as the [Adafruit nRF52 Feather Boards](https://github.com/adafruit/Adafruit_nRF52_Arduino)
+The firmware uses the same Arduino Board Support Package as the [Adafruit nRF52 Feather Boards](https://github.com/adafruit/Adafruit_nRF52_Arduino)
 
-The Adafruit NRF52 Arduino Core is based on [Arduino-nRF5](https://github.com/sandeepmistry/arduino-nRF5) by Sandeep Mistry, which in turn is based on the [Arduino SAMD Core](https://github.com/arduino/ArduinoCore-samd).
+[![GitHub license](https://img.shields.io/github/license/jpconstantineau/BlueMicro_BLE.svg)](https://github.com/jpconstantineau/BlueMicro_BLE)
 
-The following tools are used:
+BlueMicro_BLE uses the following projects, each are licensed separately.
 
-- Arduino IDE as the Editing Environment
-- GCC ARM Embedded as the compiler
-- Nordic's nrfutil 0.5.2 for flashing the firmware by serial interface
-- J-Link for flashing the bootloader by SWD interface
+| Project | Details |
+| ------- | -------- |
+| [Arduino IDE](https://github.com/arduino/Arduino) | Development Platform | 
+| [Arduino CLI](https://github.com/arduino/arduino-cli) | Alternate platform |
+| [Adafruit nRF52 Arduino](https://github.com/adafruit/Adafruit_nRF52_Arduino) | Board Support Package |
+| [Adafruit nRF52 Bootloader](https://github.com/adafruit/Adafruit_nRF52_Bootloader) | Bootloader |
+| [Adafruit Neopixel](https://github.com/adafruit/Adafruit_NeoPixel) | RGB LED Library |
+| [Adafruit TinyUSB Arduino](https://github.com/adafruit/Adafruit_TinyUSB_Arduino) | USB Library for nRF52840 |
+| [Hathach TinyUSB](https://github.com/hathach/tinyusb) | USB Library for nRF52840 |
+| [Olikraus U8g2](https://github.com/olikraus/u8g2) | U8g2: Library for monochrome displays, version 2 |
+
