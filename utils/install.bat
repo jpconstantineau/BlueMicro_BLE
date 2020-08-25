@@ -20,3 +20,4 @@ SET EXE="%~dp0..\arduino-cli\arduino-cli.exe"
 %EXE% core upgrade
 %EXE% core search nrf52
 %EXE% core install adafruit:nrf52
+%EXE% version
