@@ -1,13 +1,23 @@
 name: Build on Ubuntu
 
-on: [push]
+on:
+  # Trigger the workflow on push or pull request,
+  # but only for the master branch
+  push:
+    branches:
+      - master
+      - develop
+  pull_request:
+    branches:
+      - master
+      - develop  
 
 jobs:
   build:
     strategy:
       fail-fast: false
       matrix:
-        keyboard: ['ErgoTravel', 'gherkin', 'luddite', 'contra', 'crkbd', 'breadboard-promicro']
+        fqbn: ['feather52832', 'pca10056', 'feather52840']
 
     runs-on: self-hosted
 
@@ -51,7 +61,7 @@ jobs:
             arduino-cli lib list
 
         - name: Compile some things...
-          run: bash build/docker/gha-ubuntu-nrf52xxx.sh ${{ matrix.keyboard }}
+          run: bash build/docker/gha-ubuntu-nrf52xxx.sh all:all:all:all:${{ matrix.fqbn }}
 
 
 

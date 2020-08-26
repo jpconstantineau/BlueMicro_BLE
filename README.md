@@ -3,12 +3,17 @@
 A Keyboard Firmware for nRF52832 and nRF52840 Boards
 
 ## Build Status
-| Branch  | Windows Build nrf52832 | Docker Build nrf52832 | Docker Build nrf52840 | Adafruit BSP Version  |
-|---|---|---|---|---|
-| Master  |  ![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE-master) |  ![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE-master-Docker-nrf52832)|  ![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE-master-Docker-nrf52840) |![Adafruit Library for releases](https://img.shields.io/github/release/adafruit/Adafruit_nRF52_Arduino.svg)  |
-| Develop |![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE-develop) | ![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE-develop-Docker-nrf52832) | ![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE-develop-Docker-nrf52840) | ![Adafruit Library for releases](https://img.shields.io/github/release/adafruit/Adafruit_nRF52_Arduino.svg)   |
+| Branch  |  Docker Build nrf52832 | Docker Build nrf52840 | Adafruit BSP Version  |
+|---|---|---|---|
+| Master  |     ![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE-master-Docker-nrf52832)|  ![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE-master-Docker-nrf52840) |![Adafruit Library for releases](https://img.shields.io/github/release/adafruit/Adafruit_nRF52_Arduino.svg)  |
+| Develop |  ![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE-develop-Docker-nrf52832) | ![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE-develop-Docker-nrf52840) | ![Adafruit Library for releases](https://img.shields.io/github/release/adafruit/Adafruit_nRF52_Arduino.svg)   |
 
-[![GitHub license](https://img.shields.io/github/license/jpconstantineau/BlueMicro_BLE.svg)](https://github.com/jpconstantineau/BlueMicro_BLE)
+
+| Branch  | Github Actions - Docker | Github Actions - Ubuntu | Jenkins - Windows |
+| ------  | ------                  | ------                  | ------            |
+| Master  |![GH - Master - Docker](https://github.com/jpconstantineau/BlueMicro_BLE/workflows/Compile%20firmwares%20-%20split/badge.svg?branch=master) | ![GH - Master - Ubuntu](https://github.com/jpconstantineau/BlueMicro_BLE/workflows/Build%20on%20Ubuntu/badge.svg?branch=master) | ![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE-master) |
+| Develop |![GH - Develop - Docker](https://github.com/jpconstantineau/BlueMicro_BLE/workflows/Compile%20firmwares%20-%20split/badge.svg?branch=develop) | ![GH - Develop - Ubuntu](https://github.com/jpconstantineau/BlueMicro_BLE/workflows/Build%20on%20Ubuntu/badge.svg?branch=develop) | ![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE-develop) |
+
 
 [![Current Version](https://img.shields.io/github/tag/jpconstantineau/BlueMicro_BLE.svg)](https://github.com/jpconstantineau/BlueMicro_BLE/tags)
 
@@ -53,19 +58,39 @@ See the pages [Here](http://bluemicro.jpconstantineau.com/#)
 You can contribute to the documentation by editing the markdown files located in the docs folder of the repository.
 
 
-# Want to help?
-Contact /u/jpconstantineau on reddit.
+# Contributing
+
+We're very happy to have your contributions in BlueMicro_BLE Firmware
+
+**Contributing New Features**: First, make sure you've run a full set of builds for all boards if adding new functionality (./build.ps1 all). This will ensure that the new functionality doesn't break the build of other keyboards.  Then, make a pull request to this repo. Thanks!
+
+**Adding a new keyboard**: First, add your new keyboard to the folder structure.  You will need to create the apropriate folders and place the 4 necessary keyboard files.  Then, make sure you've run a build for all keymaps applicable to your keyboard (./build.ps1 keyboardname). This will ensure that your keymap can support future hardware configurations.  Then, make a pull request to this repo. Thanks!
+
+**Adding your keymaps**: First, make sure you've run a build for all keymaps applicable to your keyboard (./build.ps1 keyboardname). This will ensure that your keymap can support other hardware configurations.  Then, make a pull request to this repo. Thanks!
+
+**Looking for a feature**: Lots of features are already available; however, not everything is documented yet.  Join in on the [Discord server](https://discord.gg/8pZsrxP) and ask if it's already available, or if anyone is working on what you are looking for.  If you are willing to help adding or testing a new feature, join the team!
+
+**Filing an issue**: Submit issues to the [GitHub Issues](https://github.com/jpconstantineau/BlueMicro_BLE/issues) page.
+
+ **Want to help**: take one of issues in the list [here](https://github.com/jpconstantineau/BlueMicro_BLE/issues) where you think you could help. Comment on it as you start work and join in on the [Discord server](https://discord.gg/8pZsrxP) for a live discussion.
 
 
 # Credits
 
-The firmware uses the same Arduino Core as the [Adafruit nRF52 Feather Boards](https://github.com/adafruit/Adafruit_nRF52_Arduino)
+The firmware uses the same Arduino Board Support Package as the [Adafruit nRF52 Feather Boards](https://github.com/adafruit/Adafruit_nRF52_Arduino)
 
-The Adafruit NRF52 Arduino Core is based on [Arduino-nRF5](https://github.com/sandeepmistry/arduino-nRF5) by Sandeep Mistry, which in turn is based on the [Arduino SAMD Core](https://github.com/arduino/ArduinoCore-samd).
+[![GitHub license](https://img.shields.io/github/license/jpconstantineau/BlueMicro_BLE.svg)](https://github.com/jpconstantineau/BlueMicro_BLE)
 
-The following tools are used:
+BlueMicro_BLE uses the following projects, each are licensed separately.
 
-- Arduino IDE as the Editing Environment
-- GCC ARM Embedded as the compiler
-- Nordic's nrfutil 0.5.2 for flashing the firmware by serial interface
-- J-Link for flashing the bootloader by SWD interface
+| Project | Details |
+| ------- | -------- |
+| [Arduino IDE](https://github.com/arduino/Arduino) | Development Platform | 
+| [Arduino CLI](https://github.com/arduino/arduino-cli) | Alternate platform |
+| [Adafruit nRF52 Arduino](https://github.com/adafruit/Adafruit_nRF52_Arduino) | Board Support Package |
+| [Adafruit nRF52 Bootloader](https://github.com/adafruit/Adafruit_nRF52_Bootloader) | Bootloader |
+| [Adafruit Neopixel](https://github.com/adafruit/Adafruit_NeoPixel) | RGB LED Library |
+| [Adafruit TinyUSB Arduino](https://github.com/adafruit/Adafruit_TinyUSB_Arduino) | USB Library for nRF52840 |
+| [Hathach TinyUSB](https://github.com/hathach/tinyusb) | USB Library for nRF52840 |
+| [Olikraus U8g2](https://github.com/olikraus/u8g2) | U8g2: Library for monochrome displays, version 2 |
+
