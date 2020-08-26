@@ -147,4 +147,4 @@ Make sure of the following:
 | Serial port could not be opened on com3 | Serial Port not found | Double-reset | You have not pressed on reset twice (double-reset). Some boards (nrf52840 based) require a double-reset for the board to be put in DFU mode. |
 | Serial port could not be opened on com4 | Serial Port not found | Double-reset & change port | You have pressed on reset twice (double-reset) but the port in DFU mode is different. |
 | WriteFile failed  | You have compiled with an incorrect fqbn. | Recompile with the correct fqbn | Trying to upload firmware compiled for a nrf52832 to a nrf52840 will return this message. |
-| error | cause | fix | comments |
+| No data received on serial port. Not able to proceed | Serial Port does not respond to DFU commands  | Time your reset with the upload command | nrf52832 boards without reset circuitry (BlueMicro V2.0c) enter DFU mode for only a second after a reset. Timing when pressing the reset button is therefore critical compared to when sending the upload command.|
