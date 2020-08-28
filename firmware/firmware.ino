@@ -30,8 +30,10 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
  /* Making Changes
   * 
   * Edit the following files:
-  * keyboard_config.h:  This file contains the pin assignments.  Once your keyboard has this file, it should be identical to everyone else's.
-  * keymap.h:           This file contains your keymap.
+  * keyboard_config.h:  This file contains the Bluetooth definition as well as the Single/Left/Right configuration of your keyboard.
+  * hardware_config.h:  This file contains the pin assignments for the keyboard and nRF52 module you use. 
+  * keymap.cpp:         This file contains your keymap.  
+  * keymap.h:           This file contains your keymap helper definitions and macros.
   * 
   * The folder "keyboards" contains a number of example config files you can copy to get started.
   */
@@ -47,11 +49,13 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
     * 
     * Once you have completed installing the required libraries, you should be able to compile and flash the firmware.
     * 
-    * Board: Adafruit nRF52 Feather
-    * Bootloader: 0.2.6 (S132 V6.1.1)
+    * Board Selected:
+    * Most nrf52832 based boards: Adafruit nRF52 Feather
+    * Most nrf52840 based boards: PCA10056
     * Programmer: Bootloader DFU for BlueFruit nRF52
     * 
     * Note that for serial DFU (Device Firmware Upgrade) you may need to manually press the "reset" button if the serial reset circuitry using the DTR line is not used.  
+    * For PCA10056 boards, you may need to manually "double-reset" to put the board in DFU mode. 
     */
 
     /*  Flashing the Bootloader
@@ -62,7 +66,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
      * The cheapest Genuine Segger J-link is the J-Link EDU Mini.
      * There are a number of chinese J-Link clones that may work with the j-link software your mileage may vary...
      * 
-     * Required Bootloader: 0.2.6 (S132 V6.1.1)
+     * Required Bootloader: Depends on board you have.
      * 
      * Follow the instructions at Adafruit (link above) to download, install the necessary software
      * 
@@ -70,7 +74,10 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
      * Unless you have experience with these devices, we cannot recommend going with them if you are just starting out.
      * Such device include:
      * ST-Link V2 - OpenOCD
-     * Black Magic Probe - ?
+     * Black Magic Probe - arm-none-eabi-gdb
+     * 
+     * Refer to Joric's wiki for more information on flashing the bootloader using other tools
+     * https://github.com/joric/nrfmicro/wiki/Bootloader
      */
 
      /* Useful Tools
