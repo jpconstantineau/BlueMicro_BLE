@@ -31,6 +31,14 @@ byte columns[] MATRIX_COL_PINS;     // Contains the GPIO Pin Numbers defined in 
 //uint32_t lastupdatetime =0;
 SoftwareTimer keyscantimer, batterytimer;
 
+typedef volatile uint32_t REG32;
+#define pREG32 (REG32 *)
+
+#define DEVICE_ID_HIGH    (*(pREG32 (0x10000060)))
+#define DEVICE_ID_LOW     (*(pREG32 (0x10000064)))
+#define MAC_ADDRESS_HIGH  (*(pREG32 (0x100000a8)))
+#define MAC_ADDRESS_LOW   (*(pREG32 (0x100000a4)))
+
 PersistentState keyboardconfig;
 DynamicState keyboardstate;
 
@@ -61,6 +69,7 @@ void setupConfig() {
 // cppcheck-suppress unusedFunction
 void setup() {
  setupConfig();
+
  Serial.begin(115200);
  // while ( !Serial ) delay(10);   // for nrf52840 with native usb this makes the nrf52840 stall and wait for a serial connection.  Something not wanted for a keyboard...
 
@@ -91,7 +100,7 @@ void setup() {
   startAdv(); 
   keyscantimer.start();
   batterytimer.start();
-  suspendLoop(); // this commands suspends the main loop.  We are no longer using the loop but scheduling things using the timers.
+  //suspendLoop(); // this commands suspends the main loop.  We are no longer using the loop but scheduling things using the timers.
   stringbuffer.clear();
 };
 /**************************************************************************************************************************/
@@ -241,7 +250,8 @@ void process_keyboard_function(uint16_t keycode)
       InternalFS.format();
       break;
     case CLEAR_BONDS:
-      InternalFS.format();
+        Bluefruit.clearBonds();
+        Bluefruit.Central.clearBonds();
       break;      
     case DFU:
       enterOTADfu();
@@ -545,10 +555,139 @@ void sendKeyPresses() {
   #endif                                                                /**************************************************/
 }
 /**************************************************************************************************************************/
+void handleSerial() {
+    char buffer [50];
+  uint8_t intval;
+ while (Serial.available() > 0) {
+   char incomingCharacter = Serial.read();
+   switch (incomingCharacter) {
+     case 'd':
+        enterSerialDfu();
+      break;
+ 
+
+     case 'b':
+        Serial.println("Clear Bonds");
+        Serial.println("-------------------------------\n");
+
+        Serial.println();
+        Serial.println("----- Before -----\n");
+        bond_print_list(BLE_GAP_ROLE_PERIPH);
+        bond_print_list(BLE_GAP_ROLE_CENTRAL);
+
+        Bluefruit.clearBonds();
+        Bluefruit.Central.clearBonds();
+
+        Serial.println();
+        Serial.println("----- After  -----\n");
+        
+        bond_print_list(BLE_GAP_ROLE_PERIPH);
+        bond_print_list(BLE_GAP_ROLE_CENTRAL);
+      break;
+
+     case 'r':
+           NVIC_SystemReset();
+      break;
+    case 'e':
+      InternalFS.format();
+      break;
+    case 'u':
+      enterUf2Dfu();
+      break;
+     case 'i':
+          Serial.println("Bluefruit 52 HW Info");
+          Serial.println("");
+          // Unique Device ID
+          Serial.print("Device ID  : ");
+          Serial.print(DEVICE_ID_HIGH, HEX);
+          Serial.println(DEVICE_ID_LOW, HEX);
+
+          // MCU Variant;
+          Serial.printf("MCU Variant: nRF%X 0x%08X\n",NRF_FICR->INFO.PART, NRF_FICR->INFO.VARIANT);
+          Serial.printf("Memory     : Flash = %d KB, RAM = %d KB\n", NRF_FICR->INFO.FLASH, NRF_FICR->INFO.RAM);
+
+      Serial.println("Keyboard Name  : " DEVICE_NAME " "); 
+      Serial.println("Keyboard Model : " DEVICE_MODEL " "); 
+      Serial.println("Keyboard Mfg   : " MANUFACTURER_NAME " "); 
+
+      Serial.println("");
+
+      sprintf(buffer,"Device Power   : %f", DEVICE_POWER*1.0);
+      Serial.println(buffer);
+      sprintf(buffer,"Filter RSSI  : %i", FILTER_RSSI_BELOW_STRENGTH); Serial.println(buffer);  
+      addStringToQueue("Type\t RSSI\t name"); addKeycodeToQueue(KC_ENTER); 
+      sprintf(buffer,"cent\t %i\t %s",keyboardstate.rssi_cent, keyboardstate.peer_name_cent);Serial.println(buffer);  
+      sprintf(buffer,"prph\t %i\t %s",keyboardstate.rssi_prph, keyboardstate.peer_name_prph);Serial.println(buffer); 
+      sprintf(buffer,"cccd\t %i\t %s",keyboardstate.rssi_cccd, keyboardstate.peer_name_cccd);Serial.println(buffer); 
+      Serial.println("");
+          dbgPrintVersion();
+          dbgMemInfo();
+      break;
+      case ' ':
+        Serial.println(" ____  _            __  __ _                   ____  _     _____ ");
+        Serial.println("| __ )| |_   _  ___|  \\/  (_) ___ _ __ ___    | __ )| |   | ____|");
+        Serial.println("|  _ \\| | | | |/ _ \\ |\\/| | |/ __| '__/ _ \\   |  _ \\| |   |  _|  ");
+        Serial.println("| |_) | | |_| |  __/ |  | | | (__| | | (_) |  | |_) | |___| |___ ");
+        Serial.println("|____/|_|\\__,_|\\___|_|  |_|_|\\___|_|  \\___/___|____/|_____|_____|");
+        Serial.println("                                         |_____|                 ");
+        Serial.println("");
+        Serial.println("Type 'h' to get a list of commands with descriptions");
+      break;
+      case 'h':
+              Serial.println("");
+        Serial.println("b  Clear Bonds - Warning! Disconnects BLE from Computer!");
+        Serial.println("d  Enter Serial DFU - Warning! Disconnects BLE from Computer!");
+        Serial.println("u  Enter UF2 DFU - Warning! Disconnects BLE from Computer!");
+        Serial.println("e  flash reset - Warning! Disconnects BLE from Computer!");
+        Serial.println("r  reboot - Warning! Disconnects BLE from Computer!");
+
+        Serial.println("i  Show Device Information");
+        Serial.println("p  Show Battery Information");
+                Serial.println("");
+      break;
+      case 'p':
+            intval = batterymonitor.vbat_per;
+
+      switch (batterymonitor.batt_type)
+      {
+        case BATT_UNKNOWN:
+            snprintf (buffer, sizeof(buffer), "VDD = %.0f mV, VBatt = %.0f mV", batterymonitor.vbat_vdd*1.0, batterymonitor.vbat_mv*1.0);
+        break;
+        case BATT_CR2032:
+            if (intval>99)
+            {
+              snprintf (buffer, sizeof(buffer), "VDD = %.0f mV (%4d %%)", batterymonitor.vbat_mv*1.0, intval);
+            }
+            else
+            {
+              snprintf (buffer, sizeof(buffer), "VDD = %.0f mV (%3d %%)", batterymonitor.vbat_mv*1.0, intval);
+            }
+            
+        break;
+        case BATT_LIPO:
+            if (intval>99)
+            {
+              sprintf (buffer, "LIPO = %.0f mV (%4d %%)", batterymonitor.vbat_mv*1.0, intval);
+            }
+            else
+            {
+              sprintf (buffer, "LIPO = %.0f mV (%3d %%)", batterymonitor.vbat_mv*1.0, intval);
+            }   
+        break;
+      }
+      Serial.println(buffer);
+      break;
+    }
+ }
+}
+/**************************************************************************************************************************/
 // put your main code here, to run repeatedly:
 /**************************************************************************************************************************/
 // cppcheck-suppress unusedFunction
-void loop() {};  // loop is now empty and no longer being called.
+void loop() {
+  handleSerial();
+  delay(1000);
+};  // loop is now empty and no longer being called.
 // keyscantimer is being called instead
 /**************************************************************************************************************************/
 void keyscantimer_callback(TimerHandle_t _handle) {
