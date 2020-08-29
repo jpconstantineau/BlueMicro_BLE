@@ -1,5 +1,5 @@
 /*
-Copyright 2018 <Pierre Constantineau>
+Copyright 2018-2020 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -37,6 +37,7 @@ void setupGpio()
         delay(500);
         NVIC_SystemReset();
       } // end of NFC switch code.
+
 }
 
 /**************************************************************************************************************************/
@@ -78,4 +79,21 @@ void sendPWM(uint16_t value)
     buf[0] = (1 << 15) | value; // Inverse polarity (bit 15), 1500us duty cycle
     NRF_PWM2->SEQ[0].PTR = (uint32_t)&buf[0];
     NRF_PWM2->TASKS_SEQSTART[0] = 1;
+}
+
+
+/**************************************************************************************************************************/
+void switchVCC(bool value)
+{
+  #if VCC_ENABLE_GPIO == 1
+  pinMode(VCC_PIN, OUTPUT);
+  if(value)
+  {
+    digitalWrite(VCC_PIN, VCC_POLARITY_ON); 
+  }
+  else
+  {
+    digitalWrite(VCC_PIN, !VCC_POLARITY_ON); 
+  }
+  #endif
 }

@@ -14,20 +14,32 @@
 #include <bluefruit.h>
 
 
-#define PINCOUNT1 20
-#define PINCOUNT2 20
+#define PINCOUNT1 20 +1
+#define PINCOUNT2 20 +1 
 #define PINCOUNT3 30
 
 BLEDis bledis;
 BLEHidAdafruit blehid;
 
-int pinlist1 [PINCOUNT1] ={ 6, 8, 15, 17, 20, 13, 24, 9, 10, 32+6, 30, 26, 29, 2, 32+13, 3, 28, 11+32, 10+32, 4+32};
-int pinlist2 [PINCOUNT2] ={ 6, 8, 15, 17, 20, 13, 24, 9, 10, 32+6, 30, 26, 29, 2, 31+13, 3, 28, 11+32, 10+32, 4+32};
+int pinlist1 [PINCOUNT1] ={ 6, 8, 15, 17, 20, 13, 24, 9, 10, 32+6, 30, 26, 29, 2, 32+13, 3, 28, 11+32, 10+32, 4+32, 12};
+int pinlist2 [PINCOUNT2] ={ 6, 8, 15, 17, 20, 13, 24, 9, 10, 32+6, 30, 26, 29, 2, 31+13, 3, 28, 11+32, 10+32, 4+32, 12};
 int pinlist3 [PINCOUNT3] ={ 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 15, 17, 18, 20, 22, 24, 26, 28, 29,30,31, 32,  34, 36,38, 41,42,43,45};
 
 void setup() 
 {
+// this is the code needed to change the default voltage from the on chip voltage regulator.
+// see https://infocenter.nordicsemi.com/pdf/nRF52840_PS_v1.0.pdf page 45
 
+if (NRF_UICR->REGOUT0 != UICR_REGOUT0_VOUT_3V3) {
+    NRF_NVMC->CONFIG = NVMC_CONFIG_WEN_Wen << NVMC_CONFIG_WEN_Pos;
+    while (NRF_NVMC->READY == NVMC_READY_READY_Busy){}
+    NRF_UICR->REGOUT0 = UICR_REGOUT0_VOUT_3V3;
+
+    NRF_NVMC->CONFIG = NVMC_CONFIG_WEN_Ren << NVMC_CONFIG_WEN_Pos;
+    while (NRF_NVMC->READY == NVMC_READY_READY_Busy){}
+        delay(500);
+        NVIC_SystemReset();
+      }
   Bluefruit.begin();
   Bluefruit.setTxPower(4);
   Bluefruit.setName("BlueMicro840");

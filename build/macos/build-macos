@@ -4,10 +4,20 @@ cd -- "$(dirname "$BASH_SOURCE")"
 
 verbose=false
 continueOnError=false
+defaultFQBN="adafruit:nrf52:feather52832:softdevice=s132v6"
+
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--nrf52840") defaultFQBN="adafruit:nrf52:pca10056:softdevice=s140v6" ;;
+    "--fqbn") defaultFQBN=$arg ;;
+    *) set -- "$@" "$arg"
+  esac
+done
 
 while getopts ":hvc" option; do
   case $option in
-    h) echo "usage: $0 [-h] [-v] [-c] keyboard:keymap:target"; exit ;;
+    h) echo "usage: $0 [-h] [-v] [-c] keyboard:keymap:target [device] [soft_device]"; exit ;;
     v) verbose=true ;;
     c) continueOnError=true ;;
     ?) echo "error: option -$OPTARG is not implemented"; exit ;;
@@ -16,6 +26,7 @@ done
 
 shift $(($OPTIND - 1))
 boardParam=$1
+selectedFQBN=${2:-$defaultFQBN}
 
 arduinoPath="/Applications/Arduino.app"
 arduinoDataPath=$(cd ~/Library/Arduino15 && pwd)
@@ -44,8 +55,9 @@ arduino_compile() {
    local keyboard=$1
    local keymap=$2
    local target=$3
+   local fqbn=$4
 
-   printf "$keyboard:$keymap:$target... "
+   printf "$keyboard:$keymap:$target $fqbn... "
 
    keymapHeaderFile="$keyboardsPath/$keyboard/keymaps/$keymap/keymap.h"
    keymapSourceFile="$keyboardsPath/$keyboard/keymaps/$keymap/keymap.cpp"
@@ -63,7 +75,7 @@ arduino_compile() {
    sleep 2
 
    #Compile
-   cmdCompile="$arduinoPath/Contents/Java/arduino-builder -compile -logger=machine -hardware $arduinoPath/Contents/Java/hardware -hardware $arduinoDataPath/packages -tools $arduinoPath/Contents/Java/tools-builder -tools $arduinoPath/Contents/Java/hardware/tools/avr -tools $arduinoDataPath/packages -built-in-libraries $arduinoPath/Contents/Java/libraries -fqbn=adafruit:nrf52:feather52832:softdevice=s132v6,debug=l0 -ide-version=10805 -build-path $buildPath -warnings=none -build-cache $buildCachePath -prefs=build.warn_data_percentage=75 -prefs=runtime.tools.gcc-arm-none-eabi.path=$arduinoDataPath/packages/adafruit/tools/gcc-arm-none-eabi/5_2-2015q4 -prefs=runtime.tools.nrfjprog.path=$arduinoDataPath/packages/adafruit/tools/nrfjprog/9.4.0 $sourcePath/firmware.ino"
+   cmdCompile="$arduinoPath/Contents/Java/arduino-builder -compile -logger=machine -hardware $arduinoPath/Contents/Java/hardware -hardware $arduinoDataPath/packages -tools $arduinoPath/Contents/Java/tools-builder -tools $arduinoPath/Contents/Java/hardware/tools/avr -tools $arduinoDataPath/packages -built-in-libraries $arduinoPath/Contents/Java/libraries -fqbn=$fqbn,debug=l0 -ide-version=10805 -vid-pid=0000_0000 -build-path $buildPath -warnings=none -build-cache $buildCachePath -prefs=build.warn_data_percentage=75 -prefs=runtime.tools.arm-none-eabi-gcc.path=$arduinoDataPath/packages/adafruit/tools/arm-none-eabi-gcc/9-2019q4 -prefs=runtime.tools.arm-none-eabi-gcc-9-2019q4.path=$arduinoDataPath/packages/adafruit/tools/arm-none-eabi-gcc/9-2019q4 -prefs=runtime.tools.nrfjprog-9.4.0.path=$arduinoDataPath/packages/adafruit/tools/nrfjprog/9.4.0 -prefs=runtime.tools.nrfjprog.path=$arduinoDataPath/packages/adafruit/tools/nrfjprog/9.4.0 $sourcePath/firmware.ino"
   
    if $verbose; then 
       $cmdCompile
@@ -98,7 +110,7 @@ if [ -z "$boardParam" ]; then
 
    printf "\n"
    printf "This script can be run with paramters\n"
-   printf "./build-macos [-v] [-c] keyboard:keymap:target\n"
+   printf "./build-macos [-v] [-c] [--nrf52840] [--fqbn value] keyboard:keymap:target\n"
 
    selectedKeyboard="all"
    selectedKeymap="all"
@@ -117,6 +129,9 @@ if [ -z "$boardParam" ]; then
          selectedTarget=${selectedTarget:-all}
       fi
    fi
+
+   read -p "FQBN [$defaultFQBN]: " selectedFQBN
+   selectedFQBN=${selectedFQBN:-$defaultFQBN}
 
 else
 
@@ -139,7 +154,7 @@ else
 fi
 
 printf "\n"
-printf "Building $selectedKeyboard:$selectedKeymap:$selectedTarget\n"
+printf "Building $selectedKeyboard:$selectedKeymap:$selectedTarget $selectedFQBN\n"
 
 printf "\n"
 printf "Checking file locations\n"
@@ -234,7 +249,7 @@ do
    
    for keymap in "${keymaps[@]}"; do
       for target in "${targets[@]}"; do
-         arduino_compile $keyboard $keymap $target
+         arduino_compile $keyboard $keymap $target $selectedFQBN
       done
    done
 done

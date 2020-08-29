@@ -1,5 +1,5 @@
 /*
-Copyright 2018 <Pierre Constantineau>
+Copyright 2018-2020 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -27,6 +27,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 #include "KeyScanner.h"
 #include "nrf52battery.h"
+#include "datastructures.h"
 
     typedef struct {      // Payload for BLE messages between split boards. Intended for slave to master
         // BLE messages have a size limit of 20 bytes. Any extra and we have to do some ATT_MTU magic...
@@ -52,6 +53,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
     void sendKeys(uint8_t currentReport[8]);
     void sendMediaKey(uint16_t keycode);
     void sendMouseKey(uint16_t keycode);
+    void rssi_changed_callback(uint16_t conn_hdl, int8_t rssi);
 
     #if BLE_PERIPHERAL ==1   | BLE_CENTRAL ==1 
     void sendlayer(uint8_t layer);

@@ -1,5 +1,5 @@
 /*
-Copyright 2019 <Pierre Constantineau>
+Copyright 2019-2020 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -87,11 +87,13 @@ pixels.clear();
 switch (rgb_mode)
     {
         case 0:                         // OFF  
+            // cppcheck-suppress unsignedLessThanZero
             for(uint16_t i=0; i<WS2812B_LED_COUNT; i++) { // For each pixel...
                 pixels.setPixelColor(i, 0, 0, 0);  
             }
             break;
         case RGB_MODE_PLAIN:           // RAINBOW
+            // cppcheck-suppress unsignedLessThanZero
             for(uint16_t i=0; i<WS2812B_LED_COUNT; i++) { // For each pixel...
                 byte x = (time >> 2) - (i << 3);
                 colors[i] = hsvToRgb((uint32_t)x * 359 / 256, 255, RGBval);
@@ -114,6 +116,7 @@ switch (rgb_mode)
             break;
         case RGB_MODE_RGBTEST:
             if (RGBcounter>3) RGBcounter = 1;
+            // cppcheck-suppress unsignedLessThanZero
             for(uint16_t i=0; i<WS2812B_LED_COUNT; i++) { // For each pixel...        
                 if (RGBcounter==1) {colors[i].red = RGBval;} else {colors[i].red = 0;}
                 if (RGBcounter==2) {colors[i].green = RGBval;} else {colors[i].green = 0;}
@@ -124,6 +127,7 @@ switch (rgb_mode)
             break;              
         default:
             // unknown mode.  switch to mode 0
+            // cppcheck-suppress unsignedLessThanZero
             for(int i=0; i<WS2812B_LED_COUNT; i++) { // For each pixel...
                 pixels.setPixelColor(i, 0, 0, 0); 
             }
@@ -136,6 +140,7 @@ switch (rgb_mode)
 void suspendRGB(void)
 {
     pixels.clear();
+    // cppcheck-suppress unsignedLessThanZero
   for(int i=0; i<WS2812B_LED_COUNT; i++) { // For each pixel...
     pixels.setPixelColor(i, 0, 0, 0); 
   }

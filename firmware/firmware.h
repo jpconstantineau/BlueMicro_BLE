@@ -1,5 +1,5 @@
 /*
-Copyright 2018 <Pierre Constantineau>
+Copyright 2018-2020 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -21,7 +21,6 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define FIRMWARE_H
 #undef min
 #undef max
-#include "hardware_variants.h"
 #include "firmware_config.h"
 #include "bluetooth_config.h"
 #include "KeyScanner.h"
@@ -32,29 +31,13 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "LedPwm.h"
 #include "LedRGB.h"
 #include "nrf52gpio.h"
-
+#include "datastructures.h"
 // need to add this to resolve an issue when linking.
 // see https://forum.arduino.cc/index.php?topic=319795.0
 namespace std {
   void __throw_length_error(char const*) {
   }
 }
-    typedef struct { 
-        bool    ledbacklight;  
-        bool    ledrgb;    
-        uint32_t timerkeyscaninterval;
-        uint32_t timerbatteryinterval;     
-  
-    } PersistentState;
-
-    typedef struct { 
-          uint32_t timestamp;
-          uint32_t lastupdatetime;
-
-          bool helpmode;
-  
-    } DynamicState;
-
     void setupConfig(void);
     void setupMatrix(void);
     void scanMatrix(void);

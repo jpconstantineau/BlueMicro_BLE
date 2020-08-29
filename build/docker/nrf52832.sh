@@ -1,4 +1,7 @@
 #!/bin/bash
+# Called by jenkins docker job BlueMicro_BLE-develop-Docker-nrf52832 on docker:8080
+# Called by jenkins docker job BlueMicro_BLE-master-Docker-nrf52832 on docker:8080
+
 set -e
 cd -- "$(dirname "$BASH_SOURCE")"
 
@@ -17,14 +20,14 @@ done
 shift $(($OPTIND - 1))
 boardParam=$1
 
-arduinoPath="/usr/share/arduino"
-arduinoDataPath=$(cd ~/.arduino15 & pwd)
-nrf52PackagePath="/home/$USER/.arduino15/packages/adafruit/hardware/nrf52"
+#arduinoPath="/usr/share/arduino"
+#arduinoDataPath=$(cd ~/.arduino15 & pwd)
+#nrf52PackagePath="/home/$USER/.arduino15/packages/adafruit/hardware/nrf52"
 
-scriptPath="$(dirname "$BASH_SOURCE")"
+#scriptPath="$(dirname "$BASH_SOURCE")"
 
 #replace this variable with path to your avr installation
-arduinoAvrPath="$arduinoPath/hardware/arduino/avr"
+#arduinoAvrPath="$arduinoPath/hardware/arduino/avr"
 
 blueMicroPath=$(cd $scriptPath/../.. && pwd)
 firmwarePath="${blueMicroPath}/firmware"
@@ -68,8 +71,8 @@ arduino_compile() {
 
 
    #Compile
-   cmdCompile832="/arduino-cli compile -v --fqbn adafruit:nrf52:feather52832 --build-path $buildPath --build-cache-path $buildCachePath $sourcePath/firmware.ino  -o $buildPath/firmware"
-   cmdCompile840="/arduino-cli compile -v --fqbn adafruit:nrf52:feather52840 --build-path $buildPath --build-cache-path $buildCachePath $sourcePath/firmware.ino  -o $buildPath/firmware"
+   cmdCompile832="/arduino-cli compile -v --fqbn adafruit:nrf52:feather52832 --build-path $buildPath --build-cache-path $buildCachePath $sourcePath/firmware.ino"
+   cmdCompile840="/arduino-cli compile -v --fqbn adafruit:nrf52:pca10056 --build-path $buildPath --build-cache-path $buildCachePath $sourcePath/firmware.ino"
     if $verbose; then 
       $cmdCompile832
     else

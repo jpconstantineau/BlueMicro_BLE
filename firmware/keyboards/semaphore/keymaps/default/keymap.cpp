@@ -18,7 +18,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "keymap.h"
 
 
-#if KEYBOARD_SIDE == MASTER
+#if KEYBOARD_SIDE == SINGLE
 std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
     {KEYMAP(
         KC_1,  KC_2,    KC_3,    KC_4,    KC_5,    KC_6,  
@@ -109,7 +109,7 @@ uint32_t layer3[MATRIX_ROWS][MATRIX_COLS] =
   _______, _______, _______, _______, _______, _______,  \
   _______, _______, _______, _______, _______, _______,\
   KC_TRNS, _______, _______, _______, _______, _______, \
-  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, _______ \
+  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, PRINT_BATTERY \
 );
 
 
@@ -170,7 +170,7 @@ uint32_t layer3[MATRIX_ROWS][MATRIX_COLS] =
  _______, _______, _______, _______, _______, KC_DEL, \
  _______, _______, _______, _______,  _______, _______, \
   _______, _______, _______, _______, _______, _______, \
-  _______, KC_TRNS, _______, _______, _______, _______ \
+  PRINT_BATTERY, KC_TRNS, _______, _______, _______, _______ \
 );
 
 

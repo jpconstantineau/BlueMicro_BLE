@@ -1,5 +1,5 @@
 /*
-Copyright 2018 <Pierre Constantineau>
+Copyright 2018-2020 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -30,7 +30,12 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define UUID128_COUNT 4
 
 // Set max power. Accepted values are: -40, -30, -20, -16, -12, -8, -4, 0, 4
-#define DEVICE_POWER                        0                                          // Use 0.  This uses less power and allows for a longer battery life.
+#define DEVICE_POWER                        4                                          // Use 0.  This uses less power and allows for a longer battery life.
+
+#define FILTER_RSSI_BELOW_STRENGTH -90
+
+#define BLE_LED_ACTIVE false
+
 
 /*
   Power     mA    dbm  

@@ -1,0 +1,64 @@
+name: Build on Ubuntu
+
+on:
+  # Trigger the workflow on push or pull request,
+  # but only for the master branch
+  push:
+    branches:
+      - master
+      - develop 
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        fqbn: ['feather52832', 'pca10056', 'feather52840']
+
+    runs-on: self-hosted
+
+    steps:
+        - name: Fix Permissions
+          run: echo ${{secrets.DEPLOY_PASSWORD}} | sudo -S chown -R $USER:$USER /home/pierre/actions-runner/_work/BlueMicro_BLE
+
+        - name: clean up
+          run: |
+            rm -rf $HOME/.arduino15
+            rm -rf $HOME/Arduino
+            
+        - name: Checkout code
+          uses: actions/checkout@v2     
+            
+        - name: Install Arduino CLI and Tools
+          run: |
+            pip3 install adafruit-nrfutil
+            echo "::add-path::~/.local/bin"
+            # make all our directories we need for files and libraries
+            mkdir $HOME/.arduino15
+            mkdir $HOME/.arduino15/packages
+            mkdir $HOME/Arduino
+            mkdir $HOME/Arduino/libraries
+            curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
+            echo "::add-path::$GITHUB_WORKSPACE/bin"
+            
+        - name: Install BSP and Libraries
+          env:
+            BSP_URL: https://adafruit.github.io/arduino-board-index/package_adafruit_index.json
+            BSP_PATH: .arduino15/packages/adafruit/hardware/nrf52
+          run: |
+            arduino-cli config init
+            arduino-cli core update-index
+            arduino-cli core update-index --additional-urls $BSP_URL
+            arduino-cli core install adafruit:nrf52 --additional-urls $BSP_URL
+            
+            # Install library dependency
+            arduino-cli lib install "Adafruit TinyUSB Library" "Adafruit NeoPixel"
+            # Library summary
+            arduino-cli lib list
+
+        - name: Compile some things...
+          run: bash build/docker/gha-ubuntu-nrf52xxx.sh all:all:all:all:${{ matrix.fqbn }}
+
+
+
+            

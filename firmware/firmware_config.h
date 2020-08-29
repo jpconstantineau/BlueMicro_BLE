@@ -1,5 +1,5 @@
 /*
-Copyright 2018 <Pierre Constantineau>
+Copyright 2018-2020 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -22,29 +22,30 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define FIRMWARE_CONFIG_H
 #include "hardware_variants.h"
 #include "keyboard_config.h"
-#include "breakout_mapping.h"
-#if KEYBOARD_SIDE == LEFT
-#define BLE_PAIRS 1
-#define PERIPHERAL_COUNT 1
+
 #define MATRIX_SCAN 1
 #define SEND_KEYS 1
+
+#if KEYBOARD_SIDE == LEFT
+#define BLE_HID 1
+#define BLE_CENTRAL 1
+#define CENTRAL_COUNT 1
+#define PERIPHERAL_COUNT 1 //1  
+#define BLE_PERIPHERAL 0
 #define DEVICE_NAME DEVICE_NAME_L
 #elif KEYBOARD_SIDE == RIGHT
-#define BLE_PAIRS 1
-#define PERIPHERAL_COUNT 1
+#define BLE_HID 0
+#define BLE_CENTRAL 0
 #define CENTRAL_COUNT 0
-#define MATRIX_SCAN 1
-#define SEND_KEYS 1
+#define PERIPHERAL_COUNT 1 //1  
+#define BLE_PERIPHERAL 1
 #define DEVICE_NAME DEVICE_NAME_R
-#elif KEYBOARD_SIDE == MASTER
-#define BLE_PAIRS 0
+#elif KEYBOARD_SIDE == SINGLE
 #define BLE_HID 1
-#ifndef PERIPHERAL_COUNT
-  #define PERIPHERAL_COUNT 1
-#endif
+#define BLE_CENTRAL 0
 #define CENTRAL_COUNT 0
-#define MATRIX_SCAN 1
-#define SEND_KEYS 1
+#define PERIPHERAL_COUNT 1 //1  
+#define BLE_PERIPHERAL 0
 #define DEVICE_NAME DEVICE_NAME_M
 #elif KEYBOARD_SIDE == TEST
 #define BLE_CENTRAL 0  /// 
@@ -53,53 +54,26 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define BLE_HID 1 //1 //  
 #define PERIPHERAL_COUNT 1 //1  
 #define CENTRAL_COUNT 0
-#define MATRIX_SCAN 1 // 1 
-#define SEND_KEYS 1 // 1 //
 #define DEVICE_NAME DEVICE_NAME_M
 #endif
 
-//set default modes for the halves
-#ifndef KEYBOARD_MODE 
-
-#if KEYBOARD_SIDE == LEFT
-#define KEYBOARD_MODE DEFAULT //LEFT defaults to central (DEFAULT)
-#elif KEYBOARD_SIDE == RIGHT
-#define KEYBOARD_MODE SLAVE //RIGHT defaults to peripheral (SLAVE) 
-#elif KEYBOARD_SIDE == MASTER
-#define KEYBOARD_MODE MASTER //MASTER defaults to master (only one keyboard) 
-#endif
-
-#endif /* ifndef KEYBOARD_MODE */
-
-#if KEYBOARD_MODE == DEFAULT
-#define BLE_HID 1
-#define BLE_CENTRAL 1
-#define CENTRAL_COUNT 1
-#define BLE_PERIPHERAL 0
-#elif KEYBOARD_MODE == SLAVE
-#define BLE_HID 0
-#define BLE_CENTRAL 0
-#define CENTRAL_COUNT 0
-#define BLE_PERIPHERAL 1
-#elif KEYBOARD_MODE == MASTER
-#define BLE_HID 1
-#define BLE_CENTRAL 0
-#define CENTRAL_COUNT 0
-#define BLE_PERIPHERAL 0
-#endif /* KEYBOARD_MODE */
 
 #ifndef DEBOUNCETIME 
-#define DEBOUNCETIME 10
+#define DEBOUNCETIME 5
 #endif
 
 #ifndef HIDREPORTINGINTERVAL
-#define HIDREPORTINGINTERVAL 10
+#define HIDREPORTINGINTERVAL 8
 #endif
 
 // Battery Service definitions.
 
 #ifndef BATTERY_TYPE
 #define BATTERY_TYPE BATT_UNKNOWN
+#endif
+
+#ifndef BATTERYINTERVAL
+#define BATTERYINTERVAL 30000
 #endif
 
 #define SLEEPING_DELAY 30000              // when it's not connected, 30 seconds is good.
@@ -146,6 +120,15 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #else
   #define VBAT_DIVIDER      (0.71275837F)   // 2M + 0.806M voltage divider on VBAT = (2M / (0.806M + 2M))
   #define VBAT_DIVIDER_COMP (1.403F)        // Compensation factor for the VBAT divider
+#endif
+
+#ifdef VCC_PIN
+  #define VCC_ENABLE_GPIO 1
+    #ifndef VCC_POLARITY_ON
+      #define VCC_POLARITY_ON 1
+    #endif
+  #else
+  #define VCC_ENABLE_GPIO 0
 #endif
 
 #endif /* FIRMWARE_CONFIG_H */

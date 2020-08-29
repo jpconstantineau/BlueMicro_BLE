@@ -1,1 +1,0 @@
-docker run -it  --mount src="${PWD}"/../..,target=/mnt,type=bind jpconstantineau/arduino-cli-bluefruit-nrf52:latest /bin/bash /mnt/build/docker/nrf52832.sh all:all:all
