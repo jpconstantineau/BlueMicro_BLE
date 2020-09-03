@@ -21,22 +21,23 @@ arduinoPath="/usr/share/arduino"
 arduinoDataPath=$(cd ~/.arduino15 & pwd)
 nrf52PackagePath="/home/$USER/.arduino15/packages/adafruit/hardware/nrf52"
 
-scriptPath="$(dirname "$BASH_SOURCE")"
-
 #replace this variable with path to your avr installation
 arduinoAvrPath="$arduinoPath/hardware/arduino/avr"
 
+scriptPath="$(dirname "$BASH_SOURCE")"
 blueMicroPath=$(cd $scriptPath/.. && pwd)
 firmwarePath="${blueMicroPath}/firmware"
 outputPath="${blueMicroPath}/output"
-buildPath="${outputPath}/.build"
-buildCachePath="${outputPath}/.build-cache"
+outputTempPath="/tmp"
+buildPath="${outputTempPath}/.build"
+buildCachePath="${outputTempPath}/.build-cache"
 
-sourcePath="${outputPath}/.source/firmware"
+sourcePath="${outputTempPath}/.source/firmware"
 keyboardsPath="${sourcePath}/keyboards"
 
 successfulBuilds=0
 failedBuilds=0
+
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -47,32 +48,37 @@ arduino_compile() {
    local keyboard=$1
    local keymap=$2
    local target=$3
+   local fqbn=$4
+   local hardware=$5
 
-   printf "$keyboard:$keymap:$target... "
+   printf "$keyboard:$keymap:$target:$fqbn:$hardware"
 
    keymapFile="$keyboardsPath/$keyboard/keymaps/$keymap/keymap.h"
    keymapcppFile="$keyboardsPath/$keyboard/keymaps/$keymap/keymap.cpp"
-   configFile="$keyboardsPath/$keyboard/$target/keyboard_config.h"
+   configFile="$keyboardsPath/$keyboard/config/$target/keyboard_config.h"
+   hardwareFile="$keyboardsPath/$keyboard/hardware/$fqbn/$hardware/hardware_config.h"
 
    cp -f $keymapFile $sourcePath/
-#   cp -f $keymapcppFile $sourcePath/
+   cp -f $keymapcppFile $sourcePath/
    cp -f $configFile $sourcePath/
+   cp -f $hardwareFile $sourcePath/
 
    if $continueOnError; then
       set +e
    fi
 
    #Need to sleep between compile calls else arduino-builder does not recognise changes
-   sleep 2
+   #sleep 2
 
    #Compile
-   cmdCompile="$arduinoPath/arduino-builder -compile -logger=machine -hardware $arduinoPath/hardware -hardware /home/$USER/.arduino15/packages -tools $arduinoPath/tools-builder -tools $arduinoAvrPath -tools /home/$USER/.arduino15/packages -built-in-libraries $arduinoPath/lib -fqbn=adafruit:nrf52:feather52832:softdevice=s132v6,debug=l0 -ide-version=10805 -build-path $buildPath -warnings=none -build-cache $buildCachePath -prefs=build.warn_data_percentage=75 -prefs=runtime.tools.gcc-arm-none-eabi.path=$arduinoDataPath/packages/adafruit/tools/gcc-arm-none-eabi/5_2-2015q4 -prefs=runtime.tools.nrfjprog.path=$arduinoDataPath/packages/adafruit/tools/nrfjprog/9.4.0 $sourcePath/firmware.ino"
+   cmdCompile="$arduinoPath/arduino-builder -compile -logger=machine -hardware $arduinoPath/hardware -hardware /home/$USER/.arduino15/packages -tools $arduinoPath/tools-builder -tools $arduinoAvrPath -tools /home/$USER/.arduino15/packages -built-in-libraries $arduinoPath/lib -fqbn=adafruit:nrf52:$fqbn -ide-version=10805 -build-path $buildPath -warnings=none -build-cache $buildCachePath -prefs=build.warn_data_percentage=75 -prefs=runtime.tools.gcc-arm-none-eabi.path=$arduinoDataPath/packages/adafruit/tools/gcc-arm-none-eabi/5_2-2015q4 -prefs=runtime.tools.nrfjprog.path=$arduinoDataPath/packages/adafruit/tools/nrfjprog/9.4.0 $sourcePath/firmware.ino"
+   #cmdCompile="arduino-cli compile -v --fqbn adafruit:nrf52:$fqbn --build-path $buildPath --build-cache-path $buildCachePath $sourcePath/firmware.ino"
 
-   if $verbose; then 
+    if $verbose; then 
       $cmdCompile
-   else
-      $cmdCompile > /dev/null
-   fi
+    else
+       $cmdCompile > /dev/null
+    fi
 
    (($? != 0)) && failed=true || failed=false
 
@@ -80,15 +86,15 @@ arduino_compile() {
    
    if $failed; then
      failedBuilds=$((failedBuilds+1))
-     printf "${RED}Failed${NC}\n"
+     printf "${RED}Failed${NC} "
    else
      [[ -d $outputPath/$keyboard ]] || mkdir $outputPath/$keyboard
    
-     cp -f $buildPath/firmware.ino.zip $outputPath/$keyboard/$keyboard-$keymap-$target.zip
-     cp -f $buildPath/firmware.ino.hex $outputPath/$keyboard/$keyboard-$keymap-$target.hex
+     cp -f $buildPath/firmware.ino.zip $outputPath/$keyboard/$keyboard-$fqbn-$hardware-$keymap-$target.zip
+     cp -f $buildPath/firmware.ino.hex $outputPath/$keyboard/$keyboard-$fqbn-$hardware-$keymap-$target.hex
 
      successfulBuilds=$((successfulBuilds+1))
-     printf "${GREEN}OK${NC}\n"
+     printf "${GREEN}OK${NC} "
    fi
 }
 
@@ -101,11 +107,13 @@ if [ -z "$boardParam" ]; then
 
    printf "\n"
    printf "This script can be run with paramters\n"
-   printf "./build-macos [-v] [-c] keyboard:keymap:target\n"
+   printf "./build-ubuntu [-v] [-c] keyboard:keymap:target:fqbn:hardware\n"
 
    selectedKeyboard="all"
    selectedKeymap="all"
    selectedTarget="all"
+   selectedFqbn="all"
+   selectedHardware="all"
    
    printf "\n"
    read -p "Keyboard name (eg ErgoTravel) [all]: " selectedKeyboard
@@ -116,8 +124,18 @@ if [ -z "$boardParam" ]; then
       selectedKeymap=${selectedKeymap:-all}
 
       if [ "$selectedKeymap" != "all" ]; then
-         read -p "Target name (eg left / right / master) [all]: " selectedTarget
+         read -p "Target name (eg left / right / single) [all]: " selectedTarget
          selectedTarget=${selectedTarget:-all}
+
+         if [ "$selectedFqbn" != "all" ]; then
+            read -p "fqbn name [all]: " selectedFqbn
+            selectedFqbn=${selectedFqbn:-all}
+
+            if [ "$selectedHardware" != "all" ]; then
+               read -p "hardware name [all]: " selectedHardware
+               selectedHardware=${selectedHardware:-all}
+            fi
+         fi
       fi
    fi
 
@@ -139,58 +157,31 @@ else
       selectedTarget="all"
    fi
 
+   selectedHardware="${boardParamSplit[3]}"
+   if [ -z "$selectedHardware" ]; then
+      selectedHardware="all"
+   fi
+
+   selectedFqbn="${boardParamSplit[4]}"
+   if [ -z "$selectedFqbn" ]; then
+      selectedFqbn="all"
+   fi
+   
+
+
 fi
 
 printf "\n"
-printf "Building $selectedKeyboard:$selectedKeymap:$selectedTarget\n"
+printf "Building $selectedKeyboard:$selectedKeymap:$selectedTarget:$selectedFqbn:$selectedHardware\n"
 
-printf "\n"
-printf "Checking file locations\n"
-printf -- "-----------------------------------\n"
-
-printf "Arduino Installation... "
-if [ -d "$arduinoPath" ]
-then
-   printf "${GREEN}OK${NC}\n"
-else
-   printf "${RED}Failed${NC}\n"
-   printf "\n"
-   printf "Could not find Arduino installation\n"
-   printf "Donwload and install to the ${arduinoPath} path\n\n"
-   exit 1
-fi
-
-printf "Arduino Data Location... "
-if [ -d "$arduinoDataPath" ]
-then
-   printf "${GREEN}OK${NC}\n"
-else
-   printf "${RED}Failed${NC}\n"
-   printf "\n"
-   printf "Could not find Arduino Data path\n"
-   printf "Expected data in ${arduinoDataPath}\n\n"
-   exit 1
-fi
-
-printf "Adafruit nRF52 Package... "
-if [ -d "$nrf52PackagePath" ]
-then
-   printf "${GREEN}OK${NC}\n"
-else
-   printf "${RED}Failed${NC}\n"
-   printf "\n"
-   printf "Could not find Adafruit nRF52 Package\n"
-   printf "Follow the installation instructions at https://learn.adafruit.com/bluefruit-nrf52-feather-learning-guide/arduino-bsp-setup\n\n"
-   exit 1
-fi
 
 [[ -d $outputPath ]] || mkdir $outputPath
 [[ -d $buildPath ]] || mkdir $buildPath
 [[ -d $buildCachePath ]] || mkdir $buildCachePath
 
 printf "\n"
-printf "Compiling\n"
-printf -- "-----------------------------------\n"
+printf "Compiling keyboard:keymap:target:fqbn:hardware\n"
+printf -- "-----------------------------------------------------\n"
 
 rm -rf $sourcePath
 mkdir -p $sourcePath
@@ -218,8 +209,21 @@ do
       keymaps+=($keymap)
    done
 
+   fqbns=()
+   for fqbn in $sourcePath/keyboards/$keyboard/hardware/*/
+   do
+      fqbn=${fqbn%*/}
+      fqbn=${fqbn##*/}
+
+      if [ "$selectedFqbn" != "all" ] && [ "$selectedFqbn" != "$fqbn" ]; then
+         continue
+      fi
+
+      fqbns+=($fqbn)
+   done
+
    targets=()
-   for target in $sourcePath/keyboards/$keyboard/*/
+   for target in $sourcePath/keyboards/$keyboard/config/*/
    do
       target=${target%*/}
       target=${target##*/}
@@ -237,18 +241,32 @@ do
    
    for keymap in "${keymaps[@]}"; do
       for target in "${targets[@]}"; do
-         arduino_compile $keyboard $keymap $target
+         for fqbn in "${fqbns[@]}"; do
+               hardwares=()
+               for hardware in $sourcePath/keyboards/$keyboard/hardware/$fqbn/*/
+               do
+                  hardware=${hardware%*/}
+                  hardware=${hardware##*/}
+
+                  if [ "$selectedHardware" != "all" ] && [ "$selectedHardware" != "$hardware" ]; then
+                     continue
+                  fi
+                  hardwares+=($hardware)
+               done
+               for hardware in "${hardwares[@]}"; do
+                  arduino_compile $keyboard $keymap $target $fqbn $hardware
+               done
+         done
       done
    done
 done
 
 if ((successfulBuilds == 0)) && ((failedBuilds == 0)); then
-   printf "Did not find anything to build for $selectedKeyboard:$selectedKeymap:$selectedTarget\n"
+   printf "Did not find anything to build for $selectedKeyboard:$selectedKeymap:$selectedTarget:$selectedFqbn:$selectedHardware\n"
 fi
 
 printf "\n"
 printf "Successful: ${successfulBuilds} Failed: ${failedBuilds}\n"
-
 printf "\n"
 printf "Binaries can be found in ${outputPath}\n"
 printf "\n"
