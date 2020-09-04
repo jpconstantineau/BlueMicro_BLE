@@ -25,8 +25,6 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include <Adafruit_LittleFS.h>
 #include <InternalFileSystem.h>
 
-#include <utility>
-#include <cstdint>
 #include <vector>
 #include <algorithm>
 
@@ -34,8 +32,6 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "bluetooth_config.h"
 #include "nrf52battery.h"
 #include "datastructures.h"
-
-using namespace Adafruit_LittleFS_Namespace;
 
 typedef volatile uint32_t REG32;
 #define pREG32 (REG32 *)
