@@ -1,4 +1,4 @@
-# BlueMicro Firmware
+# BlueMicro Firmware  [![Current Version](https://img.shields.io/github/v/tag/jpconstantineau/BlueMicro_BLE)](https://github.com/jpconstantineau/BlueMicro_BLE/tags)  ![Build on Docker](https://github.com/jpconstantineau/BlueMicro_BLE/workflows/Build%20on%20Docker/badge.svg)
 
 A Keyboard Firmware for nRF52832 and nRF52840 Boards
 
@@ -9,14 +9,21 @@ A Keyboard Firmware for nRF52832 and nRF52840 Boards
 | Master  |![Build on Docker](https://github.com/jpconstantineau/BlueMicro_BLE/workflows/Build%20on%20Docker/badge.svg?branch=master) | !![Build on Ubuntu](https://github.com/jpconstantineau/BlueMicro_BLE/workflows/Build%20on%20Ubuntu/badge.svg?branch=master) | ![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE-master) |
 | Develop |![Build on Docker](https://github.com/jpconstantineau/BlueMicro_BLE/workflows/Build%20on%20Docker/badge.svg?branch=develop) | ![Build on Ubuntu](https://github.com/jpconstantineau/BlueMicro_BLE/workflows/Build%20on%20Ubuntu/badge.svg?branch=develop) | ![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE-develop) |
 
+| Component  | Version | 
+| ------  | ------                  |
+| BlueMicro_BLE | [![Current Version](https://img.shields.io/github/v/tag/jpconstantineau/BlueMicro_BLE)](https://github.com/jpconstantineau/BlueMicro_BLE/tags) |
+| Adafruit_nRF52_Arduino | [![Adafruit Library for releases](https://img.shields.io/github/release/adafruit/Adafruit_nRF52_Arduino.svg)](https://github.com/adafruit/Adafruit_nRF52_Arduino) |
 
-[![Current Version](https://img.shields.io/github/v/tag/jpconstantineau/BlueMicro_BLE)](https://github.com/jpconstantineau/BlueMicro_BLE/tags)
-[![Adafruit Library for releases](https://img.shields.io/github/release/adafruit/Adafruit_nRF52_Arduino.svg)](https://github.com/adafruit/Adafruit_nRF52_Arduino)
+[![GitHub forks](https://img.shields.io/github/forks/jpconstantineau/BlueMicro_BLE.svg)](https://github.com/jpconstantineau/BlueMicro_BLE/network)[![GitHub stars](https://img.shields.io/github/stars/jpconstantineau/BlueMicro_BLE.svg)](https://github.com/jpconstantineau/BlueMicro_BLE/stargazers)[![GitHub contributors](https://img.shields.io/github/contributors/jpconstantineau/BlueMicro_BLE.svg)](https://github.com/jpconstantineau/BlueMicro_BLE/graphs/contributors)[![Discord](https://img.shields.io/discord/449593318247235589.svg)](https://discord.gg/ecnCR9P)
 
-[![GitHub forks](https://img.shields.io/github/forks/jpconstantineau/BlueMicro_BLE.svg)](https://github.com/jpconstantineau/BlueMicro_BLE/network)[![GitHub pull requests](https://img.shields.io/github/issues-pr/jpconstantineau/BlueMicro_BLE.svg)](https://github.com/jpconstantineau/BlueMicro_BLE)[![GitHub issues](https://img.shields.io/github/issues/jpconstantineau/BlueMicro_BLE.svg)](https://github.com/jpconstantineau/BlueMicro_BLE/issues)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/jpconstantineau/BlueMicro_BLE.svg)](https://github.com/jpconstantineau/BlueMicro_BLE)[![GitHub issues](https://img.shields.io/github/issues/jpconstantineau/BlueMicro_BLE.svg)](https://github.com/jpconstantineau/BlueMicro_BLE/issues)
 
-[![GitHub stars](https://img.shields.io/github/stars/jpconstantineau/BlueMicro_BLE.svg)](https://github.com/jpconstantineau/BlueMicro_BLE/stargazers)[![GitHub contributors](https://img.shields.io/github/contributors/jpconstantineau/BlueMicro_BLE.svg)](https://github.com/jpconstantineau/BlueMicro_BLE/graphs/contributors)[![Discord](https://img.shields.io/discord/449593318247235589.svg)](https://discord.gg/ecnCR9P)
 
+
+# Documentation
+See the pages [Here](http://bluemicro.jpconstantineau.com/#)
+
+You can contribute to the documentation by editing the markdown files located in the docs folder of the repository.
 
 **Compatible Hardware**  
 
@@ -47,11 +54,6 @@ We need your help in bringing improved support for the nrf52840.  Contact us and
 
 Maintainer: [/u/jpconstantineau](https://github.com/jpconstantineau)  
 
-
-# Documentation
-See the pages [Here](http://bluemicro.jpconstantineau.com/#)
-
-You can contribute to the documentation by editing the markdown files located in the docs folder of the repository.
 
 
 # Contributing
