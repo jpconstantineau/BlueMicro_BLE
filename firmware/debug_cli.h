@@ -1,5 +1,5 @@
 /*
-Copyright 2018-2020 <Pierre Constantineau>
+Copyright 2018-2020 <Pierre Constantineau, Julian Komaromy>
 
 3-Clause BSD License
 
@@ -17,43 +17,47 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-#ifndef FIRMWARE_H
-#define FIRMWARE_H
-#undef min
-#undef max
+
+#ifndef DEBUG_CLI_H
+#define DEBUG_CLI_H
+
+#include <bluefruit.h>
+#include <Adafruit_LittleFS.h>
+#include <InternalFileSystem.h>
+
+#include <utility>
+#include <cstdint>
+#include <vector>
+#include <algorithm>
+
 #include "firmware_config.h"
 #include "bluetooth_config.h"
-#include "KeyScanner.h"
-#include "keymap.h"
-#include "sleep.h"
-#include "bluetooth.h"
 #include "nrf52battery.h"
-#include "LedPwm.h"
-#include "LedRGB.h"
-#include "nrf52gpio.h"
 #include "datastructures.h"
-#include "debug_cli.h"
 
-// need to add this to resolve an issue when linking.
-// see https://forum.arduino.cc/index.php?topic=319795.0
-namespace std {
-  void __throw_length_error(char const*) {
-  }
-}
-    void setupConfig(void);
-    void setupMatrix(void);
-    void scanMatrix(void);
-    void sendKeyPresses(void);
+using namespace Adafruit_LittleFS_Namespace;
 
-    void keyscantimer_callback(TimerHandle_t _handle);
-    void batterytimer_callback(TimerHandle_t _handle);
-    void RGBtimer_callback(TimerHandle_t _handle);
-    void addStringToQueue(const char* str);
-    void addKeycodeToQueue(const uint16_t keycode);
-    void process_keyboard_function(uint16_t keycode);
-    #ifndef USER_MACRO_FUNCTION  
-    #define USER_MACRO_FUNCTION 1  
-    void process_user_macros(uint16_t macroid);
-    #endif
+typedef volatile uint32_t REG32;
+#define pREG32 (REG32 *)
 
-#endif /* FIRMWARE_H */
+#define DEVICE_ID_HIGH    (*(pREG32 (0x10000060)))
+#define DEVICE_ID_LOW     (*(pREG32 (0x10000064)))
+#define MAC_ADDRESS_HIGH  (*(pREG32 (0x100000a8)))
+#define MAC_ADDRESS_LOW   (*(pREG32 (0x100000a4)))
+
+extern SoftwareTimer keyscantimer, batterytimer;
+extern Battery batterymonitor;
+extern PersistentState keyboardconfig;
+extern DynamicState keyboardstate;
+
+void gpiotester(void);
+void handleSerial(void);
+uint8_t testlink(uint8_t setpin, uint8_t readpin);
+void matrix_key_init_separator(bool singlekey);
+void matrix_key_init(bool singlekey);
+void matrix_key_end(bool singlekey);
+void matrix_key_test(bool singlekey);
+void helpline(void);
+
+
+#endif /* DEBUG_CLI_H */
