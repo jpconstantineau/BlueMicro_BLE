@@ -84,4 +84,4 @@ BlueMicro_BLE uses the following projects, each are licensed separately.
 | [Adafruit Neopixel](https://github.com/adafruit/Adafruit_NeoPixel) | RGB LED Library  | [![Adafruit_NeoPixel](https://img.shields.io/github/release/adafruit/Adafruit_NeoPixel.svg)](https://github.com/adafruit/Adafruit_NeoPixel) |
 | [Adafruit TinyUSB Arduino](https://github.com/adafruit/Adafruit_TinyUSB_Arduino) | USB Library for nRF52840  | [![Adafruit_TinyUSB_Arduino](https://img.shields.io/github/release/adafruit/Adafruit_TinyUSB_Arduino.svg)](https://github.com/adafruit/Adafruit_TinyUSB_Arduino) | 
 | [Hathach TinyUSB](https://github.com/hathach/tinyusb) | USB Library for nRF52840 | [![Hathach TinyUSB](https://img.shields.io/github/release/hathach/tinyusb.svg)](https://github.com/hathach/tinyusb) |
-| [Olikraus U8g2](https://github.com/olikraus/u8g2) | U8g2: Library for monochrome displays, version 2 | [![Olikraus U8g2](https://img.shields.io/github/release/olikraus/u8g2.svg)](https://github.com/olikraus/u8g2) |
+| [Olikraus U8g2](https://github.com/olikraus/u8g2) | U8g2: Library for monochrome displays, version 2 |  |
