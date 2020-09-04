@@ -14,7 +14,6 @@ A Keyboard Firmware for nRF52832 and nRF52840 Boards
 | Develop |![Build on Docker](https://github.com/jpconstantineau/BlueMicro_BLE/workflows/Build%20on%20Docker/badge.svg?branch=develop) | ![Build on Ubuntu](https://github.com/jpconstantineau/BlueMicro_BLE/workflows/Build%20on%20Ubuntu/badge.svg?branch=develop) | ![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE-develop) |
 
 
-
 # Documentation
 See the pages [Here](http://bluemicro.jpconstantineau.com/#)
 
@@ -76,13 +75,13 @@ The firmware uses the same Arduino Board Support Package as the [Adafruit nRF52 
 
 BlueMicro_BLE uses the following projects, each are licensed separately.
 
-| Project | Details |
-| ------- | -------- |
-| [Arduino IDE](https://github.com/arduino/Arduino) | Development Platform | 
-| [Arduino CLI](https://github.com/arduino/arduino-cli) | Alternate platform |
-| [Adafruit nRF52 Arduino](https://github.com/adafruit/Adafruit_nRF52_Arduino) | Board Support Package  [![Adafruit Library for releases](https://img.shields.io/github/release/adafruit/Adafruit_nRF52_Arduino.svg)](https://github.com/adafruit/Adafruit_nRF52_Arduino) |
-| [Adafruit nRF52 Bootloader](https://github.com/adafruit/Adafruit_nRF52_Bootloader) | Bootloader [![Adafruit Bootloader for releases](https://img.shields.io/github/release/adafruit/Adafruit_nRF52_Bootloader.svg)](https://github.com/adafruit/Adafruit_nRF52_Bootloader) |
-| [Adafruit Neopixel](https://github.com/adafruit/Adafruit_NeoPixel) | RGB LED Library [![Adafruit_NeoPixel](https://img.shields.io/github/release/adafruit/Adafruit_NeoPixel.svg)](https://github.com/adafruit/Adafruit_NeoPixel) |
-| [Adafruit TinyUSB Arduino](https://github.com/adafruit/Adafruit_TinyUSB_Arduino) | USB Library for nRF52840 [![Adafruit_TinyUSB_Arduino](https://img.shields.io/github/release/adafruit/Adafruit_TinyUSB_Arduino.svg)](https://github.com/adafruit/Adafruit_TinyUSB_Arduino) |
-| [Hathach TinyUSB](https://github.com/hathach/tinyusb) | USB Library for nRF52840 |
-| [Olikraus U8g2](https://github.com/olikraus/u8g2) | U8g2: Library for monochrome displays, version 2 |
+| Project | Details | Release |
+| ------- | -------- | -------- |
+| [Arduino IDE](https://github.com/arduino/Arduino) | Development Platform | [![Arduino IDE](https://img.shields.io/github/release/arduino/Arduino.svg)](https://github.com/arduino/Arduino)  |
+| [Arduino CLI](https://github.com/arduino/arduino-cli) | Alternate platform | [![Arduino CLI](https://img.shields.io/github/release/arduino/arduino-cli.svg)](https://github.com/arduino/arduino-cli) |
+| [Adafruit nRF52 Arduino](https://github.com/adafruit/Adafruit_nRF52_Arduino) | Board Support Package | [![Adafruit Library for releases](https://img.shields.io/github/release/adafruit/Adafruit_nRF52_Arduino.svg)](https://github.com/adafruit/Adafruit_nRF52_Arduino) |
+| [Adafruit nRF52 Bootloader](https://github.com/adafruit/Adafruit_nRF52_Bootloader) | Bootloader | [![Adafruit Bootloader for releases](https://img.shields.io/github/release/adafruit/Adafruit_nRF52_Bootloader.svg)](https://github.com/adafruit/Adafruit_nRF52_Bootloader) |
+| [Adafruit Neopixel](https://github.com/adafruit/Adafruit_NeoPixel) | RGB LED Library  | [![Adafruit_NeoPixel](https://img.shields.io/github/release/adafruit/Adafruit_NeoPixel.svg)](https://github.com/adafruit/Adafruit_NeoPixel) |
+| [Adafruit TinyUSB Arduino](https://github.com/adafruit/Adafruit_TinyUSB_Arduino) | USB Library for nRF52840  | [![Adafruit_TinyUSB_Arduino](https://img.shields.io/github/release/adafruit/Adafruit_TinyUSB_Arduino.svg)](https://github.com/adafruit/Adafruit_TinyUSB_Arduino) | 
+| [Hathach TinyUSB](https://github.com/hathach/tinyusb) | USB Library for nRF52840 | [![Hathach TinyUSB](https://img.shields.io/github/release/hathach/tinyusb.svg)](https://github.com/hathach/tinyusb) |
+| [Olikraus U8g2](https://github.com/olikraus/u8g2) | U8g2: Library for monochrome displays, version 2 | [![Olikraus U8g2](https://img.shields.io/github/release/olikraus/u8g2.svg)](https://github.com/olikraus/u8g2) |
