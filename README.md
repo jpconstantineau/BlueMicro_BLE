@@ -2,21 +2,16 @@
 
 A Keyboard Firmware for nRF52832 and nRF52840 Boards
 
+[![GitHub forks](https://img.shields.io/github/forks/jpconstantineau/BlueMicro_BLE.svg)](https://github.com/jpconstantineau/BlueMicro_BLE/network)[![GitHub stars](https://img.shields.io/github/stars/jpconstantineau/BlueMicro_BLE.svg)](https://github.com/jpconstantineau/BlueMicro_BLE/stargazers)[![GitHub contributors](https://img.shields.io/github/contributors/jpconstantineau/BlueMicro_BLE.svg)](https://github.com/jpconstantineau/BlueMicro_BLE/graphs/contributors)[![Discord](https://img.shields.io/discord/449593318247235589.svg)](https://discord.gg/ecnCR9P)
+
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/jpconstantineau/BlueMicro_BLE.svg)](https://github.com/jpconstantineau/BlueMicro_BLE)[![GitHub issues](https://img.shields.io/github/issues/jpconstantineau/BlueMicro_BLE.svg)](https://github.com/jpconstantineau/BlueMicro_BLE/issues)
+
 ## Build Status
 
 | Branch  | Github Actions - Docker | Github Actions - Ubuntu | Jenkins - Windows |
 | ------  | ------                  | ------                  | ------            |
 | Master  |![Build on Docker](https://github.com/jpconstantineau/BlueMicro_BLE/workflows/Build%20on%20Docker/badge.svg?branch=master) | !![Build on Ubuntu](https://github.com/jpconstantineau/BlueMicro_BLE/workflows/Build%20on%20Ubuntu/badge.svg?branch=master) | ![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE-master) |
 | Develop |![Build on Docker](https://github.com/jpconstantineau/BlueMicro_BLE/workflows/Build%20on%20Docker/badge.svg?branch=develop) | ![Build on Ubuntu](https://github.com/jpconstantineau/BlueMicro_BLE/workflows/Build%20on%20Ubuntu/badge.svg?branch=develop) | ![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE-develop) |
-
-| Component  | Version | 
-| ------  | ------                  |
-| BlueMicro_BLE | [![Current Version](https://img.shields.io/github/v/tag/jpconstantineau/BlueMicro_BLE)](https://github.com/jpconstantineau/BlueMicro_BLE/tags) |
-| Adafruit_nRF52_Arduino | [![Adafruit Library for releases](https://img.shields.io/github/release/adafruit/Adafruit_nRF52_Arduino.svg)](https://github.com/adafruit/Adafruit_nRF52_Arduino) |
-
-[![GitHub forks](https://img.shields.io/github/forks/jpconstantineau/BlueMicro_BLE.svg)](https://github.com/jpconstantineau/BlueMicro_BLE/network)[![GitHub stars](https://img.shields.io/github/stars/jpconstantineau/BlueMicro_BLE.svg)](https://github.com/jpconstantineau/BlueMicro_BLE/stargazers)[![GitHub contributors](https://img.shields.io/github/contributors/jpconstantineau/BlueMicro_BLE.svg)](https://github.com/jpconstantineau/BlueMicro_BLE/graphs/contributors)[![Discord](https://img.shields.io/discord/449593318247235589.svg)](https://discord.gg/ecnCR9P)
-
-[![GitHub pull requests](https://img.shields.io/github/issues-pr/jpconstantineau/BlueMicro_BLE.svg)](https://github.com/jpconstantineau/BlueMicro_BLE)[![GitHub issues](https://img.shields.io/github/issues/jpconstantineau/BlueMicro_BLE.svg)](https://github.com/jpconstantineau/BlueMicro_BLE/issues)
 
 
 
@@ -85,9 +80,9 @@ BlueMicro_BLE uses the following projects, each are licensed separately.
 | ------- | -------- |
 | [Arduino IDE](https://github.com/arduino/Arduino) | Development Platform | 
 | [Arduino CLI](https://github.com/arduino/arduino-cli) | Alternate platform |
-| [Adafruit nRF52 Arduino](https://github.com/adafruit/Adafruit_nRF52_Arduino) | Board Support Package |
-| [Adafruit nRF52 Bootloader](https://github.com/adafruit/Adafruit_nRF52_Bootloader) | Bootloader |
-| [Adafruit Neopixel](https://github.com/adafruit/Adafruit_NeoPixel) | RGB LED Library |
-| [Adafruit TinyUSB Arduino](https://github.com/adafruit/Adafruit_TinyUSB_Arduino) | USB Library for nRF52840 |
+| [Adafruit nRF52 Arduino](https://github.com/adafruit/Adafruit_nRF52_Arduino) | Board Support Package  [![Adafruit Library for releases](https://img.shields.io/github/release/adafruit/Adafruit_nRF52_Arduino.svg)](https://github.com/adafruit/Adafruit_nRF52_Arduino) |
+| [Adafruit nRF52 Bootloader](https://github.com/adafruit/Adafruit_nRF52_Bootloader) | Bootloader [![Adafruit Bootloader for releases](https://img.shields.io/github/release/adafruit/Adafruit_nRF52_Bootloader.svg)](https://github.com/adafruit/Adafruit_nRF52_Bootloader) |
+| [Adafruit Neopixel](https://github.com/adafruit/Adafruit_NeoPixel) | RGB LED Library [![Adafruit_NeoPixel](https://img.shields.io/github/release/adafruit/Adafruit_NeoPixel.svg)](https://github.com/adafruit/Adafruit_NeoPixel) |
+| [Adafruit TinyUSB Arduino](https://github.com/adafruit/Adafruit_TinyUSB_Arduino) | USB Library for nRF52840 [![Adafruit_TinyUSB_Arduino](https://img.shields.io/github/release/adafruit/Adafruit_TinyUSB_Arduino.svg)](https://github.com/adafruit/Adafruit_TinyUSB_Arduino) |
 | [Hathach TinyUSB](https://github.com/hathach/tinyusb) | USB Library for nRF52840 |
 | [Olikraus U8g2](https://github.com/olikraus/u8g2) | U8g2: Library for monochrome displays, version 2 |
