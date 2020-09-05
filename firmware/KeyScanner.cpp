@@ -361,6 +361,7 @@ bool KeyScanner::getReport()
             case KC_RESERVED_A8: consumer = keycode;  extraModifiers=0; break;              // KC_RESERVED_A8 is the keycode marker for repeating consumer reports.
             case KC_RESERVED_A9: mouse = keycode; extraModifiers=0; break;                  // KC_RESERVED_A8 is the keycode marker for mouse reports. Mousekeys can be repeated... We therefore don't need the macro logic
             case KC_RESERVED_AA: special_key = keycode; extraModifiers=0; break;            // KC_RESERVED_AA is the keycode marker for special keys.
+            case KC_RESERVED_AB: if(!processingmacros){specialfunction = keycode; processingmacros=true;} extraModifiers=0; break;               // KC_RESERVED_AB keycode for marking this as a specialfunction for international/special characters (ALT-0233 = é).
         }
         //add all of the extra modifiers into the curren modifier 
         currentMod |= extraModifiers;

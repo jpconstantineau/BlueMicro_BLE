@@ -48,6 +48,7 @@ namespace std {
     void RGBtimer_callback(TimerHandle_t _handle);
     void addStringToQueue(const char* str);
     void addKeycodeToQueue(const uint16_t keycode);
+    void addKeycodeToQueue(const uint16_t keycode, const uint8_t modifier);
     void process_keyboard_function(uint16_t keycode);
     #ifndef USER_MACRO_FUNCTION  
     #define USER_MACRO_FUNCTION 1  
