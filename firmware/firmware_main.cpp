@@ -61,6 +61,7 @@ void setupConfig() {
 // cppcheck-suppress unusedFunction
 void setup() {
  setupConfig();
+
  Serial.begin(115200);
  // while ( !Serial ) delay(10);   // for nrf52840 with native usb this makes the nrf52840 stall and wait for a serial connection.  Something not wanted for a keyboard...
 
@@ -91,7 +92,7 @@ void setup() {
   startAdv(); 
   keyscantimer.start();
   batterytimer.start();
-  suspendLoop(); // this commands suspends the main loop.  We are no longer using the loop but scheduling things using the timers.
+  //suspendLoop(); // this commands suspends the main loop.  We are no longer using the loop but scheduling things using the timers.
   stringbuffer.clear();
 };
 /**************************************************************************************************************************/
@@ -254,7 +255,8 @@ void process_keyboard_function(uint16_t keycode)
       InternalFS.format();
       break;
     case CLEAR_BONDS:
-      InternalFS.format();
+        Bluefruit.clearBonds();
+        Bluefruit.Central.clearBonds();
       break;      
     case DFU:
       enterOTADfu();
@@ -627,7 +629,10 @@ void sendKeyPresses() {
 // put your main code here, to run repeatedly:
 /**************************************************************************************************************************/
 // cppcheck-suppress unusedFunction
-void loop() {};  // loop is now empty and no longer being called.
+void loop() {
+  handleSerial();
+  delay(1000);
+};  // loop is called for serials comms and saving to flash.
 // keyscantimer is being called instead
 /**************************************************************************************************************************/
 void keyscantimer_callback(TimerHandle_t _handle) {
