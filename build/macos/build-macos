@@ -61,7 +61,7 @@ arduino_compile() {
 
    keymapHeaderFile="$keyboardsPath/$keyboard/keymaps/$keymap/keymap.h"
    keymapSourceFile="$keyboardsPath/$keyboard/keymaps/$keymap/keymap.cpp"
-   configFile="$keyboardsPath/$keyboard/$target/keyboard_config.h"
+   configFile="$keyboardsPath/$keyboard/config/$target/keyboard_config.h"
 
    cp -f $keymapHeaderFile $sourcePath/
    cp -f $keymapSourceFile $sourcePath/
@@ -231,7 +231,7 @@ do
    done
 
    targets=()
-   for target in $sourcePath/keyboards/$keyboard/*/
+   for target in $sourcePath/keyboards/$keyboard/config/*/
    do
       target=${target%*/}
       target=${target##*/}
@@ -254,7 +254,7 @@ do
    done
 done
 
-if ((successfulBuilds == 0)) && ((failedBuilds == 0)); then
+if ((successfulBuilds == 0 && failedBuilds == 0)); then
    printf "Did not find anything to build for $selectedKeyboard:$selectedKeymap:$selectedTarget\n"
 fi
 
