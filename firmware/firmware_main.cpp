@@ -61,6 +61,7 @@ void setupConfig() {
 // cppcheck-suppress unusedFunction
 void setup() {
  setupConfig();
+
  Serial.begin(115200);
  // while ( !Serial ) delay(10);   // for nrf52840 with native usb this makes the nrf52840 stall and wait for a serial connection.  Something not wanted for a keyboard...
 
@@ -91,7 +92,7 @@ void setup() {
   startAdv(); 
   keyscantimer.start();
   batterytimer.start();
-  suspendLoop(); // this commands suspends the main loop.  We are no longer using the loop but scheduling things using the timers.
+  //suspendLoop(); // this commands suspends the main loop.  We are no longer using the loop but scheduling things using the timers.
   stringbuffer.clear();
 };
 /**************************************************************************************************************************/
@@ -224,6 +225,19 @@ void addKeycodeToQueue(const uint16_t keycode)
             it = stringbuffer.insert(it, keycode);
         }
   }
+
+void addKeycodeToQueue(const uint16_t keycode, const uint8_t modifier)
+{
+  auto it = stringbuffer.begin();
+  auto hidKeycode = static_cast<uint8_t>(keycode & 0x00FF);
+     //  auto extraModifiers = static_cast<uint8_t>((keycode & 0xFF00) >> 8);
+
+        if (hidKeycode >= KC_A && hidKeycode <= KC_EXSEL)  // only insert keycodes if they are valid keyboard codes...
+        {
+                uint16_t keyreport = MOD( modifier << 8 , hidKeycode);
+                it = stringbuffer.insert(it, keyreport);
+        }
+  }  
 /**************************************************************************************************************************/
 /**************************************************************************************************************************/
 void process_keyboard_function(uint16_t keycode)
@@ -241,7 +255,8 @@ void process_keyboard_function(uint16_t keycode)
       InternalFS.format();
       break;
     case CLEAR_BONDS:
-      InternalFS.format();
+        Bluefruit.clearBonds();
+        Bluefruit.Central.clearBonds();
       break;      
     case DFU:
       enterOTADfu();
@@ -433,9 +448,75 @@ void process_keyboard_function(uint16_t keycode)
       sprintf(buffer,"cent\t %i\t %s",keyboardstate.rssi_cent, keyboardstate.peer_name_cent);addStringToQueue(buffer); addKeycodeToQueue(KC_ENTER); 
       sprintf(buffer,"prph\t %i\t %s",keyboardstate.rssi_prph, keyboardstate.peer_name_prph);addStringToQueue(buffer); addKeycodeToQueue(KC_ENTER);
       sprintf(buffer,"cccd\t %i\t %s",keyboardstate.rssi_cccd, keyboardstate.peer_name_cccd);addStringToQueue(buffer); addKeycodeToQueue(KC_ENTER);
+      break;
 
+    case WIN_A_GRAVE: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_2, KC_KP_4) break; //Alt 0224 a grave
+    case WIN_A_ACUTE: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_2, KC_KP_5) break;//Alt 0225 a acute
+    case WIN_A_CIRCU: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_2, KC_KP_6) break; //Alt 0226 a circumflex
+    case WIN_A_TILDE: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_2, KC_KP_7) break; //Alt 0227 a tilde
+    case WIN_A_UMLAU: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_2, KC_KP_8) break; //Alt 0228 a umlaut
 
-      break;      
+    case WIN_A_GRAVE_CAP: EXPAND_ALT_CODE(KC_KP_0, KC_KP_1, KC_KP_9, KC_KP_2) break; //Alt 0192 A grave
+    case WIN_A_ACUTE_CAP: EXPAND_ALT_CODE(KC_KP_0, KC_KP_1, KC_KP_9, KC_KP_3) break; //Alt 0193 A acute
+    case WIN_A_CIRCU_CAP: EXPAND_ALT_CODE(KC_KP_0, KC_KP_1, KC_KP_9, KC_KP_4) break; //Alt 0194 A circumflex
+    case WIN_A_TILDE_CAP: EXPAND_ALT_CODE(KC_KP_0, KC_KP_1, KC_KP_9, KC_KP_5) break; //Alt 0195 A tilde
+    case WIN_A_UMLAU_CAP: EXPAND_ALT_CODE(KC_KP_0, KC_KP_1, KC_KP_9, KC_KP_6) break; //Alt 0196 A umlaut
+
+    case WIN_C_CEDIL: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_3, KC_KP_1) break; //Alt 0231 c cedilla
+    case WIN_C_CEDIL_CAP: EXPAND_ALT_CODE(KC_KP_0, KC_KP_1, KC_KP_9, KC_KP_9) break;//Alt 0199 C cedilla
+
+    case WIN_E_GRAVE: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_3, KC_KP_2) break;
+    case WIN_E_ACUTE: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_3, KC_KP_3) break;
+    case WIN_E_CIRCU: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_3, KC_KP_4) break;
+    case WIN_E_UMLAU: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_3, KC_KP_5) break;
+
+    case  WIN_I_GRAVE: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_3, KC_KP_6) break;//Alt 0236 i grave
+    case  WIN_I_ACUTE: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_3, KC_KP_7) break;//Alt 0237 i acute
+    case  WIN_I_CIRCU: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_3, KC_KP_8) break;//Alt 0238 i circumflex
+    case  WIN_I_UMLAU: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_3, KC_KP_9) break; //Alt 0239 i umlaut
+
+    case  WIN_I_GRAVE_CAP: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_0, KC_KP_4) break;//Alt 0204 I grave
+    case  WIN_I_ACUTE_CAP: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_0, KC_KP_5) break; //Alt 0205 I acute
+    case  WIN_I_CIRCU_CAP: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_0, KC_KP_6) break; //Alt 0206 I circumflex
+    case  WIN_I_UMLAU_CAP: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_0, KC_KP_7) break;//Alt 0207 I umlaut
+
+    case  WIN_N_TILDE: EXPAND_ALT_CODE(KC_KP_0, KC_KP_1, KC_KP_6, KC_KP_4) break;//Alt 164 n tilde
+    case  WIN_N_TILDE_CAP: EXPAND_ALT_CODE(KC_KP_0, KC_KP_1, KC_KP_6, KC_KP_5) break; //Alt 165 N tilde
+
+    case  WIN_O_GRAVE: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_4, KC_KP_2) break; //Alt 0242 o grave
+    case  WIN_O_ACUTE: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_4, KC_KP_3) break; //Alt 0243 o acute
+    case  WIN_O_CIRCU: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_4, KC_KP_4) break; //Alt 0244 o circumflex
+    case  WIN_O_TILDE: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_4, KC_KP_5) break;  //Alt 0245 o tilde
+    case  WIN_O_UMLAU: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_4, KC_KP_6) break;  //Alt 0246 o umlaut
+
+    case  WIN_O_GRAVE_CAP: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_1, KC_KP_0) break; //Alt 0210 O grave
+    case  WIN_O_ACUTE_CAP: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_1, KC_KP_1) break; //Alt 0211 O acute
+    case  WIN_O_CIRCU_CAP: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_1, KC_KP_2) break;//Alt 0212 O circumflex
+    case  WIN_O_TILDE_CAP: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_1, KC_KP_3) break; //Alt 0213 O tilde
+    case  WIN_O_UMLAU_CAP: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_1, KC_KP_4) break; //Alt 0214 O umlaut
+
+    case  WIN_S_CARON: EXPAND_ALT_CODE(KC_KP_0, KC_KP_1, KC_KP_5, KC_KP_4) break; //Alt 0154 s caron
+    case  WIN_S_CARON_CAP: EXPAND_ALT_CODE(KC_KP_0, KC_KP_1, KC_KP_3, KC_KP_8) break;  //Alt 0138 S caron
+
+    case WIN_U_GRAVE: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_4, KC_KP_9) break;  //Alt 0249 u grave
+    case WIN_U_ACUTE: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_5, KC_KP_0) break; //Alt 0250 u acute
+    case WIN_U_CIRCU: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_5, KC_KP_1) break; //Alt 0251 u circumflex
+    case WIN_U_UMLAU: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_5, KC_KP_2) break;//Alt 0252 u umlaut
+
+    case WIN_U_GRAVE_CAP: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_1, KC_KP_1) break; //Alt 0217 U grave
+    case WIN_U_ACUTE_CAP: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_1, KC_KP_8) break;//Alt 0218  U acute
+    case WIN_U_CIRCU_CAP: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_1, KC_KP_9) break;//Alt 0219 U circumflex
+    case WIN_U_UMLAU_CAP: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_2, KC_KP_0) break; //Alt 0220 U umlaut
+
+    case  WIN_Y_ACUTE: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_5, KC_KP_3) break; //Alt 0253 y acute
+    case  WIN_Y_UMLAU: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_5, KC_KP_5) break; //Alt 0255 y umlaut
+
+    case  WIN_Y_ACUTE_CAP: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_2, KC_KP_1) break; //Alt 0221 Y tilde
+    case  WIN_Y_UMLAU_CAP: EXPAND_ALT_CODE(KC_KP_0, KC_KP_1, KC_KP_5, KC_KP_9) break;  //Alt 0159 Y umlaut
+
+    case  WIN_Z_CARON: EXPAND_ALT_CODE(KC_KP_0, KC_KP_1, KC_KP_5, KC_KP_4) break; //Alt 0154 z caron
+    case  WIN_Z_CARON_CAP: EXPAND_ALT_CODE(KC_KP_0, KC_KP_1, KC_KP_3, KC_KP_8) break;  //Alt 0138 Z caron
+     
   }
 }
 
@@ -505,9 +586,9 @@ void sendKeyPresses() {
     {
       
       uint16_t lookahead_keyreport = stringbuffer.back();
-      if (lookahead_keyreport == keyreport) // if the next key is the same, make sure to send a key release before sending it again...
+      if (lookahead_keyreport == keyreport) // if the next key is the same, make sure to send a key release before sending it again... but keep the mods.
       {
-        report[0] = 0;
+        report[0] = static_cast<uint8_t>((keyreport & 0xFF00) >> 8);// mods;
         report[1] = 0;
         sendKeys(report);
         delay(keyboardconfig.timerkeyscaninterval*3);
@@ -548,7 +629,10 @@ void sendKeyPresses() {
 // put your main code here, to run repeatedly:
 /**************************************************************************************************************************/
 // cppcheck-suppress unusedFunction
-void loop() {};  // loop is now empty and no longer being called.
+void loop() {
+  handleSerial();
+  delay(1000);
+};  // loop is called for serials comms and saving to flash.
 // keyscantimer is being called instead
 /**************************************************************************************************************************/
 void keyscantimer_callback(TimerHandle_t _handle) {

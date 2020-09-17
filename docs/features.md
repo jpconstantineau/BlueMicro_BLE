@@ -24,6 +24,8 @@ TODO
 |                   |            |            |
 | Basic HID Keycodes | Yes       | Yes        |
 |                   |            |            |
+| Accented Keys èéê | Yes (windows)  | Yes        |
+|                   |            |            |
 | N-Key rollover    | HID standard: Mods + 6 keys  |   Yes   |
 |                   |            |            |
 | Advanced Keycodes | Partial    | Yes  |
