@@ -1,5 +1,5 @@
 /*
-Copyright 2020 <Pierre Constantineau>
+Copyright 2018 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -17,46 +17,58 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-#ifndef HARDWARE_CONFIG_H
-#define HARDWARE_CONFIG_H
+
+#ifndef KEYMAP_H
+#define KEYMAP_H
+#include <stdint.h>
+#include "hid_keycodes.h"
 #include "hardware_variants.h"
+#include "keyboard_config.h"
+#include "advanced_keycodes.h"
+#include "KeyScanner.h"
+#include <array>
 
-/* HARDWARE DEFINITION*/
-/* key matrix size */
-#define MATRIX_ROWS 5
-#define MATRIX_COLS 6
-#define NICENANO 1 // used in debug_cli.cpp to bypass 0.14 and 0.16 that are directly connected to 0.18 (reset)
+// Layers Definitions
 
-#define MATRIX_ROW_PINS {10, 9, 22, 24, 32 }
-#define MATRIX_COL_PINS {31, 29, 2, 47, 45, 43 }
-#define UNUSED_PINS {}
+#define _QWERTY 0
+#define _LOWER 1
+#define _RAISE 2
+#define _ADJUST 3
 
-/* COL2ROW or ROW2COL */
-#define DIODE_DIRECTION COL2ROW
 
-   #define BATTERY_TYPE BATT_LIPO
-        #define VBAT_PIN  4
-        #define VCC_PIN 13
-        #define VCC_POLARITY_ON 0
-   /*     #define D3      6  
-        #define D2      8   
-        #define D1      17  
-        #define D0      20  
-        #define D4      22
-        #define C6      24
-        #define D7      32 //1.00  = 32+0
-        #define E6      11
-        #define B4      36 //1.04  = 32+4
-        #define B5      38 //1.06  = 32+6
+// Layers keycodes Definitions
 
-        #define F4      31
-        #define F5      29 
-        #define F6      2
-        #define F7      47 //1.15  = 32+15
-        #define B1      45 //1.13  = 32+13
-        #define B3      43 //1.11 = 32+11
-        #define B2      10
-        #define B6      9
-        #define NC      33 //1.01 = 32+1 // NC is for not connected....*/
+#define L_QWERTY   (LAYER_0 + _QWERTY)
+#define L_LOWER    (LAYER_0 + _LOWER)
+#define L_RAISE    (LAYER_0 + _RAISE)
+#define L_ADJUST   (LAYER_0 + _ADJUST)
 
-#endif /* HARDWARE_CONFIG_H */
+
+
+#define _______ KC_TRNS
+#define XXXXXXX KC_NO
+#define KC_CUT  LCTL(KC_X)	// CUT
+#define KC_CPY  LCTL(KC_C)	// COPY
+#define KC_PST  LCTL(KC_V)	// PASTE
+#define KC_UND  LCTL(KC_Z)	// UNDO
+
+// define macro hooks
+
+#define HOME_ADD MC(KC_A)
+#define WORK_ADD MC(KC_B)
+#define EMAIL_1  MC(KC_C)
+#define EMAIL_2  MC(KC_D)
+
+#define USER_MACRO_FUNCTION   0 
+void process_user_macros(uint16_t macroid);
+
+
+#define USER_LAYER_FUNCTION   0 
+void process_user_layers(uint16_t layermask);
+
+void setupKeymap();
+extern std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix;
+extern void addStringToQueue(const char* str);
+extern void addKeycodeToQueue(const uint16_t keycode);
+
+#endif /* KEYMAP_H */

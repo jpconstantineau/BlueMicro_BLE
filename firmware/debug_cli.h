@@ -1,5 +1,5 @@
 /*
-Copyright 2020 <Pierre Constantineau>
+Copyright 2018-2020 <Pierre Constantineau, Julian Komaromy>
 
 3-Clause BSD License
 
@@ -17,46 +17,43 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-#ifndef HARDWARE_CONFIG_H
-#define HARDWARE_CONFIG_H
-#include "hardware_variants.h"
 
-/* HARDWARE DEFINITION*/
-/* key matrix size */
-#define MATRIX_ROWS 5
-#define MATRIX_COLS 6
-#define NICENANO 1 // used in debug_cli.cpp to bypass 0.14 and 0.16 that are directly connected to 0.18 (reset)
+#ifndef DEBUG_CLI_H
+#define DEBUG_CLI_H
 
-#define MATRIX_ROW_PINS {10, 9, 22, 24, 32 }
-#define MATRIX_COL_PINS {31, 29, 2, 47, 45, 43 }
-#define UNUSED_PINS {}
+#include <bluefruit.h>
+#include <Adafruit_LittleFS.h>
+#include <InternalFileSystem.h>
 
-/* COL2ROW or ROW2COL */
-#define DIODE_DIRECTION COL2ROW
+#include <vector>
+#include <algorithm>
 
-   #define BATTERY_TYPE BATT_LIPO
-        #define VBAT_PIN  4
-        #define VCC_PIN 13
-        #define VCC_POLARITY_ON 0
-   /*     #define D3      6  
-        #define D2      8   
-        #define D1      17  
-        #define D0      20  
-        #define D4      22
-        #define C6      24
-        #define D7      32 //1.00  = 32+0
-        #define E6      11
-        #define B4      36 //1.04  = 32+4
-        #define B5      38 //1.06  = 32+6
+#include "firmware_config.h"
+#include "bluetooth_config.h"
+#include "nrf52battery.h"
+#include "datastructures.h"
 
-        #define F4      31
-        #define F5      29 
-        #define F6      2
-        #define F7      47 //1.15  = 32+15
-        #define B1      45 //1.13  = 32+13
-        #define B3      43 //1.11 = 32+11
-        #define B2      10
-        #define B6      9
-        #define NC      33 //1.01 = 32+1 // NC is for not connected....*/
+typedef volatile uint32_t REG32;
+#define pREG32 (REG32 *)
 
-#endif /* HARDWARE_CONFIG_H */
+#define DEVICE_ID_HIGH    (*(pREG32 (0x10000060)))
+#define DEVICE_ID_LOW     (*(pREG32 (0x10000064)))
+#define MAC_ADDRESS_HIGH  (*(pREG32 (0x100000a8)))
+#define MAC_ADDRESS_LOW   (*(pREG32 (0x100000a4)))
+
+extern SoftwareTimer keyscantimer, batterytimer;
+extern Battery batterymonitor;
+extern PersistentState keyboardconfig;
+extern DynamicState keyboardstate;
+
+void gpiotester(void);
+void handleSerial(void);
+uint8_t testlink(uint8_t setpin, uint8_t readpin);
+void matrix_key_init_separator(bool singlekey);
+void matrix_key_init(bool singlekey);
+void matrix_key_end(bool singlekey);
+void matrix_key_test(bool singlekey);
+void helpline(void);
+
+
+#endif /* DEBUG_CLI_H */

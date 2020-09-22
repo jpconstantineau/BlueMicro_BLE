@@ -489,17 +489,25 @@ void sendKeys(uint8_t currentReport[8])
          ; // Don't send keys to slaves
     #endif 
 }
-#define MOVE_STEP    10
+#ifndef MOVE_STEP
+  #define MOVE_STEP   8
+#endif
 void sendMouseKey(uint16_t keycode)
 {
+  static uint8_t movestep = MOVE_STEP;
+
   #if BLE_HID == 1
   switch (keycode) 
   {
     case KC_MS_OFF:   blehid.mouseButtonRelease(hid_conn_hdl); break;
-    case KC_MS_UP:    blehid.mouseMove(hid_conn_hdl, 0, -MOVE_STEP); break;
-    case KC_MS_DOWN:  blehid.mouseMove(hid_conn_hdl, 0,  MOVE_STEP); break;
-    case KC_MS_LEFT:  blehid.mouseMove(hid_conn_hdl, -MOVE_STEP, 0); break;
-    case KC_MS_RIGHT: blehid.mouseMove(hid_conn_hdl,  MOVE_STEP, 0); break;
+    case KC_MS_UP:    blehid.mouseMove(hid_conn_hdl, 0, -movestep); break;
+    case KC_MS_DOWN:  blehid.mouseMove(hid_conn_hdl, 0,  movestep); break;
+    case KC_MS_LEFT:  blehid.mouseMove(hid_conn_hdl, -movestep, 0); break;
+    case KC_MS_RIGHT: blehid.mouseMove(hid_conn_hdl,  movestep, 0); break;
+
+    case KC_MS_ACCEL0: movestep = MOVE_STEP/MOVE_STEP; break;
+    case KC_MS_ACCEL1: movestep = MOVE_STEP; break;
+    case KC_MS_ACCEL2: movestep = MOVE_STEP+MOVE_STEP; break;
 
     case KC_MS_BTN1:  blehid.mouseButtonPress(hid_conn_hdl, MOUSE_BUTTON_LEFT); break;
     case KC_MS_BTN2:  blehid.mouseButtonPress(hid_conn_hdl, MOUSE_BUTTON_RIGHT); break;

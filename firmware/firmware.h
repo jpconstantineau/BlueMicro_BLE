@@ -32,6 +32,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "LedRGB.h"
 #include "nrf52gpio.h"
 #include "datastructures.h"
+#include "debug_cli.h"
+
 // need to add this to resolve an issue when linking.
 // see https://forum.arduino.cc/index.php?topic=319795.0
 namespace std {
@@ -48,6 +50,7 @@ namespace std {
     void RGBtimer_callback(TimerHandle_t _handle);
     void addStringToQueue(const char* str);
     void addKeycodeToQueue(const uint16_t keycode);
+    void addKeycodeToQueue(const uint16_t keycode, const uint8_t modifier);
     void process_keyboard_function(uint16_t keycode);
     #ifndef USER_MACRO_FUNCTION  
     #define USER_MACRO_FUNCTION 1  
