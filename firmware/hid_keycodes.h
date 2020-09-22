@@ -539,6 +539,10 @@ enum hid_keyboard_keypad_usage {
 #define KC_MS_WH_DOWN   MS(KC_L)
 #define KC_MS_WH_LEFT   MS(KC_M)
 #define KC_MS_WH_RIGHT  MS(KC_N)
+#define KC_MS_ACCEL0  MS(KC_O)  // Slow speed = 1
+#define KC_MS_ACCEL1  MS(KC_P)  // normal speed = #define MOVE_STEP   8; you can redefine it in your keyboard_config.h
+#define KC_MS_ACCEL2  MS(KC_Q)  // fast speed = 2*MOVE_STEP
+
 
 // these international characters work on windows
 #define WIN_A_GRAVE    KI(KC_A) //Alt 0224 a grave
