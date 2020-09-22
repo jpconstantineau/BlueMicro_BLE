@@ -540,6 +540,80 @@ enum hid_keyboard_keypad_usage {
 #define KC_MS_WH_LEFT   MS(KC_M)
 #define KC_MS_WH_RIGHT  MS(KC_N)
 
+// these international characters work on windows
+#define WIN_A_GRAVE    KI(KC_A) //Alt 0224 a grave
+#define WIN_A_ACUTE    KI(KC_B) //Alt 0225 a acute
+#define WIN_A_CIRCU    KI(KC_C) //Alt 0226 a circumflex
+#define WIN_A_TILDE    KI(KC_D) //Alt 0227 a tilde
+#define WIN_A_UMLAU    KI(KC_E) //Alt 0228 a umlaut
+
+#define WIN_A_GRAVE_CAP    KI(KC_F) //Alt 0192 A grave
+#define WIN_A_ACUTE_CAP    KI(KC_G) //Alt 0193 A acute
+#define WIN_A_CIRCU_CAP    KI(KC_H) //Alt 0194 A circumflex
+#define WIN_A_TILDE_CAP    KI(KC_I) //Alt 0195 A tilde
+#define WIN_A_UMLAU_CAP    KI(KC_J) //Alt 0196 A umlaut
+
+#define WIN_C_CEDIL        KI(KC_K) //Alt 0231 c cedilla
+#define WIN_C_CEDIL_CAP    KI(KC_L) //Alt 0199 C cedilla
+
+#define WIN_E_GRAVE    KI(KC_M) //Alt 0232 e grave
+#define WIN_E_ACUTE    KI(KC_N) //Alt 0233 e acute
+#define WIN_E_CIRCU    KI(KC_O) //Alt 0234 e circumflex
+#define WIN_E_UMLAU    KI(KC_P) //Alt 0235 e umlaut
+
+#define WIN_E_GRAVE_CAP    KI(KC_Q) //Alt 0200 E grave
+#define WIN_E_ACUTE_CAP    KI(KC_R) //Alt 0201 E acute
+#define WIN_E_CIRCU_CAP    KI(KC_S) //Alt 0202 E circumflex
+#define WIN_E_UMLAU_CAP    KI(KC_T) //Alt 0203 E umlaut
+
+#define WIN_I_GRAVE    KI(KC_U) //Alt 0236 i grave
+#define WIN_I_ACUTE    KI(KC_V) //Alt 0237 i acute
+#define WIN_I_CIRCU    KI(KC_W) //Alt 0238 i circumflex
+#define WIN_I_UMLAU    KI(KC_X) //Alt 0239 i umlaut
+
+#define WIN_I_GRAVE_CAP    KI(KC_Y) //Alt 0204 I grave
+#define WIN_I_ACUTE_CAP    KI(KC_Z) //Alt 0205 I acute
+#define WIN_I_CIRCU_CAP    KI(KC_DOT) //Alt 0206 I circumflex
+#define WIN_I_UMLAU_CAP    KI(KC_COMMA) //Alt 0207 I umlaut
+
+#define WIN_N_TILDE        KI(KC_SPACE) //Alt 164 n tilde
+#define WIN_N_TILDE_CAP    KI(KC_BSPACE) //Alt 165 N tilde
+
+#define WIN_O_GRAVE    KI(KC_1) //Alt 0242 o grave
+#define WIN_O_ACUTE    KI(KC_2) //Alt 0243 o acute
+#define WIN_O_CIRCU    KI(KC_3) //Alt 0244 o circumflex
+#define WIN_O_TILDE    KI(KC_4) //Alt 0245 o tilde
+#define WIN_O_UMLAU    KI(KC_5) //Alt 0246 o umlaut
+
+#define WIN_O_GRAVE_CAP    KI(KC_6) //Alt 0210 O grave
+#define WIN_O_ACUTE_CAP    KI(KC_7) //Alt 0211 O acute
+#define WIN_O_CIRCU_CAP    KI(KC_8) //Alt 0212 O circumflex
+#define WIN_O_TILDE_CAP    KI(KC_9) //Alt 0213 O tilde
+#define WIN_O_UMLAU_CAP    KI(KC_0) //Alt 0214 O umlaut
+
+#define WIN_S_CARON        KI(KC_MINUS) //Alt 0154 s caron
+#define WIN_S_CARON_CAP    KI(KC_EQUAL) //Alt 0138 S caron
+
+#define WIN_U_GRAVE    KI(KC_F1) //Alt 0249 u grave
+#define WIN_U_ACUTE    KI(KC_F2) //Alt 0250 u acute
+#define WIN_U_CIRCU    KI(KC_F3) //Alt 0251 u circumflex
+#define WIN_U_UMLAU    KI(KC_F4) //Alt 0252 u umlaut
+
+#define WIN_U_GRAVE_CAP    KI(KC_F5) //Alt 0217 U grave
+#define WIN_U_ACUTE_CAP    KI(KC_F6) //Alt 0218  U acute
+#define WIN_U_CIRCU_CAP    KI(KC_F7) //Alt 0219 U circumflex
+#define WIN_U_UMLAU_CAP    KI(KC_F8) //Alt 0220 U umlaut
+
+#define WIN_Y_ACUTE        KI(KC_F9) //Alt 0253 y acute
+#define WIN_Y_UMLAU        KI(KC_F10) //Alt 0255 y umlaut
+
+#define WIN_Y_ACUTE_CAP    KI(KC_F11) //Alt 0221 Y tilde
+#define WIN_Y_UMLAU_CAP    KI(KC_F12) //Alt 0159 Y umlaut
+
+#define WIN_Z_CARON        KI(KC_F13) //Alt 0154 z caron
+#define WIN_Z_CARON_CAP    KI(KC_F14) //Alt 0138 Z caron
+
+#define EXPAND_ALT_CODE(CODE1, CODE2, CODE3, CODE4)  addKeycodeToQueue(CODE1,BIT_LALT); addKeycodeToQueue(CODE2,BIT_LALT); addKeycodeToQueue(CODE3,BIT_LALT); addKeycodeToQueue(CODE4,BIT_LALT);
 
 #endif /* HID_KEYCODES_H */
 
