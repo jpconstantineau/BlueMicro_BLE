@@ -108,6 +108,18 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define BACKLIGHT_PWM_ON 0          
 #endif
 
+#ifndef BLE_LED_ACTIVE                    // setup default value if not set
+#define BLE_LED_ACTIVE false       
+#endif 
+
+#ifndef STATUS_BLE_LED_PIN                // setup default value if not set
+#define STATUS_BLE_LED_PIN LED_BLUE         
+#endif
+
+#ifndef STATUS_KB_LED_PIN                 // setup default value if not set
+#define STATUS_KB_LED_PIN LED_RED         
+#endif
+
 #define PWM_TOUCH_INTERVAL 1000           // detection time since last keypress.
 #ifndef VBAT_PIN
    #define VBAT_PIN          (A7)
@@ -129,6 +141,15 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
     #endif
   #else
   #define VCC_ENABLE_GPIO 0
+#endif
+
+#ifdef CHARGER_PIN
+  #define VCC_ENABLE_CHARGER 1
+    #ifndef CHARGER_POLARITY_ON
+      #define CHARGER_POLARITY_ON 1
+    #endif
+  #else
+  #define VCC_ENABLE_CHARGER 0
 #endif
 
 #endif /* FIRMWARE_CONFIG_H */

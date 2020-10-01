@@ -19,27 +19,60 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 #ifndef HARDWARE_CONFIG_H
 #define HARDWARE_CONFIG_H
-
 #include "hardware_variants.h"
 /* HARDWARE DEFINITION*/
 /* key matrix size */
-	#define MATRIX_ROWS 4
-	#define MATRIX_COLS 4
+#define MATRIX_ROWS 4
+#define MATRIX_COLS 6
+#define MATRIX_ROW_PINS { 20, 13, 24, 9 }
+#define MATRIX_COL_PINS { 30, 31, 29, 2, 45, 3 }
 
-	#define MATRIX_ROW_PINS {43, 3, 28, 45}
-	#define MATRIX_COL_PINS {2, 29, 30,  26} // last 4: 6, 5, 8, 41, 22, 13, 20, 17,10, 38, 9, 24
-
-	#define WS2812B_LED_PIN 15
-	
-	#define WS2812B_LED_COUNT 1
-	#define WS2812B_LED_ON 1 
-
-	#define BLE_LED_ACTIVE true
-
-#define BATTERY_TYPE BATT_LIPO
-#define VBAT_PIN  31
+#define UNUSED_PINS {}
 
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW
 
+	#define BACKLIGHT_PWM_ON 0
+	#define WS2812B_LED_PIN 6
+	
+	#define WS2812B_LED_COUNT 27
+	#define WS2812B_LED_ON 1 
+
+     #define BATTERY_TYPE BATT_LIPO
+
+     #define VBAT_PIN  4
+
+     #define VCC_PIN 41 //1.09  = 32+9
+     #define VCC_POLARITY_ON 0
+
+     #define CHARGER_PIN  5
+     #define CHARGER_POLARITY_ON 0
+
+     #define STATUS_BLE_LED_PIN 42 //1.10  = 32+10
+
+     //#define STATUS_KB_LED_PIN 42 //1.10  = 32+10 there are no secondary LEDs on nrfmicro
+
+        // nrfmicro pinout reference
+        // https://github.com/joric/nrfmicro/wiki/Pinout
+   /*     #define D3      6  
+        #define D2      8   
+        #define D1      15 
+        #define D0      17  
+        #define D4      20
+        #define C6      13
+        #define D7      24 
+        #define E6      9
+        #define B4      10
+        #define B5      38 //1.06  = 32+6
+
+        #define F4      30
+        #define F5      31 
+        #define F6      29
+        #define F7      2
+        #define B1      45 //1.13  = 32+13
+        #define B3      3 
+        #define B2      28
+        #define B6      43 //1.11  = 32+11
+
+        #define NC      32 //1.0 = 32+0 // NC is for not connected....*/  
 #endif /* HARDWARE_CONFIG_H */

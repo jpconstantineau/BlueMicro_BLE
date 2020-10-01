@@ -59,7 +59,7 @@ void setupBluetooth(void)
   Bluefruit.configPrphBandwidth(BANDWIDTH_HIGH);
  // Bluefruit.configCentralBandwidth(BANDWIDTH_HIGH);
   Bluefruit.begin(PERIPHERAL_COUNT,CENTRAL_COUNT);                            // Defined in firmware_config.h
-  Bluefruit.autoConnLed(BLE_LED_ACTIVE);                                               // make sure the BlueFruit connection LED is not toggled.
+  Bluefruit.autoConnLed(BLE_LED_ACTIVE);                                      // make sure the BlueFruit connection LED is not toggled.
   Bluefruit.setTxPower(DEVICE_POWER);                                         // Defined in bluetooth_config.h
   Bluefruit.setName(DEVICE_NAME);                                             // Defined in keyboard_config.h
   Bluefruit.configUuid128Count(UUID128_COUNT);                                // Defined in bluetooth_config.h
@@ -426,14 +426,13 @@ void set_keyboard_led(uint16_t conn_handle, uint8_t led_bitmap)
 {
   (void) conn_handle;
   // light up Red Led if any bits is set
-  // RED LED is on P0.17 and is not being used on the standard BlueMicro
   if ( led_bitmap )
   {
-    ledOn( LED_RED );
+    ledOn( STATUS_KB_LED_PIN );
   }
   else
   {
-    ledOff( LED_RED );
+    ledOff( STATUS_KB_LED_PIN );
   }
 }
 /**************************************************************************************************************************/

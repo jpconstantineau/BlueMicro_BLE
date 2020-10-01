@@ -25,7 +25,11 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
         bool    ledbacklight;  
         bool    ledrgb; 
         bool    VCCSwitchAvailable;  
-        bool    VCCSwitchEnabled;   
+        bool    VCCSwitchEnabled;  
+        bool    ChargerControlAvailable;  
+        bool    ChargerControlEnabled; 
+        bool    WakeUpBLELED; 
+        bool    WakeUpKBLED;  
         uint32_t timerkeyscaninterval;
         uint32_t timerbatteryinterval;   
          

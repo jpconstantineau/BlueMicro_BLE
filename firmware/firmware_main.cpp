@@ -48,6 +48,11 @@ void setupConfig() {
   keyboardconfig.timerbatteryinterval=BATTERYINTERVAL;
   keyboardconfig.VCCSwitchAvailable=(VCC_ENABLE_GPIO==1);
   keyboardconfig.VCCSwitchEnabled=true;
+  keyboardconfig.ChargerControlAvailable=(VCC_ENABLE_CHARGER==1);
+  keyboardconfig.ChargerControlEnabled=true;
+
+  keyboardconfig.WakeUpBLELED=true;
+  keyboardconfig.WakeUpKBLED=true;
 
   keyboardstate.helpmode = false;
   keyboardstate.timestamp = millis();
@@ -72,7 +77,12 @@ void setup() {
   {
     switchVCC(keyboardconfig.VCCSwitchEnabled); // turn on VCC when starting up if needed.
   }
-
+  if(keyboardconfig.ChargerControlAvailable)
+  {
+    switchCharger(keyboardconfig.ChargerControlEnabled); // turn on Charger when starting up if needed.
+  }
+  setupStatusLEDs(keyboardconfig.WakeUpBLELED,keyboardconfig.WakeUpKBLED); 
+   
   keyscantimer.begin(keyboardconfig.timerkeyscaninterval, keyscantimer_callback);
   batterytimer.begin(keyboardconfig.timerbatteryinterval, batterytimer_callback);
   setupBluetooth();
@@ -94,6 +104,9 @@ void setup() {
   batterytimer.start();
   //suspendLoop(); // this commands suspends the main loop.  We are no longer using the loop but scheduling things using the timers.
   stringbuffer.clear();
+
+  
+
 };
 /**************************************************************************************************************************/
 //
