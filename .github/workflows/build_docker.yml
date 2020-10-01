@@ -5,11 +5,9 @@ on:
   push:
     branches:
       - master
-      - develop
   pull_request:
     branches:
-      - master
-      - develop  
+      - master 
 jobs:
   build:
     strategy:
