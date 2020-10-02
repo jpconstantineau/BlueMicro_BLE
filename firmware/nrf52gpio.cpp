@@ -97,3 +97,38 @@ void switchVCC(bool value)
   }
   #endif
 }
+
+void switchCharger(bool value)
+{
+  #if VCC_ENABLE_CHARGER == 1
+  pinMode(CHARGER_PIN, OUTPUT);
+  if(value)
+  {
+    digitalWrite(CHARGER_PIN, CHARGER_POLARITY_ON); 
+  }
+  else
+  {
+    digitalWrite(CHARGER_PIN, !CHARGER_POLARITY_ON); 
+  }
+  #endif
+}
+
+void setupStatusLEDs(bool blevalue, bool kbvalue)
+{
+  #ifdef STATUS_BLE_LED_PIN 
+      pinMode(STATUS_BLE_LED_PIN, OUTPUT);
+  #endif
+  #ifdef STATUS_KB_LED_PIN 
+      pinMode(STATUS_KB_LED_PIN, OUTPUT);
+  #endif
+
+    for (int i=0; i<4; i++) { 
+      #ifdef STATUS_BLE_LED_PIN
+      if (blevalue) {digitalWrite(STATUS_BLE_LED_PIN, i%2 ? LOW : HIGH );}
+      #endif
+      #ifdef STATUS_KB_LED_PIN 
+      if (kbvalue) {digitalWrite(STATUS_KB_LED_PIN, i%2 ? LOW : HIGH ); }
+      #endif
+      delay(200); 
+    }
+}
