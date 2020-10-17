@@ -230,17 +230,34 @@
                 $("#page-content-wrapper").empty();
                 $("#page-content-wrapper").load(contents_file, function(e){
                     
-                    $(document).trigger("ready");
-                    $(document).ready();
+                    //$(document).trigger("ready");
+                    //$(document).ready();
                 });
 
 
                 // toggle active
                 $(".sidebar-sticky ul li .active").removeClass("active");
                 clickd.parent().addClass("active");
-
            }
         );
+        $( document ).ready(function() {
+          var hash = location.hash.slice(1);
+          console.log( hash );
+          if (hash=="")
+          {
+              console.log("first load - stay on default");
+          }
+          else
+          {
+                $("#page-content-wrapper").empty();
+                $("#page-content-wrapper").load(hash, function(e){             
+                    //$(document).trigger("ready");
+                    //$(document).ready();
+                });
+
+          }
+
+        });
     </script>
   </body>
 </html>
