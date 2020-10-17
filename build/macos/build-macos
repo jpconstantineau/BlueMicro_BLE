@@ -6,7 +6,7 @@ verbose=false
 continueOnError=false
 Debug=false
 
-while getopts ":hvc" option; do
+while getopts ":hvcd" option; do
   case $option in
     h) echo "usage: $0 [-h] [-v] [-c] [-d] keyboard:keymap:target"; exit ;;
     v) verbose=true ;;
