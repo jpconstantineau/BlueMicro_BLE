@@ -30,5 +30,7 @@ void setupGpio();
 void setupPWM(uint8_t ledpin);
 void sendPWM(uint16_t value);
 void switchVCC(bool value);
+void switchCharger(bool value);
+void setupStatusLEDs(bool blevalue, bool kbvalue);
 
 #endif
