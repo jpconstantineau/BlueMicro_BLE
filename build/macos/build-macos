@@ -73,15 +73,15 @@ arduino_compile() {
    # '-fqbn "adafruit:nrf52`:$fqbn`:softdevice=$fqbnsd,debug=$fqbndb" '
 
     if $Debug; then
-      fqbndb = "l1"
+      fqbndb="l1"
     else
-      fqbndb = "l0"
+      fqbndb="l0"
     fi
 
     if [ "$fqbn" != "feather52832" ]; then
-      fqbnsd = "s140v6"  
+      fqbnsd="s140v6"  
     else
-      fqbnsd = "s132v6"
+      fqbnsd="s132v6"
     fi
 
 
