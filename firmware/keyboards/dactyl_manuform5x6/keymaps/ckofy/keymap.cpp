@@ -171,17 +171,6 @@ void setupKeymap() {
                                    _______,_______, \
                                    _______,_______  \
 );
-/*
-    uint32_t shift[MATRIX_ROWS][MATRIX_COLS] =
-        KEYMAP( \
-  _______, LSFT(KC_7), LSFT(KC_5), LSFT(KC_3), LSFT(KC_1), LSFT(KC_9), \
-  LSFT(KC_TAB), LSFT(KC_Q), LSFT(KC_W), LSFT(KC_F), LSFT(KC_P), LSFT(KC_B), \
-  _______, LSFT(KC_A), LSFT(KC_R), LSFT(KC_S), LSFT(KC_T), LSFT(KC_G), \ 
-  _______, LSFT(KC_Z), LSFT(KC_X), LSFT(KC_C), LSFT(KC_D), LSFT(KC_V), \
-                       LSFT(KC_ESC),  LSFT(KC_EQL), _______, _______, \
-                                 _______,  _______, _______, _______  \
-); 
-*/
 /* Adjust
  * ,-----------------------------------------.
  * |  `   |   F1 |  F2  |  F3  |  F4  |  F5  |
@@ -237,7 +226,6 @@ void setupKeymap() {
             matrix[row][col].addActivation(_LOWER, Method::PRESS, lower[row][col]);
             matrix[row][col].addActivation(_RAISE, Method::PRESS, raise[row][col]);
             matrix[row][col].addActivation(_ADJUST, Method::PRESS, adjust[row][col]);
-         // matrix[row][col].addActivation(_SHIFT,  Method::PRESS, shift[row][col]);
             matrix[row][col].addActivation(_MACRO,  Method::PRESS, macro[row][col]);
         }
     }
@@ -251,24 +239,24 @@ uint32_t colemak[MATRIX_ROWS][MATRIX_COLS] =
     KEYMAP(    
         KC_ESC,  KC_7,    KC_5,    KC_3,    KC_1,    KC_9, 
         KC_TAB,  KC_Q,    KC_W,    KC_F,    KC_P,    KC_B, 
-        KC_BSPC, KC_A,    KC_R,    KC_S,    KC_T,    KC_G,
+        L_MACRO, KC_A,    KC_R,    KC_S,    KC_T,    KC_G,
         KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_D,    KC_V,
                           KC_ESC,  KC_EQL,  
                                             L_LOWER, KC_SPC,
                                             KC_BSPC, KC_LCTL,
-                                            L_MACRO, KC_LALT
+                                            KC_TAB,  KC_LALT
 			);
 
 uint32_t fourty[MATRIX_ROWS][MATRIX_COLS] =
     KEYMAP(    
         KC_ESC,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, 
         KC_TAB,  KC_Q,    KC_W,    KC_F,    KC_P,    KC_B, 
-        KC_BSPC, KC_A,    KC_R,    KC_S,    KC_T,    KC_G,
+        L_MACRO, KC_A,    KC_R,    KC_S,    KC_T,    KC_G,
         KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_D,    KC_V,
                           KC_ESC,  KC_EQL,  
                                             L_LOWER, KC_SPC,
                                             KC_BSPC, KC_LCTL,
-                                            L_MACRO, KC_LALT
+                                            KC_TAB,  KC_LALT
 			);					  
 						  
  switch ((macroid))
@@ -344,7 +332,7 @@ std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
         KC_M,    KC_N,    KC_E,    KC_I,    KC_O,      KC_QUOTE,
         KC_K,    KC_H,    KC_COMMA,KC_DOT,  KC_SLSH,   KC_ENT,
                           KC_MINS ,KC_QUOTE, 
-        KC_LSFT, L_RAISE,				  
+     OS(KC_LSFT),L_RAISE,				  
         KC_RCTL, KC_ENT,
         KC_LGUI, KC_DEL
     )};
@@ -455,17 +443,6 @@ void setupKeymap() {
   _______, _______,                                      \
   _______, _______                                       \ 
 );
-/*
-    uint32_t shift[MATRIX_ROWS][MATRIX_COLS] =
-        KEYMAP( \
-  RSFT(KC_8),RSFT(KC_0),RSFT(KC_2),RSFT(KC_4),RSFT(KC_6),_______, 
-  RSFT(KC_J),RSFT(KC_L),RSFT(KC_U),RSFT(KC_Y),RSFT(KC_SCOLON),_______, 
-  RSFT(KC_M),RSFT(KC_N),RSFT(KC_E),RSFT(KC_I),RSFT(KC_O),RSFT(KC_QUOTE),
-  RSFT(KC_K),RSFT(KC_H),RSFT(KC_COMMA),RSFT(KC_DOT),RSFT(KC_SLSH),   _______,
-  SHIFTL,_______,_______,_______, \
-  _______,_______,_______,_______  \
-);
-*/
 
 /* Adjust
  *                ,-----------------------------------------.
@@ -523,7 +500,6 @@ void setupKeymap() {
             matrix[row][col].addActivation(_LOWER, Method::PRESS, lower[row][col]);
             matrix[row][col].addActivation(_RAISE, Method::PRESS, raise[row][col]);
             matrix[row][col].addActivation(_ADJUST, Method::PRESS, adjust[row][col]);
-         // matrix[row][col].addActivation(_SHIFT,  Method::PRESS, shift[row][col]);
             matrix[row][col].addActivation(_MACRO,  Method::PRESS, macro[row][col]);
         }
     }
@@ -540,7 +516,7 @@ uint32_t colemak[MATRIX_ROWS][MATRIX_COLS] =
         KC_M,    KC_N,    KC_E,    KC_I,    KC_O,      KC_QUOTE,
         KC_K,    KC_H,    KC_COMMA,KC_DOT,  KC_SLSH,   KC_ENT,
                           KC_MINS ,KC_QUOTE,
-        KC_LSFT, L_RAISE,						  
+     OS(KC_LSFT),L_RAISE,	
         KC_RCTL, KC_ENT,  
         KC_LGUI, KC_DEL
         );
@@ -552,7 +528,7 @@ uint32_t fourty[MATRIX_ROWS][MATRIX_COLS] =
         KC_M,    KC_N,    KC_E,    KC_I,    KC_O,      KC_QUOTE,
         KC_K,    KC_H,    KC_COMMA,KC_DOT,  KC_SLSH,   KC_ENT,
                           KC_MINS ,KC_QUOTE,
-        KC_LSFT, L_RAISE,						  
+     OS(KC_LSFT),L_RAISE,	
         KC_RCTL, KC_ENT,  
         KC_LGUI, KC_DEL
         );

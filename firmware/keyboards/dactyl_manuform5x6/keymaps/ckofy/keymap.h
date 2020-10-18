@@ -34,7 +34,6 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define _LOWER 1
 #define _RAISE 2
 #define _ADJUST 3
-//#define _SHIFT 4
 #define _MACRO 5
 
 // Layers keycodes Definitions
@@ -44,12 +43,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define L_LOWER    (LAYER_0 + _LOWER)
 #define L_RAISE    (LAYER_0 + _RAISE)
 #define L_ADJUST   (LAYER_0 + _ADJUST)
-//#define L_SHIFT    (LAYER_0 + _SHIFT)
 #define L_MACRO    (LAYER_0 + _MACRO)
-
-
-// Layers keycodes with oneshot Definitions
-//#define SHIFTL OS(L_SHIFT)
 
 
 #define _______ KC_TRNS
