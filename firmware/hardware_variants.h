@@ -32,5 +32,5 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 // putting this here since it's called in every keyboard_config and we need this for all the keymaps.
 #define KEYMAP2ARRAY(OTHERMACROHERE) {OTHERMACROHERE}
 #define ADDLAYER(LAYER_INPUT,METHOD_INPUT,KEYMAP_INPUT )  for (int row = 0; row < MATRIX_ROWS; ++row) { for (int col = 0; col < MATRIX_COLS; ++col){ matrix[row][col].addActivation(LAYER_INPUT, METHOD_INPUT, KEYMAP_INPUT[row][col]);}}
-
+#define _PINNUM(port, pin) ((port)*32 + (pin))
 #endif  /*HARDWAREVARIANTS_H*/
