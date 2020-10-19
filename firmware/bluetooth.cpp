@@ -68,7 +68,8 @@ void setupBluetooth(void)
   Bluefruit.setRssiCallback(rssi_changed_callback);
   //********Bluefruit.setConnInterval(9, 12);                                 // 0.10.1: not needed for master...
   Bluefruit.Periph.setConnInterval(6, 12); // 7.5 - 15 ms
-
+  Bluefruit.Periph.setConnectCallback(prph_connect_callback);
+  Bluefruit.Periph.setDisconnectCallback(prph_disconnect_callback);  
   // Configure and Start Device Information Service
   bledis.setManufacturer(MANUFACTURER_NAME);                                  // Defined in keyboard_config.h
   bledis.setModel(DEVICE_MODEL);                                              // Defined in keyboard_config.h
@@ -154,8 +155,7 @@ void setupBluetooth(void)
   KBLinkClientChar_Buffer.begin();
   KBLinkClientChar_Buffer.setNotifyCallback(notify_callback);
   KBLinkClientChar_Layer_Request.begin(); 
-  Bluefruit.Periph.setConnectCallback(prph_connect_callback);
-  Bluefruit.Periph.setDisconnectCallback(prph_disconnect_callback);  
+
   Bluefruit.Scanner.setRxCallback(scan_callback);
   Bluefruit.Scanner.restartOnDisconnect(true);
   Bluefruit.Scanner.filterRssi(FILTER_RSSI_BELOW_STRENGTH);                                              // limits very far away devices - reduces load
@@ -221,14 +221,17 @@ void rssi_changed_callback(uint16_t conn_hdl, int8_t rssi)
   if (conn_hdl == keyboardstate.conn_handle_prph)
   {
     keyboardstate.rssi_prph = rssi;
+    keyboardstate.rssi_prph_updated = true;
   } else
   if (conn_hdl == keyboardstate.conn_handle_cent)
   {
     keyboardstate.rssi_cent = rssi;
+    keyboardstate.rssi_cent_updated = true;
   } else
   if (conn_hdl == keyboardstate.conn_handle_cccd)
   {
     keyboardstate.rssi_cccd = rssi;
+    keyboardstate.rssi_cccd_updated = true;
   }  
      
 }
@@ -321,19 +324,6 @@ LOG_LV1("CB_CHR","layer_request_callback: len %i offset %i  data %i" ,len, data[
 #endif
 
 /**************************************************************************************************************************/
-// This callback is called when the scanner finds a device. This happens on the Client/Central
-/**************************************************************************************************************************/
-#if BLE_CENTRAL == 1    // CENTRAL IS THE MASTER BOARD
-void scan_callback(ble_gap_evt_adv_report_t* report)
-{
-  if ( Bluefruit.Scanner.checkReportForService(report, KBLinkClientService) )
-  {
-    LOG_LV1("KBLINK","KBLink service detected. Connecting ... ");
-    Bluefruit.Central.connect(report);
-    } 
-}
-
-/**************************************************************************************************************************/
 // This callback is called when the master connects to a slave
 /**************************************************************************************************************************/
 void prph_connect_callback(uint16_t conn_handle)
@@ -351,7 +341,6 @@ keyboardstate.conn_handle_prph = conn_handle;
 hid_conn_hdl = conn_handle;
 #endif
 }
-
 /**************************************************************************************************************************/
 // This callback is called when the master disconnects from a slave
 /**************************************************************************************************************************/
@@ -366,6 +355,21 @@ void prph_disconnect_callback(uint16_t conn_handle, uint8_t reason)
 hid_conn_hdl = 0;
 #endif
 }
+/**************************************************************************************************************************/
+// This callback is called when the scanner finds a device. This happens on the Client/Central
+/**************************************************************************************************************************/
+#if BLE_CENTRAL == 1    // CENTRAL IS THE MASTER BOARD
+void scan_callback(ble_gap_evt_adv_report_t* report)
+{
+  if ( Bluefruit.Scanner.checkReportForService(report, KBLinkClientService) )
+  {
+    LOG_LV1("KBLINK","KBLink service detected. Connecting ... ");
+    Bluefruit.Central.connect(report);
+    } 
+}
+
+
+
 
 /**************************************************************************************************************************/
 // This callback is called when the central connects to a peripheral
