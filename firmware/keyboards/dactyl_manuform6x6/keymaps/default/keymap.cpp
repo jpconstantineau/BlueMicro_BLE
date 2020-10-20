@@ -21,6 +21,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #if KEYBOARD_SIDE == MASTER
 std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
     {KEYMAP(
+	    KC_F1, KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,
         KC_1,  KC_2,    KC_3,    KC_4,    KC_5,    KC_6,
         KC_7,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,
         KC_8,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,
@@ -56,6 +57,8 @@ void process_user_layers(uint16_t layermask)
 
 /* Qwerty
  * ,-----------------------------------------.
+ * |  F12 |  F1  |  F2  |  F3  |  F4  |  F5  |
+ * |-----------------------------------------|
  * | Esc  |   1  |   2  |   3  |   4  |   5  | 
  * |-----------------------------------------|
  * | Tab  |   Q  |   W  |   E  |   R  |   T  | 
@@ -76,6 +79,7 @@ void process_user_layers(uint16_t layermask)
 
 std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
     {KEYMAP(
+	    KC_F12,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,
         KC_ESC,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5, 
         KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T, 
         KC_LSFT, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,
@@ -92,11 +96,13 @@ void setupKeymap() {
 
 /* Lower
  * ,-----------------------------------------.
- * |  F12 |  F1  |  F2  |  F3  |  F4  |  F5  |
+ * |      |      |      |      |      |      |
  * |-----------------------------------------|
  * |      |      |      |      |      |   [  | 
  * |------+------+------+------+------+------|
- * | Caps | Home | PgDn | PgUp | End  |   (  |
+ * |      |      |      |      |      |   (  | 
+ * |------+------+------+------+------+------|
+ * | Caps | Home | PgDn | PgUp | End  |      |
  * |------+------+------+------+------+------|
  * |      | Undo | Cut  | Copy | Paste|      |
  * `-----------------------------------------'
@@ -111,7 +117,8 @@ void setupKeymap() {
  */
     uint32_t lower[MATRIX_ROWS][MATRIX_COLS] =
         KEYMAP( \
-  KC_F12, KC_F1,  KC_F2,  KC_F3,  KC_F4,  KC_F5, \
+  _______,_______,_______,_______,_______,_______, \		
+  _______,_______,_______,_______,_______,_______, \
   _______,_______,_______,_______,_______,KC_LBRC, \
   KC_CAPS,KC_HOME,KC_PGDN,KC_PGUP,KC_END, KC_LPRN, \
   _______,KC_UND, KC_CUT, KC_CPY, KC_PST, _______, \
@@ -123,11 +130,13 @@ void setupKeymap() {
 
 /* Raise
  * ,-----------------------------------------.
+ * |      |      |      |      |      |      |
+ * |-----------------------------------------|
  * |   ~  |  !   |  @   |  #   |  $   |  %   |
  * |-----------------------------------------|
  * | Mute |      |      |      |      |  [   |
  * |------+------+------+------+------+------|
- * | Vol+ | Left | Down |  Up  | Right|  (   |
+ * | Vol+ | Left | Down |  Up  |Right |  (   |
  * |------+------+------+------+------+------|
  * | Vol- |      |      |      |      |      |
  * `-----------------------------------------'
@@ -142,6 +151,7 @@ void setupKeymap() {
  */
     uint32_t raise[MATRIX_ROWS][MATRIX_COLS] =
         KEYMAP( \
+  _______,_______,_______,_______,_______,_______, \
   KC_TILD,KC_EXLM,KC_AT,  KC_HASH,KC_DLR, KC_PERC, \
   KC_MUTE,_______,_______,_______,_______,KC_LBRC, \
   KC_VOLU,KC_LEFT,KC_DOWN,KC_UP,  KC_RGHT,KC_LPRN, \
@@ -154,6 +164,8 @@ void setupKeymap() {
  
 /* Adjust
  * ,-----------------------------------------.
+ * |      |      |      |      |      |      |
+ * |-----------------------------------------|
  * |Batt  |  M1  |  M2  |  M3  |  M4  |      |
  * |------+------+------+------+------+-------
  * |      |      |      |      |      |      |
@@ -173,11 +185,12 @@ void setupKeymap() {
  */
     uint32_t adjust[MATRIX_ROWS][MATRIX_COLS] =
         KEYMAP( \
+  _______, _______,_______,_______, _______, _______, \
   PRINT_BATTERY,HOME_ADD,WORK_ADD,EMAIL_1,EMAIL_2,_______,   \
   _______, _______,_______,_______, _______, _______, \
   _______, _______,_______,_______, _______, _______,  \
   PRINT_INFO,_______,_______,_______,_______,_______, \
-                      _______,_______,                 \
+                     _______,_______,                 \
                                      _______,_______, \
                                      _______,_______, \
                                      _______,_______  \ 
@@ -231,6 +244,8 @@ void process_user_layers(uint16_t layermask)
 
 /* Qwerty
  *                ,-----------------------------------------.
+ *                |   F6 |  F7  |  F8  |  F9  | F10  | F11  |
+ *                |-----------------------------------------|
  *                |   6  |   7  |   8  |   9  |   0  | Bksp |
  *                |-----------------------------------------|
  *                |   Y  |   U  |   I  |   O  |   P  |  -   |
@@ -251,6 +266,7 @@ void process_user_layers(uint16_t layermask)
 
 std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
     {KEYMAP(
+        KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,   KC_F11, 
         KC_6,    KC_7,    KC_8,    KC_9,    KC_0,     KC_BSPACE, 
         KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,     KC_MINS, 
         KC_H,    KC_J,    KC_K,    KC_L,    KC_SCOLON,KC_QUOTE,
@@ -268,7 +284,11 @@ void setupKeymap() {
 
 /* Lower
  *                ,-----------------------------------------.
- *                |   F6 |  F7  |  F8  |  F9  | F10  | F11  |
+ *                |      |      |      |      |      |      |
+ *                |-----------------------------------------|
+ *                |      |      |      |      |      |      |
+ *                |-----------------------------------------|
+ *                |      |      |      |      |      |      |
  *                |-----------------------------------------|
  *                |  ]   |      |      | Ins  |      | Mute |
  *                |------+------+------+------+-------------|
@@ -287,7 +307,8 @@ void setupKeymap() {
  */
     uint32_t lower[MATRIX_ROWS][MATRIX_COLS] =
         KEYMAP( \
-  KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,   \
+  _______, _______, _______, _______, _______, _______,  \
+  _______, _______, _______, _______, _______, _______,  \
   KC_RBRC, _______, _______, KC_INS , _______, KC_MUTE,  \
   KC_RPRN, KC_MPRV, KC_MPLY, KC_MNXT, _______, KC_VOLU,  \
   _______, _______, _______, _______, _______, KC_VOLD,  \
@@ -299,6 +320,8 @@ void setupKeymap() {
 
 /* Raise
  *                ,-----------------------------------------.
+ *                |      |      |      |      |      |      |
+ *                |-----------------------------------------|
  *                |   ^  |   &  |  *   |   (  |   )  |  Del |
  *                |-----------------------------------------|
  *                |   ]  |   7  |  8   |   9  |   -  |   _  |
@@ -318,6 +341,7 @@ void setupKeymap() {
  */
     uint32_t raise[MATRIX_ROWS][MATRIX_COLS] =
         KEYMAP( \
+  _______, _______, _______, _______, _______, _______,  \
   KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_DEL,   \
   KC_RBRC, KC_P7 ,  KC_P8 ,  KC_P9 ,  KC_MINS, KC_UNDS,  \
   KC_RPRN, KC_P4 ,  KC_P5 ,  KC_P6 ,  KC_PLUS, KC_PIPE,  \
@@ -330,6 +354,8 @@ void setupKeymap() {
 
 /* Adjust
  *                ,-----------------------------------------.
+ *                |      |      |      |      |      |      |
+ *                |-----------------------------------------|
  *                |      |      |      |      |      |Batt  |
  *                |-----------------------------------------|
  *                |      |      |      |      |      |      |
@@ -349,6 +375,7 @@ void setupKeymap() {
  */
     uint32_t adjust[MATRIX_ROWS][MATRIX_COLS] =
         KEYMAP( \
+  _______, _______, _______, _______, _______, _______,  \
   _______, _______, _______, _______, _______,PRINT_BATTERY,  \
   _______, _______, _______, _______, _______, _______,  \
   _______, _______, _______, _______, _______, _______,  \   
