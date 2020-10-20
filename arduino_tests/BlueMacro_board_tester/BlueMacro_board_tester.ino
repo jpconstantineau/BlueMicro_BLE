@@ -25,6 +25,7 @@ BLEHidAdafruit blehid;
 
 void setup() 
 {
+  
 // this is the code needed to change the default voltage from the on chip voltage regulator.
 // see https://infocenter.nordicsemi.com/pdf/nRF52840_PS_v1.0.pdf page 45
 
@@ -40,7 +41,7 @@ if (NRF_UICR->REGOUT0 != UICR_REGOUT0_VOUT_3V3) {
       }
 
   Serial.begin(115200);
-  //while ( !Serial ) delay(10);   // for nrf52840 with native usb
+ // while ( !Serial ) delay(10);   // for nrf52840 with native usb
   
   Bluefruit.begin();
   Bluefruit.setTxPower(4);
