@@ -21,14 +21,14 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define KEYBOARD_CONFIG_H
 #include "hardware_config.h"
 
-#define KEYBOARD_SIDE RIGHT
+#define KEYBOARD_SIDE LEFT
 // CHANGE THIS FOR THE KEYBOARD TO MATCH WHAT IS BEING FLASHED. OPTIONS: LEFT  RIGHT  MASTER
 
-#define DEVICE_NAME_R                        "Manuform(5x6)_R"                          /**< Name of device. Will be included in the advertising data. */
-#define DEVICE_NAME_L                        "Manuform(5x6)_L"                          /**< Name of device. Will be included in the advertising data. */
-#define DEVICE_NAME_M                        "Manuform(5x6)BLE"                          /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME_R                        "Manuform(6x6)_R"                          /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME_L                        "Manuform(6x6)_L"                          /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME_M                        "Manuform(6x6)BLE"                          /**< Name of device. Will be included in the advertising data. */
 
-#define DEVICE_MODEL                        "Dactyl_Manuform(5x6)BLE"                          /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_MODEL                        "Dactyl_Manuform(6x6)BLE"                          /**< Name of device. Will be included in the advertising data. */
 
 #define MANUFACTURER_NAME                   "/u/crystalhand"                      /**< Manufacturer. Will be passed to Device Information Service. */
 
@@ -39,18 +39,20 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
       k10,  k11,  k12, k13, k14, k15, \
       k20,  k21,  k22, k23, k24, k25, \
       k30,  k31,  k32, k33, k34, k35, \
-                  k42, k43,           \
-                            k44, k45, \
+      k40,  k41,  k42, k43, k44, k45, \
+                  k52, k53,           \
                             k54, k55, \
-                            k52, k53  \
+                            k64, k65, \
+                            k62, k63  \
 ) \
 { \
     { k00,  k01,  k02, k03, k04, k05 }, \
     { k10,  k11,  k12, k13, k14, k15 }, \
     { k20,  k21,  k22, k23, k24, k25 }, \
     { k30,  k31,  k32, k33, k34, k35 }, \
-    {KC_NO, KC_NO,k42, k43, k44, k45 }, \
-    {KC_NO, KC_NO,k52, k53, k54, k55 }  \
+    { k40,  k41,  k42, k43, k44, k45 }, \
+    {KC_NO, KC_NO,k52, k53, k54, k55 }, \
+    {KC_NO, KC_NO,k62, k63, k64, k65 }  \
 } 
 #else
 #define KEYMAP( \
@@ -58,18 +60,20 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
       k10,  k11,  k12, k13, k14, k15, \
       k20,  k21,  k22, k23, k24, k25, \
       k30,  k31,  k32, k33, k34, k35, \
-                  k42, k43,           \
-      k40,  k41,                      \
+      k40,  k41,  k42, k43, k44, k45, \
+                  k52, k53,           \
       k50,  k51,                      \
-      k52,  k53                       \
+      k60,  k61,                      \
+      k62,  k63                       \
 ) \
 { \
     {k00, k01, k02, k03, k04,   k05  }, \
     {k10, k11, k12, k13, k14,   k15  }, \
     {k20, k21, k22, k23, k24,   k25  }, \
     {k30, k31, k32, k33, k34,   k35  }, \
-    {k40, k41, k42, k43, KC_NO, KC_NO}, \
-    {k50, k51, k52, k53, KC_NO, KC_NO}  \
+    {k40, k41, k42, k43, k44,   k45  }, \
+    {k50, k51, k52, k53, KC_NO, KC_NO}, \
+    {k60, k61, k62, k63, KC_NO, KC_NO}  \
 }
 #endif
 
