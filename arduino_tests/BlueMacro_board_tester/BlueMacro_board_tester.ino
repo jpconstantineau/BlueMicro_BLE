@@ -40,7 +40,7 @@ if (NRF_UICR->REGOUT0 != UICR_REGOUT0_VOUT_3V3) {
       }
 
   Serial.begin(115200);
-  while ( !Serial ) delay(10);   // for nrf52840 with native usb
+ // while ( !Serial ) delay(10);   // for nrf52840 with native usb
   
   Bluefruit.begin();
   Bluefruit.setTxPower(4);
