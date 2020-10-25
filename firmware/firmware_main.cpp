@@ -47,7 +47,7 @@ void setupConfig() {
   keyboardconfig.timerkeyscaninterval=HIDREPORTINGINTERVAL;
   keyboardconfig.timerbatteryinterval=BATTERYINTERVAL;
   keyboardconfig.VCCSwitchAvailable=(VCC_ENABLE_GPIO==1);
-  keyboardconfig.VCCSwitchEnabled=true;
+  keyboardconfig.VCCSwitchEnabled=(VCC_DEFAULT_ON==1);;
   keyboardconfig.ChargerControlAvailable=(VCC_ENABLE_CHARGER==1);
   keyboardconfig.ChargerControlEnabled=true;
 

@@ -101,47 +101,90 @@ With the information from both the keyboard and controller schamatics, we can ma
 
 #### Battery Monitoring
 
+Battery Monitoring is a function that's specific to the controller you use.  Most controllers implement an on-board battery charger and battery monitoring voltage divider and connect this divider to an analog input.  Such a configuration is shown below:
+
+![Battery Monitoring](https://raw.githubusercontent.com/jpconstantineau/BlueMicro_BLE/develop/docs/images/batterymonitoring.png)
+
+From the schematic, we identify that the connection point of the voltage divider is connected to 0.31. This leads to this definition:
+
 ``` c++
 #define BATTERY_TYPE BATT_LIPO
 #define VBAT_PIN  31
 
 ```
 
+If a non-rechargeable CR2032 (3V) powers your keyboard and the battery is directly connected to the nRF52 chip, you still need to define a `VBATT_PIN`  but since the nrf52 chip can measure its own supply voltage, it will not use this configuration. All you need to do is to use this definition:
+
+``` c++
+#define BATTERY_TYPE BATT_CR2032
+
+```
+
 #### External VCC Switching
+
+Some controllers implement switching of external VCC to ensure low power consumption.  Polarity of switching will depend on the hardware implementation.  Refer to the controller documentation and/or schematic to identify if VCC switching is available, which GPIO it is connected to and polarity of the switch.
 
 ``` c++
 #define VCC_PIN 12
 #define VCC_POLARITY_ON 1
 
 ```
+If `VCC_PIN` is left undefined, VCC switching functionality will not be enabled in the firmware.
+
+By default, `VCC_POLARITY_ON` is defined with 1. You only need to define it if polarity is reversed. (replace 1 with 0)
+
+By default, the firmware will turn on external VCC when booting up and will turn off External VCC when going to sleep.  If you want to force external VCC to be off at bootup, you can add this definition to your __hardware_config.h__ file.
+
+``` c++
+#define VCC_DEFAULT_ON 0
+
+```
 
 #### LiPo Charger Switching
+
+Some controllers implement turning off the LiPo Charger to allow for a more precise battery level measurement.  Switching polarity will depend on the hardware implementation.  Refer to the controller documentation and/or schematic to identify if charger switching is available, which GPIO it is connected to and polarity to enable charging.
 
 ``` c++
      #define CHARGER_PIN  5
      #define CHARGER_POLARITY_ON 0
 ```
+If `CHARGER_PIN` is left undefined, charger switching functionality will not be enabled in the firmware. By default, the firmware will turn on charger when booting up and will not change it at any time.
+
 
 #### Backlight PWM LED Definition
 
+Some keyboards have backlit keys using LEDs controlled by a central mosfet.  The brightness of these LEDs can be modulated using Pulse Width Modulation (PWM). When referring to the keyboard and controller schematics above, we see that GPIO 1.06 is connected to the LED Backlight.
+
+ ![GPIO Mapping](https://raw.githubusercontent.com/jpconstantineau/BlueMicro_BLE/develop/docs/images/gpiomapping.png)
+
+This enables setting up the following configuration:
+
 ``` c++
-	#define BACKLIGHT_LED_PIN 23
+	#define BACKLIGHT_LED_PIN 38
 	#define BACKLIGHT_PWM_ON 1 
-    #define DEFAULT_PWM_VALUE 10000            // PWM intensity  max is 10000
+    #define DEFAULT_PWM_VALUE 10000            // Reduce max PWM intensity to 10000 out of 63351 (0x7FFF)
 
 ```
-
+If `BACKLIGHT_LED_PIN` is left undefined, LED functionality will not be enabled in the firmware.
+`BACKLIGHT_PWM_ON` is optional. If `BACKLIGHT_LED_PIN` is defined, but you want to turn off LED functionality, you can do so by setting `BACKLIGHT_PWM_ON` to 0.
+If `DEFAULT_PWM_VALUE` is left undefined, the default value will be that of maximum PWM value of 63351 (0x7FFF).  This will turn on LEDs on fully.
 
 #### RGB LED Definition
 
+Some keyboards have RGB LEDs.  These LEDs are controlled through a single data line. When referring to the keyboard and controller schematics above, we see that GPIO 0.06 is connected to the RGB WS2812 LEDs.
+
+ ![GPIO Mapping](https://raw.githubusercontent.com/jpconstantineau/BlueMicro_BLE/develop/docs/images/gpiomapping.png)
+
+This enables setting up the following configuration:
+
 ``` c++
-	#define WS2812B_LED_PIN 15
-	
+	#define WS2812B_LED_PIN 6
 	#define WS2812B_LED_COUNT 1
 	#define WS2812B_LED_ON 1 
 
 ```
-
+If `WS2812B_LED_PIN` is left undefined, LED functionality will not be enabled in the firmware.
+If `WS2812B_LED_ON` is set to 0, RGB functionality will not be enabled in the firmware. Note that this will not power down VCC power to the RGB LEDs, impacting power consumption of your keyboard.  External VCC to the RGB LEDs is controlled through the __External VCC Switch__ functionality described above.
 
 #### OLED Definition
 

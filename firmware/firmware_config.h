@@ -72,6 +72,12 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define BATTERY_TYPE BATT_UNKNOWN
 #endif
 
+#ifndef VBAT_PIN
+#define VBAT_PIN  31       // make sure we have a default analog pin to do something with...
+#endif
+
+
+
 #ifndef BATTERYINTERVAL
 #define BATTERYINTERVAL 30000
 #endif
@@ -89,24 +95,37 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #endif
 
 #ifndef BACKLIGHT_LED_PIN
-#define BACKLIGHT_LED_PIN 0          
+  #define BACKLIGHT_LED_PIN 0 
+  #ifndef BACKLIGHT_PWM_ON
+   #define BACKLIGHT_PWM_ON 0          
+  #endif  
+#else
+  #ifndef BACKLIGHT_PWM_ON
+  #define BACKLIGHT_PWM_ON 1          
+  #endif      
 #endif
 
 #ifndef WS2812B_LED_PIN
-#define WS2812B_LED_PIN 0          
+  #define WS2812B_LED_PIN 0 
+  #ifndef WS2812B_LED_COUNT
+  #define WS2812B_LED_COUNT 0          
+  #endif
+
+  #ifndef WS2812B_LED_ON
+  #define WS2812B_LED_ON 0          
+  #endif        
 #endif
 
-#ifndef WS2812B_LED_COUNT
-#define WS2812B_LED_COUNT 0          
-#endif
+  #ifndef WS2812B_LED_ON
+  #define WS2812B_LED_ON 1          
+  #endif 
 
-#ifndef WS2812B_LED_ON
-#define WS2812B_LED_ON 0          
-#endif
+  #ifndef WS2812B_LED_COUNT
+  #define WS2812B_LED_COUNT 1          
+  #endif
 
-#ifndef BACKLIGHT_PWM_ON
-#define BACKLIGHT_PWM_ON 0          
-#endif
+
+
 
 #ifndef BLE_LED_ACTIVE                    // setup default value if not set
 #define BLE_LED_ACTIVE false       
@@ -138,6 +157,9 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
   #define VCC_ENABLE_GPIO 1
     #ifndef VCC_POLARITY_ON
       #define VCC_POLARITY_ON 1
+    #endif
+    #ifndef VCC_DEFAULT_ON
+      #define VCC_DEFAULT_ON 1
     #endif
   #else
   #define VCC_ENABLE_GPIO 0
