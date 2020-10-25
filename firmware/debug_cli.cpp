@@ -283,8 +283,9 @@ void handleSerial() {
         Serial.println("----- Before -----\n");
         bond_print_list(BLE_GAP_ROLE_PERIPH);
         bond_print_list(BLE_GAP_ROLE_CENTRAL);
-
+        #ifndef ARDUINO_NRF52_COMMUNITY
         Bluefruit.clearBonds();
+        #endif
         Bluefruit.Central.clearBonds();
 
         Serial.println();

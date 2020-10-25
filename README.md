@@ -10,7 +10,7 @@ By starting with the simple hid_keyboard.ino example provided with the Arduino b
 
 ## Build Status
 
-| Branch  | Github Actions - Docker | Github Actions - Ubuntu | Jenkins - Windows |
+| Branch  | Github Actions - Docker (Adafruit BSP) | Github Actions - Ubuntu (Community BSP) | Jenkins - Windows |
 | ------  | ------                  | ------                  | ------            |
 | Master  |![Build on Docker](https://github.com/jpconstantineau/BlueMicro_BLE/workflows/Build%20on%20Docker/badge.svg?branch=master) | ![Build on Ubuntu](https://github.com/jpconstantineau/BlueMicro_BLE/workflows/Build%20on%20Ubuntu/badge.svg?branch=master) | ![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE-master) |
 | Develop |![Build on Docker](https://github.com/jpconstantineau/BlueMicro_BLE/workflows/Build%20on%20Docker/badge.svg?branch=develop) | ![Build on Ubuntu](https://github.com/jpconstantineau/BlueMicro_BLE/workflows/Build%20on%20Ubuntu/badge.svg?branch=develop) | ![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE-develop) |
