@@ -72,7 +72,7 @@ For __Port 1__, the GPIO number will be the Bit number plus 32.
 
 Most keyboards use a matrix of columns and rows to scan each key.  You will need to refer to the keyboard schematic to identify how many columns and rows your keyboard uses for it's scanning matrix.  The scanning matrix may differ from the keyboard layout.  For example, a 4x12 matrix uses 16 GPIOs and allows for 48 keys to be scanned.  A 8x8 matrix also uses 16 GPIOs but will allow 64 keys to be scanned.  The mapping of each key in the scanning matrix to the keyboard layout is done in the KEYMAP macro definition in keyboard_config.h.
 
-![keyboard matrix](images\keyboardmatrix.png)
+![keyboard matrix](https://raw.githubusercontent.com/jpconstantineau/BlueMicro_BLE/develop/docs/images/keyboardmatrix.png)
 
 In the image above, we see that this keyboard has a matrix of 4 rows, with 7 columns.  The direction of the diodes goes from the columns to the rows.  With this information, we can define the following:
 
@@ -87,7 +87,7 @@ In the image above, we see that this keyboard has a matrix of 4 rows, with 7 col
 
 Next, we need to identify how each row and column are mapped to the microntroller on board of the nRF52 module you use.  Since most DIY keyboards use the Arduino Pro Micro as its controller, we are using such an example.
 
-![GPIO Mapping](images\gpiomapping.png)
+![GPIO Mapping](https://raw.githubusercontent.com/jpconstantineau/BlueMicro_BLE/develop/docs/images/gpiomapping.png)
 
 With the information from both the keyboard and controller schamatics, we can map each row and column to the GPIO and using the formula shown in the previous section, we can define the configuration needed: 
 
