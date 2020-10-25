@@ -65,3 +65,100 @@ For __Port 1__, the GPIO number will be the Bit number plus 32.
 
 
 ## Configuring your keyboard
+
+### hardware_config.h
+
+#### Matrix Definition
+
+Most keyboards use a matrix of columns and rows to scan each key.  You will need to refer to the keyboard schematic to identify how many columns and rows your keyboard uses for it's scanning matrix.  The scanning matrix may differ from the keyboard layout.  For example, a 4x12 matrix uses 16 GPIOs and allows for 48 keys to be scanned.  A 8x8 matrix also uses 16 GPIOs but will allow 64 keys to be scanned.  The mapping of each key in the scanning matrix to the keyboard layout is done in the KEYMAP macro definition in keyboard_config.h.
+
+![keyboard matrix](images\keyboardmatrix.png)
+
+In the image above, we see that this keyboard has a matrix of 4 rows, with 7 columns.  The direction of the diodes goes from the columns to the rows.  With this information, we can define the following:
+
+``` c++
+
+#define MATRIX_ROWS 4
+#define MATRIX_COLS 7
+
+#define DIODE_DIRECTION COL2ROW
+
+```
+
+Next, we need to identify how each row and column are mapped to the microntroller on board of the nRF52 module you use.  Since most DIY keyboards use the Arduino Pro Micro as its controller, we are using such an example.
+
+![GPIO Mapping](images\gpiomapping.png)
+
+With the information from both the keyboard and controller schamatics, we can map each row and column to the GPIO and using the formula shown in the previous section, we can define the configuration needed: 
+
+``` c++
+
+#define MATRIX_ROW_PINS {13, 24, 9, 10 }
+#define MATRIX_COL_PINS {26, 29, 2, 45, 3, 28, 43 }
+
+```
+
+
+#### Battery Monitoring
+
+``` c++
+#define BATTERY_TYPE BATT_LIPO
+#define VBAT_PIN  31
+
+```
+
+#### External VCC Switching
+
+``` c++
+#define VCC_PIN 12
+#define VCC_POLARITY_ON 1
+
+```
+
+#### LiPo Charger Switching
+
+``` c++
+     #define CHARGER_PIN  5
+     #define CHARGER_POLARITY_ON 0
+```
+
+#### Backlight PWM LED Definition
+
+``` c++
+	#define BACKLIGHT_LED_PIN 23
+	#define BACKLIGHT_PWM_ON 1 
+    #define DEFAULT_PWM_VALUE 10000            // PWM intensity  max is 10000
+
+```
+
+
+#### RGB LED Definition
+
+``` c++
+	#define WS2812B_LED_PIN 15
+	
+	#define WS2812B_LED_COUNT 1
+	#define WS2812B_LED_ON 1 
+
+```
+
+
+#### OLED Definition
+
+To Do - Still being implemented.
+
+``` c++
+#define OLED_SDA_PIN        25
+#define OLED_SCL_PIN        26
+```
+
+
+#### Rotary Encoder Definition
+
+To Do - Still being implemented.
+
+``` c++
+#define ENCODERS_COUNT 1
+#define ENCODERS_A_PIN { 26 }
+#define ENCODERS_B_PIN { 30 }
+```
