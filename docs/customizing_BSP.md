@@ -1,5 +1,13 @@
 # Customizing your Adafruit BSP for your project
 
+**RECOMMENDED**
+
+We have created a new Community BSP for you to be able to include your module variant so that your changes can benefit everyone. 
+
+Go to the [Community nRF52 Add-on Boards](https://github.com/jpconstantineau/Community_nRF52_Arduino) project and add your module variant there.  You will then be able to use it directly when compiling your keyboard.  Everyone else will aslo be able to use your module as part of their project.
+
+
+**ALTERNATE OPTION**
 In the case where you are building a project with a nRF module that is not from adafruit and that you want to exclude the LF oscillator to reduce your BOM. Or perhaps you forgot to include one in your design and want to test the rest of your hardware. Modifying the Adafruit BSP to support this configuration is shown in the example below:
 
 In this example, an nRF52832 module is being used and a LF oscillator was not included in it's design. The nRF52832 can make use of an internal oscillator for this purpose. The paramater to make this change can be found in the following file:
