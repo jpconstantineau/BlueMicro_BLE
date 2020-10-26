@@ -268,9 +268,7 @@ void process_keyboard_function(uint16_t keycode)
       InternalFS.format();
       break;
     case CLEAR_BONDS:
-        #ifndef ARDUINO_NRF52_COMMUNITY
-        Bluefruit.clearBonds();
-        #endif
+       // Bluefruit.clearBonds(); //removed in next BSP?
         Bluefruit.Central.clearBonds();
       break;      
     case DFU:
