@@ -39,10 +39,6 @@ module.exports = {
               label: 'Getting Started',
               to: 'docs/',
             },
-            {
-              label: 'Second Doc',
-              to: 'docs/doc2/',
-            },
           ],
         },
         {
