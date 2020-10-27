@@ -1,1 +1,0 @@
-"C:\Program Files (x86)\SEGGER\JLink_V634f\jlink.exe"

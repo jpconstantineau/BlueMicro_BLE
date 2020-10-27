@@ -1,1 +1,0 @@
-nrfjprog.exe --recover
