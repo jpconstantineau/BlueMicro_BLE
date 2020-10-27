@@ -1,4 +1,9 @@
-# Configuring your own keymap
+---
+id: keymaps
+title: Configuring your own keymap
+slug: /keymaps
+---
+
 To understand how to configure your keymap, you should first know what constitutes a keycode:
 
 ## Keycodes
@@ -35,14 +40,14 @@ Toggle is useful with modifiers and layers.  You can toggle the key until the to
 * Oneshot: The keycode will be sent for a single HID report to the computer.  The keycode will be sent with the next non-null report to the computer (next keypress).  An an example, SHIFT key makes the next letter into a capital letter but no other one thereafter.  OneShot is useful for modifiers when a specific modifier should be sent along with the next key.  OneShot currently do not work for selecting layers.
 
 The activation duration can be defined in the following way:
-<pre>
-    <i>DURATION</i>(<i>HID keycode</i>)
-</pre>
+
+    DURATION(HID keycode)
+
 e.g.
-<pre>
+
     TG(KC_LSHIFT)
     OS(KC_LSHIFT)
-</pre>
+
 
 The activation duration are included as part of the definition for a layer or a single key.  As such, it does not get 
 
@@ -63,26 +68,26 @@ The default layer is the layer which you will most often use. Generally this is 
 Here, you give the 
 HID Keycode and optionally the activation duration for the default method on the default layer
 (currently PRESS and layer 0).
-<pre>
+
     std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS>  matrix {
     KEYMAP(
         <i>KEYCODE1</i>, <i>KEYCODE2</i>, <i>etc.</i>)
     };
-</pre>
+
 For example for the gherkin:
-<pre>
+
 std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
     {KEYMAP(
         KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,
         KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_ESC,
         KC_Z,    KC_X,    KC_C,    KC_V,    KC_SPC,  KC_BKSPC,KC_B,    KC_N,    KC_M,    KC_NO )};
-</pre>
+
 
 
 ## Further layers
 You can define layers in the same way as the default layer for any activation method and layer combo, 
 e.g. PRESS on layer 1 or MT\_TAP for layer 0. Most of the time, you'll only need press layers unless you use other activation methods a lot. You will need to add a tuple ** people won't understand what a tuple is...** of this layer using the addLayers function.
-<pre>
+
     uint32_t <i>LAYER_NAME</i> {
         KEYMAP(<i>...</i>)
     };
@@ -94,11 +99,11 @@ e.g. PRESS on layer 1 or MT\_TAP for layer 0. Most of the time, you'll only need
 
         }
     }  
-</pre>
+
 
 ## Single keys
 You'll most likely use this to configure keys with uncommon activation methods, e.g. DT\_DOUBLETAP.  However, when using a remapping macro (KEYMAP), it is recommended to create a full matrix with KC_NO everywhere except for where the specific activation method is desired.  However, for keyboards with no need for the KEYMAP macro, you can use the specific row and column directly (instead of looping over each row/column as shown above).
-<pre> 
+
     matrix[<i>row</i>][<i>col</i>].addActivation(<i>LAYER</i>, <i>METHOD</i>, <i>KEYCODE</i>);
-</pre>
+
 

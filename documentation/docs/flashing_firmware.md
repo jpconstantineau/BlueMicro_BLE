@@ -1,4 +1,8 @@
-# Flashing BlueMicro_BLE to your keyboard
+---
+id: flash
+title: Flashing Firmware to your keyboard
+slug: /flash
+---
 
 
 # Preparing your build and flashing environment

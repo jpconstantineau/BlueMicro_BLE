@@ -1,6 +1,9 @@
-# Features
-
-TODO
+---
+id: features
+title: Features Compared
+sidebar_label: Features Compared
+slug: /Features
+---
 
 ### BlueMicro vs QMK
 

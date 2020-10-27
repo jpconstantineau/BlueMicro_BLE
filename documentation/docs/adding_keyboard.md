@@ -1,4 +1,8 @@
-# Adding a new Keyboard to BlueMicro
+---
+id: adding_keyboard
+title: Adding a new Keyboard
+slug: /add
+---
 
 There are 4 files that either need to be edited or created for you to add your keyvoard
 

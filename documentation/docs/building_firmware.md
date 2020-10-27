@@ -1,4 +1,9 @@
-# Building Firmware
+---
+id: build
+title: Building Firmware
+slug: /build
+---
+
 
 
 # Preparing your build and flashing environment

@@ -1,4 +1,8 @@
-# Installing Tools
+---
+id: tools
+title: Installing Tools
+slug: /tools
+---
 
 ## Windows
 

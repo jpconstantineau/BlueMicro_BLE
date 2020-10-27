@@ -1,4 +1,9 @@
-# Supported Hardware
+---
+id: hardware
+title: Supported Hardware
+sidebar_label: Supported Hardware
+slug: /hardware
+---
 
 ## Target CPU: Nordic Semiconductor nRF52832 and nRF52840
 

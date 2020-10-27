@@ -1,4 +1,8 @@
-# Configuring BlueMicro
+---
+id: configure
+title: Configuring Firmware
+slug: /configure
+---
 
 ## Understanding nRF52 Modules and how GPIOs are numbered
 
