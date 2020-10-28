@@ -1,7 +1,7 @@
 ---
 id: hardware
-title: Supported Hardware
-sidebar_label: Supported Hardware
+title: Supported Processors
+sidebar_label: Supported Processors
 slug: /hardware
 ---
 
