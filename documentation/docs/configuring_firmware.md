@@ -55,11 +55,10 @@ To be able to address GPIOs on Port 1, we need to use this simple definition to 
 
 ``` c++
 #define _PINNUM(port, bit)    ((port)*32 + (bit))
-
 ```
-For __Port 0__, the GPIO number will be the same as the Bit number.
+For __Port 0__, the GPIO number will be the same as the Bit number. For example, `P(0.11) = 0 + 11 = 11`
 
-For __Port 1__, the GPIO number will be the Bit number plus 32.
+For __Port 1__, the GPIO number will be the Bit number plus 32. For example, `P(1.11) = 32 + 11 = 43`
 
 | Port              | Bit        | GPIO Number to use       |
 | ----------------- | ---------- | ---------- |
@@ -81,12 +80,10 @@ Most keyboards use a matrix of columns and rows to scan each key.  You will need
 In the image above, we see that this keyboard has a matrix of 4 rows, with 7 columns.  The direction of the diodes goes from the columns to the rows.  With this information, we can define the following:
 
 ``` c++
-
 #define MATRIX_ROWS 4
 #define MATRIX_COLS 7
 
 #define DIODE_DIRECTION COL2ROW
-
 ```
 
 Next, we need to identify how each row and column are mapped to the microntroller on board of the nRF52 module you use.  Since most DIY keyboards use the Arduino Pro Micro as its controller, we are using such an example.
@@ -96,10 +93,8 @@ Next, we need to identify how each row and column are mapped to the microntrolle
 With the information from both the keyboard and controller schamatics, we can map each row and column to the GPIO and using the formula shown in the previous section, we can define the configuration needed: 
 
 ``` c++
-
 #define MATRIX_ROW_PINS {13, 24, 9, 10 }
 #define MATRIX_COL_PINS {26, 29, 2, 45, 3, 28, 43 }
-
 ```
 
 
@@ -114,14 +109,12 @@ From the schematic, we identify that the connection point of the voltage divider
 ``` c++
 #define BATTERY_TYPE BATT_LIPO
 #define VBAT_PIN  31
-
 ```
 
 If a non-rechargeable CR2032 (3V) powers your keyboard and the battery is directly connected to the nRF52 chip, you still need to define a `VBATT_PIN`  but since the nrf52 chip can measure its own supply voltage, it will not use this configuration. All you need to do is to use this definition:
 
 ``` c++
 #define BATTERY_TYPE BATT_CR2032
-
 ```
 
 #### External VCC Switching
@@ -131,7 +124,6 @@ Some controllers implement switching of external VCC to ensure low power consump
 ``` c++
 #define VCC_PIN 12
 #define VCC_POLARITY_ON 1
-
 ```
 If `VCC_PIN` is left undefined, VCC switching functionality will not be enabled in the firmware.
 
@@ -141,7 +133,6 @@ By default, the firmware will turn on external VCC when booting up and will turn
 
 ``` c++
 #define VCC_DEFAULT_ON 0
-
 ```
 
 #### LiPo Charger Switching
@@ -166,8 +157,7 @@ This enables setting up the following configuration:
 ``` c++
 	#define BACKLIGHT_LED_PIN 38
 	#define BACKLIGHT_PWM_ON 1 
-    #define DEFAULT_PWM_VALUE 10000            // Reduce max PWM intensity to 10000 out of 63351 (0x7FFF)
-
+    #define DEFAULT_PWM_VALUE 10000  // Reduce max PWM to 10000 out of 63351 (0x7FFF)
 ```
 If `BACKLIGHT_LED_PIN` is left undefined, LED functionality will not be enabled in the firmware.
 `BACKLIGHT_PWM_ON` is optional. If `BACKLIGHT_LED_PIN` is defined, but you want to turn off LED functionality, you can do so by setting `BACKLIGHT_PWM_ON` to 0.
@@ -185,7 +175,6 @@ This enables setting up the following configuration:
 	#define WS2812B_LED_PIN 6
 	#define WS2812B_LED_COUNT 1
 	#define WS2812B_LED_ON 1 
-
 ```
 If `WS2812B_LED_PIN` is left undefined, LED functionality will not be enabled in the firmware.
 If `WS2812B_LED_ON` is set to 0, RGB functionality will not be enabled in the firmware. Note that this will not power down VCC power to the RGB LEDs, impacting power consumption of your keyboard.  External VCC to the RGB LEDs is controlled through the __External VCC Switch__ functionality described above.

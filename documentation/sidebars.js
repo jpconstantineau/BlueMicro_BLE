@@ -3,7 +3,20 @@ module.exports = {
     'Introduction': ['getting_started', 'bluetooth_firmware','hardware','keyboards'],
     Features: ['features'],
     'How To':['tools','adding_keyboard','configure','keymaps','build','flash','customize_BSP'],
-    'Tutorials': ['tut_base','tut_layers','tut_flashing'],
+    'Tutorials': [
+                  'tutorials/tut_base',
+                  'tutorials/tut_keycodes',
+                  'tutorials/tut_layers',
+                  'tutorials/tut_adjust',
+                  'tutorials/tut_modkeys',
+                  'tutorials/tut_oneshottoggle',
+                  'tutorials/tut_taphold',
+                  'tutorials/tut_tapholdlayer',
+                  'tutorials/tut_spacecadet',
+                  'tutorials/tut_flashing',
+                  'tutorials/tut_keymapswitch',
+                  'tutorials/tut_macros'
+                ],
     'Contributing': ['DocumentationStyleGuide','contributing']
   },
 };

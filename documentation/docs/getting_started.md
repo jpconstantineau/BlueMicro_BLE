@@ -51,6 +51,7 @@ The script follows these steps:
 ### Step 2: Download BlueMicro_BLE Firmware
 <iframe width="572" height="320" src="https://www.youtube.com/embed/eKDoVYfXWYQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
+
 To get a copy of the firmware, you have 3 options:
 - Download the [zip file](https://github.com/jpconstantineau/BlueMicro_BLE/archive/master.zip) of the master branch of the repository.
 - Clone the repository localy  `git clone https://github.com/jpconstantineau/BlueMicro_BLE.git`

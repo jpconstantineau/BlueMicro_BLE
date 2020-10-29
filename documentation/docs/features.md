@@ -5,7 +5,45 @@ sidebar_label: Features Compared
 slug: /Features
 ---
 
-### BlueMicro vs QMK
+
+BlueMicro is currently missing some features found in other popular firmware. This table compares the features supported by BlueMicro, QMK and ZMK:
+
+| **Feature**                                                                                                            | [BlueMicro](http://bluemicro.jpconstantineau.com/) | [QMK nRF52 Fork](https://github.com/joric/nrfmicro/wiki/QMK) | [ZMK](https://zmkfirmware.dev/) |
+| ---------------------------------------------------------------------------------------------------------------------- |  :-------: | :-: | :-: |
+| **Connectivity and Power Saving Options**                                                                              |            |     |    |
+| Low Latency BLE Support                                                                                                |     ✅    |      | ✅  |
+| Multi-Device BLE Support (Several Computers)                                                                           |     🚧    |      | ✅  | 
+| USB HID                                                                                                                |     🚧    | ✅  | ✅  |
+| Battery Reporting (BLE Battery Service)                                                                                |     ✅    |      | 🚧  |
+| Low Power Sleep States                                                                                                 |     ✅    |      | 🚧  |
+| Low Active Power Usage                                                                                                 |            |      | ✅  |
+| **Firmware Options**                                                                                                   |            |      |    |
+| Keymaps and Layers                                                                                                     |     ✅     | ✅  | ✅  |
+| Basic Keycodes                                                                                                         |     ✅     | ✅  | ✅  | 
+| Basic consumer (Media) Keycodes                                                                                        |     ✅     | ✅  | ✅  |
+| Mouse Keys                                                                                                             |     ✅     | ✅  |      |
+| Hold-Tap (which includes Mod-Tap and Layer-Tap)                                                                        |     ✅     | ✅  | ✅  | 
+| One Shot Keys                                                                                                          |     ✅     | ✅  | 🚧  |
+| Combo Keys                                                                                                             |             | ✅  | 🚧  |
+| Macros                                                                                                                 |     ✅     | ✅  | 🚧  |
+| **Keyboard and Controller Board Hardware Options**                                                                     |            |     |    |
+| Split Keyboard Support                                                                                                 |     ✅     | ✅  | ✅  |
+| Key Backlight LED PWM Control                                                                                          |     ✅     | ✅  |      |
+| RGB Underglow                                                                                                          |     ✅     | ✅  | ✅  |
+| Encoders                                                                                                               |     🚧     | ✅  | ✅  |
+| OLED Display Support                                                                                                   |     🚧     | ✅  | 🚧  |
+| Low Power Mode (VCC Shutoff)                                                                                           |     ✅     |     | 🚧  |
+| **Microcontroller Support**                                                                                            |            |     |    |
+| Support for Nordic nRF52 Microcontrollers                                                                              |     ✅     |     |  ✅  |
+| Support for Wide Range of ARM Microcontrollers                                                                         |            |     | ✅  |
+| Support for AVR/8 Bit Microcontrollers                                                                                 |            | ✅  |     |
+| **Tooling and Build Configuration**                                                                                    |            |     |    |
+| Serial Debug CLI                                                                                                       |      ✅   |     |    |
+| Hardware Troubleshooting tools                                                                                         |      ✅   |     |    |
+| User Configuration Repositories                                                                                        |            |     | ✅  |
+| Realtime Keymap Updating                                                                                               |            | ✅  |  💡  |
+
+
 
 | Feature           | BlueMicro  | QMK        |
 | ----------------- | ---------- | ---------- |
@@ -16,16 +54,6 @@ slug: /Features
 |  * Wireless Device Firmware Update    |    Yes        |   No    |
 |  * Central/Peripheral Communications | Yes  | No  |
 |  * Dongle free    | Yes | Depends |
-|                   |            |            |
-| Low Power Functions |          |            |
-|  * Programmable radio power | Yes | (?) |
-|  * Variable Keyboard Scanning Rate | Possible    |   n/a         |
-|  * Timed low-power mode | Yes    |   n/a         |
-|  * Low Battery low-power mode | Sleep after 10 minutes    |   n/a         |
-|                   |            |            |
-| Split Keyboards   | Yes (future support for >2 halves) | yes - 2 halves only |
-|                   |            |            |
-| Basic HID Keycodes | Yes       | Yes        |
 |                   |            |            |
 | Accented Keys èéê | Yes (windows)  | Yes        |
 |                   |            |            |
@@ -42,47 +70,9 @@ slug: /Features
 |                   |            |            |
 | Auto Shift        | Key Timing | Yes  |
 |                   | Required   |            |
-|                   |            |            |
-| Backlight LEDs    | Tested     | Yes  |
-|                   |            |            |
-| Boot Magic        | Special Functions available  | Yes  |
-|                   |            |            |
-| Dynamic Macros    | Future     | Yes  |
-|                   |            |            |
-| LCD Display       | OLED - WIP         | Yes  |
-|                   |            |            |
-| Key Lock          | ?          | Yes  |
-|                   |            |            |
-| Layouts           | Yes        | Yes  |
-|                   |            |            |
 | Leader Key        | Future     | Yes  |
-|                   |            |            |
-| Pre-programmed Macros | Yes | Yes  |
-|                   |            |            |
-| Mouse Keys        | Yes | Yes  |
-|                   |            |            |
-| Pointing Device   | Depends on Library | Yes  |
-|                   |            |            |
-| PS2 Mouse         | No         | Yes  |
-|                   |            |            |
-| RGB Light         | Yes     | Yes  |
-|                   |            |            |
-| RGB Matrix        | Future     | Yes  |
-|                   |            |            |
-| Space Cadet       | Tap/Hold   | Yes  |
 |                   |            |            |
 | Stenography       | Partial No NKRO.  | Yes  |
 |                   |            |            |
-| Swap Hands        | No         | Yes  |
-|                   |            |            |
 | Tap Dance         | Tap/Double Tap | Yes  |
 |                   | Tap/Hold   |            |
-|                   |            |            |
-| Terminal          | No         | Yes  |
-|                   |            |            |
-| Thermal Printer   | No         | Yes  |
-|                   |            |            |
-| Unicode           | No  (OS Limited) | Yes  |
-|                   |            |            |
-| Userspace         | No         | Yes  |
-|                   |            |            |
