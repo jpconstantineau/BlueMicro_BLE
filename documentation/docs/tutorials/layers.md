@@ -2,6 +2,7 @@
 id: tut_layers
 title: Setting up Layers
 sidebar_label: Layers
+slug: /tut_layers
 ---
 
 <figure class="video-container">

@@ -1,6 +1,7 @@
 ---
 id: tut_adjust
 title: Hidden Layers (tri-layers)
+slug: /tut_adjust
 ---
 
 <figure class="video-container">

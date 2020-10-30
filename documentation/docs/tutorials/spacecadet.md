@@ -1,6 +1,7 @@
 ---
 id: tut_spacecadet
 title: Space Cadet
+slug: /tut_spacecadet
 ---
 
 <figure class="video-container">

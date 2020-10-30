@@ -1,6 +1,7 @@
 ---
 id: tut_macros
 title: Macros
+slug: /tut_macros
 ---
 
 <figure class="video-container">

@@ -1,6 +1,7 @@
 ---
 id: keycodes_firmware
 title: Firmware-only Keycodes
+slug: /keycodes_firmware
 ---
 
 Firmware only keycodes are keycodes that modify the behavior of the keyboard firmware and are processed to send something different. 

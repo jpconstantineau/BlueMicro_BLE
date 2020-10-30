@@ -1,6 +1,7 @@
 ---
 id: tut_tapholdlayer
 title: Tap/Hold for Layers
+slug: /tut_tapholdlayer
 ---
 
 <figure class="video-container">

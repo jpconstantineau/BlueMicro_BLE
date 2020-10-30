@@ -1,6 +1,7 @@
 ---
 id: keycodes_basic
 title: Basic Keycodes
+slug: /keycodes_basic
 ---
 
 These keycodes are based on [Universal Serial Bus HID Usage Tables](https://www.usb.org/sites/default/files/documents/hut1_12v2.pdf) Document Version 1.12

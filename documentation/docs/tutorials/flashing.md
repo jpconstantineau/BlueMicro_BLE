@@ -2,6 +2,7 @@
 id: tut_flashing
 title: Flashing your keyboard
 sidebar_label: Flashing
+slug: /tut_flashing
 ---
 
 <figure class="video-container">

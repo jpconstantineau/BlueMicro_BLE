@@ -1,6 +1,7 @@
 ---
 id: tut_keymapswitch
 title: Switching Keymaps
+slug: /tut_keymapswitch
 ---
 
 <figure class="video-container">

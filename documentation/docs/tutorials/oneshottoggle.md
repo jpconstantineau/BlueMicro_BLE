@@ -1,6 +1,7 @@
 ---
 id: tut_oneshottoggle
 title: One-Shot Toggles
+slug: /tut_oneshottoggle
 ---
 
 <figure class="video-container">

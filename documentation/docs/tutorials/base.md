@@ -2,6 +2,7 @@
 id: tut_base
 title: Setting up
 sidebar_label: Basic setup
+slug: /tut_base
 ---
 
 

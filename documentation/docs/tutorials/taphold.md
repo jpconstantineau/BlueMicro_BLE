@@ -1,6 +1,7 @@
 ---
 id: tut_taphold
 title: Tap/Hold for Modifiers
+slug: /tut_taphold
 ---
 
 <figure class="video-container">

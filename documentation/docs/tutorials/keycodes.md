@@ -1,6 +1,7 @@
 ---
 id: tut_keycodes
 title: Finding Keycodes
+slug: /tut_keycodes
 ---
 
 <figure class="video-container">

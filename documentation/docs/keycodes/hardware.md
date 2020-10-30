@@ -1,6 +1,7 @@
 ---
 id: keycodes_hardware
 title: Hardware-specific Keycodes
+slug: /keycodes_hardware
 ---
 
 

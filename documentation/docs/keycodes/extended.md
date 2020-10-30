@@ -1,6 +1,7 @@
 ---
 id: keycodes_extended
 title: Extended Keycodes
+slug: /keycodes_extended
 ---
 
 Firmware only keycodes are keycodes that combine multiple keycodes from the standard HID Usage Tables to generate specific characters.
