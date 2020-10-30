@@ -3,6 +3,12 @@ module.exports = {
     'Introduction': ['getting_started', 'bluetooth_firmware','hardware','keyboards'],
     Features: ['features'],
     'How To':['tools','adding_keyboard','configure','keymaps','build','flash','customize_BSP'],
+    'Keycodes':[
+                'keycodes/keycodes_basic',
+                'keycodes/keycodes_extended',
+                'keycodes/keycodes_firmware',
+                'keycodes/keycodes_hardware'
+              ],
     'Tutorials': [
                   'tutorials/tut_base',
                   'tutorials/tut_keycodes',

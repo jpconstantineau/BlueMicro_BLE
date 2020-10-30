@@ -2,7 +2,6 @@
 id: features
 title: Features Compared
 sidebar_label: Features Compared
-slug: /Features
 ---
 
 
@@ -39,40 +38,11 @@ BlueMicro is currently missing some features found in other popular firmware. Th
 | Support for AVR/8 Bit Microcontrollers                                                                                 |            | ✅  |     |
 | **Tooling and Build Configuration**                                                                                    |            |     |    |
 | Serial Debug CLI                                                                                                       |      ✅   |     |    |
+| Web Bluetooth Configuration                                                                                            |      💡    |     |    |
 | Hardware Troubleshooting tools                                                                                         |      ✅   |     |    |
 | User Configuration Repositories                                                                                        |            |     | ✅  |
 | Realtime Keymap Updating                                                                                               |            | ✅  |  💡  |
 
 
+This __Features Compared__ page is licenced under [CC-BY-NC-SA-4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) and was adapted from [ZMK Firmware Documentation](https://zmkfirmware.dev/docs/) originally created by the ZMK Project Contributors.
 
-| Feature           | BlueMicro  | QMK        |
-| ----------------- | ---------- | ---------- |
-| Wireless          | Native BLE | Using add-on module  |
-|  * HID Service    |  Yes       |    Yes     |
-|  * Device Information Service |  Yes  |  Yes |
-|  * Battery Service | Yes       |    (?)      |
-|  * Wireless Device Firmware Update    |    Yes        |   No    |
-|  * Central/Peripheral Communications | Yes  | No  |
-|  * Dongle free    | Yes | Depends |
-|                   |            |            |
-| Accented Keys èéê | Yes (windows)  | Yes        |
-|                   |            |            |
-| N-Key rollover    | HID standard: Mods + 6 keys  |   Yes   |
-|                   |            |            |
-| Advanced Keycodes | Partial    | Yes  |
-| * Layers          | Yes        | Yes  |
-| * Momentary Keys  | Yes     | Yes  |
-| * One Shot Keys   | Yes     | Yes  |
-| * Toggle Keys     | Yes     | Yes  |
-| * Mod-Tap Keys    | Yes     | Yes  |
-|                   |            |            |
-| Audio             | No         | Yes  |
-|                   |            |            |
-| Auto Shift        | Key Timing | Yes  |
-|                   | Required   |            |
-| Leader Key        | Future     | Yes  |
-|                   |            |            |
-| Stenography       | Partial No NKRO.  | Yes  |
-|                   |            |            |
-| Tap Dance         | Tap/Double Tap | Yes  |
-|                   | Tap/Hold   |            |
