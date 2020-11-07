@@ -29,8 +29,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define UUID128_CHR_KEYBOARD_BUFFER           0x220f9018372a46da81d3cd196a57d5ab           // 7 Bytes for passing HID MODS and BUFFER from Slave to Master
 #define UUID128_COUNT 4
 
-// Set max power. Accepted values are: -40, -30, -20, -16, -12, -8, -4, 0, 4
-#define DEVICE_POWER                        4                                          // Use 0.  This uses less power and allows for a longer battery life.
+// Set max power. Accepted values are: -40, -30, -20, -16, -12, -8, -4, 0, 4 
+#define DEVICE_POWER                        -40                                          // Use 0.  This uses less power and allows for a longer battery life.
 
 #define FILTER_RSSI_BELOW_STRENGTH -90
 

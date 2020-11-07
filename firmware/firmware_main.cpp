@@ -68,7 +68,6 @@ void setup() {
  setupConfig();
 
  Serial.begin(115200);
- // while ( !Serial ) delay(10);   // for nrf52840 with native usb this makes the nrf52840 stall and wait for a serial connection.  Something not wanted for a keyboard...
 
   LOG_LV1("BLEMIC","Starting %s" ,DEVICE_NAME);
 
@@ -89,7 +88,7 @@ void setup() {
 
   if(keyboardconfig.ledbacklight)
   {
-    setupPWM(BACKLIGHT_LED_PIN);
+    setupPWM(BACKLIGHT_LED_PIN); //This line contributes 500uA to the bottom line...
   }
 
   if(keyboardconfig.ledrgb)
@@ -102,10 +101,9 @@ void setup() {
   startAdv(); 
   keyscantimer.start();
   batterytimer.start();
-  //suspendLoop(); // this commands suspends the main loop.  We are no longer using the loop but scheduling things using the timers.
+ // suspendLoop(); // this commands suspends the main loop.  We are no longer using the loop but scheduling things using the timers.
   stringbuffer.clear();
 
-  
 
 };
 /**************************************************************************************************************************/
@@ -693,9 +691,9 @@ void batterytimer_callback(TimerHandle_t _handle)
 //* Any impact of placing code here on current consumption?                                  *//
 //********************************************************************************************//
 // cppcheck-suppress unusedFunction  
-extern "C" void vApplicationIdleHook(void) {
+/*extern "C" void vApplicationIdleHook(void) {
   // Don't call any other FreeRTOS blocking API()
   // Perform background task(s) here
     sd_power_mode_set(NRF_POWER_MODE_LOWPWR);
     sd_app_evt_wait();  // puts the nrf52 to sleep when there is nothing to do.  You need this to reduce power consumption. (removing this will increase current to 8mA)
-};
+};*/
