@@ -55,10 +55,20 @@ StatePayload  statedata;
 /**************************************************************************************************************************/
 void setupBluetooth(void)
 {
+ble_gap_conn_params_t _ppcp;
+  _ppcp = ((ble_gap_conn_params_t) {
+    .min_conn_interval = 6,
+    .max_conn_interval = 12,
+    .slave_latency     = 5,
+    .conn_sup_timeout  = 2000 / 10 // in 10ms unit
+  });
+  
   //Bluefruit.configPrphBandwidth(BANDWIDTH_MAX); // OK for nrf52840
-  Bluefruit.configPrphBandwidth(BANDWIDTH_HIGH);
+//  Bluefruit.configPrphBandwidth(BANDWIDTH_HIGH);
  // Bluefruit.configCentralBandwidth(BANDWIDTH_HIGH);
   Bluefruit.begin(PERIPHERAL_COUNT,CENTRAL_COUNT);                            // Defined in firmware_config.h
+ Bluefruit.begin();
+  
   Bluefruit.autoConnLed(BLE_LED_ACTIVE);                                      // make sure the BlueFruit connection LED is not toggled.
   Bluefruit.setTxPower(DEVICE_POWER);                                         // Defined in bluetooth_config.h
   Bluefruit.setName(DEVICE_NAME);                                             // Defined in keyboard_config.h
@@ -67,7 +77,13 @@ void setupBluetooth(void)
   Bluefruit.setAppearance(BLE_APPEARANCE_HID_KEYBOARD);                       // How the device appears once connected
   Bluefruit.setRssiCallback(rssi_changed_callback);
   //********Bluefruit.setConnInterval(9, 12);                                 // 0.10.1: not needed for master...
-  Bluefruit.Periph.setConnInterval(6, 12); // 7.5 - 15 ms
+  //https://devzone.nordicsemi.com/nordic/power/w/opp/2/online-power-profiler-for-ble
+ // Bluefruit.Periph.setConnInterval(6, 12); // 7.5 - 15 ms
+ // Bluefruit.Periph.setConnSlaveLatency(10); // TODO: add this when 0.22.0 gets released!  This will reduce power consumption significantly.
+ 
+//sd_ble_gap_ppcp_get(&_ppcp);
+//_ppcp.slave_latency = 30;
+sd_ble_gap_ppcp_set(&_ppcp);
 
   // Configure and Start Device Information Service
   bledis.setManufacturer(MANUFACTURER_NAME);                                  // Defined in keyboard_config.h
@@ -135,6 +151,7 @@ void setupBluetooth(void)
    * up to 11.25 ms. Therefore BLEHidAdafruit::begin() will try to set the min and max
    * connection interval to 11.25  ms and 15 ms respectively for best performance.
    */
+   
 #if BLE_HID == 1
   blehid.begin();
   // Set callback for set LED from central
@@ -145,7 +162,7 @@ void setupBluetooth(void)
    * Note: It is already set by BLEHidAdafruit::begin() to 11.25ms - 15ms
    * min = 9*1.25=11.25 ms, max = 12*1.25= 15 ms 
    */
- 
+
  #if BLE_CENTRAL == 1                                   // CENTRAL IS THE MASTER BOARD
 
   KBLinkClientService.begin();

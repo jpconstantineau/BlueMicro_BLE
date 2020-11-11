@@ -61,10 +61,7 @@ void setupPWM(uint8_t ledpin)
   NRF_PWM2->SEQ[0].ENDDELAY = 0;
   NRF_PWM2->SEQ[0].PTR = (uint32_t)&buf[0];
   NRF_PWM2->SEQ[0].REFRESH = 0;
-  NRF_PWM2->SHORTS = 0;//(PWM_SHORTS_LOOPSDONE_SEQSTART0_Enabled << PWM_SHORTS_LOOPSDONE_SEQSTART0_Pos);//0;
-  
-  NRF_PWM2->ENABLE = 1;
-  NRF_PWM2->TASKS_SEQSTART[0] = 1; 
+  NRF_PWM2->SHORTS = 0;
   
   }
 
@@ -75,9 +72,11 @@ void sendPWM(uint16_t value)
 // max value for PWM is 15 bits
 // 16th bit is used for inverse polarity
 {
+
     value = value & 0x7FFF;  // dropping the 16th bit.  DEFAULT_PWM_MAX_VALUE
     buf[0] = (1 << 15) | value; // Inverse polarity (bit 15), 1500us duty cycle
     NRF_PWM2->SEQ[0].PTR = (uint32_t)&buf[0];
+    NRF_PWM2->ENABLE = 1;
     NRF_PWM2->TASKS_SEQSTART[0] = 1;
 }
 

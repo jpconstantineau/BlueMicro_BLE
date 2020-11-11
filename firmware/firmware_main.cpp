@@ -88,7 +88,7 @@ void setup() {
 
   if(keyboardconfig.ledbacklight)
   {
-    setupPWM(BACKLIGHT_LED_PIN); //This line contributes 500uA to the bottom line...
+    setupPWM(BACKLIGHT_LED_PIN); //PWM contributes 500uA to the bottom line on a 840 device. see https://devzone.nordicsemi.com/f/nordic-q-a/40912/pwm-power-consumption-nrf52840 (there is no electrical specification)
   }
 
   if(keyboardconfig.ledrgb)
@@ -103,6 +103,8 @@ void setup() {
   batterytimer.start();
  // suspendLoop(); // this commands suspends the main loop.  We are no longer using the loop but scheduling things using the timers.
   stringbuffer.clear();
+
+  pinMode(36, OUTPUT);
 
 
 };
@@ -643,6 +645,7 @@ void sendKeyPresses() {
 void loop() {
   handleSerial();
   delay(1000);
+  
 };  // loop is called for serials comms and saving to flash.
 // keyscantimer is being called instead
 /**************************************************************************************************************************/
@@ -691,9 +694,9 @@ void batterytimer_callback(TimerHandle_t _handle)
 //* Any impact of placing code here on current consumption?                                  *//
 //********************************************************************************************//
 // cppcheck-suppress unusedFunction  
-/*extern "C" void vApplicationIdleHook(void) {
+extern "C" void vApplicationIdleHook(void) {
   // Don't call any other FreeRTOS blocking API()
   // Perform background task(s) here
     sd_power_mode_set(NRF_POWER_MODE_LOWPWR);
     sd_app_evt_wait();  // puts the nrf52 to sleep when there is nothing to do.  You need this to reduce power consumption. (removing this will increase current to 8mA)
-};*/
+};
