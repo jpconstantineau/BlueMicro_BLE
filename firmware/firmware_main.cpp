@@ -104,8 +104,6 @@ void setup() {
  // suspendLoop(); // this commands suspends the main loop.  We are no longer using the loop but scheduling things using the timers.
   stringbuffer.clear();
 
-  pinMode(36, OUTPUT);
-
 
 };
 /**************************************************************************************************************************/
@@ -697,6 +695,7 @@ void batterytimer_callback(TimerHandle_t _handle)
 extern "C" void vApplicationIdleHook(void) {
   // Don't call any other FreeRTOS blocking API()
   // Perform background task(s) here
-    sd_power_mode_set(NRF_POWER_MODE_LOWPWR);
+    sd_power_mode_set(NRF_POWER_MODE_LOWPWR); // 944uA
+    //sd_power_mode_set(NRF_POWER_MODE_CONSTLAT); // 1.5mA
     sd_app_evt_wait();  // puts the nrf52 to sleep when there is nothing to do.  You need this to reduce power consumption. (removing this will increase current to 8mA)
 };

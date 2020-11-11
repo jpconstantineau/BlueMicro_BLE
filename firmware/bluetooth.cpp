@@ -67,7 +67,7 @@ ble_gap_conn_params_t _ppcp;
 //  Bluefruit.configPrphBandwidth(BANDWIDTH_HIGH);
  // Bluefruit.configCentralBandwidth(BANDWIDTH_HIGH);
   Bluefruit.begin(PERIPHERAL_COUNT,CENTRAL_COUNT);                            // Defined in firmware_config.h
- Bluefruit.begin();
+
   
   Bluefruit.autoConnLed(BLE_LED_ACTIVE);                                      // make sure the BlueFruit connection LED is not toggled.
   Bluefruit.setTxPower(DEVICE_POWER);                                         // Defined in bluetooth_config.h
