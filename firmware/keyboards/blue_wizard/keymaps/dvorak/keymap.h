@@ -28,11 +28,43 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #ifndef KEYMAP_H
 #define KEYMAP_H
 
-#define _QUERTY 0 // Base Dvorak layer
+#define _DVORAK 0 // Base Dvorak layer
 #define _NUM 1 // Number Layer
-
+#define _MEDIA 2  // Media layer
+#define _GAME 3 // Game Layer
 
 #define L_NUM (LAYER_0 + _NUM)
+#define L_MEDIA (LAYER_0 + _MEDIA)
+#define L_GAME (LAYER_0 + _GAME)
+
+#define XXXXXXX KC_NO
+#define _______ KC_TRNS
+#define KC_ALLU LSFT(LCTL(KC_UP))
+#define KC_ALLL LSFT(LCTL(KC_LEFT))
+#define KC_ALLR LSFT(LCTL(KC_RIGHT))
+#define KC_ALLD LSFT(LCTL(KC_DOWN))
+#define KC_COPY LCTL(KC_C)
+#define KC_PST LCTL(KC_V)
+#define KC_CUT LCTL(KC_X)
+#define KC_CALD LCTL(LALT(KC_DEL))
+#define KC_WINL LGUI(KC_LEFT)		//Window Snap
+#define KC_WINR LGUI(KC_RIGHT)
+#define KC_WINU LGUI(KC_UP)
+#define KC_WIND LGUI(KC_DOWN)
+#define KC_VIRL LCTL(LGUI(KC_LEFT))	//Virtual Desktop
+#define KC_VIRR LCTL(LGUI(KC_RIGHT))	//Virtual Desktop 
+#define KC_LOCK LGUI(KC_L)
+#define KC_PDFL LSFT(LCTL(KC_TAB))	//PDF Tab Switch
+#define KC_PDFR LCTL(KC_TAB)
+#define KC_CAW1 LCTL(LALT(LGUI(KC_1)))	// Move to monitor custom hotkey
+#define KC_CAW2 LCTL(LALT(LGUI(KC_2)))
+#define KC_CAW3 LCTL(LALT(LGUI(KC_3)))
+#define KC_CAW4 LCTL(LALT(LGUI(KC_4)))
+#define KC_CAW5 LCTL(LALT(LGUI(KC_5)))
+#define KC_CAW6 LCTL(LALT(LGUI(KC_6)))
+#define KC_CAW7 LCTL(LALT(LGUI(KC_7)))
+#define KC_CAW8 LCTL(LALT(LGUI(KC_8)))
+#define KC_CAW9 LCTL(LALT(LGUI(KC_9)))
 
 void setupKeymap();
 extern std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix;
