@@ -30,7 +30,7 @@ std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
                                        KC_HOME,
                      KC_BSPC,  KC_DEL,  KC_END,
         // right hand
-         KC_F9, KC_F10,  KC_F11,  KC_F12, KC_PSCR, KC_SCLK, KC_PAUS,  L_NUM, KC_SPC,
+         KC_F9, KC_F10,  KC_F11,  KC_F12, KC_PSCR, KC_SLCK, KC_PAUS, TG(L_NUM), KC_SPC,
          KC_6,    KC_7,    KC_8,    KC_9,    KC_0, KC_MINS,
          KC_Y,    KC_U,    KC_I,    KC_O,    KC_P, KC_BSLS,
          KC_H,    KC_J,    KC_K,    KC_L, KC_SCLN, KC_QUOT,
@@ -56,7 +56,7 @@ void setupKeymap() {
                                     _______, \
                   _______, _______, _______, \
         // right hand
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, \
+        _______, _______, _______, _______, _______, _______, _______, TG(L_NUM), _______, \
         _______, KC_NLCK,  KC_EQL, KC_SLSH, KC_ASTR, _______, \
         _______,    KC_7,    KC_8,    KC_9, KC_MINS, _______,
         _______,    KC_4,    KC_5,    KC_6, KC_PLUS, _______, \
