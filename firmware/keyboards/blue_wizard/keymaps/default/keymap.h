@@ -1,5 +1,5 @@
 /*
-Copyright 2019-2020 <Pierre Constantineau>
+Copyright (C) 2020, Jocelyn Turcotte <turcotte.j@gmail.com>
 
 3-Clause BSD License
 
@@ -17,24 +17,24 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
+#include <stdint.h>
+#include "hid_keycodes.h"
+#include "keyboard_config.h"
+#include "advanced_keycodes.h"
+#define MAX_NO_LAYERS 5 //needs to be one greater than the number of layers implimented. Too large of a number will cause crashing due to dynamic memory limits.
+#include "Key.h"
+#include <array>
 
-#ifndef HARDWAREVARIANTS_H
-#define HARDWAREVARIANTS_H
-#include "datastructures.h"
+#ifndef KEYMAP_H
+#define KEYMAP_H
 
-// putting this here since it's called in every keyboard_config and we need this for all the keymaps.
-// THIS FILE CONTAINS THE MACRO DEFINITIONS THAT USERS MAY USE IN THEIR keymap.cpp/h FILES.
-// FOR DATASTRUCTURES USED BY USER FUNCTIONS, SEE datastructures.h
+#define _QUERTY 0 // Base Dvorak layer
+#define _NUM 1 // Number Layer
 
-#define COL2ROW       0
-#define ROW2COL       1
 
-#define TEST 0
-#define LEFT 1
-#define RIGHT 2
-#define SINGLE 3
+#define L_NUM (LAYER_0 + _NUM)
 
-#define KEYMAP2ARRAY(OTHERMACROHERE) {OTHERMACROHERE}
-#define ADDLAYER(LAYER_INPUT,METHOD_INPUT,KEYMAP_INPUT )  for (int row = 0; row < MATRIX_ROWS; ++row) { for (int col = 0; col < MATRIX_COLS; ++col){ matrix[row][col].addActivation(LAYER_INPUT, METHOD_INPUT, KEYMAP_INPUT[row][col]);}}
-#define _PINNUM(port, pin) ((port)*32 + (pin))
-#endif  /*HARDWAREVARIANTS_H*/
+void setupKeymap();
+extern std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix;
+
+#endif /* KEYMAP_H */

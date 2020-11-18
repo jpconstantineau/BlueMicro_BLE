@@ -25,6 +25,7 @@ BLEHidAdafruit blehid;
 
 void setup() 
 {
+  
 // this is the code needed to change the default voltage from the on chip voltage regulator.
 // see https://infocenter.nordicsemi.com/pdf/nRF52840_PS_v1.0.pdf page 45
 
@@ -44,9 +45,9 @@ if (NRF_UICR->REGOUT0 != UICR_REGOUT0_VOUT_3V3) {
   
   Bluefruit.begin();
   Bluefruit.setTxPower(4);
-  Bluefruit.setName("BlueMicro840");
+  Bluefruit.setName("BlueMacro840");
   bledis.setManufacturer("jpconstantineau.com");
-  bledis.setModel("BlueMicro Tester");
+  bledis.setModel("BlueMacro Tester");
   bledis.begin();
   blehid.begin();
   startAdv();

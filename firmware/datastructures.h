@@ -72,14 +72,17 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
         char peer_name_prph[32];
         uint16_t conn_handle_prph;
         int8_t rssi_prph;
+        bool rssi_prph_updated;
 
         char peer_name_cent[32];
         uint16_t conn_handle_cent;
         int8_t rssi_cent;
+        bool rssi_cent_updated;
 
         char peer_name_cccd[32];
         uint16_t conn_handle_cccd;
         int8_t rssi_cccd;
+        bool rssi_cccd_updated;
     } DynamicState; // meant for keyboard and BLE status and things that are dynamic and should not be stored in flash.
 
     // TODO: Add the structures and function definitions for keycode buffer for user processing
