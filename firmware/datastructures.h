@@ -21,26 +21,44 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define DATASTRUCTURES_H
 #include <array>
 
-    typedef struct { 
-        bool    ledbacklight;  
-        bool    ledrgb; 
-        bool    VCCSwitchAvailable;  
-        bool    VCCSwitchEnabled;  
-        bool    ChargerControlAvailable;  
-        bool    ChargerControlEnabled; 
-        bool    WakeUpBLELED; 
-        bool    WakeUpKBLED;  
+    typedef union {
+        struct { 
         uint32_t timerkeyscaninterval;
-        uint32_t timerbatteryinterval;   
-         
+        uint32_t timerbatteryinterval; 
+
+        uint8_t    pinBLELED;  
+        uint8_t    pinKBLED; 
+        uint8_t    pinPWMLED;
+        uint8_t    pinRGBLED;
+        uint8_t    pinVCCSwitch;
+        uint8_t    pinChargerControl;
+
+        bool    enableBLELED; 
+        bool    enableKBLED; 
+        bool    enablePWMLED;  
+        bool    enableRGBLED;
+
+        bool    polarityBLELED; 
+        bool    polarityKBLED; 
+        bool    polarityPWMLED;  
+
+        bool    enableVCCSwitch;  
+        bool    polarityVCCSwitch;  
+        bool    enableChargerControl;  
+        bool    polarityChargerControl;    
+
+        bool    enableDisplay;
+        bool    enableSerial;
   
-    } PersistentState;
+       };
+       char data[16]; } PersistentState;  // meant for configuration and things that we want to store in flash so that we can pick it up on the next reboot.
 
     typedef struct { 
         uint32_t timestamp;
         uint32_t lastupdatetime;
         uint16_t layer;
-        uint8_t statusled;
+        uint8_t statuskb;
+        uint8_t statusble;
 
         bool helpmode;
         uint32_t vbat_raw;
@@ -62,6 +80,10 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
         char peer_name_cccd[32];
         uint16_t conn_handle_cccd;
         int8_t rssi_cccd;
-    } DynamicState;
+    } DynamicState; // meant for keyboard and BLE status and things that are dynamic and should not be stored in flash.
+
+    // TODO: Add the structures and function definitions for keycode buffer for user processing
+
+    typedef void (*ledupdateCallback)(PersistentState* config, DynamicState* status);
 
     #endif 

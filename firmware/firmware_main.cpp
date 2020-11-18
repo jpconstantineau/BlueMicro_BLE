@@ -23,36 +23,54 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include <Adafruit_LittleFS.h>
 #include <InternalFileSystem.h>
 
-using namespace Adafruit_LittleFS_Namespace;
 /**************************************************************************************************************************/
 // Keyboard Matrix
 byte rows[] MATRIX_ROW_PINS;        // Contains the GPIO Pin Numbers defined in keyboard_config.h
 byte columns[] MATRIX_COL_PINS;     // Contains the GPIO Pin Numbers defined in keyboard_config.h  
-//uint32_t lastupdatetime =0;
+
 SoftwareTimer keyscantimer, batterytimer;
 
 PersistentState keyboardconfig;
 DynamicState keyboardstate;
 
+led_handler statusLEDs(&keyboardconfig, &keyboardstate);  /// Typically a Blue LED and a Red LED
+
 KeyScanner keys;
 Battery batterymonitor;
 
 static std::vector<uint16_t> stringbuffer; // buffer for macros to type into...
-//static bool helpmode = false;
 
 /**************************************************************************************************************************/
 void setupConfig() {
-  keyboardconfig.ledbacklight=BACKLIGHT_PWM_ON;
-  keyboardconfig.ledrgb=WS2812B_LED_ON;
   keyboardconfig.timerkeyscaninterval=HIDREPORTINGINTERVAL;
   keyboardconfig.timerbatteryinterval=BATTERYINTERVAL;
-  keyboardconfig.VCCSwitchAvailable=(VCC_ENABLE_GPIO==1);
-  keyboardconfig.VCCSwitchEnabled=(VCC_DEFAULT_ON==1);;
-  keyboardconfig.ChargerControlAvailable=(VCC_ENABLE_CHARGER==1);
-  keyboardconfig.ChargerControlEnabled=true;
 
-  keyboardconfig.WakeUpBLELED=true;
-  keyboardconfig.WakeUpKBLED=true;
+  keyboardconfig.pinPWMLED=BACKLIGHT_LED_PIN;
+  keyboardconfig.pinRGBLED=WS2812B_LED_PIN;
+  keyboardconfig.pinBLELED=STATUS_BLE_LED_PIN;  
+  keyboardconfig.pinKBLED=STATUS_KB_LED_PIN;
+
+  keyboardconfig.enablePWMLED=BACKLIGHT_PWM_ON;
+  keyboardconfig.enableRGBLED=WS2812B_LED_ON;
+  keyboardconfig.enableBLELED=BLE_LED_ACTIVE;
+  keyboardconfig.enableKBLED=STATUS_KB_LED_ACTIVE;
+
+  keyboardconfig.polarityBLELED=BLE_LED_POLARITY;
+  keyboardconfig.polarityKBLED=STATUS_KB_LED_POLARITY;
+
+  keyboardconfig.enableVCCSwitch=VCC_ENABLE_GPIO;
+  keyboardconfig.polarityVCCSwitch=VCC_DEFAULT_ON;
+
+  keyboardconfig.enableChargerControl=VCC_ENABLE_CHARGER;
+  keyboardconfig.polarityChargerControl=true;
+
+  keyboardconfig.enableDisplay = false; // no displays yet
+
+  keyboardconfig.enableSerial = true; // no serial logic yet  TODO: take care of the bluemicro 2.0x where serial is on top of GPIOs
+
+
+  keyboardstate.statusble=0;  //initialize to a known state.
+  keyboardstate.statuskb=0;   //initialize to a known state.
 
   keyboardstate.helpmode = false;
   keyboardstate.timestamp = millis();
@@ -65,45 +83,52 @@ void setupConfig() {
 /**************************************************************************************************************************/
 // cppcheck-suppress unusedFunction
 void setup() {
- setupConfig();
+  setupGpio();                                                                // checks that NFC functions on GPIOs are disabled.
+  setupConfig();
+     //loadConfig();  TODO: Load config from flash 
 
- Serial.begin(115200);
-
+  if (keyboardconfig.enableSerial)
+  {
+   Serial.begin(115200);
+  }
+ 
   LOG_LV1("BLEMIC","Starting %s" ,DEVICE_NAME);
 
-  setupGpio();                                                                // checks that NFC functions on GPIOs are disabled.
-  if(keyboardconfig.VCCSwitchAvailable)
+  if(keyboardconfig.enableVCCSwitch)
   {
-    switchVCC(keyboardconfig.VCCSwitchEnabled); // turn on VCC when starting up if needed.
+    switchVCC(keyboardconfig.polarityVCCSwitch); // turn on VCC when starting up if needed.
   }
-  if(keyboardconfig.ChargerControlAvailable)
+
+  if(keyboardconfig.enableChargerControl)
   {
-    switchCharger(keyboardconfig.ChargerControlEnabled); // turn on Charger when starting up if needed.
+    switchCharger(keyboardconfig.polarityChargerControl); // turn on Charger when starting up if needed.
   }
-  setupStatusLEDs(keyboardconfig.WakeUpBLELED,keyboardconfig.WakeUpKBLED); 
-   
+
   keyscantimer.begin(keyboardconfig.timerkeyscaninterval, keyscantimer_callback);
   batterytimer.begin(keyboardconfig.timerbatteryinterval, batterytimer_callback);
   setupBluetooth();
 
-  if(keyboardconfig.ledbacklight)
-  {
-    setupPWM(BACKLIGHT_LED_PIN); //PWM contributes 500uA to the bottom line on a 840 device. see https://devzone.nordicsemi.com/f/nordic-q-a/40912/pwm-power-consumption-nrf52840 (there is no electrical specification)
-  }
-
-  if(keyboardconfig.ledrgb)
-  {
-    setupRGB();
-  }
   // Set up keyboard matrix and start advertising
-  setupKeymap();
+  setupKeymap(); // this is where we can change the callback for our LEDs...
   setupMatrix();
   startAdv(); 
   keyscantimer.start();
   batterytimer.start();
- // suspendLoop(); // this commands suspends the main loop.  We are no longer using the loop but scheduling things using the timers.
+
   stringbuffer.clear();
 
+  if(keyboardconfig.enablePWMLED)
+  {
+    setupPWM(keyboardconfig.pinPWMLED); //PWM contributes 500uA to the bottom line on a 840 device. see https://devzone.nordicsemi.com/f/nordic-q-a/40912/pwm-power-consumption-nrf52840 (there is no electrical specification)
+  }
+
+  if(keyboardconfig.enableRGBLED)
+  {
+    setupRGB();//keyboardconfig.pinRGBLED
+  }
+
+  statusLEDs.enable();
+  statusLEDs.hello();  // blinks Status LEDs a couple as last step of setup.
 
 };
 /**************************************************************************************************************************/
@@ -641,7 +666,18 @@ void sendKeyPresses() {
 /**************************************************************************************************************************/
 // cppcheck-suppress unusedFunction
 void loop() {
-  handleSerial();
+  if (keyboardconfig.enableSerial)
+  {
+    handleSerial();
+  }
+
+  updateBLEStatus();
+  statusLEDs.update(); //slow update in 1 second loop
+
+  if(keyboardconfig.enableDisplay)
+  {
+    // updateDisplay(timesincelastkeypress);
+  }
   delay(1000);
   
 };  // loop is called for serials comms and saving to flash.
@@ -652,7 +688,7 @@ void keyscantimer_callback(TimerHandle_t _handle) {
     scanMatrix();
   #endif
   #if SEND_KEYS == 1
-    sendKeyPresses();    // how often does this really run?
+    sendKeyPresses();    // TODO: how often does this really need to run?
   #endif
    unsigned long timesincelastkeypress = keyboardstate.timestamp - KeyScanner::getLastPressed();
 
@@ -667,16 +703,15 @@ void keyscantimer_callback(TimerHandle_t _handle) {
     }
   #endif
 
-  if(keyboardconfig.ledbacklight)
+  if(keyboardconfig.enablePWMLED) // TODO: is this timer too fast for this?
   {
     updatePWM(timesincelastkeypress);
   }
 
-  if(keyboardconfig.ledrgb)
+  if(keyboardconfig.enableRGBLED)// TODO: is this timer too fast for this?
   {
      updateRGB(timesincelastkeypress);
   }
-
 }
 //********************************************************************************************//
 //* Battery Monitoring Task - runs infrequently                                              *//

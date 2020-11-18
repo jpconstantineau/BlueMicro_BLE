@@ -66,6 +66,7 @@ class KeyScanner {
         static uint8_t currentReport[8];
         
         static uint8_t bufferposition;
+        static uint8_t ledStatus;
 
     private:
         static void resetReport();

@@ -18,19 +18,45 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 */
 
-#ifndef GPIO_H
-#define GPIO_H
+#ifndef NRF52GPIO_H
+#define NRF52GPIO_H
 
 #include <Arduino.h>
 #include <bluefruit.h>
-#include "keyboard_config.h"
+#include "hardware_variants.h"
 #include "firmware_config.h"
 
+  class led_handler
+  {
+    public:
+        led_handler(PersistentState* cfg, DynamicState* stat);
+        void setCallback(ledupdateCallback cb);
+        void update();
+        void enable();
+        void disable();
+        void hello();
+        void sleep();
+        
+    private:
+        bool enabled;
+        ledupdateCallback callback;
+        PersistentState* config;
+        DynamicState* status;
+  };
+
+void defaultLedCallback(PersistentState* config, DynamicState* status);
+
+
 void setupGpio();
-void setupPWM(uint8_t ledpin);
-void sendPWM(uint16_t value);
+
+void setupVCC(uint8_t pin, bool polarity);
+void setupCharger(uint8_t chargerpin, bool polarity);
+
 void switchVCC(bool value);
 void switchCharger(bool value);
-void setupStatusLEDs(bool blevalue, bool kbvalue);
+
+void setupPWM(uint8_t pin);
+void sendPWM(uint16_t value);
+
 
 #endif

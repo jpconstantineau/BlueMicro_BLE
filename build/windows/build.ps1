@@ -188,6 +188,7 @@ Function Compile-Board($keyboard, $target, $keymap, $fqbn, $hardware) {
 
     Copy-Item "$BuildDir\firmware.ino.zip" "$keyboardOutputDir\$keyboard-$fqbn-$hardware-$keymap-$target.zip" -force
     Copy-Item "$BuildDir\firmware.ino.hex" "$keyboardOutputDir\$keyboard-$fqbn-$hardware-$keymap-$target.hex" -force
+    Copy-Item "$BuildDir\firmware.ino.elf" "$keyboardOutputDir\$keyboard-$fqbn-$hardware-$keymap-$target.elf" -force
 
     Write-Host -ForegroundColor Green "OK"
     Write-Verbose

@@ -22,6 +22,10 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define FIRMWARE_CONFIG_H
 #include "hardware_variants.h"
 #include "keyboard_config.h"
+#include "datastructures.h"
+
+// THIS FILE USES THE USER KEYBOARD DEFINITION FILES TO CONFIGURE THE REST OF THE OPTIONS
+// NOTE THAT OPTIONS NOT DEFINED BY THE USER WILL BE SET TO THEIR DEFAULTS IN THIS FILE
 
 #define MATRIX_SCAN 1
 #define SEND_KEYS 1
@@ -108,35 +112,54 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #ifndef WS2812B_LED_PIN
   #define WS2812B_LED_PIN 0 
   #ifndef WS2812B_LED_COUNT
-  #define WS2812B_LED_COUNT 0          
+    #define WS2812B_LED_COUNT 0          
   #endif
-
   #ifndef WS2812B_LED_ON
-  #define WS2812B_LED_ON 0          
+    #define WS2812B_LED_ON 0          
   #endif        
 #endif
 
-  #ifndef WS2812B_LED_ON
+  #ifndef WS2812B_LED_ON  // it would have been created if a LED_PIN did not exist
   #define WS2812B_LED_ON 1          
   #endif 
 
-  #ifndef WS2812B_LED_COUNT
+  #ifndef WS2812B_LED_COUNT  // it would have been created if a LED_PIN did not exist
   #define WS2812B_LED_COUNT 1          
   #endif
 
 
-
-
-#ifndef BLE_LED_ACTIVE                    // setup default value if not set
-#define BLE_LED_ACTIVE false       
-#endif 
-
 #ifndef STATUS_BLE_LED_PIN                // setup default value if not set
-#define STATUS_BLE_LED_PIN LED_BLUE         
+  #define STATUS_BLE_LED_PIN LED_BLUE 
+  #ifndef BLE_LED_ACTIVE                    // setup default value if not set
+    #define BLE_LED_ACTIVE 0     
+  #endif 
+  #ifndef BLE_LED_POLARITY                    // setup default value if not set
+    #define BLE_LED_POLARITY 1     
+  #endif 
+#else
+  #ifndef BLE_LED_ACTIVE                    // setup default value if not set
+    #define BLE_LED_ACTIVE 1     
+  #endif
+  #ifndef BLE_LED_POLARITY                    // setup default value if not set
+    #define BLE_LED_POLARITY 1     
+  #endif 
 #endif
 
 #ifndef STATUS_KB_LED_PIN                 // setup default value if not set
-#define STATUS_KB_LED_PIN LED_RED         
+  #define STATUS_KB_LED_PIN LED_RED 
+  #ifndef STATUS_KB_LED_ACTIVE                   // setup default value if not set
+    #define STATUS_KB_LED_ACTIVE 0       
+  #endif
+  #ifndef STATUS_KB_LED_POLARITY                    // setup default value if not set
+    #define STATUS_KB_LED_POLARITY 1     
+  #endif 
+#else
+  #ifndef STATUS_KB_LED_ACTIVE                   // setup default value if not set
+    #define STATUS_KB_LED_ACTIVE 1       
+  #endif 
+  #ifndef STATUS_KB_LED_POLARITY                    // setup default value if not set
+    #define STATUS_KB_LED_POLARITY 1     
+  #endif       
 #endif
 
 #define PWM_TOUCH_INTERVAL 1000           // detection time since last keypress.
