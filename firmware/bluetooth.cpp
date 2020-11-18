@@ -55,11 +55,21 @@ StatePayload  statedata;
 /**************************************************************************************************************************/
 void setupBluetooth(void)
 {
+ble_gap_conn_params_t _ppcp;
+  _ppcp = ((ble_gap_conn_params_t) {
+    .min_conn_interval = 6,
+    .max_conn_interval = 12,
+    .slave_latency     = 5,
+    .conn_sup_timeout  = 2000 / 10 // in 10ms unit
+  });
+  
   //Bluefruit.configPrphBandwidth(BANDWIDTH_MAX); // OK for nrf52840
-  Bluefruit.configPrphBandwidth(BANDWIDTH_HIGH);
+//  Bluefruit.configPrphBandwidth(BANDWIDTH_HIGH);
  // Bluefruit.configCentralBandwidth(BANDWIDTH_HIGH);
   Bluefruit.begin(PERIPHERAL_COUNT,CENTRAL_COUNT);                            // Defined in firmware_config.h
-  Bluefruit.autoConnLed(BLE_LED_ACTIVE);                                      // make sure the BlueFruit connection LED is not toggled.
+
+  
+  Bluefruit.autoConnLed(false);                                               // make sure the BlueFruit connection LED is not toggled.
   Bluefruit.setTxPower(DEVICE_POWER);                                         // Defined in bluetooth_config.h
   Bluefruit.setName(DEVICE_NAME);                                             // Defined in keyboard_config.h
   Bluefruit.configUuid128Count(UUID128_COUNT);                                // Defined in bluetooth_config.h
@@ -67,7 +77,14 @@ void setupBluetooth(void)
   Bluefruit.setAppearance(BLE_APPEARANCE_HID_KEYBOARD);                       // How the device appears once connected
   Bluefruit.setRssiCallback(rssi_changed_callback);
   //********Bluefruit.setConnInterval(9, 12);                                 // 0.10.1: not needed for master...
-  Bluefruit.Periph.setConnInterval(6, 12); // 7.5 - 15 ms
+  //https://devzone.nordicsemi.com/nordic/power/w/opp/2/online-power-profiler-for-ble
+ // Bluefruit.Periph.setConnInterval(6, 12); // 7.5 - 15 ms
+ // Bluefruit.Periph.setConnSlaveLatency(10); // TODO: add this when 0.22.0 gets released!  This will reduce power consumption significantly.
+ 
+//sd_ble_gap_ppcp_get(&_ppcp);
+//_ppcp.slave_latency = 30;
+sd_ble_gap_ppcp_set(&_ppcp);
+
   Bluefruit.Periph.setConnectCallback(prph_connect_callback);
   Bluefruit.Periph.setDisconnectCallback(prph_disconnect_callback);  
   // Configure and Start Device Information Service
@@ -136,6 +153,7 @@ void setupBluetooth(void)
    * up to 11.25 ms. Therefore BLEHidAdafruit::begin() will try to set the min and max
    * connection interval to 11.25  ms and 15 ms respectively for best performance.
    */
+   
 #if BLE_HID == 1
   blehid.begin();
   // Set callback for set LED from central
@@ -146,7 +164,7 @@ void setupBluetooth(void)
    * Note: It is already set by BLEHidAdafruit::begin() to 11.25ms - 15ms
    * min = 9*1.25=11.25 ms, max = 12*1.25= 15 ms 
    */
- 
+
  #if BLE_CENTRAL == 1                                   // CENTRAL IS THE MASTER BOARD
 
   KBLinkClientService.begin();
@@ -214,7 +232,30 @@ void startAdv(void)
   Bluefruit.Advertising.setInterval(32, 244);    // in unit of 0.625 ms
   Bluefruit.Advertising.setFastTimeout(30);      // number of seconds in fast mode
   Bluefruit.Advertising.start(0);                // 0 = Don't stop advertising after n seconds
+  
+  Bluefruit.Advertising.setSlowCallback(advertizing_slow_callback);
+  Bluefruit.Advertising.setStopCallback(advertizing_stop_callback);
 }
+
+
+ // typedef void (*stop_callback_t) (void);
+  //typedef void (*slow_callback_t) (void);
+  void advertizing_slow_callback(void)
+  {
+     // drop fast
+     keyboardstate.statusble = keyboardstate.statusble & (~1); // bitwise AND NOT
+     // add is_running
+     keyboardstate.statusble = keyboardstate.statusble | (4); // bitwise OR
+     // add slow
+     keyboardstate.statusble = keyboardstate.statusble | (2); // bitwise OR
+  }
+  void advertizing_stop_callback(void)
+  {
+     // drop slow
+     keyboardstate.statusble = keyboardstate.statusble & (~2); // bitwise AND NOT
+     // drop is_running
+     keyboardstate.statusble = keyboardstate.statusble & (~4); // bitwise AND NOT
+  }
 
 void rssi_changed_callback(uint16_t conn_hdl, int8_t rssi)
 {
@@ -234,6 +275,21 @@ void rssi_changed_callback(uint16_t conn_hdl, int8_t rssi)
     keyboardstate.rssi_cccd_updated = true;
   }  
      
+}
+
+void updateBLEStatus(void)
+{
+  keyboardstate.statusble = 0;
+  if (Bluefruit.Advertising.isRunning())
+  { 
+    keyboardstate.statusble = keyboardstate.statusble | (4); // bitwise OR
+  }
+    if (Bluefruit.connected()>0)
+  { 
+    keyboardstate.statusble = keyboardstate.statusble | (32); // bitwise OR
+  }
+
+
 }
 
 /**************************************************************************************************************************/
@@ -306,7 +362,7 @@ void cccd_callback(uint16_t conn_hdl, BLECharacteristic* chr, uint16_t cccd_valu
             LOG_LV1("CBCCCD","KBLinkChar_Buffer 'Notify' disabled");
           }
       }
-      
+
 }
 /**************************************************************************************************************************/
 // This callback is called layer_request when characteristic is being written to.  This occurs on the server (Peripheral)
@@ -336,6 +392,15 @@ connection->monitorRssi(6);
 strcpy (keyboardstate.peer_name_prph,peer_name);
 keyboardstate.conn_handle_prph = conn_handle;
 
+keyboardstate.statusble = keyboardstate.statusble | (8); // bitwise OR
+
+     // drop fast
+     keyboardstate.statusble = keyboardstate.statusble & (~1); // bitwise AND NOT
+     // drop slow
+     keyboardstate.statusble = keyboardstate.statusble & (~2); // bitwise AND NOT
+     // drop is_running
+     keyboardstate.statusble = keyboardstate.statusble & (~4); // bitwise AND NOT
+
 // if HID then save connection handle to HID_connection handle
 #if BLE_HID == 1
 hid_conn_hdl = conn_handle;
@@ -350,6 +415,8 @@ void prph_disconnect_callback(uint16_t conn_handle, uint8_t reason)
   (void) reason;
   LOG_LV1("PRPH","Disconnected"  );
 
+//keyboardstate.statusble = keyboardstate.statusble & (~8); // bitwise AND NOT
+keyboardstate.statusble = 0;
 // if HID then save connection handle to HID_connection handle
 #if BLE_HID == 1
 hid_conn_hdl = 0;
@@ -402,7 +469,8 @@ keyboardstate.conn_handle_cent = conn_handle;
     LOG_LV1("CENTRL","No KBLink Service on this connection"  );
     // disconect since we couldn't find KBLink service
     Bluefruit.disconnect(conn_handle);
-  }   
+  } 
+  keyboardstate.statusble = keyboardstate.statusble | (16); // bitwise OR
 }
 /**************************************************************************************************************************/
 // This callback is called when the central disconnects from a peripheral
@@ -415,6 +483,7 @@ void cent_disconnect_callback(uint16_t conn_handle, uint8_t reason)
   // if the half disconnects, we need to make sure that the received buffer is set to empty.
             KeyScanner::updateRemoteLayer(0);  // Layer is only a single uint8
            KeyScanner::updateRemoteReport(0,0,0, 0,0, 0, 0);
+           keyboardstate.statusble = keyboardstate.statusble & (~16); // bitwise AND NOT  
 }
 #endif
 
@@ -430,14 +499,17 @@ void set_keyboard_led(uint16_t conn_handle, uint8_t led_bitmap)
 {
   (void) conn_handle;
   // light up Red Led if any bits is set
-  if ( led_bitmap )
+/*  if ( led_bitmap )
   {
     ledOn( STATUS_KB_LED_PIN );
   }
   else
   {
     ledOff( STATUS_KB_LED_PIN );
-  }
+  }*/
+
+  keyboardstate.statuskb = led_bitmap;
+  //KeyScanner::ledStatus = led_bitmap;
 }
 /**************************************************************************************************************************/
 void sendlayer(uint8_t layer)

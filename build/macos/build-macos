@@ -106,6 +106,7 @@ arduino_compile() {
    
      cp -f $buildPath/firmware.ino.zip $outputPath/$keyboard/$keyboard-$fqbn-$hardware-$keymap-$target.zip
      cp -f $buildPath/firmware.ino.hex $outputPath/$keyboard/$keyboard-$fqbn-$hardware-$keymap-$target.hex
+     cp -f $buildPath/firmware.ino.elf $outputPath/$keyboard/$keyboard-$fqbn-$hardware-$keymap-$target.elf
 
      successfulBuilds=$((successfulBuilds+1))
      printf "${GREEN}OK${NC}\n"

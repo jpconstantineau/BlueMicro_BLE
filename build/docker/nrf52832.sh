@@ -91,6 +91,7 @@ arduino_compile() {
 
      cp -f $buildPath/firmware.ino.zip $outputPath/$keyboard/$keyboard-$keymap-$target.nrf52832.zip
      cp -f $buildPath/firmware.ino.hex $outputPath/$keyboard/$keyboard-$keymap-$target.nrf52832.hex
+     cp -f $buildPath/firmware.ino.elf $outputPath/$keyboard/$keyboard-$keymap-$target.nrf52832.elf
 
      successfulBuilds832=$((successfulBuilds832+1))
      printf "${GREEN}OK${NC} \n"

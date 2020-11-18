@@ -22,6 +22,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include <bluefruit.h>
 #include "firmware_config.h"
 #include "bluetooth_config.h"
+#include "nrf52gpio.h"
 #undef min
 #undef max
 
@@ -45,7 +46,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
         uint32_t       timesync;         // 4 bytes
     } StatePayload;
 
-
+void updateBLEStatus(void);
     void setupBluetooth(void);
     void startAdv(void);
     void set_keyboard_led(uint16_t conn_handle, uint8_t led_bitmap);
@@ -54,6 +55,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
     void sendMediaKey(uint16_t keycode);
     void sendMouseKey(uint16_t keycode);
     void rssi_changed_callback(uint16_t conn_hdl, int8_t rssi);
+    void advertizing_slow_callback(void);
+    void advertizing_stop_callback(void);
     void prph_connect_callback(uint16_t conn_handle);
     void prph_disconnect_callback(uint16_t conn_handle, uint8_t reason);
 

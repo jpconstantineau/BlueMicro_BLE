@@ -19,6 +19,9 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 #include "sleep.h"
 #include "LedRGB.h"
+
+
+extern led_handler statusLEDs; /// Typically a Blue and Red LED
 /**************************************************************************************************************************/
 // Prepare sense pins for waking up from complete shutdown
 /**************************************************************************************************************************/
@@ -44,6 +47,8 @@ void setupWakeUp() {
       #if VCC_ENABLE_GPIO ==1 
       switchVCC(false); // turn off VCC when going to sleep. This isn't an optional thing...
       #endif
+
+  statusLEDs.sleep(); 
 }
 
 /**************************************************************************************************************************/

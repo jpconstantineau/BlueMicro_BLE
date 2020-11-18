@@ -16,7 +16,7 @@ if exist %bmpprefix% (
     @echo NOT Found arm-none-eabi-gdb.exe
 )
 
-%bmpprefix% --batch -ex "target extended-remote \\.\%1" -ex "mon tpwr enable" -ex "mon swdp_scan" -ex "att 2" -ex "mon erase_mass"
+%bmpprefix% --batch -ex "target extended-remote \\.\%1" -ex "mon tpwr enable" -ex "mon swdp_scan" -ex "att 1" -ex "mon erase_mass"
 
 set search_cmd="dir /b %prefix%"
 FOR /F "tokens=*" %%i IN (' %search_cmd% ') DO SET ver=%%i
@@ -29,4 +29,4 @@ FOR /F "tokens=*" %%i IN (' %searchbootloader_cmd% ') DO SET bootloader=%%i
 
 set bootloaderfullname=%bootloaderprefix%\%bootloader%
 @echo %bootloaderfullname%
-%bmpprefix% %bootloaderfullname% --batch -ex "target extended-remote \\.\%1" -ex "mon tpwr enable" -ex "mon swdp_scan" -ex "att 1" -ex "load "  -ex "quit"
+%bmpprefix% %bootloaderfullname% --batch -ex "target extended-remote \\.\%1" -ex "mon tpwr enable" -ex "mon swdp_scan" -ex "att 1"  -ex "load  " -ex "compare-sections" -ex "mon hard_srst" -ex "detach"
