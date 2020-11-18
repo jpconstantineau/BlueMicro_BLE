@@ -111,9 +111,6 @@ void led_handler::update()
 {
   
  // do something looking at config and status and adjust LED states...
- Serial.print(status->statusble);
- Serial.print(" ");
- Serial.println(status->statuskb);
  // BLE LED
  // (0 = 1) Fast Advertizing
  // (1 = 2) Slow Advertizing
