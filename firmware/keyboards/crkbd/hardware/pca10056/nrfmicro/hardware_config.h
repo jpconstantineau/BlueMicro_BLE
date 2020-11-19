@@ -44,13 +44,14 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
      #define VCC_PIN 41 //1.09  = 32+9
      #define VCC_POLARITY_ON 0
-
+#define  STATUS_BLE_LED_PIN  19  //blue = 0.19
+#define  STATUS_KB_LED_PIN 17  //red = 0.17
      #define CHARGER_PIN  5
      #define CHARGER_POLARITY_ON 0
 
+     //#define  STATUS_KB_LED_PIN 0  //no RED LED
      #define STATUS_BLE_LED_PIN 42 //1.10  = 32+10
 
-     //#define STATUS_KB_LED_PIN 42 //1.10  = 32+10 there are no secondary LEDs on nrfmicro
 
         // nrfmicro pinout reference
         // https://github.com/joric/nrfmicro/wiki/Pinout
