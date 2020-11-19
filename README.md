@@ -23,7 +23,7 @@ You can contribute to the documentation by editing the markdown files located in
 
 **Compatible Hardware**  
 
-![BlueMicro](/docs/images/BlueMicro_Hardware.jpg)
+![BlueMicro](http://bluemicro.jpconstantineau.com/img/BlueMicro_Hardware.jpg)
 
 Top Row: 5x5Backpack, 4x4Backpack
 
