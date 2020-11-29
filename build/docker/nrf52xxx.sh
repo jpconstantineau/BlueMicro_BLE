@@ -16,7 +16,9 @@ done
 
 shift $(($OPTIND - 1))
 boardParam=$1
+
 scriptPath="$(dirname "$BASH_SOURCE")"
+
 blueMicroPath=$(cd $scriptPath/../.. && pwd)
 firmwarePath="${blueMicroPath}/firmware"
 outputPath="${blueMicroPath}/output"
@@ -84,6 +86,7 @@ arduino_compile() {
    
      cp -f $buildPath/firmware.ino.zip $outputPath/$keyboard/$keyboard-$fqbn-$hardware-$keymap-$target.zip
      cp -f $buildPath/firmware.ino.hex $outputPath/$keyboard/$keyboard-$fqbn-$hardware-$keymap-$target.hex
+     cp -f $buildPath/firmware.ino.elf $outputPath/$keyboard/$keyboard-$fqbn-$hardware-$keymap-$target.elf
 
      successfulBuilds=$((successfulBuilds+1))
      printf "${GREEN}OK${NC} "

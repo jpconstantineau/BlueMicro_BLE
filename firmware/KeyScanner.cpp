@@ -427,6 +427,7 @@ uint16_t KeyScanner::remoteLayer = 0;
 uint16_t KeyScanner::remotespecialkeycode = 0;
 
 uint16_t KeyScanner::oneshotLayer = 0;
+uint8_t KeyScanner::ledStatus = 0;
 uint8_t KeyScanner::remoteMod = 0;
 uint8_t KeyScanner::currentMod = 0;
 unsigned long KeyScanner::timestamps[MATRIX_ROWS][MATRIX_COLS]  = {0};

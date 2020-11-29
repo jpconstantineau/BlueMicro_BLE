@@ -1,8 +1,4 @@
-# Features
 
-TODO
-
-### BlueMicro vs QMK
 
 | Feature           | BlueMicro  | QMK        |
 | ----------------- | ---------- | ---------- |
@@ -13,16 +9,6 @@ TODO
 |  * Wireless Device Firmware Update    |    Yes        |   No    |
 |  * Central/Peripheral Communications | Yes  | No  |
 |  * Dongle free    | Yes | Depends |
-|                   |            |            |
-| Low Power Functions |          |            |
-|  * Programmable radio power | Yes | (?) |
-|  * Variable Keyboard Scanning Rate | Possible    |   n/a         |
-|  * Timed low-power mode | Yes    |   n/a         |
-|  * Low Battery low-power mode | Sleep after 10 minutes    |   n/a         |
-|                   |            |            |
-| Split Keyboards   | Yes (future support for >2 halves) | yes - 2 halves only |
-|                   |            |            |
-| Basic HID Keycodes | Yes       | Yes        |
 |                   |            |            |
 | Accented Keys èéê | Yes (windows)  | Yes        |
 |                   |            |            |
@@ -39,47 +25,9 @@ TODO
 |                   |            |            |
 | Auto Shift        | Key Timing | Yes  |
 |                   | Required   |            |
-|                   |            |            |
-| Backlight LEDs    | Tested     | Yes  |
-|                   |            |            |
-| Boot Magic        | Special Functions available  | Yes  |
-|                   |            |            |
-| Dynamic Macros    | Future     | Yes  |
-|                   |            |            |
-| LCD Display       | OLED - WIP         | Yes  |
-|                   |            |            |
-| Key Lock          | ?          | Yes  |
-|                   |            |            |
-| Layouts           | Yes        | Yes  |
-|                   |            |            |
 | Leader Key        | Future     | Yes  |
-|                   |            |            |
-| Pre-programmed Macros | Yes | Yes  |
-|                   |            |            |
-| Mouse Keys        | Yes | Yes  |
-|                   |            |            |
-| Pointing Device   | Depends on Library | Yes  |
-|                   |            |            |
-| PS2 Mouse         | No         | Yes  |
-|                   |            |            |
-| RGB Light         | Yes     | Yes  |
-|                   |            |            |
-| RGB Matrix        | Future     | Yes  |
-|                   |            |            |
-| Space Cadet       | Tap/Hold   | Yes  |
 |                   |            |            |
 | Stenography       | Partial No NKRO.  | Yes  |
 |                   |            |            |
-| Swap Hands        | No         | Yes  |
-|                   |            |            |
 | Tap Dance         | Tap/Double Tap | Yes  |
 |                   | Tap/Hold   |            |
-|                   |            |            |
-| Terminal          | No         | Yes  |
-|                   |            |            |
-| Thermal Printer   | No         | Yes  |
-|                   |            |            |
-| Unicode           | No  (OS Limited) | Yes  |
-|                   |            |            |
-| Userspace         | No         | Yes  |
-|                   |            |            |

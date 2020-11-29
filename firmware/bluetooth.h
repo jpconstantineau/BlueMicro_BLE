@@ -22,6 +22,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include <bluefruit.h>
 #include "firmware_config.h"
 #include "bluetooth_config.h"
+#include "nrf52gpio.h"
 #undef min
 #undef max
 
@@ -45,7 +46,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
         uint32_t       timesync;         // 4 bytes
     } StatePayload;
 
-
+void updateBLEStatus(void);
     void setupBluetooth(void);
     void startAdv(void);
     void set_keyboard_led(uint16_t conn_handle, uint8_t led_bitmap);
@@ -54,6 +55,10 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
     void sendMediaKey(uint16_t keycode);
     void sendMouseKey(uint16_t keycode);
     void rssi_changed_callback(uint16_t conn_hdl, int8_t rssi);
+    void advertizing_slow_callback(void);
+    void advertizing_stop_callback(void);
+    void prph_connect_callback(uint16_t conn_handle);
+    void prph_disconnect_callback(uint16_t conn_handle, uint8_t reason);
 
     #if BLE_PERIPHERAL ==1   | BLE_CENTRAL ==1 
     void sendlayer(uint8_t layer);
@@ -67,8 +72,6 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
     #if BLE_CENTRAL == 1
         void notify_callback(BLEClientCharacteristic* chr, uint8_t* data, uint16_t len);
         void scan_callback(ble_gap_evt_adv_report_t* report);
-        void prph_connect_callback(uint16_t conn_handle);
-        void prph_disconnect_callback(uint16_t conn_handle, uint8_t reason);
         void cent_connect_callback(uint16_t conn_handle);
         void cent_disconnect_callback(uint16_t conn_handle, uint8_t reason);
     #endif

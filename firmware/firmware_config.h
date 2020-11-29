@@ -22,6 +22,10 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define FIRMWARE_CONFIG_H
 #include "hardware_variants.h"
 #include "keyboard_config.h"
+#include "datastructures.h"
+
+// THIS FILE USES THE USER KEYBOARD DEFINITION FILES TO CONFIGURE THE REST OF THE OPTIONS
+// NOTE THAT OPTIONS NOT DEFINED BY THE USER WILL BE SET TO THEIR DEFAULTS IN THIS FILE
 
 #define MATRIX_SCAN 1
 #define SEND_KEYS 1
@@ -32,21 +36,23 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define CENTRAL_COUNT 1
 #define PERIPHERAL_COUNT 1 //1  
 #define BLE_PERIPHERAL 0
-#define DEVICE_NAME DEVICE_NAME_L
+#define DEVICE_NAME DEVICE_NAME_L // override name
 #elif KEYBOARD_SIDE == RIGHT
 #define BLE_HID 0
 #define BLE_CENTRAL 0
 #define CENTRAL_COUNT 0
 #define PERIPHERAL_COUNT 1 //1  
 #define BLE_PERIPHERAL 1
-#define DEVICE_NAME DEVICE_NAME_R
+#define DEVICE_NAME DEVICE_NAME_R // override name
 #elif KEYBOARD_SIDE == SINGLE
 #define BLE_HID 1
 #define BLE_CENTRAL 0
 #define CENTRAL_COUNT 0
 #define PERIPHERAL_COUNT 1 //1  
 #define BLE_PERIPHERAL 0
+#ifndef DEVICE_NAME 
 #define DEVICE_NAME DEVICE_NAME_M
+#endif
 #elif KEYBOARD_SIDE == TEST
 #define BLE_CENTRAL 0  /// 
 #define BLE_PERIPHERAL 0 /// 
@@ -54,7 +60,9 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define BLE_HID 1 //1 //  
 #define PERIPHERAL_COUNT 1 //1  
 #define CENTRAL_COUNT 0
+#ifndef DEVICE_NAME 
 #define DEVICE_NAME DEVICE_NAME_M
+#endif
 #endif
 
 
@@ -71,6 +79,12 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #ifndef BATTERY_TYPE
 #define BATTERY_TYPE BATT_UNKNOWN
 #endif
+
+#ifndef VBAT_PIN
+#define VBAT_PIN  31       // make sure we have a default analog pin to do something with...
+#endif
+
+
 
 #ifndef BATTERYINTERVAL
 #define BATTERYINTERVAL 30000
@@ -89,23 +103,67 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #endif
 
 #ifndef BACKLIGHT_LED_PIN
-#define BACKLIGHT_LED_PIN 0          
+  #define BACKLIGHT_LED_PIN 0 
+  #ifndef BACKLIGHT_PWM_ON
+   #define BACKLIGHT_PWM_ON 0          
+  #endif  
+#else
+  #ifndef BACKLIGHT_PWM_ON
+  #define BACKLIGHT_PWM_ON 1          
+  #endif      
 #endif
 
 #ifndef WS2812B_LED_PIN
-#define WS2812B_LED_PIN 0          
+  #define WS2812B_LED_PIN 0 
+  #ifndef WS2812B_LED_COUNT
+    #define WS2812B_LED_COUNT 0          
+  #endif
+  #ifndef WS2812B_LED_ON
+    #define WS2812B_LED_ON 0          
+  #endif        
 #endif
 
-#ifndef WS2812B_LED_COUNT
-#define WS2812B_LED_COUNT 0          
+  #ifndef WS2812B_LED_ON  // it would have been created if a LED_PIN did not exist
+  #define WS2812B_LED_ON 1          
+  #endif 
+
+  #ifndef WS2812B_LED_COUNT  // it would have been created if a LED_PIN did not exist
+  #define WS2812B_LED_COUNT 1          
+  #endif
+
+
+#ifndef STATUS_BLE_LED_PIN                // setup default value if not set
+  #define STATUS_BLE_LED_PIN LED_BLUE 
+  #ifndef BLE_LED_ACTIVE                    // setup default value if not set
+    #define BLE_LED_ACTIVE 0     
+  #endif 
+  #ifndef BLE_LED_POLARITY                    // setup default value if not set
+    #define BLE_LED_POLARITY 1     
+  #endif 
+#else
+  #ifndef BLE_LED_ACTIVE                    // setup default value if not set
+    #define BLE_LED_ACTIVE 1     
+  #endif
+  #ifndef BLE_LED_POLARITY                    // setup default value if not set
+    #define BLE_LED_POLARITY 1     
+  #endif 
 #endif
 
-#ifndef WS2812B_LED_ON
-#define WS2812B_LED_ON 0          
-#endif
-
-#ifndef BACKLIGHT_PWM_ON
-#define BACKLIGHT_PWM_ON 0          
+#ifndef STATUS_KB_LED_PIN                 // setup default value if not set
+  #define STATUS_KB_LED_PIN LED_RED 
+  #ifndef STATUS_KB_LED_ACTIVE                   // setup default value if not set
+    #define STATUS_KB_LED_ACTIVE 0       
+  #endif
+  #ifndef STATUS_KB_LED_POLARITY                    // setup default value if not set
+    #define STATUS_KB_LED_POLARITY 1     
+  #endif 
+#else
+  #ifndef STATUS_KB_LED_ACTIVE                   // setup default value if not set
+    #define STATUS_KB_LED_ACTIVE 1       
+  #endif 
+  #ifndef STATUS_KB_LED_POLARITY                    // setup default value if not set
+    #define STATUS_KB_LED_POLARITY 1     
+  #endif       
 #endif
 
 #define PWM_TOUCH_INTERVAL 1000           // detection time since last keypress.
@@ -127,8 +185,26 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
     #ifndef VCC_POLARITY_ON
       #define VCC_POLARITY_ON 1
     #endif
+    #ifndef VCC_DEFAULT_ON
+      #define VCC_DEFAULT_ON 1
+    #endif
   #else
   #define VCC_ENABLE_GPIO 0
+#endif
+
+#ifndef VCC_DEFAULT_ON
+  #define VCC_DEFAULT_ON 0
+#endif
+
+ 
+
+#ifdef CHARGER_PIN
+  #define VCC_ENABLE_CHARGER 1
+    #ifndef CHARGER_POLARITY_ON
+      #define CHARGER_POLARITY_ON 1
+    #endif
+  #else
+  #define VCC_ENABLE_CHARGER 0
 #endif
 
 #endif /* FIRMWARE_CONFIG_H */

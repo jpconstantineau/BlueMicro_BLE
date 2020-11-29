@@ -101,8 +101,11 @@ void matrix_key_test(bool singlekey)
 {
     #ifdef NRF52840_XXAA
     // below tests all nrf52840 GPIOs except 32kHz xtal and reset
-    uint8_t pins[]    = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,  19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47   };
-    
+    #ifdef NICENANO // 14 and 16 are connected to 18 - reset line
+      uint8_t pins[]    = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15, 17, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47   };
+    #else
+      uint8_t pins[]    = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,  19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47   };
+    #endif
     #else
     // below tests all nrf52832 GPIOs except 32kHz xtal and reset
     uint8_t pins[]    = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31   };
@@ -181,13 +184,17 @@ void matrix_key_test(bool singlekey)
 void gpiotester(){
     keyscantimer.stop();
   batterytimer.stop();
-        #ifdef NRF52840_XXAA
-        // below tests all nrf52840 GPIOs except 32kHz xtal and reset
-        uint8_t pins[]    = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,  19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47   };
-        #else
-        // below tests all nrf52832 GPIOs except 32kHz xtal and reset
-        uint8_t pins[]    = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31   };
-        #endif
+    #ifdef NRF52840_XXAA
+    // below tests all nrf52840 GPIOs except 32kHz xtal and reset
+    #ifdef NICENANO // 14 and 16 are connected to 18 - reset line
+      uint8_t pins[]    = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15, 17, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47   };
+    #else
+      uint8_t pins[]    = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,  19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47   };
+    #endif
+    #else
+    // below tests all nrf52832 GPIOs except 32kHz xtal and reset
+    uint8_t pins[]    = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31};
+    #endif
 uint8_t pincount = sizeof(pins)/sizeof(pins[0]);
   Serial.println("GPIO TESTER");
   Serial.println("-------------------------------\n");
@@ -276,8 +283,7 @@ void handleSerial() {
         Serial.println("----- Before -----\n");
         bond_print_list(BLE_GAP_ROLE_PERIPH);
         bond_print_list(BLE_GAP_ROLE_CENTRAL);
-
-        Bluefruit.clearBonds();
+       // Bluefruit.clearBonds(); //removed in next BSP?
         Bluefruit.Central.clearBonds();
 
         Serial.println();

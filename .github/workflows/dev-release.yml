@@ -1,0 +1,44 @@
+on:
+  push:
+    branches:
+      - develop
+name: Draft Patch Release on Push/Merge into develop
+
+jobs:
+  build:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - uses: oprypin/find-latest-tag@v1
+        id: lasttag  # The step ID to refer to later.
+        with:
+          repository: jpconstantineau/BlueMicro_BLE  # The repository to scan.
+          releases-only: true  # We know that all relevant tags have a GitHub release for them.
+
+      - name: Previously released version
+        run: echo ${{ steps.lasttag.outputs.tag }}
+
+      - name: Bump release version
+        id: bump_version
+        uses: christian-draeger/increment-semantic-version@1.0.2
+        with:
+          current-version: ${{ steps.lasttag.outputs.tag }}
+          version-fragment: 'bug'
+
+      - name: About to release version
+        run: echo ${{ steps.bump_version.outputs.next-version }}
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          tag_name: ${{ steps.bump_version.outputs.next-version }}
+          release_name: ${{ steps.bump_version.outputs.next-version }}
+          draft: true
+          prerelease: true
+
+

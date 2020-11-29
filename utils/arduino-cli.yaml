@@ -1,3 +1,4 @@
 board_manager:
   additional_urls:
     - https://www.adafruit.com/package_adafruit_index.json
+    - https://github.com/jpconstantineau/Community_nRF52_Arduino/releases/latest/download/package_jpconstantineau_boards_index.json
