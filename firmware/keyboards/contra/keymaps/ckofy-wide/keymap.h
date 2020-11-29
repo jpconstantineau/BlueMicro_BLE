@@ -58,6 +58,13 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define KC_BRK  LCTL(KC_B)    // LabVIEW remove broken wires
 #define KC_SWP  LCTL(KC_E)    // LabVIEW show block diagram/show front panel
 
+// Mac shortcuts
+#define KC_MCUT  LGUI(KC_X)	// CUT
+#define KC_MCPY  LGUI(KC_C)	// COPY
+#define KC_MPST  LGUI(KC_V)	// PASTE
+#define KC_MUND  LGUI(KC_Z)	// UNDO
+#define KC_MSVE  LGUI(KC_S)  // Save
+
 /*
 #define KC_SETG MOD(MOD_LGUI, KC_I)		// Settings
 #define KC_EXPL MOD(MOD_LGUI, KC_E)		// File Explorer
@@ -74,7 +81,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 // define macro hooks
 
 #define KM_COLEMAK  MC(KC_1)
-#define KM_QWERTY MC(KC_2)
+#define KM_MAC MC(KC_2)
 
 #define HOME_ADD MC(KC_A)
 #define WORK_ADD MC(KC_B)
