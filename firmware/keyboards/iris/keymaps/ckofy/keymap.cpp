@@ -26,7 +26,7 @@ std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
      KC_ESC,  KC_7,    KC_5,    KC_3,    KC_1,     KC_9,                
      KC_TAB,  KC_Q,    KC_W,    KC_F,    KC_P,     KC_B, 
      KC_ESC,  KC_A,    KC_R,    KC_S,    KC_T,     KC_G,
-     KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_D,     KC_V,  ,KC_LCTL,
+     KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_D,     KC_V, KC_LCTL,
                                 KC_LCTL, L_LOWER,  KC_SPC 
   )};
 
@@ -53,14 +53,6 @@ void setupKeymap() {
                                    KC_LGUI, L_MLOWER,KC_SPC 
         );
 
-    uint32_t layer2[MATRIX_ROWS][MATRIX_COLS] =
-        KEYMAP(
-        KC_F12 , KC_F1  , KC_F2  , KC_F3  , KC_F4  , KC_F5  ,                
-        KC_TAB , KC_Q  , KC_W  , KC_E  , KC_R  , KC_T  ,
-        KC_LSFT, KC_A  , KC_S  , KC_D  , KC_F  , KC_G  ,
-        KC_LCTL, KC_Z  , KC_X  , KC_C  , KC_V  , KC_B  ,KC_HOME,
-                                 KC_LGUI,LAYER_1,KC_ENT 
-        );
 
 
     uint32_t raise[MATRIX_ROWS][MATRIX_COLS] =
@@ -209,7 +201,7 @@ void setupKeymap() {
         KEYMAP( 
             _______, _______, _______, _______, _______, _______,		
             _______, _______, _______, _______, _______, _______,
-            XXXXXXX,  XXXXXXX,  XXXXXXX, KC_F11,KC_F12,PRINT_BATTERY, 
+            XXXXXXX,  XXXXXXX,  XXXXXXX,XXXXXXX,XXXXXXX,PRINT_BATTERY, 
     _______,XXXXXXX,  XXXXXXX,  XXXXXXX,XXXXXXX,XXXXXXX,PRINT_INFO, 
             _______, _______, _______  \
         );
