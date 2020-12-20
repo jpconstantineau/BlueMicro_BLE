@@ -145,7 +145,7 @@ uint32_t qwerty[MATRIX_ROWS][MATRIX_COLS] =
      addStringToQueue("123 Quiet Crescent");
      break;
      case WORK_ADD:
-     addStringToQueue("gvQ223aw$%1!");
+     addStringToQueue("456 Work Place");
       break;
      case EMAIL_1:
      addStringToQueue("Primary@Email");
