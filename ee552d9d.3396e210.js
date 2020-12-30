@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[47],{103:function(o){o.exports=JSON.parse('{"allTagsPath":"/blog/tags","slug":"blue-micro","name":"bluemicro","count":1,"permalink":"/blog/tags/blue-micro"}')}}]);
