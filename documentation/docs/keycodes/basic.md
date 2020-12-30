@@ -107,5 +107,13 @@ Chapter 10: Keyboard/Keypad Page(0x07) - Page 53
 | 5D             | Keypad 5                | KC_KP_5                    |
 | 5E             | Keypad 6 and Right Arrow | KC_KP_6                    |
 | 5F             | Keypad 7 and Home       | KC_KP_7                    |
+| E0             | Keyboard Left Control   | KC_LCTRL                    |
+| E1             | Keyboard Left Shift     | KC_LSHIFT                    |
+| E2             | Keyboard Left Alt       | KC_LALT                      |
+| E3             | Keyboard Left GUI       | KC_LGUI                 |
+| E4             | Keypad Right Control    | KC_RCTRL                |
+| E5             | Keypad Right Shift      | KC_RSHIFT             |
+| E6             | Keypad Right Alt        | KC_RALT                |
+| E7             | Keypad Right GUI        | KC_RGUI                 |
 
 Table is still a work in progress.  Refer to `hid_keycodes.h` and `advanced_keycodes.h` for a detailed list of keycodes.
