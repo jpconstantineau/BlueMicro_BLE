@@ -75,5 +75,37 @@ Chapter 10: Keyboard/Keypad Page(0x07) - Page 53
 | 3D             | Keyboard F4             | KC_F4                       |
 | 3E             | Keyboard F5             | KC_F5                       |
 | 3F             | Keyboard F6             | KC_F6                       |
+| 40             | Keyboard F7             | KC_F7                      |
+| 41             | Keyboard F8             | KC_F8                      |
+| 42             | Keyboard F9             | KC_F9                      |
+| 43             | Keyboard F10            | KC_F10                     |
+| 44             | Keyboard F11            | KC_F11                     |
+| 45             | Keyboard F12            | KC_F12                     |
+| 46             | Keyboard PrintScreen    | KC_PSCREEN                 |
+| 47             | Keyboard Scroll Lock    | KC_SCROLLLOCK              |
+| 48             | Keyboard Pause          | KC_PAUSE                   |
+| 49             | Keyboard Insert         | KC_INSERT                  |
+| 4A             | Keyboard Home           | KC_HOME                    |
+| 4B             | Keyboard Page Up        | KC_PGUP                    |
+| 4C             | Keyboard Delete         | KC_DELETE                  |
+| 4D             | Keyboard End            | KC_END                     |
+| 4E             | Keyboard Page Down      | KC_PGDOWN                  |
+| 4F             | Keyboard Right Arrow    | KC_RIGHT                   |
+| 50             | Keyboard Left Arrow     | KC_LEFT                    |
+| 51             | Keyboard Down Arrow     | KC_DOWN                    |
+| 52             | Keyboard Up Arrow       | KC_UP                      |
+| 53             | Keyboard Num Lock       | KC_NUMLOCK                 |
+| 54             | Keypad /                | KC_KP_SLASH                |
+| 55             | Keypad *                | KC_KP_ASTERISK             |
+| 56             | Keypad -                | KC_KP_MINUS                |
+| 57             | Keypad +                | KC_KP_PLUS                 |
+| 58             | Keypad Enter            | KC_KP_ENTER                |
+| 59             | Keypad 1 and End        | KC_KP_1                    |
+| 5A             | Keypad 2 and Down Arrow | KC_KP_2                    |
+| 5B             | Keypad 3 and Page Down  | KC_KP_3                    |
+| 5C             | Keypad 4 and Left Arrow | KC_KP_4                    |
+| 5D             | Keypad 5                | KC_KP_5                    |
+| 5E             | Keypad 6 and Right Arrow | KC_KP_6                    |
+| 5F             | Keypad 7 and Home       | KC_KP_7                    |
 
 Table is still a work in progress.  Refer to `hid_keycodes.h` and `advanced_keycodes.h` for a detailed list of keycodes.
