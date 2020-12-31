@@ -229,3 +229,17 @@ void switchCharger(bool value)
   }
   #endif
 }
+
+void setupWDT()
+{
+  // Configure WDT
+  NRF_WDT->CONFIG         = 0x00;             // stop WDT when sleeping
+  NRF_WDT->CRV            = 5 * 32768 + 1;    // set timeout (5 sec)
+  NRF_WDT->RREN           = 0x01;             // enable the RR[0] reload register
+  NRF_WDT->TASKS_START    = 1;                // start WDT
+}
+
+void updateWDT()
+{
+  NRF_WDT->RR[0] = WDT_RR_RR_Reload;    // pet watchdog
+}

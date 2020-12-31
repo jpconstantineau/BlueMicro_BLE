@@ -84,6 +84,7 @@ void setupConfig() {
 // cppcheck-suppress unusedFunction
 void setup() {
   setupGpio();                                                                // checks that NFC functions on GPIOs are disabled.
+  setupWDT();
   setupConfig();
      //loadConfig();  TODO: Load config from flash 
 
@@ -666,6 +667,7 @@ void sendKeyPresses() {
 /**************************************************************************************************************************/
 // cppcheck-suppress unusedFunction
 void loop() {
+  updateWDT();
   if (keyboardconfig.enableSerial)
   {
     handleSerial();

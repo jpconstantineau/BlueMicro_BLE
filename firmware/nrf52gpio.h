@@ -47,7 +47,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 void defaultLedCallback(PersistentState* config, DynamicState* status);
 
 
-void setupGpio();
+void setupGpio(void);
 
 void setupVCC(uint8_t pin, bool polarity);
 void setupCharger(uint8_t chargerpin, bool polarity);
@@ -57,6 +57,7 @@ void switchCharger(bool value);
 
 void setupPWM(uint8_t pin);
 void sendPWM(uint16_t value);
-
+void setupWDT(void);
+void updateWDT(void);
 
 #endif
