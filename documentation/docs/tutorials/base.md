@@ -23,7 +23,7 @@ It will contain at the minimum these 5 lines:
 #define MATRIX_COL_PINS {2, 29, 30,  26}
 #define DIODE_DIRECTION COL2ROW
 ```
-Other lines can be added for other features like battery monitoring, RGB Underglow, Backlight LEDs and other hardware features that are connected to the microcontroller. For more information on the options available to add in __hardware_config.h__ refer [here](/docs/configure)
+Other lines can be added for other features like battery monitoring, RGB Underglow, Backlight LEDs and other hardware features that are connected to the microcontroller. For more information on the options available to add in __hardware_config.h__ refer [here](/docs/configure_hardware)
 
  ### keyboard_config.h
 
