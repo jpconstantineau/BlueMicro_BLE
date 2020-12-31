@@ -636,28 +636,43 @@ void process_keyboard_function(uint16_t keycode)
 
     case BLEPROFILE_1:
      // if (connectionState != CONNECTION_USB)
-      {
-        keyboardconfig.BLEProfile = 0;
-        keyboardstate.save2flash = true;
-        keyboardstate.needReset = true;
+        {
+        #ifdef ARDUINO_NRF52_COMMUNITY
+          keyboardconfig.BLEProfile = 0;
+          keyboardstate.save2flash = true;
+          keyboardstate.needReset = true;
+        #endif
+        #ifdef ARDUINO_NRF52_ADAFRUIT
+          ; // do nothing since the Adafruit BSP doesn't support ediv.
+        #endif
       }
     break;
 
     case BLEPROFILE_2:
      // if (connectionState != CONNECTION_USB)
       {
-        keyboardconfig.BLEProfile = 1;
-        keyboardstate.save2flash = true;
-        keyboardstate.needReset = true;
+        #ifdef ARDUINO_NRF52_COMMUNITY
+          keyboardconfig.BLEProfile = 1;
+          keyboardstate.save2flash = true;
+          keyboardstate.needReset = true;
+        #endif
+        #ifdef ARDUINO_NRF52_ADAFRUIT
+          ; // do nothing since the Adafruit BSP doesn't support ediv.
+        #endif
       }
     break;
 
     case BLEPROFILE_3:
      // if (connectionState != CONNECTION_USB)
       {
-        keyboardconfig.BLEProfile = 2;
-        keyboardstate.save2flash = true;
-        keyboardstate.needReset = true;
+        #ifdef ARDUINO_NRF52_COMMUNITY
+          keyboardconfig.BLEProfile = 2;
+          keyboardstate.save2flash = true;
+          keyboardstate.needReset = true;
+        #endif
+        #ifdef ARDUINO_NRF52_ADAFRUIT
+          ; // do nothing since the Adafruit BSP doesn't support ediv.
+        #endif
       }
     break;
      

@@ -417,8 +417,12 @@ strcpy (keyboardstate.peer_name_prph,peer_name);
     strncpy(keyboardconfig.BLEProfileName[keyboardconfig.BLEProfile], peer_name, sizeof(peer_name));
     keyboardstate.save2flash = true;
   }
-
+#ifdef ARDUINO_NRF52_COMMUNITY
   uint16_t ediv = connection->getEdiv();
+#endif
+#ifdef ARDUINO_NRF52_ADAFRUIT
+  uint16_t ediv = keyboardconfig.BLEProfile; // we have to do something different for it to compile fine...
+#endif
   if (ediv != keyboardconfig.BLEProfileEdiv[keyboardconfig.BLEProfile])
   {
     keyboardconfig.BLEProfileEdiv[keyboardconfig.BLEProfile] = ediv;
