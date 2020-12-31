@@ -156,12 +156,12 @@ void setup() {
 
   keyscantimer.begin(keyboardconfig.timerkeyscaninterval, keyscantimer_callback);
   batterytimer.begin(keyboardconfig.timerbatteryinterval, batterytimer_callback);
-  setupBluetooth();
+  bt_setup(keyboardconfig.BLEProfile);
 
   // Set up keyboard matrix and start advertising
   setupKeymap(); // this is where we can change the callback for our LEDs...
   setupMatrix();
-  startAdv(); 
+  bt_startAdv(); 
   keyscantimer.start();
   batterytimer.start();
 
@@ -717,13 +717,13 @@ void sendKeyPresses() {
     
     report[0] = static_cast<uint8_t>((keyreport & 0xFF00) >> 8);// mods
     report[1] = static_cast<uint8_t>(keyreport & 0x00FF);
-    sendKeys(report);
+    bt_sendKeys(report);
     delay(keyboardconfig.timerkeyscaninterval*3);
     if (stringbuffer.empty()) // make sure to send an empty report when done...
     { 
       report[0] = 0;
       report[1] = 0;
-      sendKeys(report);
+      bt_sendKeys(report);
       delay(keyboardconfig.timerkeyscaninterval*3);
     }
     else
@@ -734,7 +734,7 @@ void sendKeyPresses() {
       {
         report[0] = static_cast<uint8_t>((keyreport & 0xFF00) >> 8);// mods;
         report[1] = 0;
-        sendKeys(report);
+        bt_sendKeys(report);
         delay(keyboardconfig.timerkeyscaninterval*3);
       }
     }
@@ -742,7 +742,7 @@ void sendKeyPresses() {
   }
   else if ((KeyScanner::reportChanged))  //any new key presses anywhere?
   {                                                                              
-        sendKeys(KeyScanner::currentReport);
+        bt_sendKeys(KeyScanner::currentReport);
         LOG_LV1("MXSCAN","SEND: %i %i %i %i %i %i %i %i %i " ,keyboardstate.timestamp,KeyScanner::currentReport[0], KeyScanner::currentReport[1],KeyScanner::currentReport[2],KeyScanner::currentReport[3], KeyScanner::currentReport[4],KeyScanner::currentReport[5], KeyScanner::currentReport[6],KeyScanner::currentReport[7] );        
   } else if (KeyScanner::specialfunction > 0)
   {
@@ -750,11 +750,11 @@ void sendKeyPresses() {
     KeyScanner::specialfunction = 0; 
   } else if (KeyScanner::consumer > 0)
   {
-    sendMediaKey(KeyScanner::consumer);
+    bt_sendMediaKey(KeyScanner::consumer);
     KeyScanner::consumer = 0; 
   } else if (KeyScanner::mouse > 0)
   {
-    sendMouseKey(KeyScanner::mouse);
+    bt_sendMouseKey(KeyScanner::mouse);
     KeyScanner::mouse = 0; 
   }
   

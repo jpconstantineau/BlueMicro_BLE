@@ -23,6 +23,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 BLEDis bledis;                                                                    // Device Information Service
 extern KeyScanner keys;
+extern PersistentState keyboardconfig;
 extern DynamicState keyboardstate;
 extern Battery batterymonitor;
 
@@ -53,7 +54,7 @@ StatePayload  statedata;
   BLEClientCharacteristic KBLinkClientChar_Buffer        = BLEClientCharacteristic(UUID128_CHR_KEYBOARD_BUFFER); 
 #endif
 /**************************************************************************************************************************/
-void setupBluetooth(void)
+void bt_setup(uint8_t BLEProfile)
 {
 ble_gap_conn_params_t _ppcp;
   _ppcp = ((ble_gap_conn_params_t) {
@@ -87,6 +88,16 @@ sd_ble_gap_ppcp_set(&_ppcp);
 
   Bluefruit.Periph.setConnectCallback(prph_connect_callback);
   Bluefruit.Periph.setDisconnectCallback(prph_disconnect_callback);  
+
+  // Set MAC address based on active BLE profile
+  if (BLEProfile > 0)
+  {
+    ble_gap_addr_t gap_addr;
+    gap_addr = Bluefruit.getAddr();
+    gap_addr.addr[0] += BLEProfile;
+    Bluefruit.setAddr(&gap_addr);
+  }
+
   // Configure and Start Device Information Service
   bledis.setManufacturer(MANUFACTURER_NAME);                                  // Defined in keyboard_config.h
   bledis.setModel(DEVICE_MODEL);                                              // Defined in keyboard_config.h
@@ -188,11 +199,17 @@ sd_ble_gap_ppcp_set(&_ppcp);
 
 }
 
+ble_gap_addr_t bt_getMACAddr(void)
+{
+  ble_gap_addr_t gap_addr;
+  gap_addr = Bluefruit.getAddr();
+  return gap_addr;
+}
 
 /**************************************************************************************************************************/
 //
 /**************************************************************************************************************************/
-void startAdv(void)
+void bt_startAdv(void)
 {  
   // Advertising packet
   Bluefruit.Advertising.addFlags(BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE);
@@ -237,6 +254,10 @@ void startAdv(void)
   Bluefruit.Advertising.setStopCallback(advertizing_stop_callback);
 }
 
+void bt_stopAdv()
+{
+  Bluefruit.Advertising.stop();
+}
 
  // typedef void (*stop_callback_t) (void);
   //typedef void (*slow_callback_t) (void);
@@ -390,6 +411,20 @@ connection->getPeerName(peer_name, sizeof(peer_name));
 LOG_LV1("PRPH","Connected to %i %s",conn_handle,peer_name  );
 connection->monitorRssi(6);
 strcpy (keyboardstate.peer_name_prph,peer_name);
+
+  if (strncmp(peer_name, keyboardconfig.BLEProfileName[keyboardconfig.BLEProfile], sizeof(peer_name)))
+  {
+    strncpy(keyboardconfig.BLEProfileName[keyboardconfig.BLEProfile], peer_name, sizeof(peer_name));
+    keyboardstate.save2flash = true;
+  }
+
+  uint16_t ediv = connection->getEdiv();
+  if (ediv != keyboardconfig.BLEProfileEdiv[keyboardconfig.BLEProfile])
+  {
+    keyboardconfig.BLEProfileEdiv[keyboardconfig.BLEProfile] = ediv;
+    keyboardstate.save2flash = true;
+  }
+
 keyboardstate.conn_handle_prph = conn_handle;
 
 keyboardstate.statusble = keyboardstate.statusble | (8); // bitwise OR
@@ -511,6 +546,19 @@ void set_keyboard_led(uint16_t conn_handle, uint8_t led_bitmap)
   keyboardstate.statuskb = led_bitmap;
   //KeyScanner::ledStatus = led_bitmap;
 }
+
+bool bt_isConnected()
+{
+  return Bluefruit.connected();
+}
+
+void bt_disconnect()
+{
+  #if BLE_HID == 1
+  Bluefruit.disconnect(hid_conn_hdl);
+  #endif
+}
+
 /**************************************************************************************************************************/
 void sendlayer(uint8_t layer)
 {     
@@ -527,7 +575,7 @@ void sendlayer(uint8_t layer)
         #endif 
 }
 /**************************************************************************************************************************/
-void sendKeys(uint8_t currentReport[8])
+void bt_sendKeys(uint8_t currentReport[8])
 {
     #if BLE_HID == 1  
         uint8_t keycode[6];
@@ -567,7 +615,7 @@ void sendKeys(uint8_t currentReport[8])
 #ifndef MOVE_STEP
   #define MOVE_STEP   8
 #endif
-void sendMouseKey(uint16_t keycode)
+void bt_sendMouseKey(uint16_t keycode)
 {
   static uint8_t movestep = MOVE_STEP;
 
@@ -616,7 +664,7 @@ void sendMouseKey(uint16_t keycode)
          ; // Don't send keys to slaves
     #endif 
 }
-void sendMediaKey(uint16_t keycode)
+void bt_sendMediaKey(uint16_t keycode)
 {
 uint16_t usagecode = 0;
 #if BLE_HID == 1

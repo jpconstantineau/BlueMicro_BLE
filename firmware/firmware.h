@@ -41,6 +41,9 @@ namespace std {
   }
 }
     void setupConfig(void);
+    void loadConfig(void);
+    void saveConfig(void);
+    void resetConfig(void);
     void setupMatrix(void);
     void scanMatrix(void);
     void sendKeyPresses(void);
