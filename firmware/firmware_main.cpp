@@ -790,6 +790,7 @@ void sendKeyPresses() {
 /**************************************************************************************************************************/
 // cppcheck-suppress unusedFunction
 void loop() {
+  unsigned long timesincelastkeypress = keyboardstate.timestamp - KeyScanner::getLastPressed();
   if (keyboardconfig.enableSerial)
   {
     handleSerial();
