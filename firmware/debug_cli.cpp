@@ -117,6 +117,7 @@ void matrix_key_test(bool singlekey)
     static  std::vector<uint8_t> negpins; 
   while (Serial.available() == 0)
   {
+    updateWDT();
     if(singlekey){
       pospins.clear();
       negpins.clear();    
@@ -268,6 +269,7 @@ void handleSerial() {
     char buffer [50];
   uint8_t intval;
  while (Serial.available() > 0) {
+   
    char incomingCharacter = Serial.read();
    switch (incomingCharacter) {
      case 'd':
