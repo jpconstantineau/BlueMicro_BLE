@@ -30,6 +30,9 @@ byte columns[] MATRIX_COL_PINS;     // Contains the GPIO Pin Numbers defined in 
 
 SoftwareTimer keyscantimer, batterytimer;
 
+using namespace Adafruit_LittleFS_Namespace;
+#define SETTINGS_FILE "/settings"
+File file(InternalFS);
 PersistentState keyboardconfig;
 DynamicState keyboardstate;
 
@@ -42,9 +45,43 @@ static std::vector<uint16_t> stringbuffer; // buffer for macros to type into...
 
 /**************************************************************************************************************************/
 void setupConfig() {
-  keyboardconfig.timerkeyscaninterval=HIDREPORTINGINTERVAL;
-  keyboardconfig.timerbatteryinterval=BATTERYINTERVAL;
+  InternalFS.begin();
+  loadConfig();
 
+  keyboardstate.statusble=0;  //initialize to a known state.
+  keyboardstate.statuskb=0;   //initialize to a known state.
+
+  keyboardstate.helpmode = false;
+  keyboardstate.timestamp = millis();
+  keyboardstate.lastupdatetime = keyboardstate.timestamp;
+
+  keyboardstate.connectionState = 255;
+  keyboardstate.needReset = false;
+  keyboardstate.needUnpair = false;
+  keyboardstate.needFSReset = false;
+  keyboardstate.save2flash = false;
+}
+
+/**************************************************************************************************************************/
+void loadConfig()
+{
+  file.open(SETTINGS_FILE, FILE_O_READ);
+
+  if (file)
+  {
+    file.read(&keyboardconfig, sizeof(keyboardconfig));
+    file.close();
+  }
+  else
+  {
+    resetConfig();
+    saveConfig();
+  }
+}
+
+/**************************************************************************************************************************/
+void resetConfig()
+{
   keyboardconfig.pinPWMLED=BACKLIGHT_LED_PIN;
   keyboardconfig.pinRGBLED=WS2812B_LED_PIN;
   keyboardconfig.pinBLELED=STATUS_BLE_LED_PIN;  
@@ -68,15 +105,28 @@ void setupConfig() {
 
   keyboardconfig.enableSerial = true; // no serial logic yet  TODO: take care of the bluemicro 2.0x where serial is on top of GPIOs
 
-
-  keyboardstate.statusble=0;  //initialize to a known state.
-  keyboardstate.statuskb=0;   //initialize to a known state.
-
-  keyboardstate.helpmode = false;
-  keyboardstate.timestamp = millis();
-  keyboardstate.lastupdatetime = keyboardstate.timestamp;
+  keyboardconfig.timerkeyscaninterval=HIDREPORTINGINTERVAL;
+  keyboardconfig.timerbatteryinterval=BATTERYINTERVAL;
+  keyboardconfig.BLEProfile = 0;
+  keyboardconfig.BLEProfileEdiv[0] = 0xFFFF;
+  keyboardconfig.BLEProfileEdiv[1] = 0xFFFF;
+  keyboardconfig.BLEProfileEdiv[2] = 0xFFFF;
+  strcpy(keyboardconfig.BLEProfileName[0], "unpaired");
+  strcpy(keyboardconfig.BLEProfileName[1], "unpaired");
+  strcpy(keyboardconfig.BLEProfileName[2], "unpaired");
 }
 
+/**************************************************************************************************************************/
+void saveConfig()
+{
+  InternalFS.remove(SETTINGS_FILE);
+
+  if (file.open(SETTINGS_FILE, FILE_O_WRITE))
+  {
+    file.write((uint8_t*)&keyboardconfig, sizeof(keyboardconfig));
+    file.close();
+  }
+}
 
 /**************************************************************************************************************************/
 // put your setup code here, to run once:
@@ -283,16 +333,22 @@ void process_keyboard_function(uint16_t keycode)
    switch(keycode)
   {
     case RESET:
+    
       NVIC_SystemReset();
       break;
     case DEBUG:
+      keyboardconfig.enableSerial = !keyboardconfig.enableSerial;
+      keyboardstate.save2flash = true;
       break;
     case EEPROM_RESET:
-      InternalFS.format();
+      keyboardstate.needFSReset = true;
+      //InternalFS.format();
       break;
     case CLEAR_BONDS:
        // Bluefruit.clearBonds(); //removed in next BSP?
-        Bluefruit.Central.clearBonds();
+       //if (connectionState == CONNECTION_BT) 
+       keyboardstate.needUnpair = true;
+        //Bluefruit.Central.clearBonds();
       break;      
     case DFU:
       enterOTADfu();
@@ -484,7 +540,30 @@ void process_keyboard_function(uint16_t keycode)
       sprintf(buffer,"cent\t %i\t %s",keyboardstate.rssi_cent, keyboardstate.peer_name_cent);addStringToQueue(buffer); addKeycodeToQueue(KC_ENTER); 
       sprintf(buffer,"prph\t %i\t %s",keyboardstate.rssi_prph, keyboardstate.peer_name_prph);addStringToQueue(buffer); addKeycodeToQueue(KC_ENTER);
       sprintf(buffer,"cccd\t %i\t %s",keyboardstate.rssi_cccd, keyboardstate.peer_name_cccd);addStringToQueue(buffer); addKeycodeToQueue(KC_ENTER);
+       sprintf(buffer,  "Profile 1:   %s", keyboardconfig.BLEProfileName[0]);
+      addStringToQueue(buffer);
+      if (keyboardconfig.BLEProfile == 0) addStringToQueue(" (active)");
+      addKeycodeToQueue(KC_ENTER);
+      sprintf(buffer,  "Profile 2:   %s", keyboardconfig.BLEProfileName[1]);
+      addStringToQueue(buffer);
+      if (keyboardconfig.BLEProfile == 1) addStringToQueue(" (active)");
+      addKeycodeToQueue(KC_ENTER);
+      sprintf(buffer,  "Profile 3:   %s", keyboardconfig.BLEProfileName[2]);
+      addStringToQueue(buffer);
+      if (keyboardconfig.BLEProfile == 2) addStringToQueue(" (active)");
+      addKeycodeToQueue(KC_ENTER);
+      addKeycodeToQueue(KC_ENTER);
+      ble_gap_addr_t gap_addr;
+      gap_addr = bt_getMACAddr();
+      sprintf(buffer,  "BT MAC Addr: %02X:%02X:%02X:%02X:%02X:%02X", gap_addr.addr[5], gap_addr.addr[4], gap_addr.addr[3], gap_addr.addr[2], gap_addr.addr[1], gap_addr.addr[0]);
+      addStringToQueue(buffer);
+      addKeycodeToQueue(KC_ENTER);
+      addKeycodeToQueue(KC_ENTER);
       break;
+
+    case SLEEP_NOW:
+      //if (connectionState != CONNECTION_USB) sleepNow();
+    break;
 
     case WIN_A_GRAVE: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_2, KC_KP_4) break; //Alt 0224 a grave
     case WIN_A_ACUTE: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_2, KC_KP_5) break;//Alt 0225 a acute
@@ -552,6 +631,35 @@ void process_keyboard_function(uint16_t keycode)
 
     case  WIN_Z_CARON: EXPAND_ALT_CODE(KC_KP_0, KC_KP_1, KC_KP_5, KC_KP_4) break; //Alt 0154 z caron
     case  WIN_Z_CARON_CAP: EXPAND_ALT_CODE(KC_KP_0, KC_KP_1, KC_KP_3, KC_KP_8) break;  //Alt 0138 Z caron
+
+    case SYM_DEGREE: EXPAND_ALT_CODE(KC_KP_0, KC_KP_1, KC_KP_7, KC_KP_6) break; // Alt 0176 degree symbol
+
+    case BLEPROFILE_1:
+     // if (connectionState != CONNECTION_USB)
+      {
+        keyboardconfig.BLEProfile = 0;
+        keyboardstate.save2flash = true;
+        keyboardstate.needReset = true;
+      }
+    break;
+
+    case BLEPROFILE_2:
+     // if (connectionState != CONNECTION_USB)
+      {
+        keyboardconfig.BLEProfile = 1;
+        keyboardstate.save2flash = true;
+        keyboardstate.needReset = true;
+      }
+    break;
+
+    case BLEPROFILE_3:
+     // if (connectionState != CONNECTION_USB)
+      {
+        keyboardconfig.BLEProfile = 2;
+        keyboardstate.save2flash = true;
+        keyboardstate.needReset = true;
+      }
+    break;
      
   }
 }
@@ -672,13 +780,37 @@ void loop() {
   }
 
   updateBLEStatus();
-  statusLEDs.update(); //slow update in 1 second loop
+  statusLEDs.update(); //slow update in 250 millisecond loop
 
   if(keyboardconfig.enableDisplay)
   {
     // updateDisplay(timesincelastkeypress);
   }
-  delay(1000);
+  if (keyboardstate.needUnpair)
+  {
+    bt_disconnect();
+    char filename[32] = { 0 };
+    sprintf(filename, "/adafruit/bond_prph/%04x", keyboardconfig.BLEProfileEdiv[keyboardconfig.BLEProfile]);
+    InternalFS.remove(filename);
+
+    keyboardconfig.BLEProfileEdiv[keyboardconfig.BLEProfile] = 0xFFFF;
+    strcpy(keyboardconfig.BLEProfileName[keyboardconfig.BLEProfile], "unpaired");
+    keyboardstate.save2flash = true;
+    keyboardstate.needReset = true;
+  }
+  if (keyboardstate.save2flash)
+  {
+    saveConfig();
+    keyboardstate.save2flash = false;
+  }
+  if (keyboardstate.needFSReset)
+  {
+    InternalFS.format();
+    keyboardstate.needReset = true;
+  }
+  if (keyboardstate.needReset) NVIC_SystemReset();
+
+  delay(250);
   
 };  // loop is called for serials comms and saving to flash.
 // keyscantimer is being called instead

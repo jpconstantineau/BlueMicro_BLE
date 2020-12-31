@@ -83,6 +83,11 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
         uint16_t conn_handle_cccd;
         int8_t rssi_cccd;
         bool rssi_cccd_updated;
+
+        uint8_t connectionState;
+        bool needReset;
+        bool needUnpair;
+        bool needFSReset ;
     } DynamicState; // meant for keyboard and BLE status and things that are dynamic and should not be stored in flash.
 
     // TODO: Add the structures and function definitions for keycode buffer for user processing
@@ -90,3 +95,5 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
     typedef void (*ledupdateCallback)(PersistentState* config, DynamicState* status);
 
     #endif 
+
+
