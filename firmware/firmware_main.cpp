@@ -133,9 +133,8 @@ void saveConfig()
 /**************************************************************************************************************************/
 // cppcheck-suppress unusedFunction
 void setup() {
-  setupGpio();                                                                // checks that NFC functions on GPIOs are disabled.
+  setupGpio();                                                           // checks that NFC functions on GPIOs are disabled.
   setupConfig();
-     //loadConfig();  TODO: Load config from flash 
 
   if (keyboardconfig.enableSerial)
   {
@@ -176,7 +175,10 @@ void setup() {
   {
     setupRGB();//keyboardconfig.pinRGBLED
   }
-
+  if(keyboardconfig.enableDisplay)
+  {
+    // setupDisplay(i2cpins);
+  }
   statusLEDs.enable();
   statusLEDs.hello();  // blinks Status LEDs a couple as last step of setup.
 
@@ -342,7 +344,6 @@ void process_keyboard_function(uint16_t keycode)
       break;
     case EEPROM_RESET:
       keyboardstate.needFSReset = true;
-      //InternalFS.format();
       break;
     case CLEAR_BONDS:
        // Bluefruit.clearBonds(); //removed in next BSP?
@@ -562,7 +563,8 @@ void process_keyboard_function(uint16_t keycode)
       break;
 
     case SLEEP_NOW:
-      //if (connectionState != CONNECTION_USB) sleepNow();
+      //if (connectionState != CONNECTION_USB) 
+      sleepNow();
     break;
 
     case WIN_A_GRAVE: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_2, KC_KP_4) break; //Alt 0224 a grave
@@ -711,8 +713,7 @@ void process_user_special_keys()
 /**************************************************************************************************************************/
 void sendKeyPresses() {
 
-
-   KeyScanner::getReport();                                            // get state data - Data is in KeyScanner::currentReport 
+   KeyScanner::getReport();                                         // get state data - Data is in KeyScanner::currentReport 
 
   if (KeyScanner::special_key > 0){
       process_user_special_keys();
@@ -796,11 +797,21 @@ void loop() {
 
   updateBLEStatus();
   statusLEDs.update(); //slow update in 250 millisecond loop
+  if(keyboardconfig.enablePWMLED) // TODO: is this loop too slow for this?
+  {
+    updatePWM(timesincelastkeypress);
+  }
 
+  if(keyboardconfig.enableRGBLED)// TODO: is this loop too slow for this?
+  {
+     updateRGB(timesincelastkeypress);
+  }
   if(keyboardconfig.enableDisplay)
   {
     // updateDisplay(timesincelastkeypress);
   }
+
+  // do things that cannot be done in a timer
   if (keyboardstate.needUnpair)
   {
     bt_disconnect();
@@ -823,7 +834,7 @@ void loop() {
     InternalFS.format();
     keyboardstate.needReset = true;
   }
-  if (keyboardstate.needReset) NVIC_SystemReset();
+  if (keyboardstate.needReset) NVIC_SystemReset(); // this reboots the keyboard.
 
   delay(250);
   
@@ -850,15 +861,6 @@ void keyscantimer_callback(TimerHandle_t _handle) {
     }
   #endif
 
-  if(keyboardconfig.enablePWMLED) // TODO: is this timer too fast for this?
-  {
-    updatePWM(timesincelastkeypress);
-  }
-
-  if(keyboardconfig.enableRGBLED)// TODO: is this timer too fast for this?
-  {
-     updateRGB(timesincelastkeypress);
-  }
 }
 //********************************************************************************************//
 //* Battery Monitoring Task - runs infrequently                                              *//

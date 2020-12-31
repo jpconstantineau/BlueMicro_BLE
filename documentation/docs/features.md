@@ -27,6 +27,7 @@ BlueMicro is currently missing some features found in other popular firmware. Th
 | Combo Keys                                                                                                             |             | ✅  | 🚧  |
 | Macros                                                                                                                 |     ✅     | ✅  | 🚧  |
 | **Keyboard and Controller Board Hardware Options**                                                                     |            |     |    |
+| Ghosted Keys Support                                                                                                   |     🚧     | ✅  |    |
 | Split Keyboard Support                                                                                                 |     ✅     | ✅  | ✅  |
 | Key Backlight LED PWM Control                                                                                          |     ✅     | ✅  |      |
 | RGB Underglow                                                                                                          |     ✅     | ✅  | ✅  |

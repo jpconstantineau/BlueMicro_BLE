@@ -18,14 +18,12 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 */
 #include "sleep.h"
-#include "LedRGB.h"
-
 
 extern led_handler statusLEDs; /// Typically a Blue and Red LED
 /**************************************************************************************************************************/
 // Prepare sense pins for waking up from complete shutdown
 /**************************************************************************************************************************/
-void setupWakeUp() {
+void prepareSleep() {
   for(int j = 0; j < MATRIX_ROWS; ++j) {                             
     //set the current row as OUPUT and LOW
     pinMode(rows[j], OUTPUT);
@@ -49,6 +47,18 @@ void setupWakeUp() {
       #endif
 
   statusLEDs.sleep(); 
+  sendPWM(0);  // forces PWM backlight off
+  NRF_PWM2->ENABLE = 0; // Turn off PWM peripheral
+}
+
+void sleepNow()
+{
+  prepareSleep();
+  #if WS2812B_LED_ON == 1 
+    suspendRGB();
+  #endif
+  delay(3000);    // delay to let any keys be released
+  sd_power_system_off();
 }
 
 /**************************************************************************************************************************/
@@ -58,21 +68,13 @@ void gotoSleep(unsigned long timesincelastkeypress,bool connected)
   if ((timesincelastkeypress>SLEEPING_DELAY)&&(!connected))
   {
     LOG_LV2("SLEEP","Not Connected Sleep %i", timesincelastkeypress);
-    #if WS2812B_LED_ON == 1 
-    suspendRGB();
-    #endif
-    setupWakeUp();
-    sd_power_system_off();
+    sleepNow();
   } 
 
   // shutdown when unconnected and no keypresses for SLEEPING_DELAY_CONNECTED ms
   if ((timesincelastkeypress>SLEEPING_DELAY_CONNECTED)&&(connected))
   {
     LOG_LV2("SLEEP","Connected Sleep %i", timesincelastkeypress);
-    #if WS2812B_LED_ON == 1 
-    suspendRGB();
-    #endif
-    setupWakeUp();
-    sd_power_system_off();
+    sleepNow();
   } 
 }
