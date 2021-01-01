@@ -805,7 +805,38 @@ void loop() {
     // updateDisplay(timesincelastkeypress);
   }
 
-  // do things that cannot be done in a timer
+  if (usb_isConnected())  //todo: get switch logic to enable USB connected but using BLE for HID instead.
+  {
+    if (keyboardstate.connectionState != CONNECTION_USB)
+    {
+      if (bt_isConnected()) bt_disconnect();
+      bt_stopAdv();
+      keyboardstate.connectionState = CONNECTION_USB;
+    }
+  }
+else if (bt_isConnected())
+  {
+    if (keyboardstate.connectionState != CONNECTION_BT)
+    {
+      //Battery::first_vbat = true;
+      //KeyScanner::setLastPressed(millis()); // why here?
+      //keyboardstate.timestamp = millis();   // why here?
+      keyboardstate.connectionState = CONNECTION_BT;
+    }
+  }
+  else
+  {
+    if (keyboardstate.connectionState != CONNECTION_NONE)
+    {
+      bt_startAdv();
+      //Battery::first_vbat = true;
+      //KeyScanner::setLastPressed(millis());  // why here?
+      //keyboardstate.timestamp = millis();    // why here?
+      keyboardstate.connectionState = CONNECTION_NONE;
+    }
+  }
+
+  // none of these things can be done in the timer event callbacks
   if (keyboardstate.needUnpair)
   {
     bt_disconnect();
@@ -845,7 +876,20 @@ void keyscantimer_callback(TimerHandle_t _handle) {
    unsigned long timesincelastkeypress = keyboardstate.timestamp - KeyScanner::getLastPressed();
 
   #if SLEEP_ACTIVE == 1
-    gotoSleep(timesincelastkeypress,Bluefruit.connected());
+    switch (keyboardstate.connectionState)
+    {
+      case CONNECTION_USB:
+        // never sleep in this case
+      break;
+
+      case CONNECTION_BT:
+        gotoSleep(timesincelastkeypress, true);
+      break;
+
+      case CONNECTION_NONE:
+        gotoSleep(timesincelastkeypress, false);
+      break;
+    }
   #endif
 
   #if BLE_CENTRAL == 1  
