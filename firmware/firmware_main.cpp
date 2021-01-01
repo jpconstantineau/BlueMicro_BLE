@@ -55,7 +55,7 @@ void setupConfig() {
   keyboardstate.timestamp = millis();
   keyboardstate.lastupdatetime = keyboardstate.timestamp;
 
-  keyboardstate.connectionState = 255;
+  keyboardstate.connectionState = CONNECTION_NONE;
   keyboardstate.needReset = false;
   keyboardstate.needUnpair = false;
   keyboardstate.needFSReset = false;
@@ -158,6 +158,7 @@ void setup() {
   keyscantimer.begin(keyboardconfig.timerkeyscaninterval, keyscantimer_callback);
   batterytimer.begin(keyboardconfig.timerbatteryinterval, batterytimer_callback);
   bt_setup(keyboardconfig.BLEProfile);
+  usb_setup(); // does nothing for 832 - see usb.cpp
 
   // Set up keyboard matrix and start advertising
   setupKeymap(); // this is where we can change the callback for our LEDs...
@@ -349,8 +350,7 @@ void process_keyboard_function(uint16_t keycode)
       break;
     case CLEAR_BONDS:
        // Bluefruit.clearBonds(); //removed in next BSP?
-       //if (connectionState == CONNECTION_BT) 
-       keyboardstate.needUnpair = true;
+       if (keyboardstate.connectionState == CONNECTION_BT) keyboardstate.needUnpair = true;
         //Bluefruit.Central.clearBonds();
       break;      
     case DFU:
@@ -565,8 +565,7 @@ void process_keyboard_function(uint16_t keycode)
       break;
 
     case SLEEP_NOW:
-      //if (connectionState != CONNECTION_USB) 
-      sleepNow();
+      if (keyboardstate.connectionState != CONNECTION_USB) sleepNow();
     break;
 
     case WIN_A_GRAVE: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_2, KC_KP_4) break; //Alt 0224 a grave
@@ -639,7 +638,7 @@ void process_keyboard_function(uint16_t keycode)
     case SYM_DEGREE: EXPAND_ALT_CODE(KC_KP_0, KC_KP_1, KC_KP_7, KC_KP_6) break; // Alt 0176 degree symbol
 
     case BLEPROFILE_1:
-     // if (connectionState != CONNECTION_USB)
+     // if (keyboardstate.connectionState != CONNECTION_USB) // can we switch BLE profile when connected to USB???
         {
         #ifdef ARDUINO_NRF52_COMMUNITY
           keyboardconfig.BLEProfile = 0;
@@ -653,7 +652,7 @@ void process_keyboard_function(uint16_t keycode)
     break;
 
     case BLEPROFILE_2:
-     // if (connectionState != CONNECTION_USB)
+     // if (keyboardstate.connectionState != CONNECTION_USB)// can we switch BLE profile when connected to USB???
       {
         #ifdef ARDUINO_NRF52_COMMUNITY
           keyboardconfig.BLEProfile = 1;
@@ -667,7 +666,7 @@ void process_keyboard_function(uint16_t keycode)
     break;
 
     case BLEPROFILE_3:
-     // if (connectionState != CONNECTION_USB)
+     // if (keyboardstate.connectionState != CONNECTION_USB)// can we switch BLE profile when connected to USB???
       {
         #ifdef ARDUINO_NRF52_COMMUNITY
           keyboardconfig.BLEProfile = 2;

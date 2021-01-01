@@ -105,6 +105,13 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
     typedef void (*ledupdateCallback)(PersistentState* config, DynamicState* status);
 
+    enum connectionState
+    {
+    CONNECTION_NONE,
+    CONNECTION_USB,
+    CONNECTION_BT
+    };
+
     #endif 
 
 
