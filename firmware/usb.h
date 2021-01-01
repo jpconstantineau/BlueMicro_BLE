@@ -18,14 +18,34 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 */
 
+
+
 #ifndef USB_H
 #define USB_H
+
+    #include <bluefruit.h>
+    #include "firmware_config.h"
+    #include "keymap.h"
+    #include "datastructures.h"
+
     #ifdef NRF52840_XXAA  // only the 840 has USB available.
         #ifdef ARDUINO_NRF52_ADAFRUIT
             // do nothing since the Adafruit BSP doesn't support ediv.
         #endif
         #ifdef ARDUINO_NRF52_COMMUNITY
-
+            #include "Adafruit_TinyUSB.h"
+            #define TINYUSB_AVAILABLE 1
         #endif
     #endif
+
+    // these functions will be defined for all cases (nrf52832 and nrf52840) but will work differently.
+    void usb_setup();
+    bool usb_isConnected();
+    void usb_wakeup();
+    void usb_sendKeys(uint8_t currentReport[8]);
+    void usb_sendMediaKey(uint16_t keycode);
+    void usb_sendMouseKey(uint16_t keycode);
+    void usb_sendMouseMove(uint16_t keycode, uint16_t steps);
+    void hid_report_callback(uint8_t report_id, hid_report_type_t report_type, uint8_t const* buffer, uint16_t bufsize);
+
 #endif

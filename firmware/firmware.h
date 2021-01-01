@@ -33,6 +33,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "nrf52gpio.h"
 #include "datastructures.h"
 #include "debug_cli.h"
+#include "usb.h"
 
 // need to add this to resolve an issue when linking.
 // see https://forum.arduino.cc/index.php?topic=319795.0

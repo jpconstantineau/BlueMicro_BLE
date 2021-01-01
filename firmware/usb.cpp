@@ -18,9 +18,182 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 */
 
-#ifdef ARDUINO_NRF52_ADAFRUIT
-    // do nothing since the Adafruit BSP doesn't support ediv.
-#endif
-#ifdef ARDUINO_NRF52_COMMUNITY
+#include "usb.h"
 
+
+extern DynamicState keyboardstate;
+
+// Report ID
+enum
+{
+  RID_KEYBOARD = 1,
+  RID_MOUSE,
+  RID_CONSUMER_CONTROL, // Media, volume etc ..
+};
+
+#ifdef TINYUSB_AVAILABLE
+        // HID report descriptor using TinyUSB's template
+    // Single Report (no ID) descriptor
+    uint8_t const desc_hid_report[] =
+    {
+      TUD_HID_REPORT_DESC_KEYBOARD(HID_REPORT_ID(RID_KEYBOARD)),
+      TUD_HID_REPORT_DESC_MOUSE   (HID_REPORT_ID(RID_MOUSE)),
+      TUD_HID_REPORT_DESC_CONSUMER(HID_REPORT_ID(RID_CONSUMER_CONTROL))
+    };
+
+    extern Adafruit_USBD_Device USBDevice;
+    Adafruit_USBD_HID USBhid;
 #endif
+
+
+void usb_setup()
+{
+  #ifdef TINYUSB_AVAILABLE
+  USBDevice.setManufacturerDescriptor(MANUFACTURER_NAME);
+  USBDevice.setProductDescriptor(DEVICE_NAME);
+
+  USBhid.setPollInterval(2);
+  USBhid.setReportDescriptor(desc_hid_report, sizeof(desc_hid_report));
+  USBhid.setReportCallback(NULL, hid_report_callback);
+  USBhid.begin();
+  #endif
+}
+
+bool usb_isConnected()
+{
+  #ifdef TINYUSB_AVAILABLE
+    return USBhid.ready() && !USBDevice.suspended();
+  #else
+    return false;
+  #endif
+}
+
+void usb_wakeup()
+{
+  #ifdef TINYUSB_AVAILABLE
+  if (USBDevice.suspended())
+  {
+    // Wake up host if we are in suspend mode and REMOTE_WAKEUP feature is enabled by host
+    USBDevice.remoteWakeup();
+  }
+  #endif
+}
+
+void usb_sendKeys(uint8_t currentReport[8])
+{
+  #ifdef TINYUSB_AVAILABLE
+  uint8_t keycode[6];
+  uint8_t mods = 0;
+
+  mods = currentReport[0];                                                 // modifiers
+  keycode[0] = currentReport[1];                                           // Buffer
+  keycode[1] = currentReport[2];                                           // Buffer
+  keycode[2] = currentReport[3];                                           // Buffer
+  keycode[3] = currentReport[4];                                           // Buffer
+  keycode[4] = currentReport[5];                                           // Buffer
+  keycode[5] = currentReport[6];                                           // Buffer
+
+  USBhid.keyboardReport(RID_KEYBOARD, mods, keycode);
+  #endif
+}
+
+void usb_sendMediaKey(uint16_t keycode)
+{
+  #ifdef TINYUSB_AVAILABLE
+  uint16_t usagecode = 0;
+
+  switch (keycode)
+  {
+    case KC_SYSTEM_POWER: usagecode = HID_USAGE_CONSUMER_POWER; break;
+    case KC_SYSTEM_RESET: usagecode = HID_USAGE_CONSUMER_RESET; break;
+    case KC_SYSTEM_SLEEP: usagecode = HID_USAGE_CONSUMER_SLEEP; break;
+    case KC_DISPLAY_BRIGHTI: usagecode = HID_USAGE_CONSUMER_BRIGHTNESS_INCREMENT; break;
+    case KC_DISPLAY_BRIGHTD: usagecode = HID_USAGE_CONSUMER_BRIGHTNESS_DECREMENT; break;
+    case KC_RADIO_CONTROL: usagecode = HID_USAGE_CONSUMER_WIRELESS_RADIO_CONTROLS; break;
+    case KC_RADIO_BUTTONS: usagecode = HID_USAGE_CONSUMER_WIRELESS_RADIO_BUTTONS; break;
+    case KC_RADIO_LED: usagecode = HID_USAGE_CONSUMER_WIRELESS_RADIO_LED; break;
+    case KC_RADIO_SWITCH: usagecode = HID_USAGE_CONSUMER_WIRELESS_RADIO_SLIDER_SWITCH; break;
+    case KC_MEDIA_PLAY_PAUSE: usagecode = HID_USAGE_CONSUMER_PLAY_PAUSE; break;
+    case KC_MEDIA_NEXT_TRACK: usagecode = HID_USAGE_CONSUMER_SCAN_NEXT; break;
+    case KC_MEDIA_PREV_TRACK: usagecode = HID_USAGE_CONSUMER_SCAN_PREVIOUS; break;
+    case KC_MEDIA_STOP: usagecode = HID_USAGE_CONSUMER_STOP; break;
+    case KC_AUDIO_VOL: usagecode = HID_USAGE_CONSUMER_VOLUME; break;
+    case KC_AUDIO_MUTE: usagecode = HID_USAGE_CONSUMER_MUTE; break;
+    case KC_AUDIO_BASS: usagecode = HID_USAGE_CONSUMER_BASS; break;
+    case KC_AUDIO_TREBLE: usagecode = HID_USAGE_CONSUMER_TREBLE; break;
+    case KC_AUDIO_BASS_BOOST: usagecode = HID_USAGE_CONSUMER_BASS_BOOST; break;
+    case KC_AUDIO_VOL_UP: usagecode = HID_USAGE_CONSUMER_VOLUME_INCREMENT; break;
+    case KC_AUDIO_VOL_DOWN: usagecode = HID_USAGE_CONSUMER_VOLUME_DECREMENT; break;
+    case KC_AUDIO_BASS_UP: usagecode = HID_USAGE_CONSUMER_BASS_INCREMENT; break;
+    case KC_AUDIO_BASS_DOWN: usagecode = HID_USAGE_CONSUMER_BASS_DECREMENT; break;
+    case KC_AUDIO_TREBLE_UP: usagecode = HID_USAGE_CONSUMER_TREBLE_INCREMENT; break;
+    case KC_AUDIO_TREBLE_DOWN: usagecode = HID_USAGE_CONSUMER_TREBLE_DECREMENT; break;
+    case KC_MSEL: usagecode = HID_USAGE_CONSUMER_AL_CONSUMER_CONTROL_CONFIGURATION; break;
+    case KC_WWW: usagecode = HID_USAGE_CONSUMER_AL_EMAIL_READER; break;
+    case KC_CALCULATOR: usagecode = HID_USAGE_CONSUMER_AL_CALCULATOR; break;
+    case KC_MYCM: usagecode = HID_USAGE_CONSUMER_AL_LOCAL_BROWSER; break;
+
+    case KC_WWW_SEARCH: usagecode = HID_USAGE_CONSUMER_AC_SEARCH; break;
+    case KC_WWW_HOME: usagecode = HID_USAGE_CONSUMER_AC_HOME; break;
+    case KC_WWW_BACK: usagecode = HID_USAGE_CONSUMER_AC_BACK; break;
+    case KC_WWW_FORWARD: usagecode = HID_USAGE_CONSUMER_AC_FORWARD; break;
+    case KC_WWW_STOP: usagecode = HID_USAGE_CONSUMER_AC_STOP; break;
+    case KC_WWW_REFRESH: usagecode = HID_USAGE_CONSUMER_AC_REFRESH; break;
+    case KC_WWW_FAVORITES: usagecode = HID_USAGE_CONSUMER_AC_BOOKMARKS; break;
+    case KC_AC_PAN: usagecode = HID_USAGE_CONSUMER_AC_PAN; break;
+  }
+
+  USBhid.sendReport16(RID_CONSUMER_CONTROL, usagecode);
+  #endif
+}
+
+
+#define MOVE_STEP    1
+void usb_sendMouseKey(uint16_t keycode)
+{
+  #ifdef TINYUSB_AVAILABLE
+  switch (keycode)
+  {
+    case KC_MS_OFF:   USBhid.mouseButtonRelease(RID_MOUSE); break;
+    case KC_MS_BTN1:  USBhid.mouseButtonPress(RID_MOUSE, MOUSE_BUTTON_LEFT); break;
+    case KC_MS_BTN2:  USBhid.mouseButtonPress(RID_MOUSE, MOUSE_BUTTON_RIGHT); break;
+    case KC_MS_BTN3:  USBhid.mouseButtonPress(RID_MOUSE, MOUSE_BUTTON_MIDDLE); break;
+    case KC_MS_BTN4:  USBhid.mouseButtonPress(RID_MOUSE, MOUSE_BUTTON_BACKWARD); break;
+    case KC_MS_BTN5:  USBhid.mouseButtonPress(RID_MOUSE, MOUSE_BUTTON_FORWARD); break;
+  }
+  #endif
+}
+
+void usb_sendMouseMove(uint16_t keycode, uint16_t steps)
+{
+  #ifdef TINYUSB_AVAILABLE
+  switch (keycode)
+  {
+    case KC_MS_UP:    USBhid.mouseMove(RID_MOUSE, 0, -steps); break;
+    case KC_MS_DOWN:  USBhid.mouseMove(RID_MOUSE, 0, steps); break;
+    case KC_MS_LEFT:  USBhid.mouseMove(RID_MOUSE, -steps, 0); break;
+    case KC_MS_RIGHT: USBhid.mouseMove(RID_MOUSE, steps, 0); break;
+
+    case KC_MS_WH_UP: USBhid.mouseScroll(RID_MOUSE, -1, 0); break;
+    case KC_MS_WH_DOWN: USBhid.mouseScroll(RID_MOUSE, 1, 0); break;
+    case KC_MS_WH_LEFT: USBhid.mouseScroll(RID_MOUSE, 0, -1); break;
+    case KC_MS_WH_RIGHT: USBhid.mouseScroll(RID_MOUSE, 0, 1); break;
+  }
+  #endif
+}
+
+
+// Output report callback for LED indicator such as Caplocks
+void hid_report_callback(uint8_t report_id, hid_report_type_t report_type, uint8_t const* buffer, uint16_t bufsize)
+{
+  #ifdef TINYUSB_AVAILABLE
+    if (report_id != RID_KEYBOARD) return;
+
+    // LED indicator is output report with only 1 byte length
+    if (report_type != HID_REPORT_TYPE_OUTPUT) return;
+
+    // The LED bit map is as follows: (also defined by KEYBOARD_LED_* )
+    // Kana (4) | Compose (3) | ScrollLock (2) | CapsLock (1) | Numlock (0)
+    keyboardstate.statuskb = buffer[1];
+  #endif
+}
