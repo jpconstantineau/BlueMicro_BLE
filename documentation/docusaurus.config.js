@@ -21,6 +21,16 @@ module.exports = {
           label: 'Docs',
           position: 'left',
         },
+        {
+          href: 'http://nrf52.jpconstantineau.com/docs/',
+          label: 'BlueMicro Hardware',
+          position: 'right',
+        },
+        {
+          href: 'https://github.com/jpconstantineau/Community_nRF52_Arduino/wiki',
+          label: 'Community nRF52 Arduino Support',
+          position: 'right',
+        },
         {to: 'blog', label: 'Blog', position: 'left'},
         {
           href: 'https://github.com/jpconstantineau/BlueMicro_BLE',

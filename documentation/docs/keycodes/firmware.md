@@ -52,12 +52,6 @@ Note that `_L1`, `_L2` and `_L3` are not keycodes.
 If combinations with more layers are needed, you can add them in that function.
 
 
-### Press
 
-
-### Toggles
-
-
-### One Shot
 
 Page is still a work in progress.  Refer to `hid_keycodes.h` and `advanced_keycodes.h` for a detailed list of keycodes.

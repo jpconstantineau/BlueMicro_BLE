@@ -2,7 +2,16 @@ module.exports = {
   someSidebar: {
     'Introduction': ['getting_started', 'bluetooth_firmware','hardware','keyboards'],
     Features: ['features'],
-    'How To':['tools','adding_keyboard','configure','keymaps','build','flash','customize_BSP'],
+    'How To':[
+              'tools',
+              'adding_keyboard',
+              'understand_gpios',
+              'configure_hardware',
+              'configure_keyboard',
+              'keymaps',
+              'build',
+              'flash',
+              'customize_BSP'],
     'Keycodes':[
                 'keycodes/keycodes_basic',
                 'keycodes/keycodes_extended',

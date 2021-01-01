@@ -1,73 +1,10 @@
 ---
-id: configure
-title: Configuring Firmware
-slug: /configure
+id: configure_hardware
+title: Configuring Hardware
+slug: /configure_hardware
 ---
 
-## Understanding nRF52 Modules and how GPIOs are numbered
-
-### Adafruit Feather nRF52832
-
-The __Adafruit Feather nRF52832__ uses the GPIO numbers in the IDE to call the specific pins.  This can be seen as the purple numbers in the following pinout image:
-![Adafruit Feather nRF52832](https://cdn-learn.adafruit.com/assets/assets/000/046/248/original/microcontrollers_Feather_NRF52_Pinout_v1.2-1.png?1504885794)
-
-Since there is a direct mapping between the Arduino IDE numbers and the GPIO number, the numbers used while programming are the same as the GPIOs.  __**This makes the Adafruit Feather nRF52832 compatible with most nRF52832 modules.**__
-
-You can find a schematic of the Adafruit Feather nRF52832 [here](https://cdn-learn.adafruit.com/assets/assets/000/039/913/original/microcontrollers_BluefruitnRF52Feather_Rev-F.png).
-
-
-### Adafruit Feather nRF52840 Express
-
-Unlike for the nRF52832 Feather, Adafruit has opted to use the labels on the module itself as the numbers to use when programming the __Adafruit Feather nRF52840 Express__.  This means that there is no longer a direct representation between what's used while programming and the GPIO Port and Bit on the nRF52840 chip.  __**This makes the Adafruit Feather nRF52840 Express incompatible with other modules.**__
-
-![Adafruit Feather nRF52840 Express](https://cdn-learn.adafruit.com/assets/assets/000/068/578/large1024/circuitpython_Screenshot_2019-01-02_at_12.04.27.png?1546446487)
-
-For more details on the pinout of the Adafruit Feather nRF52840 Express, go to Adafruit's [documentation page](https://learn.adafruit.com/introducing-the-adafruit-nrf52840-feather/pinouts)
-
-You can find a schematic of the Adafruit Feather nRF52840 Express [here](https://cdn-learn.adafruit.com/assets/assets/000/068/545/original/circuitpython_nRF52840_Schematic_REV-D.png).
-
-
-### Nordic nRF52840DK (PCA10056)
-
-Adafruit was very helpful when they included the __Nordic Semiconductor nRF52840 Development Kit__ in the Adafruit nRF52 Board Support Package. Unlike for the __Adafruit Feather nRF52840 Express__, the __PCA10056__ does not remap GPIO and Pin Numbers.  As such, we can use the GPIO number directly when programming.  __**This makes the Nordic nRF52840DK (PCA10056) compatible with most nRF52840 modules.**__
-
-To find how to calculate the GPIO number, refer to the method described in the next section.
-
-You can find more information on the PCA10056 [here](https://www.nordicsemi.com/Software-and-tools/Development-Kits/nRF52840-DK)
-
-### Other nRF52832 and nRF52840 modules
-
-This includes the BlueMicro, BlueMicro840, nRFMicro, Nice!Nano.  These modules reuse the __Adafruit Feather nRF52832__ or __Nordic nRF52840DK (PCA10056)__ boards in the Adafruit nRF52 Board Support Package.  As described above, the definition of these boards do not remap pins in code.
-
-To find how to calculate the GPIO number, refer to the method described in the next section.
-
-## Selecting GPIOs numbers
-
-### Adafruit Feather nRF52840 Express
-
-Use the Pin number as per what's written on the module itself. See picture in the  __Adafruit Feather nRF52840 Express__ section above.
-
-### All other modules (nRF52832 or nRF52840)
-
-The nRF52832 has 32 GPIOs on 1 port (Port 0) while the nRF52840 has 48 GPIOs on 2 ports (Port 0 and 1).  
-
-To be able to address GPIOs on Port 1, we need to use this simple definition to convert port and bit to a single number.
-
-``` c++
-#define _PINNUM(port, bit)    ((port)*32 + (bit))
-```
-For __Port 0__, the GPIO number will be the same as the Bit number. For example, `P(0.11) = 0 + 11 = 11`
-
-For __Port 1__, the GPIO number will be the Bit number plus 32. For example, `P(1.11) = 32 + 11 = 43`
-
-| Port              | Bit        | GPIO Number to use       |
-| ----------------- | ---------- | ---------- |
-| 0                 | 0-31       | 0-31       |
-| 1                 | 0-15       | 32-47      |
-
-
-
-## Configuring your keyboard
+## Configuring your keyboard - Part 1: Hardware Definition
 
 ### hardware_config.h
 
@@ -75,7 +12,7 @@ For __Port 1__, the GPIO number will be the Bit number plus 32. For example, `P(
 
 Most keyboards use a matrix of columns and rows to scan each key.  You will need to refer to the keyboard schematic to identify how many columns and rows your keyboard uses for it's scanning matrix.  The scanning matrix may differ from the keyboard layout.  For example, a 4x12 matrix uses 16 GPIOs and allows for 48 keys to be scanned.  A 8x8 matrix also uses 16 GPIOs but will allow 64 keys to be scanned.  The mapping of each key in the scanning matrix to the keyboard layout is done in the KEYMAP macro definition in keyboard_config.h.
 
-![keyboard matrix](https://raw.githubusercontent.com/jpconstantineau/BlueMicro_BLE/develop/docs/images/keyboardmatrix.png)
+![keyboard matrix](http://bluemicro.jpconstantineau.com/img/keyboardmatrix.png)
 
 In the image above, we see that this keyboard has a matrix of 4 rows, with 7 columns.  The direction of the diodes goes from the columns to the rows.  With this information, we can define the following:
 
@@ -88,7 +25,7 @@ In the image above, we see that this keyboard has a matrix of 4 rows, with 7 col
 
 Next, we need to identify how each row and column are mapped to the microntroller on board of the nRF52 module you use.  Since most DIY keyboards use the Arduino Pro Micro as its controller, we are using such an example.
 
-![GPIO Mapping](https://raw.githubusercontent.com/jpconstantineau/BlueMicro_BLE/develop/docs/images/gpiomapping.png)
+![GPIO Mapping](http://bluemicro.jpconstantineau.com/img/gpiomapping.png)
 
 With the information from both the keyboard and controller schamatics, we can map each row and column to the GPIO and using the formula shown in the previous section, we can define the configuration needed: 
 
@@ -97,12 +34,34 @@ With the information from both the keyboard and controller schamatics, we can ma
 #define MATRIX_COL_PINS {26, 29, 2, 45, 3, 28, 43 }
 ```
 
+#### Status LEDs
+
+Most controllers will have 1 or 2 LEDs to let the user know of the status of the board.  To configure the firmware to use these LEDs, you need to set at least the PIN definition for the LED. 
+By default, when `STATUS_BLE_LED_PIN` or `STATUS_KB_LED_PIN` are defined, both the `ACTIVE` and `POLARITY` settings will default to 1.
+
+``` c++
+	#define  STATUS_BLE_LED_PIN  19  //blue = 0.19
+	#define  BLE_LED_ACTIVE 1
+	#define  BLE_LED_POLARITY 1
+
+	#define  STATUS_KB_LED_PIN 17  //red = 0.17
+	#define  STATUS_KB_LED_ACTIVE 1
+	#define  STATUS_KB_LED_POLARITY 1
+```
+If you want to keep the definition of the PIN but want to disable the use of the specific status LED, you need to set the `ACTIVE` to `0`.  
+
+By default, setting a `1` on the GPIO will turn on the LED.  If this logic is reversed, set `POLARITY` to `0`.
+
+If your board does not have the LED defined but it's status does not change, you need to configure the PIN so that it can be updated to match the state of the keyboard.
+
+Note that when going to sleep, the enabled pins will go in a low power mode (INPUT) and will turn off the LEDs.
+
 
 #### Battery Monitoring
 
 Battery Monitoring is a function that's specific to the controller you use.  Most controllers implement an on-board battery charger and battery monitoring voltage divider and connect this divider to an analog input.  Such a configuration is shown below:
 
-![Battery Monitoring](https://raw.githubusercontent.com/jpconstantineau/BlueMicro_BLE/develop/docs/images/batterymonitoring.png)
+![Battery Monitoring](http://bluemicro.jpconstantineau.com/img/batterymonitoring.png)
 
 From the schematic, we identify that the connection point of the voltage divider is connected to 0.31. This leads to this definition:
 
@@ -150,7 +109,7 @@ If `CHARGER_PIN` is left undefined, charger switching functionality will not be 
 
 Some keyboards have backlit keys using LEDs controlled by a central mosfet.  The brightness of these LEDs can be modulated using Pulse Width Modulation (PWM). When referring to the keyboard and controller schematics above, we see that GPIO 1.06 is connected to the LED Backlight.
 
- ![GPIO Mapping](https://raw.githubusercontent.com/jpconstantineau/BlueMicro_BLE/develop/docs/images/gpiomapping.png)
+ ![GPIO Mapping](http://bluemicro.jpconstantineau.com/img/gpiomapping.png)
 
 This enables setting up the following configuration:
 
@@ -163,11 +122,14 @@ If `BACKLIGHT_LED_PIN` is left undefined, LED functionality will not be enabled 
 `BACKLIGHT_PWM_ON` is optional. If `BACKLIGHT_LED_PIN` is defined, but you want to turn off LED functionality, you can do so by setting `BACKLIGHT_PWM_ON` to 0.
 If `DEFAULT_PWM_VALUE` is left undefined, the default value will be that of maximum PWM value of 63351 (0x7FFF).  This will turn on LEDs on fully.
 
+Turning on the PWM peripheral on the nRF52 chip uses approximately 0.5mA, not including the power used by the LED themselves.  As such, when the PWM value is set to 0, the firmware turns off the PWM peripheral it uses for controlling the brightness of the LEDs. It does the same prior to going to sleep. 
+
+
 #### RGB LED Definition
 
 Some keyboards have RGB LEDs.  These LEDs are controlled through a single data line. When referring to the keyboard and controller schematics above, we see that GPIO 0.06 is connected to the RGB WS2812 LEDs.
 
- ![GPIO Mapping](https://raw.githubusercontent.com/jpconstantineau/BlueMicro_BLE/develop/docs/images/gpiomapping.png)
+ ![GPIO Mapping](http://bluemicro.jpconstantineau.com/img/gpiomapping.png)
 
 This enables setting up the following configuration:
 

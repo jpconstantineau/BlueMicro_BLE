@@ -31,6 +31,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "firmware_config.h"
 #include "bluetooth_config.h"
 #include "nrf52battery.h"
+#include "nrf52gpio.h"
 #include "datastructures.h"
 
 typedef volatile uint32_t REG32;

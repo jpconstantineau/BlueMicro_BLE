@@ -134,7 +134,8 @@ void saveConfig()
 /**************************************************************************************************************************/
 // cppcheck-suppress unusedFunction
 void setup() {
-  setupGpio();                                                           // checks that NFC functions on GPIOs are disabled.
+  setupGpio();                                                                // checks that NFC functions on GPIOs are disabled.
+  setupWDT();
   setupConfig();
 
   if (keyboardconfig.enableSerial)
@@ -791,6 +792,7 @@ void sendKeyPresses() {
 /**************************************************************************************************************************/
 // cppcheck-suppress unusedFunction
 void loop() {
+  updateWDT();
   if (keyboardconfig.enableSerial)
   {
     handleSerial();
