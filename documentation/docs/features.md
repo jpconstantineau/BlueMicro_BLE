@@ -12,8 +12,8 @@ BlueMicro is currently missing some features found in other popular firmware. Th
 | ---------------------------------------------------------------------------------------------------------------------- |  :-------: | :-: | :-: |
 | **Connectivity and Power Saving Options**                                                                              |            |     |    |
 | Low Latency BLE Support                                                                                                |     ✅    |      | ✅  |
-| Multi-Device BLE Support (Several Computers)                                                                           |     🚧    |      | ✅  | 
-| USB HID                                                                                                                |     🚧    | ✅  | ✅  |
+| Multi-Device BLE Support (Several Computers) <sup>1</sup>                                                              |     🚧    |      | ✅  | 
+| USB HID <sup>1,2</sup>                                                                                                 |     🚧    | ✅  | ✅  |
 | Battery Reporting (BLE Battery Service)                                                                                |     ✅    |      | 🚧  |
 | Low Power Sleep States                                                                                                 |     ✅    |      | 🚧  |
 | Low Active Power Usage                                                                                                 |            |      | ✅  |
@@ -27,11 +27,12 @@ BlueMicro is currently missing some features found in other popular firmware. Th
 | Combo Keys                                                                                                             |             | ✅  | 🚧  |
 | Macros                                                                                                                 |     ✅     | ✅  | 🚧  |
 | **Keyboard and Controller Board Hardware Options**                                                                     |            |     |    |
+| Ghosted Keys Support                                                                                                   |     🚧     | ✅  |    |
 | Split Keyboard Support                                                                                                 |     ✅     | ✅  | ✅  |
 | Key Backlight LED PWM Control                                                                                          |     ✅     | ✅  |      |
 | RGB Underglow                                                                                                          |     ✅     | ✅  | ✅  |
 | Encoders                                                                                                               |     🚧     | ✅  | ✅  |
-| OLED Display Support                                                                                                   |     🚧     | ✅  | 🚧  |
+| OLED Display Support <sup>1</sup>                                                                                      |     🚧     | ✅  | 🚧  |
 | Low Power Mode (VCC Shutoff)                                                                                           |     ✅     |     | 🚧  |
 | **Microcontroller Support**                                                                                            |            |     |    |
 | Support for Nordic nRF52 Microcontrollers                                                                              |     ✅     |     |  ✅  |
@@ -47,3 +48,7 @@ BlueMicro is currently missing some features found in other popular firmware. Th
 
 This __Features Compared__ page is licenced under [CC-BY-NC-SA-4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) and was adapted from [ZMK Firmware Documentation](https://zmkfirmware.dev/docs/) originally created by the ZMK Project Contributors.
 
+**Notes**
+
+<sup>1</sup>: Requires Community nRF52 Support Package instead of Adafruit nRF52 Board Support Package
+<sup>2</sup>: Requires nRF52840 SoC.

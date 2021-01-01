@@ -25,6 +25,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
         struct { 
         uint32_t timerkeyscaninterval;
         uint32_t timerbatteryinterval; 
+        uint32_t mainloopinterval;
 
         uint8_t    pinBLELED;  
         uint8_t    pinKBLED; 
@@ -41,6 +42,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
         bool    polarityBLELED; 
         bool    polarityKBLED; 
         bool    polarityPWMLED;  
+        
 
         bool    enableVCCSwitch;  
         bool    polarityVCCSwitch;  
@@ -49,9 +51,17 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
         bool    enableDisplay;
         bool    enableSerial;
+
+        bool    dummy1;
+        bool    dummy2;
+        bool    dummy3;
+        
+        uint8_t BLEProfile;
+        uint16_t BLEProfileEdiv[3];
+        char BLEProfileName[3][32];
   
        };
-       char data[16]; } PersistentState;  // meant for configuration and things that we want to store in flash so that we can pick it up on the next reboot.
+       char data[125]; } PersistentState;  // meant for configuration and things that we want to store in flash so that we can pick it up on the next reboot.
 
     typedef struct { 
         uint32_t timestamp;
@@ -83,6 +93,12 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
         uint16_t conn_handle_cccd;
         int8_t rssi_cccd;
         bool rssi_cccd_updated;
+
+        uint8_t connectionState;
+        bool needReset;
+        bool needUnpair;
+        bool needFSReset ;
+        bool save2flash;
     } DynamicState; // meant for keyboard and BLE status and things that are dynamic and should not be stored in flash.
 
     // TODO: Add the structures and function definitions for keycode buffer for user processing
@@ -90,3 +106,5 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
     typedef void (*ledupdateCallback)(PersistentState* config, DynamicState* status);
 
     #endif 
+
+

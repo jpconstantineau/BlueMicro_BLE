@@ -450,8 +450,13 @@ enum hid_keyboard_keypad_usage {
 #define PRINT_BATTERY       KB(KC_F4)
 #define PRINT_INFO          KB(KC_F5)
 #define PRINT_BLE           KB(KC_F6)
+#define BLEPROFILE_1        KB(KC_F7)
+#define BLEPROFILE_2        KB(KC_F8)
+#define BLEPROFILE_3        KB(KC_F9)
 
 #define HELP_MODE           KB(KC_F12)
+
+#define SLEEP_NOW           KB(KC_F13)
 
 // Power Control
 #define KC_SYSTEM_POWER      MK(KC_A) //HID_USAGE_CONSUMER_POWER  
@@ -616,6 +621,8 @@ enum hid_keyboard_keypad_usage {
 
 #define WIN_Z_CARON        KI(KC_F13) //Alt 0154 z caron
 #define WIN_Z_CARON_CAP    KI(KC_F14) //Alt 0138 Z caron
+
+#define SYM_DEGREE         KI(KC_F15) //alt 0176 degree symbol
 
 #define EXPAND_ALT_CODE(CODE1, CODE2, CODE3, CODE4)  addKeycodeToQueue(CODE1,BIT_LALT); addKeycodeToQueue(CODE2,BIT_LALT); addKeycodeToQueue(CODE3,BIT_LALT); addKeycodeToQueue(CODE4,BIT_LALT);
 
