@@ -26,7 +26,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "firmware_config.h"
 #include "nrf52gpio.h"
 #include "LedRGB.h"
-#include "LedPWM.h"
+#include "LedPwm.h"
 // Keyboard Matrix
 extern byte rows[]  ;      // Contains the GPIO Pin Numbers defined in keyboard_config.h
 extern byte columns[] ;     // Contains the GPIO Pin Numbers defined in keyboard_config.h  
