@@ -67,7 +67,7 @@ void loadConfig()
 {
   file.open(SETTINGS_FILE, FILE_O_READ);
 
-  if (file)
+  if(file)
   {
     file.read(&keyboardconfig, sizeof(keyboardconfig));
     file.close();
@@ -107,6 +107,7 @@ void resetConfig()
 
   keyboardconfig.timerkeyscaninterval=HIDREPORTINGINTERVAL;
   keyboardconfig.timerbatteryinterval=BATTERYINTERVAL;
+  keyboardconfig.mainloopinterval=LOOPINGINTERVAL;
   keyboardconfig.BLEProfile = 0;
   keyboardconfig.BLEProfileEdiv[0] = 0xFFFF;
   keyboardconfig.BLEProfileEdiv[1] = 0xFFFF;
@@ -790,7 +791,6 @@ void sendKeyPresses() {
 /**************************************************************************************************************************/
 // cppcheck-suppress unusedFunction
 void loop() {
-  unsigned long timesincelastkeypress = keyboardstate.timestamp - KeyScanner::getLastPressed();
   if (keyboardconfig.enableSerial)
   {
     handleSerial();
@@ -798,15 +798,7 @@ void loop() {
 
   updateBLEStatus();
   statusLEDs.update(); //slow update in 250 millisecond loop
-  if(keyboardconfig.enablePWMLED) // TODO: is this loop too slow for this?
-  {
-    updatePWM(timesincelastkeypress);
-  }
 
-  if(keyboardconfig.enableRGBLED)// TODO: is this loop too slow for this?
-  {
-     updateRGB(timesincelastkeypress);
-  }
   if(keyboardconfig.enableDisplay)
   {
     // updateDisplay(timesincelastkeypress);
@@ -837,7 +829,7 @@ void loop() {
   }
   if (keyboardstate.needReset) NVIC_SystemReset(); // this reboots the keyboard.
 
-  delay(250);
+  delay(keyboardconfig.mainloopinterval);
   
 };  // loop is called for serials comms and saving to flash.
 // keyscantimer is being called instead
@@ -861,7 +853,15 @@ void keyscantimer_callback(TimerHandle_t _handle) {
       Bluefruit.Scanner.start(0);                                             // 0 = Don't stop scanning after 0 seconds  ();
     }
   #endif
+  if(keyboardconfig.enablePWMLED) // TODO: is this timer fast for this?
+  {
+    updatePWM(timesincelastkeypress);
+  }
 
+  if(keyboardconfig.enableRGBLED)// TODO: is thistimer fast  for this?
+  {
+     updateRGB(timesincelastkeypress);
+  }
 }
 //********************************************************************************************//
 //* Battery Monitoring Task - runs infrequently                                              *//
