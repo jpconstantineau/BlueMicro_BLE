@@ -108,6 +108,7 @@ void resetConfig()
   keyboardconfig.timerkeyscaninterval=HIDREPORTINGINTERVAL;
   keyboardconfig.timerbatteryinterval=BATTERYINTERVAL;
   keyboardconfig.mainloopinterval=LOOPINGINTERVAL;
+  keyboardconfig.connectionMode  = CONNECTION_MODE_AUTO;
   keyboardconfig.BLEProfile = 0;
   keyboardconfig.BLEProfileEdiv[0] = 0xFFFF;
   keyboardconfig.BLEProfileEdiv[1] = 0xFFFF;
@@ -368,10 +369,34 @@ void process_keyboard_function(uint16_t keycode)
       break;  
 
     case OUT_AUTO:
+      keyboardconfig.connectionMode = CONNECTION_MODE_AUTO;
+      if ( keyboardstate.helpmode) {
+        addStringToQueue("Automatic USB/BLE - Active");addKeycodeToQueue(KC_ENTER);
+        addStringToQueue("USB Only");addKeycodeToQueue(KC_ENTER);
+        addStringToQueue("BLE Only");addKeycodeToQueue(KC_ENTER);
+      }
       break;
     case OUT_USB:
+      #ifdef NRF52840_XXAA  // only the 840 has USB available.
+        keyboardconfig.connectionMode = CONNECTION_MODE_USB_ONLY;
+        if ( keyboardstate.helpmode) {
+          addStringToQueue("Automatic USB/BLE");addKeycodeToQueue(KC_ENTER);
+          addStringToQueue("USB Only - Active");addKeycodeToQueue(KC_ENTER);
+          addStringToQueue("BLE Only");addKeycodeToQueue(KC_ENTER);
+        }
+      #else
+        if ( keyboardstate.helpmode) {
+          addStringToQueue("USB not available on NRF52832");addKeycodeToQueue(KC_ENTER);
+        }   
+      #endif
       break;
     case OUT_BT:
+      keyboardconfig.connectionMode = CONNECTION_MODE_BLE_ONLY;
+      if ( keyboardstate.helpmode) {
+        addStringToQueue("Automatic USB/BLE");addKeycodeToQueue(KC_ENTER);
+        addStringToQueue("USB Only");addKeycodeToQueue(KC_ENTER);
+        addStringToQueue("BLE Only - Active");addKeycodeToQueue(KC_ENTER);
+      }
       break;  
 
     // BACKLIGHT FUNCTIONS
@@ -638,7 +663,7 @@ void process_keyboard_function(uint16_t keycode)
     case SYM_DEGREE: EXPAND_ALT_CODE(KC_KP_0, KC_KP_1, KC_KP_7, KC_KP_6) break; // Alt 0176 degree symbol
 
     case BLEPROFILE_1:
-     // if (keyboardstate.connectionState != CONNECTION_USB) // can we switch BLE profile when connected to USB???
+      if (keyboardstate.connectionState != CONNECTION_USB) // reseting/rebooting KB when BLE Profile switching on USB would be ennoying...
         {
         #ifdef ARDUINO_NRF52_COMMUNITY
           keyboardconfig.BLEProfile = 0;
@@ -652,7 +677,7 @@ void process_keyboard_function(uint16_t keycode)
     break;
 
     case BLEPROFILE_2:
-     // if (keyboardstate.connectionState != CONNECTION_USB)// can we switch BLE profile when connected to USB???
+      if (keyboardstate.connectionState != CONNECTION_USB) // reseting/rebooting KB when BLE Profile switching on USB would be ennoying...
       {
         #ifdef ARDUINO_NRF52_COMMUNITY
           keyboardconfig.BLEProfile = 1;
@@ -666,7 +691,7 @@ void process_keyboard_function(uint16_t keycode)
     break;
 
     case BLEPROFILE_3:
-     // if (keyboardstate.connectionState != CONNECTION_USB)// can we switch BLE profile when connected to USB???
+      if (keyboardstate.connectionState != CONNECTION_USB) // reseting/rebooting KB when BLE Profile switching on USB would be ennoying...
       {
         #ifdef ARDUINO_NRF52_COMMUNITY
           keyboardconfig.BLEProfile = 2;
@@ -805,36 +830,72 @@ void loop() {
     // updateDisplay(timesincelastkeypress);
   }
 
-  if (usb_isConnected())  //todo: get switch logic to enable USB connected but using BLE for HID instead.
+  switch (keyboardconfig.connectionMode)
   {
-    if (keyboardstate.connectionState != CONNECTION_USB)
-    {
-      if (bt_isConnected()) bt_disconnect();
-      bt_stopAdv();
-      keyboardstate.connectionState = CONNECTION_USB;
-    }
+    case CONNECTION_MODE_AUTO:  // automatically switch between BLE and USB when connecting/disconnecting USB
+        if (usb_isConnected())  
+        {
+          if (keyboardstate.connectionState != CONNECTION_USB)
+          {
+            if (bt_isConnected()) bt_disconnect();
+            bt_stopAdv();
+            keyboardstate.connectionState = CONNECTION_USB;
+            keyboardstate.lastuseractiontime = millis(); // a USB connection will reset sleep timer... 
+          }
+        }
+      else if (bt_isConnected())
+        {
+          if (keyboardstate.connectionState != CONNECTION_BT)
+          {
+            keyboardstate.connectionState = CONNECTION_BT;
+            keyboardstate.lastuseractiontime = millis(); // a BLE connection will reset sleep timer...
+          }
+        }
+        else
+        {
+          if (keyboardstate.connectionState != CONNECTION_NONE)
+          {
+            bt_startAdv();
+            keyboardstate.connectionState = CONNECTION_NONE;
+            // disconnecting won't reset sleep timer.
+          }
+        }
+      break;
+    case CONNECTION_MODE_USB_ONLY:
+        if (usb_isConnected())  
+        {
+          if (keyboardstate.connectionState != CONNECTION_USB)
+          {
+            if (bt_isConnected()) bt_disconnect();
+            bt_stopAdv();
+            keyboardstate.connectionState = CONNECTION_USB;
+          }
+        }
+        else // if USB not connected but we are in USB Mode only...
+        {
+          keyboardstate.connectionState = CONNECTION_NONE;
+        }
+      break;
+    case CONNECTION_MODE_BLE_ONLY:
+        if (bt_isConnected())
+        {
+          if (keyboardstate.connectionState != CONNECTION_BT)
+          {
+            keyboardstate.connectionState = CONNECTION_BT;
+          }
+        }
+        else
+        {
+          if (keyboardstate.connectionState != CONNECTION_NONE)
+          {
+            bt_startAdv();
+            keyboardstate.connectionState = CONNECTION_NONE;
+          }
+        }
+      break;
   }
-else if (bt_isConnected())
-  {
-    if (keyboardstate.connectionState != CONNECTION_BT)
-    {
-      //Battery::first_vbat = true;
-      //KeyScanner::setLastPressed(millis()); // why here?
-      //keyboardstate.timestamp = millis();   // why here?
-      keyboardstate.connectionState = CONNECTION_BT;
-    }
-  }
-  else
-  {
-    if (keyboardstate.connectionState != CONNECTION_NONE)
-    {
-      bt_startAdv();
-      //Battery::first_vbat = true;
-      //KeyScanner::setLastPressed(millis());  // why here?
-      //keyboardstate.timestamp = millis();    // why here?
-      keyboardstate.connectionState = CONNECTION_NONE;
-    }
-  }
+
+  // TODO: check for battery filtering when switching USB in/out
 
   // none of these things can be done in the timer event callbacks
   if (keyboardstate.needUnpair)
@@ -871,9 +932,10 @@ void keyscantimer_callback(TimerHandle_t _handle) {
     scanMatrix();
   #endif
   #if SEND_KEYS == 1
-    sendKeyPresses();    // TODO: how often does this really need to run?
+    sendKeyPresses();  
   #endif
-   unsigned long timesincelastkeypress = keyboardstate.timestamp - KeyScanner::getLastPressed();
+   keyboardstate.lastuseractiontime = max(KeyScanner::getLastPressed(),keyboardstate.lastuseractiontime); // use the latest time to check for sleep...
+   unsigned long timesincelastkeypress = keyboardstate.timestamp - keyboardstate.lastuseractiontime;
 
   #if SLEEP_ACTIVE == 1
     switch (keyboardstate.connectionState)

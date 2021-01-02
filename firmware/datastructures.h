@@ -55,22 +55,22 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
         bool    dummy1;
         bool    dummy2;
         bool    dummy3;
-        
+        uint8_t connectionMode;
         uint8_t BLEProfile;
         uint16_t BLEProfileEdiv[3];
         char BLEProfileName[3][32];
   
        };
-       char data[125]; } PersistentState;  // meant for configuration and things that we want to store in flash so that we can pick it up on the next reboot.
+       char data[126]; } PersistentState;  // meant for configuration and things that we want to store in flash so that we can pick it up on the next reboot.
 
     typedef struct { 
         uint32_t timestamp;
         uint32_t lastupdatetime;
+        uint32_t lastuseractiontime;
         uint16_t layer;
         uint8_t statuskb;
         uint8_t statusble;
-
-        bool helpmode;
+        
         uint32_t vbat_raw;
         uint32_t vbat_mv;
         uint32_t vbat_vdd;
@@ -82,22 +82,24 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
         char peer_name_prph[32];
         uint16_t conn_handle_prph;
         int8_t rssi_prph;
-        bool rssi_prph_updated;
-
+        
         char peer_name_cent[32];
         uint16_t conn_handle_cent;
         int8_t rssi_cent;
-        bool rssi_cent_updated;
-
+        
         char peer_name_cccd[32];
         uint16_t conn_handle_cccd;
         int8_t rssi_cccd;
-        bool rssi_cccd_updated;
-
+        
         uint8_t connectionState;
+
+        bool rssi_prph_updated;
+        bool rssi_cent_updated;
+        bool rssi_cccd_updated;
+        bool helpmode;
         bool needReset;
         bool needUnpair;
-        bool needFSReset ;
+        bool needFSReset;
         bool save2flash;
     } DynamicState; // meant for keyboard and BLE status and things that are dynamic and should not be stored in flash.
 
@@ -112,6 +114,12 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
     CONNECTION_BT
     };
 
+    enum connectionMode
+    {
+    CONNECTION_MODE_AUTO,
+    CONNECTION_MODE_USB_ONLY,
+    CONNECTION_MODE_BLE_ONLY
+    };
     #endif 
 
 
