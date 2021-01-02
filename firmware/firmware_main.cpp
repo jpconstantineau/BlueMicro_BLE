@@ -759,13 +759,21 @@ void sendKeyPresses() {
     
     report[0] = static_cast<uint8_t>((keyreport & 0xFF00) >> 8);// mods
     report[1] = static_cast<uint8_t>(keyreport & 0x00FF);
-    bt_sendKeys(report);
+    switch (keyboardstate.connectionState)
+    {
+      case CONNECTION_USB: usb_sendKeys(report); break;
+      case CONNECTION_BT: bt_sendKeys(report); break;
+    }
     delay(keyboardconfig.timerkeyscaninterval*3);
     if (stringbuffer.empty()) // make sure to send an empty report when done...
     { 
       report[0] = 0;
       report[1] = 0;
-      bt_sendKeys(report);
+      switch (keyboardstate.connectionState)
+      {
+        case CONNECTION_USB: usb_sendKeys(report); break;
+        case CONNECTION_BT: bt_sendKeys(report); break;
+      }
       delay(keyboardconfig.timerkeyscaninterval*3);
     }
     else
@@ -776,7 +784,11 @@ void sendKeyPresses() {
       {
         report[0] = static_cast<uint8_t>((keyreport & 0xFF00) >> 8);// mods;
         report[1] = 0;
-        bt_sendKeys(report);
+        switch (keyboardstate.connectionState)
+        {
+          case CONNECTION_USB: usb_sendKeys(report); break;
+          case CONNECTION_BT: bt_sendKeys(report); break;
+        }
         delay(keyboardconfig.timerkeyscaninterval*3);
       }
     }
@@ -784,7 +796,11 @@ void sendKeyPresses() {
   }
   else if ((KeyScanner::reportChanged))  //any new key presses anywhere?
   {                                                                              
-        bt_sendKeys(KeyScanner::currentReport);
+    switch (keyboardstate.connectionState)
+    {
+      case CONNECTION_USB: usb_sendKeys(KeyScanner::currentReport); break;
+      case CONNECTION_BT: bt_sendKeys(KeyScanner::currentReport); break;
+    }
         LOG_LV1("MXSCAN","SEND: %i %i %i %i %i %i %i %i %i " ,keyboardstate.timestamp,KeyScanner::currentReport[0], KeyScanner::currentReport[1],KeyScanner::currentReport[2],KeyScanner::currentReport[3], KeyScanner::currentReport[4],KeyScanner::currentReport[5], KeyScanner::currentReport[6],KeyScanner::currentReport[7] );        
   } else if (KeyScanner::specialfunction > 0)
   {
@@ -792,11 +808,19 @@ void sendKeyPresses() {
     KeyScanner::specialfunction = 0; 
   } else if (KeyScanner::consumer > 0)
   {
-    bt_sendMediaKey(KeyScanner::consumer);
+    switch (keyboardstate.connectionState)
+    {
+      case CONNECTION_USB: usb_sendMediaKey(KeyScanner::consumer); break;
+      case CONNECTION_BT: bt_sendMediaKey(KeyScanner::consumer); break;
+    }
     KeyScanner::consumer = 0; 
   } else if (KeyScanner::mouse > 0)
   {
-    bt_sendMouseKey(KeyScanner::mouse);
+    switch (keyboardstate.connectionState)
+    {
+      case CONNECTION_USB: usb_sendMouseKey(KeyScanner::mouse); break;
+      case CONNECTION_BT: bt_sendMouseKey(KeyScanner::mouse); break;
+    }
     KeyScanner::mouse = 0; 
   }
   
