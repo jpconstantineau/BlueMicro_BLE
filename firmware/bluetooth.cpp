@@ -107,7 +107,7 @@ sd_ble_gap_ppcp_set(&_ppcp);
   // Configure and Start Battery Service
   blebas.begin();
   blebas.write(100); // put the battery level at 100% - until it is updated by the battery monitoring loop.
-  Battery::readVBAT(); // Get a single ADC sample and throw it away
+  batterymonitor.readVBAT(); // Get a single ADC sample and throw it away
   
   statedata.command =0;
   statedata.layer =0;

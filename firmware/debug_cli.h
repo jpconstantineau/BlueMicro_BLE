@@ -27,7 +27,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 #include <vector>
 #include <algorithm>
-
+#include "firmware.h"
 #include "firmware_config.h"
 #include "bluetooth_config.h"
 #include "nrf52battery.h"

@@ -588,7 +588,8 @@ void process_keyboard_function(uint16_t keycode)
       addKeycodeToQueue(KC_ENTER);
       addKeycodeToQueue(KC_ENTER);
       break;
-
+    case PRINT_HELP:
+      break;
     case SLEEP_NOW:
       if (keyboardstate.connectionState != CONNECTION_USB) sleepNow();
     break;

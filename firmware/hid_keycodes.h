@@ -450,9 +450,10 @@ enum hid_keyboard_keypad_usage {
 #define PRINT_BATTERY       KB(KC_F4)
 #define PRINT_INFO          KB(KC_F5)
 #define PRINT_BLE           KB(KC_F6)
-#define BLEPROFILE_1        KB(KC_F7)
-#define BLEPROFILE_2        KB(KC_F8)
-#define BLEPROFILE_3        KB(KC_F9)
+#define PRINT_HELP          KB(KC_F7)
+#define BLEPROFILE_1        KB(KC_F8)       
+#define BLEPROFILE_2        KB(KC_F9)
+#define BLEPROFILE_3        KB(KC_F10)
 
 #define HELP_MODE           KB(KC_F12)
 
