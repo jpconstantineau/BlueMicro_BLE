@@ -21,17 +21,17 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define DATASTRUCTURES_H
 #include <array>
 
-#define BLUEMICRO_CONFIG_VERSION 0  // this should be incremented every time the PersistentState structure definition is updated.  This will ensure that the SETTINGS_FILE file is reset when the structure is updated.
+#define BLUEMICRO_CONFIG_VERSION 1  // this should be incremented every time the PersistentState structure definition is updated.  This will ensure that the SETTINGS_FILE file is reset when the structure is updated.
 
     typedef union {
         struct { 
         uint8_t  version;
 
-        uint32_t timerkeyscaninterval;
-
-        uint32_t timerbatteryinterval; 
-
-        uint32_t mainloopinterval;
+        uint32_t matrixscaninterval; // timer interval = normal priority
+        uint32_t batteryinterval;  // timer interval = normal priority
+        uint32_t keysendinterval; //   normal priority
+        uint32_t lowpriorityloopinterval;
+        uint32_t lowestpriorityloopinterval;
 
         uint8_t    pinBLELED;  
         uint8_t    pinKBLED; 

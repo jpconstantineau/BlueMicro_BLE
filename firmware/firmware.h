@@ -43,7 +43,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
     void setupMatrix(void);
     void scanMatrix(void);
     void sendKeyPresses(void);
-
+    void LowestPriorityloop(void);
+    void NormalPriorityloop(void);
     void keyscantimer_callback(TimerHandle_t _handle);
     void batterytimer_callback(TimerHandle_t _handle);
     void RGBtimer_callback(TimerHandle_t _handle);

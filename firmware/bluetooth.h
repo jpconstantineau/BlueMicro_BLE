@@ -47,7 +47,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
         uint32_t       timesync;         // 4 bytes
     } StatePayload;
 
-void updateBLEStatus(void);
+    void updateBLEStatus(void);
     void bt_setup(uint8_t BLEProfile);
     void bt_startAdv(void);
     void bt_disconnect(void);

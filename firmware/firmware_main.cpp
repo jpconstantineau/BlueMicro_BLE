@@ -112,9 +112,11 @@ void resetConfig()
 
   keyboardconfig.enableSerial = true; // no serial logic yet  TODO: take care of the bluemicro 2.0x where serial is on top of GPIOs
 
-  keyboardconfig.timerkeyscaninterval=HIDREPORTINGINTERVAL;
-  keyboardconfig.timerbatteryinterval=BATTERYINTERVAL;
-  keyboardconfig.mainloopinterval=LOOPINGINTERVAL;
+  keyboardconfig.matrixscaninterval=HIDREPORTINGINTERVAL;
+  keyboardconfig.batteryinterval=BATTERYINTERVAL;
+  keyboardconfig.keysendinterval=HIDREPORTINGINTERVAL;
+  keyboardconfig.lowpriorityloopinterval=LOOPINGINTERVAL;
+  keyboardconfig.lowestpriorityloopinterval = HIDREPORTINGINTERVAL*4;
   keyboardconfig.connectionMode  = CONNECTION_MODE_AUTO;
   keyboardconfig.BLEProfile = 0;
   keyboardconfig.BLEProfileEdiv[0] = 0xFFFF;
@@ -163,8 +165,8 @@ void setup() {
     switchCharger(keyboardconfig.polarityChargerControl); // turn on Charger when starting up if needed.
   }
 
-  keyscantimer.begin(keyboardconfig.timerkeyscaninterval, keyscantimer_callback);
-  batterytimer.begin(keyboardconfig.timerbatteryinterval, batterytimer_callback);
+  keyscantimer.begin(keyboardconfig.matrixscaninterval, keyscantimer_callback);
+  batterytimer.begin(keyboardconfig.batteryinterval, batterytimer_callback);
   bt_setup(keyboardconfig.BLEProfile);
   usb_setup(); // does nothing for 832 - see usb.cpp
 
@@ -192,7 +194,8 @@ void setup() {
   }
   statusLEDs.enable();
   statusLEDs.hello();  // blinks Status LEDs a couple as last step of setup.
-
+  Scheduler.startLoop(LowestPriorityloop, 1024, TASK_PRIO_LOWEST, "l1"); // this loop contains LED,RGB & PWM and Display updates.
+  Scheduler.startLoop(NormalPriorityloop, 1024, TASK_PRIO_NORMAL, "n1"); // this loop contains keypress send.
 };
 /**************************************************************************************************************************/
 //
@@ -242,7 +245,6 @@ void setupMatrix(void) {
 void scanMatrix() {
 
     keyboardstate.timestamp  = millis();   // lets call it once per scan instead of once per key in the matrix
-    //take care when selecting debouncetime - each row has a delay of 1ms inbetween - so if you have 5 rows, setting debouncetime to 2 is at least 5ms...
     
     static PINDATATYPE pindata[MATRIX_ROWS][DEBOUNCETIME];
 
@@ -566,6 +568,32 @@ void process_keyboard_function(uint16_t keycode)
       addKeycodeToQueue(KC_ENTER);
       sprintf(buffer,"Device Power   : %f", DEVICE_POWER*1.0);
       addStringToQueue(buffer); addKeycodeToQueue(KC_ENTER);
+        switch (keyboardconfig.connectionMode)
+        {
+          case CONNECTION_MODE_AUTO:
+          addStringToQueue("CONNECTION_MODE_AUTO"); addKeycodeToQueue(KC_ENTER);
+          break;
+          case CONNECTION_MODE_USB_ONLY:
+          addStringToQueue("CONNECTION_MODE_USB_ONLY"); addKeycodeToQueue(KC_ENTER);
+          break;
+          case CONNECTION_MODE_BLE_ONLY:
+          addStringToQueue("CONNECTION_MODE_BLE_ONLY"); addKeycodeToQueue(KC_ENTER);
+          break;
+        }
+            switch (keyboardstate.connectionState)
+            {
+              case CONNECTION_USB:
+                addStringToQueue("CONNECTION_USB"); addKeycodeToQueue(KC_ENTER);
+              break;
+
+              case CONNECTION_BT:
+                addStringToQueue("CONNECTION_BLE"); addKeycodeToQueue(KC_ENTER);
+              break;
+
+              case CONNECTION_NONE:
+                addStringToQueue("CONNECTION_NONE"); addKeycodeToQueue(KC_ENTER);
+              break;
+            }
       break;  
     case PRINT_BLE:
       addStringToQueue("Keyboard Name: " DEVICE_NAME " "); addKeycodeToQueue(KC_ENTER);
@@ -781,7 +809,7 @@ void sendKeyPresses() {
       case CONNECTION_USB: usb_sendKeys(report); break;
       case CONNECTION_BT: bt_sendKeys(report); break;
     }
-    delay(keyboardconfig.timerkeyscaninterval*3);
+    delay(keyboardconfig.keysendinterval*2);
     if (stringbuffer.empty()) // make sure to send an empty report when done...
     { 
       report[0] = 0;
@@ -791,7 +819,7 @@ void sendKeyPresses() {
         case CONNECTION_USB: usb_sendKeys(report); break;
         case CONNECTION_BT: bt_sendKeys(report); break;
       }
-      delay(keyboardconfig.timerkeyscaninterval*3);
+      delay(keyboardconfig.keysendinterval*2);
     }
     else
     {
@@ -806,7 +834,7 @@ void sendKeyPresses() {
           case CONNECTION_USB: usb_sendKeys(report); break;
           case CONNECTION_BT: bt_sendKeys(report); break;
         }
-        delay(keyboardconfig.timerkeyscaninterval*3);
+        delay(keyboardconfig.keysendinterval*2);
       }
     }
    // KeyScanner::processingmacros=0;
@@ -852,23 +880,77 @@ void sendKeyPresses() {
     } 
   #endif                                                                /**************************************************/
 }
+
+// keyscantimer is being called instead
+/**************************************************************************************************************************/
+void keyscantimer_callback(TimerHandle_t _handle) {
+  // timers have NORMAL priorities (HIGHEST>HIGH>NORMAL>LOW>LOWEST)
+  // since timers are repeated non stop, we dont want the duration of code running within the timer to vary and potentially
+  // go longer than the interval time.
+
+  #if MATRIX_SCAN == 1
+    scanMatrix();
+  #endif
+
+   keyboardstate.lastuseractiontime = max(KeyScanner::getLastPressed(),keyboardstate.lastuseractiontime); // use the latest time to check for sleep...
+   unsigned long timesincelastkeypress = keyboardstate.timestamp - keyboardstate.lastuseractiontime;
+
+  #if SLEEP_ACTIVE == 1
+    switch (keyboardstate.connectionState)
+    {
+      case CONNECTION_USB:
+        // never sleep in this case
+      break;
+
+      case CONNECTION_BT:
+        gotoSleep(timesincelastkeypress, true);
+      break;
+
+      case CONNECTION_NONE:
+        gotoSleep(timesincelastkeypress, false);
+      break;
+    }
+  #endif
+
+  #if BLE_CENTRAL == 1  // this is for the master half...
+    if ((timesincelastkeypress<10)&&(!Bluefruit.Central.connected()&&(!Bluefruit.Scanner.isRunning())))
+    {
+      Bluefruit.Scanner.start(0);                                             // 0 = Don't stop scanning after 0 seconds  ();
+    }
+  #endif
+
+}
+//********************************************************************************************//
+//* Battery Monitoring Task - runs infrequently                                              *//
+//********************************************************************************************//
+// TODO: move to lower priority loop.  updating battery infomation isnt critical
+// timers have NORMAL priorities (HIGHEST>HIGH>NORMAL>LOW>LOWEST)
+void batterytimer_callback(TimerHandle_t _handle)
+{ 
+      batterymonitor.updateBattery();
+}
+
+//********************************************************************************************//
+//* Loop to send keypresses - moved to loop instead of timer due to delay() in processing macros *//
+//********************************************************************************************//
+// this loop has NORMAL priority(HIGHEST>HIGH>NORMAL>LOW>LOWEST)
+void NormalPriorityloop(void)
+{
+  #if SEND_KEYS == 1
+    sendKeyPresses();  
+  #endif
+  delay (keyboardconfig.keysendinterval);
+}
+
 /**************************************************************************************************************************/
 // put your main code here, to run repeatedly:
 /**************************************************************************************************************************/
 // cppcheck-suppress unusedFunction
-void loop() {
+void loop() {  // has task priority TASK_PRIO_LOW     
   updateWDT();
   if (keyboardconfig.enableSerial)
   {
     handleSerial();
-  }
-
-  updateBLEStatus();
-  statusLEDs.update(); //slow update in 250 millisecond loop
-
-  if(keyboardconfig.enableDisplay)
-  {
-    // updateDisplay(timesincelastkeypress);
   }
 
   switch (keyboardconfig.connectionMode)
@@ -963,44 +1045,22 @@ void loop() {
   }
   if (keyboardstate.needReset) NVIC_SystemReset(); // this reboots the keyboard.
 
-  delay(keyboardconfig.mainloopinterval);
+  delay (keyboardconfig.lowpriorityloopinterval);
   
 };  // loop is called for serials comms and saving to flash.
-// keyscantimer is being called instead
 /**************************************************************************************************************************/
-void keyscantimer_callback(TimerHandle_t _handle) {
-    #if MATRIX_SCAN == 1
-    scanMatrix();
-  #endif
-  #if SEND_KEYS == 1
-    sendKeyPresses();  
-  #endif
+void LowestPriorityloop()
+{ // this loop has LOWEST priority (HIGHEST>HIGH>NORMAL>LOW>LOWEST)
    keyboardstate.lastuseractiontime = max(KeyScanner::getLastPressed(),keyboardstate.lastuseractiontime); // use the latest time to check for sleep...
    unsigned long timesincelastkeypress = keyboardstate.timestamp - keyboardstate.lastuseractiontime;
+  updateBLEStatus();
+  statusLEDs.update(); //slow update in 25 millisecond loop
 
-  #if SLEEP_ACTIVE == 1
-    switch (keyboardstate.connectionState)
-    {
-      case CONNECTION_USB:
-        // never sleep in this case
-      break;
+  if(keyboardconfig.enableDisplay)
+  {
+    // updateDisplay(timesincelastkeypress);
+  }
 
-      case CONNECTION_BT:
-        gotoSleep(timesincelastkeypress, true);
-      break;
-
-      case CONNECTION_NONE:
-        gotoSleep(timesincelastkeypress, false);
-      break;
-    }
-  #endif
-
-  #if BLE_CENTRAL == 1  
-    if ((timesincelastkeypress<10)&&(!Bluefruit.Central.connected()&&(!Bluefruit.Scanner.isRunning())))
-    {
-      Bluefruit.Scanner.start(0);                                             // 0 = Don't stop scanning after 0 seconds  ();
-    }
-  #endif
   if(keyboardconfig.enablePWMLED) // TODO: is this timer fast for this?
   {
     updatePWM(timesincelastkeypress);
@@ -1010,14 +1070,9 @@ void keyscantimer_callback(TimerHandle_t _handle) {
   {
      updateRGB(timesincelastkeypress);
   }
+  delay(keyboardconfig.lowestpriorityloopinterval);              // wait not too long  
 }
-//********************************************************************************************//
-//* Battery Monitoring Task - runs infrequently                                              *//
-//********************************************************************************************//
-void batterytimer_callback(TimerHandle_t _handle)
-{ 
-      batterymonitor.updateBattery();
-}
+
 
 
 //********************************************************************************************//
@@ -1028,6 +1083,7 @@ void batterytimer_callback(TimerHandle_t _handle)
 extern "C" void vApplicationIdleHook(void) {
   // Don't call any other FreeRTOS blocking API()
   // Perform background task(s) here
+  // this task has LOWEST priority (HIGHEST>HIGH>NORMAL>LOW>LOWEST)
     sd_power_mode_set(NRF_POWER_MODE_LOWPWR); // 944uA
     //sd_power_mode_set(NRF_POWER_MODE_CONSTLAT); // 1.5mA
     sd_app_evt_wait();  // puts the nrf52 to sleep when there is nothing to do.  You need this to reduce power consumption. (removing this will increase current to 8mA)
