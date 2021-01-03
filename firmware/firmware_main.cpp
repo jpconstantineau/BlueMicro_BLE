@@ -115,7 +115,7 @@ void resetConfig()
   keyboardconfig.matrixscaninterval=HIDREPORTINGINTERVAL;
   keyboardconfig.batteryinterval=BATTERYINTERVAL;
   keyboardconfig.keysendinterval=HIDREPORTINGINTERVAL;
-  keyboardconfig.lowpriorityloopinterval=LOOPINGINTERVAL;
+  keyboardconfig.lowpriorityloopinterval=LOWPRIORITYLOOPINTERVAL;
   keyboardconfig.lowestpriorityloopinterval = HIDREPORTINGINTERVAL*4;
   keyboardconfig.connectionMode  = CONNECTION_MODE_AUTO;
   keyboardconfig.BLEProfile = 0;

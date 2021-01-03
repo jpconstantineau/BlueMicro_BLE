@@ -75,4 +75,5 @@ BlueMicro_BLE uses the following projects, each are licensed separately.
 | [Hathach TinyUSB](https://github.com/hathach/tinyusb) | USB Library for nRF52840 | [![Hathach TinyUSB](https://img.shields.io/github/release/hathach/tinyusb.svg)](https://github.com/hathach/tinyusb) |
 | [Adafruit SSD1306](https://github.com/adafruit/Adafruit_SSD1306) | Monochrome OLEDs Library based on SSD1306 drivers  | [![Adafruit_SSD1306](https://img.shields.io/github/release/adafruit/Adafruit_SSD1306.svg)](https://github.com/adafruit/Adafruit_SSD1306) |
 | [Adafruit GFX Library](https://github.com/adafruit/Adafruit-GFX-Library) | core graphics library  | [![Adafruit-GFX-Library](https://img.shields.io/github/release/adafruit/Adafruit-GFX-Library.svg)](https://github.com/adafruit/Adafruit-GFX-Library) |
+| [Adafruit_BusIO](https://github.com/adafruit/Adafruit_BusIO) | helper libary to abstract away I2C & SPI transactions and registers  | [![Adafruit_BusIO](https://img.shields.io/github/release/adafruit/Adafruit_BusIO.svg)](https://github.com/adafruit/Adafruit_BusIO) |
 | [Olikraus U8g2](https://github.com/olikraus/u8g2) | U8g2: Library for monochrome displays, version 2 |  |
