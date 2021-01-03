@@ -1,4 +1,4 @@
-/*
+ /*
 Copyright 2018 <Pierre Constantineau>
 
 3-Clause BSD License
@@ -35,6 +35,17 @@ void setupKeymap() {
    // once tested, you can flash the left and right to their respective halves.
 
 }
+
+void process_user_macros(uint16_t macroid)
+{
+	
+}
+	
+void process_user_layers(uint16_t layermask) 
+{
+
+}
+
 #endif
 
 
