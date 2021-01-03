@@ -454,10 +454,12 @@ enum hid_keyboard_keypad_usage {
 #define BLEPROFILE_1        KB(KC_F8)       
 #define BLEPROFILE_2        KB(KC_F9)
 #define BLEPROFILE_3        KB(KC_F10)
-
+#define SLEEP_NOW           KB(KC_F11)
 #define HELP_MODE           KB(KC_F12)
 
-#define SLEEP_NOW           KB(KC_F13)
+#define BATTERY_CALC_DEFAULT  KB(KC_F13)
+#define BATTERY_CALC_TEST     KB(KC_F14)
+#define BATTERY_CALC_FILTERED KB(KC_F15) // TODO: bring the akudaikon filtered method for switching between USB connected/not connected.
 
 // Power Control
 #define KC_SYSTEM_POWER      MK(KC_A) //HID_USAGE_CONSUMER_POWER  

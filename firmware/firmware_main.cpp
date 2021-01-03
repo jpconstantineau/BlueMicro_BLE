@@ -77,11 +77,18 @@ void loadConfig()
     resetConfig();
     saveConfig();
   }
+
+ if (keyboardconfig.version != BLUEMICRO_CONFIG_VERSION) // SETTINGS_FILE format changed. we need to reset and re-save it.
+ {
+    resetConfig();
+    saveConfig();
+ }
 }
 
 /**************************************************************************************************************************/
 void resetConfig()
 {
+  keyboardconfig.version=BLUEMICRO_CONFIG_VERSION;
   keyboardconfig.pinPWMLED=BACKLIGHT_LED_PIN;
   keyboardconfig.pinRGBLED=WS2812B_LED_PIN;
   keyboardconfig.pinBLELED=STATUS_BLE_LED_PIN;  
@@ -704,6 +711,15 @@ void process_keyboard_function(uint16_t keycode)
         #endif
       }
     break;
+
+    case BATTERY_CALC_DEFAULT:
+      batterymonitor.setmvToPercentCallback(mvToPercent_default);
+      batterymonitor.updateBattery(); // force an update
+    break;
+    case BATTERY_CALC_TEST:
+      batterymonitor.setmvToPercentCallback(mvToPercent_test);
+      batterymonitor.updateBattery(); // force an update
+    break;     
      
   }
 }

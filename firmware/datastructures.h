@@ -21,16 +21,23 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define DATASTRUCTURES_H
 #include <array>
 
+#define BLUEMICRO_CONFIG_VERSION 0  // this should be incremented every time the PersistentState structure definition is updated.  This will ensure that the SETTINGS_FILE file is reset when the structure is updated.
+
     typedef union {
         struct { 
+        uint8_t  version;
+
         uint32_t timerkeyscaninterval;
+
         uint32_t timerbatteryinterval; 
+
         uint32_t mainloopinterval;
 
         uint8_t    pinBLELED;  
         uint8_t    pinKBLED; 
         uint8_t    pinPWMLED;
         uint8_t    pinRGBLED;
+
         uint8_t    pinVCCSwitch;
         uint8_t    pinChargerControl;
 
@@ -42,26 +49,26 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
         bool    polarityBLELED; 
         bool    polarityKBLED; 
         bool    polarityPWMLED;  
-        
-
         bool    enableVCCSwitch;  
+
         bool    polarityVCCSwitch;  
         bool    enableChargerControl;  
         bool    polarityChargerControl;    
-
         bool    enableDisplay;
-        bool    enableSerial;
 
+        bool    enableSerial;
         bool    dummy1;
         bool    dummy2;
         bool    dummy3;
+
         uint8_t connectionMode;
         uint8_t BLEProfile;
         uint16_t BLEProfileEdiv[3];
+
         char BLEProfileName[3][32];
   
        };
-       char data[126]; } PersistentState;  // meant for configuration and things that we want to store in flash so that we can pick it up on the next reboot.
+       char data[128]; } PersistentState;  // meant for configuration and things that we want to store in flash so that we can pick it up on the next reboot.
 
     typedef struct { 
         uint32_t timestamp;
@@ -101,6 +108,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
         bool needUnpair;
         bool needFSReset;
         bool save2flash;
+
     } DynamicState; // meant for keyboard and BLE status and things that are dynamic and should not be stored in flash.
 
     // TODO: Add the structures and function definitions for keycode buffer for user processing

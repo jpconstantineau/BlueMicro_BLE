@@ -42,6 +42,7 @@ typedef void (*mvToPercent_cb_t)(uint8_t & vbat_per, uint32_t mvolts, uint8_t ba
          uint8_t batt_type;
          void updateBattery(void);
          uint32_t readVBAT(void);
+         void setmvToPercentCallback(mvToPercent_cb_t callback);
         
     private:
          
@@ -50,6 +51,6 @@ typedef void (*mvToPercent_cb_t)(uint8_t & vbat_per, uint32_t mvolts, uint8_t ba
          mvToPercent_cb_t _mvToPercent_cb;
 
   };
-void mvToPercent(uint8_t & vbat_per, uint32_t mvolts, uint8_t batt_type );
-
+void mvToPercent_default(uint8_t & vbat_per, uint32_t mvolts, uint8_t batt_type );
+void mvToPercent_test(uint8_t & vbat_per, uint32_t mvolts, uint8_t batt_type );
 #endif
