@@ -103,7 +103,7 @@ void resetConfig()
 
   keyboardconfig.enableDisplay = false; // no displays yet
 
-  keyboardconfig.enableSerial = true; // no serial logic yet  TODO: take care of the bluemicro 2.0x where serial is on top of GPIOs
+  keyboardconfig.enableSerial = SERIAL_DEBUG_CLI_DEFAULT_ON;   
 
   keyboardconfig.timerkeyscaninterval=HIDREPORTINGINTERVAL;
   keyboardconfig.timerbatteryinterval=BATTERYINTERVAL;
