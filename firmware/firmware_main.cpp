@@ -891,7 +891,9 @@ void keyscantimer_callback(TimerHandle_t _handle) {
   #if MATRIX_SCAN == 1
     scanMatrix();
   #endif
-
+  #if SEND_KEYS == 1
+    sendKeyPresses();  
+  #endif
    keyboardstate.lastuseractiontime = max(KeyScanner::getLastPressed(),keyboardstate.lastuseractiontime); // use the latest time to check for sleep...
    unsigned long timesincelastkeypress = keyboardstate.timestamp - keyboardstate.lastuseractiontime;
 
@@ -936,9 +938,7 @@ void batterytimer_callback(TimerHandle_t _handle)
 // this loop has NORMAL priority(HIGHEST>HIGH>NORMAL>LOW>LOWEST)
 void NormalPriorityloop(void)
 {
-  #if SEND_KEYS == 1
-    sendKeyPresses();  
-  #endif
+
   delay (keyboardconfig.keysendinterval);
 }
 
