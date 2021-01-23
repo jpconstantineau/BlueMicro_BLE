@@ -67,14 +67,14 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 
 #ifndef DEBOUNCETIME 
-#define DEBOUNCETIME 1
+#define DEBOUNCETIME 3   // changing this to 1 and you will have problems with the debounce logic - repeated keys perhaps...
 #endif
 
 #ifndef HIDREPORTINGINTERVAL
 #define HIDREPORTINGINTERVAL 8
 #endif
-#ifndef LOOPINGINTERVAL
-#define LOOPINGINTERVAL 128
+#ifndef LOWPRIORITYLOOPINTERVAL
+#define LOWPRIORITYLOOPINTERVAL 128
 #endif
 
 

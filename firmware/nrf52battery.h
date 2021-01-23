@@ -31,20 +31,26 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
     BATT_LIPO = 2,
 };
 
+typedef void (*mvToPercent_cb_t)(uint8_t & vbat_per, uint32_t mvolts, uint8_t batt_type ); 
+
   class Battery {
     public:
         Battery();  
-        static uint8_t vbat_per;
-        static uint32_t vbat_mv;
-        static uint32_t vbat_vdd;
-        static uint8_t batt_type;
-        static void updateBattery(void);
-        static uint32_t readVBAT(void);
-        static uint8_t mvToPercent(uint32_t mvolts);
+         uint8_t vbat_per;
+         uint32_t vbat_mv;
+         uint32_t vbat_vdd;
+         uint8_t batt_type;
+         void updateBattery(void);
+         uint32_t readVBAT(void);
+         void setmvToPercentCallback(mvToPercent_cb_t callback);
+        
     private:
-        static uint32_t analogReadVDD();
-        static uint32_t vbat_raw;
+         
+         uint32_t analogReadVDD();
+         uint32_t vbat_raw;
+         mvToPercent_cb_t _mvToPercent_cb;
 
   };
-
+void mvToPercent_default(uint8_t & vbat_per, uint32_t mvolts, uint8_t batt_type );
+void mvToPercent_test(uint8_t & vbat_per, uint32_t mvolts, uint8_t batt_type );
 #endif

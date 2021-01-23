@@ -1,5 +1,5 @@
 /*
-Copyright 2018-2020 <Pierre Constantineau, Julian Komaromy>
+Copyright 2020 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -18,43 +18,35 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 */
 
-#ifndef DEBUG_CLI_H
-#define DEBUG_CLI_H
-
-#include <bluefruit.h>
-#include <Adafruit_LittleFS.h>
-#include <InternalFileSystem.h>
-
-#include <vector>
-#include <algorithm>
-#include "firmware.h"
-#include "firmware_config.h"
-#include "bluetooth_config.h"
-#include "nrf52battery.h"
-#include "nrf52gpio.h"
-#include "datastructures.h"
-
-typedef volatile uint32_t REG32;
-#define pREG32 (REG32 *)
-
-#define DEVICE_ID_HIGH    (*(pREG32 (0x10000060)))
-#define DEVICE_ID_LOW     (*(pREG32 (0x10000064)))
-#define MAC_ADDRESS_HIGH  (*(pREG32 (0x100000a8)))
-#define MAC_ADDRESS_LOW   (*(pREG32 (0x100000a4)))
-
-extern SoftwareTimer keyscantimer, batterytimer;
-extern Battery batterymonitor;
-extern PersistentState keyboardconfig;
-extern DynamicState keyboardstate;
-
-void gpiotester(void);
-void handleSerial(void);
-uint8_t testlink(uint8_t setpin, uint8_t readpin);
-void matrix_key_init_separator(bool singlekey);
-void matrix_key_init(bool singlekey);
-void matrix_key_end(bool singlekey);
-void matrix_key_test(bool singlekey);
-void helpline(void);
 
 
-#endif /* DEBUG_CLI_H */
+#ifndef USB_H
+#define USB_H
+
+    #include <bluefruit.h>
+    #include "firmware_config.h"
+    #include "keymap.h"
+    #include "datastructures.h"
+    #include "HID.h"
+
+    #ifdef NRF52840_XXAA  // only the 840 has USB available.
+        #ifdef ARDUINO_NRF52_ADAFRUIT
+            // do nothing since the Adafruit BSP doesn't support ediv.
+        #endif
+        #ifdef ARDUINO_NRF52_COMMUNITY
+            #include "Adafruit_TinyUSB.h"
+            #define TINYUSB_AVAILABLE 1
+        #endif
+    #endif
+
+    // these functions will be defined for all cases (nrf52832 and nrf52840) but will work differently.
+    void usb_setup();
+    bool usb_isConnected();
+    void usb_wakeup();
+    void usb_sendKeys(uint8_t currentReport[8]);
+    void usb_sendMediaKey(uint16_t keycode);
+    void usb_sendMouseKey(uint16_t keycode);
+    void usb_sendMouseMove(uint16_t keycode, uint16_t steps);
+    void hid_report_callback(uint8_t report_id, hid_report_type_t report_type, uint8_t const* buffer, uint16_t bufsize);
+
+#endif

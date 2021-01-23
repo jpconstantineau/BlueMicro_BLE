@@ -19,6 +19,12 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 
 #include "firmware_config.h"
+// need to add this to resolve an issue when linking.
+// see https://forum.arduino.cc/index.php?topic=319795.0
+namespace std {
+  void __throw_length_error(char const*) {
+  }
+}
 
 /* About the firmware:
  *   

@@ -29,6 +29,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "KeyScanner.h"
 #include "nrf52battery.h"
 #include "datastructures.h"
+#include "HID.h"
 
     typedef struct {      // Payload for BLE messages between split boards. Intended for slave to master
         // BLE messages have a size limit of 20 bytes. Any extra and we have to do some ATT_MTU magic...
@@ -46,7 +47,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
         uint32_t       timesync;         // 4 bytes
     } StatePayload;
 
-void updateBLEStatus(void);
+    void updateBLEStatus(void);
     void bt_setup(uint8_t BLEProfile);
     void bt_startAdv(void);
     void bt_disconnect(void);

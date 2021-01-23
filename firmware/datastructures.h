@@ -21,16 +21,23 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define DATASTRUCTURES_H
 #include <array>
 
+#define BLUEMICRO_CONFIG_VERSION 1  // this should be incremented every time the PersistentState structure definition is updated.  This will ensure that the SETTINGS_FILE file is reset when the structure is updated.
+
     typedef union {
         struct { 
-        uint32_t timerkeyscaninterval;
-        uint32_t timerbatteryinterval; 
-        uint32_t mainloopinterval;
+        uint8_t  version;
+
+        uint32_t matrixscaninterval; // timer interval = normal priority
+        uint32_t batteryinterval;  // timer interval = normal priority
+        uint32_t keysendinterval; //   normal priority
+        uint32_t lowpriorityloopinterval;
+        uint32_t lowestpriorityloopinterval;
 
         uint8_t    pinBLELED;  
         uint8_t    pinKBLED; 
         uint8_t    pinPWMLED;
         uint8_t    pinRGBLED;
+
         uint8_t    pinVCCSwitch;
         uint8_t    pinChargerControl;
 
@@ -42,35 +49,35 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
         bool    polarityBLELED; 
         bool    polarityKBLED; 
         bool    polarityPWMLED;  
-        
-
         bool    enableVCCSwitch;  
+
         bool    polarityVCCSwitch;  
         bool    enableChargerControl;  
         bool    polarityChargerControl;    
-
         bool    enableDisplay;
-        bool    enableSerial;
 
+        bool    enableSerial;
         bool    dummy1;
         bool    dummy2;
         bool    dummy3;
-        
+
+        uint8_t connectionMode;
         uint8_t BLEProfile;
         uint16_t BLEProfileEdiv[3];
+
         char BLEProfileName[3][32];
   
        };
-       char data[125]; } PersistentState;  // meant for configuration and things that we want to store in flash so that we can pick it up on the next reboot.
+       char data[128]; } PersistentState;  // meant for configuration and things that we want to store in flash so that we can pick it up on the next reboot.
 
     typedef struct { 
         uint32_t timestamp;
         uint32_t lastupdatetime;
+        uint32_t lastuseractiontime;
         uint16_t layer;
         uint8_t statuskb;
         uint8_t statusble;
-
-        bool helpmode;
+        
         uint32_t vbat_raw;
         uint32_t vbat_mv;
         uint32_t vbat_vdd;
@@ -82,29 +89,45 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
         char peer_name_prph[32];
         uint16_t conn_handle_prph;
         int8_t rssi_prph;
-        bool rssi_prph_updated;
-
+        
         char peer_name_cent[32];
         uint16_t conn_handle_cent;
         int8_t rssi_cent;
-        bool rssi_cent_updated;
-
+        
         char peer_name_cccd[32];
         uint16_t conn_handle_cccd;
         int8_t rssi_cccd;
-        bool rssi_cccd_updated;
-
+        
         uint8_t connectionState;
+
+        bool rssi_prph_updated;
+        bool rssi_cent_updated;
+        bool rssi_cccd_updated;
+        bool helpmode;
         bool needReset;
         bool needUnpair;
-        bool needFSReset ;
+        bool needFSReset;
         bool save2flash;
+
     } DynamicState; // meant for keyboard and BLE status and things that are dynamic and should not be stored in flash.
 
     // TODO: Add the structures and function definitions for keycode buffer for user processing
 
     typedef void (*ledupdateCallback)(PersistentState* config, DynamicState* status);
 
+    enum connectionState
+    {
+    CONNECTION_NONE,
+    CONNECTION_USB,
+    CONNECTION_BT
+    };
+
+    enum connectionMode
+    {
+    CONNECTION_MODE_AUTO,
+    CONNECTION_MODE_USB_ONLY,
+    CONNECTION_MODE_BLE_ONLY
+    };
     #endif 
 
 

@@ -1,5 +1,5 @@
 /*
-Copyright 2018-2020 <Pierre Constantineau, Julian Komaromy>
+Copyright 2020 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -18,43 +18,15 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 */
 
-#ifndef DEBUG_CLI_H
-#define DEBUG_CLI_H
 
+
+#ifndef HID_H
+#define HID_H
 #include <bluefruit.h>
-#include <Adafruit_LittleFS.h>
-#include <InternalFileSystem.h>
+#include "hid_keycodes.h"
+#include "advanced_keycodes.h"
 
-#include <vector>
-#include <algorithm>
-#include "firmware.h"
-#include "firmware_config.h"
-#include "bluetooth_config.h"
-#include "nrf52battery.h"
-#include "nrf52gpio.h"
-#include "datastructures.h"
-
-typedef volatile uint32_t REG32;
-#define pREG32 (REG32 *)
-
-#define DEVICE_ID_HIGH    (*(pREG32 (0x10000060)))
-#define DEVICE_ID_LOW     (*(pREG32 (0x10000064)))
-#define MAC_ADDRESS_HIGH  (*(pREG32 (0x100000a8)))
-#define MAC_ADDRESS_LOW   (*(pREG32 (0x100000a4)))
-
-extern SoftwareTimer keyscantimer, batterytimer;
-extern Battery batterymonitor;
-extern PersistentState keyboardconfig;
-extern DynamicState keyboardstate;
-
-void gpiotester(void);
-void handleSerial(void);
-uint8_t testlink(uint8_t setpin, uint8_t readpin);
-void matrix_key_init_separator(bool singlekey);
-void matrix_key_init(bool singlekey);
-void matrix_key_end(bool singlekey);
-void matrix_key_test(bool singlekey);
-void helpline(void);
+uint16_t hid_GetMediaUsageCode(uint16_t keycode);
 
 
-#endif /* DEBUG_CLI_H */
+#endif
