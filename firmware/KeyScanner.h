@@ -18,6 +18,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 */
 //#include <array>
+#ifndef KEYSCANNER_H
+#define KEYSCANNER_H
 #include <utility>
 #include <cstdint>
 #include <vector>
@@ -32,8 +34,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "advanced_keycodes.h"
 #include "Key.h" //already included through keymap.h do we need it here?
 
-#ifndef KEYSCANNER_H
-#define KEYSCANNER_H
+
 
 #ifndef USER_LAYER_FUNCTION  
 #define USER_LAYER_FUNCTION 1  
@@ -51,6 +52,7 @@ class KeyScanner {
         static void updateRemoteReport(uint8_t data0 , uint8_t data1, uint8_t data2,uint8_t data3, uint8_t data4, uint8_t data5,uint8_t data6);
         static void updateRemoteLayer(uint8_t data0);
         static void process_for_tri_layers(uint8_t if_layer1, uint8_t and_layer2, uint8_t use_layer3);
+        static void add_to_encoderKeys(uint16_t keycode);
         static bool getReport();
         static unsigned long getLastPressed();
         static bool layerChanged;
@@ -90,6 +92,7 @@ class KeyScanner {
          static uint8_t currentMod;
 
         static std::vector<uint16_t> activeKeys; 
+        static std::vector<uint16_t> encoderKeys; 
         static std::vector<uint16_t> macroBuffer; 
         static std::vector<uint16_t> toggleBuffer; 
         static std::vector<uint16_t> leaderBuffer; 

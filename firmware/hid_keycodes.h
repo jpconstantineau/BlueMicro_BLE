@@ -545,6 +545,7 @@ enum hid_keyboard_keypad_usage {
 #define KC_MS_BTN5   MS(KC_J)
 #define KC_MS_WH_UP     MS(KC_K)
 #define KC_MS_WH_DOWN   MS(KC_L)
+#define KC_MS_WH_DN             KC_MS_WH_DOWN
 #define KC_MS_WH_LEFT   MS(KC_M)
 #define KC_MS_WH_RIGHT  MS(KC_N)
 #define KC_MS_ACCEL0  MS(KC_O)  // Slow speed = 1
