@@ -162,6 +162,8 @@ Add these lines to your `hardware_config.h`
 #define ENCODER_B_PIN  30 
 ```
 
+From a hardware point of view, the A an B lines of the encoder should be wired directly to the nRF52 GPIO. The C (or common) line should be wired to ground. By default, the configuration uses the hardware QDEC peripheral (Quadrature Decoder) that's part of the nRF52 SoC and uses callbacks to handle rotation.  The Adafruit library supports sofware interrupts for 4 encoders but this has not been fully tested.  This limit on the number of encoders supported can be modified in the [library](https://github.com/jpconstantineau/Adafruit_nRF52_Arduino/blob/master/libraries/RotaryEncoder/SwRotaryEncoder.cpp).  Refer to the examples in the library if you want to implement multiple encoders.
+
 You will need to add a few things to your keymap.h file.
 
 ``` c++
