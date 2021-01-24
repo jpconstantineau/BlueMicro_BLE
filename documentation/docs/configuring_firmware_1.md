@@ -1,14 +1,12 @@
 ---
 id: configure_hardware
-title: Configuring Hardware
+title: Configuring hardware_config.h
 slug: /configure_hardware
 ---
 
 ## Configuring your keyboard - Part 1: Hardware Definition
 
-### hardware_config.h
-
-#### Matrix Definition
+### Matrix Definition
 
 Most keyboards use a matrix of columns and rows to scan each key.  You will need to refer to the keyboard schematic to identify how many columns and rows your keyboard uses for it's scanning matrix.  The scanning matrix may differ from the keyboard layout.  For example, a 4x12 matrix uses 16 GPIOs and allows for 48 keys to be scanned.  A 8x8 matrix also uses 16 GPIOs but will allow 64 keys to be scanned.  The mapping of each key in the scanning matrix to the keyboard layout is done in the KEYMAP macro definition in keyboard_config.h.
 
@@ -34,7 +32,7 @@ With the information from both the keyboard and controller schamatics, we can ma
 #define MATRIX_COL_PINS {26, 29, 2, 45, 3, 28, 43 }
 ```
 
-#### Status LEDs
+### Status LEDs
 
 Most controllers will have 1 or 2 LEDs to let the user know of the status of the board.  To configure the firmware to use these LEDs, you need to set at least the PIN definition for the LED. 
 By default, when `STATUS_BLE_LED_PIN` or `STATUS_KB_LED_PIN` are defined, both the `ACTIVE` and `POLARITY` settings will default to 1.
@@ -57,7 +55,7 @@ If your board does not have the LED defined but it's status does not change, you
 Note that when going to sleep, the enabled pins will go in a low power mode (INPUT) and will turn off the LEDs.
 
 
-#### Battery Monitoring
+### Battery Monitoring
 
 Battery Monitoring is a function that's specific to the controller you use.  Most controllers implement an on-board battery charger and battery monitoring voltage divider and connect this divider to an analog input.  Such a configuration is shown below:
 
@@ -76,7 +74,7 @@ If a non-rechargeable CR2032 (3V) powers your keyboard and the battery is direct
 #define BATTERY_TYPE BATT_CR2032
 ```
 
-#### External VCC Switching
+### External VCC Switching
 
 Some controllers implement switching of external VCC to ensure low power consumption.  Polarity of switching will depend on the hardware implementation.  Refer to the controller documentation and/or schematic to identify if VCC switching is available, which GPIO it is connected to and polarity of the switch.
 
@@ -94,7 +92,7 @@ By default, the firmware will turn on external VCC when booting up and will turn
 #define VCC_DEFAULT_ON 0
 ```
 
-#### LiPo Charger Switching
+### LiPo Charger Switching
 
 Some controllers implement turning off the LiPo Charger to allow for a more precise battery level measurement.  Switching polarity will depend on the hardware implementation.  Refer to the controller documentation and/or schematic to identify if charger switching is available, which GPIO it is connected to and polarity to enable charging.
 
@@ -105,7 +103,7 @@ Some controllers implement turning off the LiPo Charger to allow for a more prec
 If `CHARGER_PIN` is left undefined, charger switching functionality will not be enabled in the firmware. By default, the firmware will turn on charger when booting up and will not change it at any time.
 
 
-#### Backlight PWM LED Definition
+### Backlight PWM LED Definition
 
 Some keyboards have backlit keys using LEDs controlled by a central mosfet.  The brightness of these LEDs can be modulated using Pulse Width Modulation (PWM). When referring to the keyboard and controller schematics above, we see that GPIO 1.06 is connected to the LED Backlight.
 
@@ -125,7 +123,7 @@ If `DEFAULT_PWM_VALUE` is left undefined, the default value will be that of maxi
 Turning on the PWM peripheral on the nRF52 chip uses approximately 0.5mA, not including the power used by the LED themselves.  As such, when the PWM value is set to 0, the firmware turns off the PWM peripheral it uses for controlling the brightness of the LEDs. It does the same prior to going to sleep. 
 
 
-#### RGB LED Definition
+### RGB LED Definition
 
 Some keyboards have RGB LEDs.  These LEDs are controlled through a single data line. When referring to the keyboard and controller schematics above, we see that GPIO 0.06 is connected to the RGB WS2812 LEDs.
 
@@ -141,7 +139,7 @@ This enables setting up the following configuration:
 If `WS2812B_LED_PIN` is left undefined, LED functionality will not be enabled in the firmware.
 If `WS2812B_LED_ON` is set to 0, RGB functionality will not be enabled in the firmware. Note that this will not power down VCC power to the RGB LEDs, impacting power consumption of your keyboard.  External VCC to the RGB LEDs is controlled through the __External VCC Switch__ functionality described above.
 
-#### OLED Definition
+### OLED Definition
 
 To Do - Still being implemented.
 
@@ -151,7 +149,7 @@ To Do - Still being implemented.
 ```
 
 
-#### Rotary Encoder Definition
+### Rotary Encoder Definition
 
 Currently implemented for a single Rotary encoder per side/half.
 

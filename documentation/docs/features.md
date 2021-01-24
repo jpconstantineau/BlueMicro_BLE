@@ -51,4 +51,5 @@ This __Features Compared__ page is licenced under [CC-BY-NC-SA-4.0](https://crea
 **Notes**
 
 <sup>1</sup>: Requires Community nRF52 Support Package instead of Adafruit nRF52 Board Support Package
+
 <sup>2</sup>: Requires nRF52840 SoC.
