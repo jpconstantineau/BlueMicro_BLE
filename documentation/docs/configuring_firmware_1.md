@@ -153,10 +153,63 @@ To Do - Still being implemented.
 
 #### Rotary Encoder Definition
 
-To Do - Still being implemented.
+Currently implemented for a single Rotary encoder per side/half.
+
+Add these lines to your `hardware_config.h`
 
 ``` c++
-#define ENCODERS_COUNT 1
-#define ENCODERS_A_PIN { 26 }
-#define ENCODERS_B_PIN { 30 }
+#define ENCODER_A_PIN  26 
+#define ENCODER_B_PIN  30 
 ```
+
+From a hardware point of view, the A an B lines of the encoder should be wired directly to the nRF52 GPIO. The C (or common) line should be wired to ground. By default, the configuration uses the hardware QDEC peripheral (Quadrature Decoder) that's part of the nRF52 SoC and uses callbacks to handle rotation.  The Adafruit library supports sofware interrupts for 4 encoders but this has not been fully tested.  This limit on the number of encoders supported can be modified in the [library](https://github.com/jpconstantineau/Adafruit_nRF52_Arduino/blob/master/libraries/RotaryEncoder/SwRotaryEncoder.cpp).  Refer to the examples in the library if you want to implement multiple encoders.
+
+You will need to add a few things to your keymap.h file.
+
+``` c++
+#include "KeyScanner.h"  // include at the top with the other includes
+
+void encoder_callback(int step); // add right after void setupKeymap();
+
+```
+
+You will also need to add a few things to your keymap.cpp file.  For example, you will need to add the following 3 lines in the `setupKeymap()` function:
+
+``` c++
+// Code below makes sure that the encoder gets configured.
+
+  RotaryEncoder.begin(ENCODER_PAD_A, ENCODER_PAD_B);    // Initialize Encoder
+  RotaryEncoder.setCallback(encoder_callback);    // Set callback
+  RotaryEncoder.start();    // Start encoder
+
+```
+
+You will need to add the  `encoder_callback()` function:
+
+``` c++
+void encoder_callback(int step)
+{
+  if ( step > 0 )
+  {
+      switch(KeyScanner::localLayer)
+      {
+         // case _L0: break;  // commented out to revert to default
+          case _L1: break;    // in Layer 1, send nothing
+          case _L2: break;    // in Layer 2, send nothing
+          default: KeyScanner::add_to_encoderKeys(KC_AUDIO_VOL_UP);
+      }
+  }else
+  {
+      switch(KeyScanner::localLayer)
+      {
+         // case _L0: break;   // commented out to revert to default
+          case _L1: break;     // in Layer 1, send nothing
+          case _L2: break;     // in Layer 2, send nothing
+          default: KeyScanner::add_to_encoderKeys(KC_AUDIO_VOL_DOWN);
+      }
+  }  
+}
+
+```
+
+If you rotate in one direction and the keycodes are for the other direction, simply change the `if ( step > 0 )` statement to `if ( step < 0 )` or swap the keycodes around.

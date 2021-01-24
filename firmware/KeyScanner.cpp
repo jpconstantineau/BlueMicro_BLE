@@ -169,6 +169,12 @@ void KeyScanner::updateBuffer()
     bool emptyOneshot = false;
     //bool emptyOneshotLayer = false;
 
+    for (auto keycode : encoderKeys) 
+    {
+        activeKeys.push_back(keycode);
+    }
+
+    encoderKeys.clear();
 
 // call the tri layer functions...
 process_user_layers(detectedlayerkeys);
@@ -269,6 +275,12 @@ void KeyScanner::process_for_tri_layers(uint8_t if_layer1, uint8_t and_layer2, u
     uint16_t mask12 = (1UL << if_layer1) | (1UL << and_layer2);             // merge the two layers with bitwise shifts to detect the triggered layer keys
     uint16_t mask3 = 1UL << use_layer3;                                     // create a mask to return the resulting layer
     detectedlayerkeys = (detectedlayerkeys & mask12) == mask12 ? ((detectedlayerkeys & ~mask12) | mask3) : (detectedlayerkeys); // if detectedlayerkeys has mask12 in it,remove mask12 and add extra layer; otherwise return as is.
+}
+
+
+void KeyScanner::add_to_encoderKeys(uint16_t keycode)
+{
+    encoderKeys.push_back(keycode);
 }
 
 
@@ -435,6 +447,7 @@ unsigned long KeyScanner::lastPressed = 0;
 uint8_t KeyScanner::bufferposition = 0;
 //uint8_t KeyScanner::layerMode = 0;
 std::vector<uint16_t> KeyScanner::activeKeys {};
+std::vector<uint16_t> KeyScanner::encoderKeys {};
 std::vector<uint16_t> KeyScanner::macroBuffer {};
 std::vector<uint16_t> KeyScanner::toggleBuffer {};
 std::vector<uint16_t> KeyScanner::leaderBuffer {};

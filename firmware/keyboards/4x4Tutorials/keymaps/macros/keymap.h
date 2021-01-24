@@ -25,6 +25,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "keyboard_config.h"
 #include "advanced_keycodes.h"
 #include "KeyScanner.h"
+#include "Key.h"
 #include <array>
 
 #define KC_CAP_D MOD(MOD_LSHIFT, KC_D)

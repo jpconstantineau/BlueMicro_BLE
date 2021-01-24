@@ -16,6 +16,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 */
 #include "keymap.h"
+#include "RotaryEncoder.h"
 
 
 #if KEYBOARD_SIDE == MASTER
@@ -35,7 +36,24 @@ void setupKeymap() {
    // flash this keymap to both left and right to test whether each half works properly.
    // once tested, you can flash the left and right to their respective halves.
 
+  // Code below makes sure that the encoder gets configured.  
+  RotaryEncoder.begin(ENCODER_PAD_A, ENCODER_PAD_B);    // Initialize Encoder
+  RotaryEncoder.setCallback(encoder_callback);    // Set callback
+  RotaryEncoder.start();    // Start encoder
 }
+
+void encoder_callback(int step)
+{
+  if ( step > 0 )
+  {
+    KeyScanner::add_to_encoderKeys(KC_AUDIO_VOL_DOWN);
+  }else
+  {
+    KeyScanner::add_to_encoderKeys(KC_AUDIO_VOL_UP);
+  }  
+}
+
+
 #endif
 
 
@@ -81,7 +99,34 @@ ADDLAYER(_L1, Method::PRESS , layer1);
 ADDLAYER(_L2, Method::PRESS , layer2);
     // if you want to add Tap/Hold or Tap/Doubletap activations, then you add them below.
 
-//NOTE ROTARY ENCODERS ARE NOT IMPLEMENTED IN FIRMWARE YET
+// Code below makes sure that the encoder gets configured.
+
+  RotaryEncoder.begin(ENCODER_PAD_A, ENCODER_PAD_B);    // Initialize Encoder
+  RotaryEncoder.setCallback(encoder_callback);    // Set callback
+  RotaryEncoder.start();    // Start encoder
+}
+
+void encoder_callback(int step)
+{
+  if ( step > 0 )
+  {
+      switch(KeyScanner::localLayer)
+      {
+        //  case _L0: break;
+          case _L1: break;
+          case _L2: break;
+          default: KeyScanner::add_to_encoderKeys(KC_AUDIO_VOL_DOWN);
+      }
+  }else
+  {
+      switch(KeyScanner::localLayer)
+      {
+         // case _L0: break;
+          case _L1: break;
+          case _L2: break;
+          default: KeyScanner::add_to_encoderKeys(KC_AUDIO_VOL_UP);
+      }
+  }  
 }
 
 #endif  // left
@@ -157,6 +202,34 @@ void setupKeymap() {
 ADDLAYER(_L1, Method::PRESS , layer1);
 ADDLAYER(_L2, Method::PRESS , layer2);
 
+// Code below makes sure that the encoder gets configured.
+
+  RotaryEncoder.begin(ENCODER_PAD_A, ENCODER_PAD_B);    // Initialize Encoder
+  RotaryEncoder.setCallback(encoder_callback);    // Set callback
+  RotaryEncoder.start();    // Start encoder
+}
+
+void encoder_callback(int step)
+{
+  if ( step > 0 )
+  {
+      switch(KeyScanner::localLayer)
+      {
+         // case _L0: break;
+          case _L1: break;
+          case _L2: break;
+          default: KeyScanner::add_to_encoderKeys(KC_AUDIO_VOL_UP);
+      }
+  }else
+  {
+      switch(KeyScanner::localLayer)
+      {
+         // case _L0: break;
+          case _L1: break;
+          case _L2: break;
+          default: KeyScanner::add_to_encoderKeys(KC_AUDIO_VOL_DOWN);
+      }
+  }  
 }
 
 #endif
