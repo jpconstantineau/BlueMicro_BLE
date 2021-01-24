@@ -67,12 +67,16 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 
 #ifndef DEBOUNCETIME 
-#define DEBOUNCETIME 5
+#define DEBOUNCETIME 3   // changing this to 1 and you will have problems with the debounce logic - repeated keys perhaps...
 #endif
 
 #ifndef HIDREPORTINGINTERVAL
 #define HIDREPORTINGINTERVAL 8
 #endif
+#ifndef LOWPRIORITYLOOPINTERVAL
+#define LOWPRIORITYLOOPINTERVAL 128
+#endif
+
 
 // Battery Service definitions.
 
@@ -83,8 +87,6 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #ifndef VBAT_PIN
 #define VBAT_PIN  31       // make sure we have a default analog pin to do something with...
 #endif
-
-
 
 #ifndef BATTERYINTERVAL
 #define BATTERYINTERVAL 30000
@@ -205,6 +207,10 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
     #endif
   #else
   #define VCC_ENABLE_CHARGER 0
+#endif
+
+#ifndef SERIAL_DEBUG_CLI_DEFAULT_ON
+  #define SERIAL_DEBUG_CLI_DEFAULT_ON 1
 #endif
 
 #endif /* FIRMWARE_CONFIG_H */
