@@ -8,6 +8,7 @@ module.exports = {
               'understand_gpios',
               'configure_hardware',
               'configure_keyboard',
+              'configure_keymap',
               'keymaps',
               'build',
               'flash',

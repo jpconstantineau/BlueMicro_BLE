@@ -79,9 +79,9 @@ One such example is the [Blue Ortho](https://imgur.com/a/p3ZXnPM#wDFujG6).
 This is a relatively new chip that supports on-chip USB.  There is more Flash (1Mb), more RAM (256kb), more GPIOs (48 instead of 32), can run with 5V, and also has a USB 2.0 controller.   Wired HID functionality will be available through the use of the TinyUSB Library.  Adafruit has a couple of versions hardware that uses this chip.  They have extended the library to support this new chip.  The BlueMicro firmware supports this chip.
 
 
-### NRF52810
+### NRF52810 and NRF52805
 
-This chip is very similar to the NRF52832 but has less features, flash space and ram. There are fewer modules available with the NRF52810 than with the NRF52832; often at higher prices due to their limited availability.  The NRF52 Adafruit library does not support this chip.  As such, it's recommended to go directly to the NRF52832.
+This chip is very similar to the NRF52832 but has less features, flash space and ram. There are fewer modules available with these than with the NRF52832; often at higher prices due to their limited availability.  The NRF52 Adafruit library does not support this chip.  As such, it's recommended to go directly to the NRF52832 or nRF52840.
 
 
 ### NRF51822
@@ -111,6 +111,7 @@ Bottom Row: BlueMicro V2.0,  BlueMicro V1.0, BlueNano V2.0, BlueNano V1.0, Pro M
 | [BlueMicro V1.1](https://github.com/jpconstantineau/NRF52-Board/tree/master/EByte_E73)  | Compatible with more Keyboards - Serial TX/RX are routed separately; Tested and Gerber available | nRF52832 | nrf52832 feather |
 | [BlueMicro V2.0b](https://github.com/jpconstantineau/NRF52-Board/tree/master/EByte_E73_Batt) | Compatible with more Keyboards - Serial TX/RX are routed separately, LiPo Charger on board; Tested and Gerber available | nRF52832 | nrf52832 feather |
 | [BlueMicro V2.0c](https://github.com/jpconstantineau/NRF52-Board/tree/master/EByte_E73_Batt_ErgoTravel) | Serial TX/RX routed through D2 and D3; Designed for the ErgoTravel. LiPo Charger on Board with battery connection connected to RAW pin. Tested and Gerber available. | nRF52832 | nrf52832 feather |
+| [BlueMicro V2.1](https://store.jpconstantineau.com/#/group/bluemicro) | CH340g Serial Chip on Board for ease of programming. LiPo Charger on Board with battery connection connected to RAW pin. Tested and Gerber available. | nRF52832 | nrf52832 feather |
 | [4x4 Backpack](https://github.com/jpconstantineau/NRF52-Board/tree/master/4x4_backpack/4x4_backpack) | For use with [40percent.club 4x4 Boards](https://www.40percent.club/2018/01/4x4x4x4x4.html). Uses a CR2032 Battery. | nRF52832 | nrf52832 feather |
 | [4x4 Platform](https://github.com/jpconstantineau/NRF52-Board/tree/master/4x4_backpack/4x4_platform) | For use with [40percent.club 4x4 Boards](https://www.40percent.club/2018/01/4x4x4x4x4.html). Uses a rechargeable Battery, has a single RGB on board and has a few status LEDs and PWM driven LEDs. Has serial on board too! | nRF52832 | nrf52832 feather |
 | [4x4 Backpack840](https://github.com/jpconstantineau/NRF52-Board/tree/master/4x4_backpack/4x4_backpack_nrf52840) | For use with [40percent.club 4x4 Boards](https://www.40percent.club/2018/01/4x4x4x4x4.html). Uses a rechargeable  Battery, has a single RGB on board and has a few status LEDs and PWM driven LEDs.  Most importantly, it uses a nrf52840 module instead of a nrf52832 module. | nRF52832 | nrf52832 feather |
@@ -118,6 +119,7 @@ Bottom Row: BlueMicro V2.0,  BlueMicro V1.0, BlueNano V2.0, BlueNano V1.0, Pro M
 | BLE Phage   |    (Compatible with even more Keyboards due to its small size - Serial USB and PoLi Charger on board) | nRF52832 | nrf52832 feather |
 | [BLE Phage Basic](https://southpawdesign.net/products/blue-phage-basic?variant=8958741545020) | (Compatible with even more Keyboards due to its small size - Serial TX/RX are routed separately) | nRF52832 | nrf52832 feather |
 | [Adafruit nRF52840 Feather](https://www.adafruit.com/product/3406) | The updated nrf52 feather from Adafruit! | nRF52840 | nrf52840 feather express |
-| [BlueMicro840](https://store.jpconstantineau.com/#/group/bluemicro) | Bluemicro based on the design of the nrfmicro.  Still being worked on... | nRF52840 | PCA10056 |
+| [BlueMicro840](https://store.jpconstantineau.com/#/group/bluemicro) | Bluemicro based on the design of the nrfmicro.  | nRF52840 | PCA10056 or BlueMicro840 |
+| [BlueMacro840](https://store.jpconstantineau.com/#/group/bluemicro) | Larger Bluemicro with the footprint of an Arduino Micro.  | nRF52840 | PCA10056 or BlueMicro840 |
 | [nice!nano](https://docs.nicekeyboards.com/#/nice!nano/) | uses the nRF52840 chip. Same size as the Pro Micro.  | nRF52840 | nice_nano |
 

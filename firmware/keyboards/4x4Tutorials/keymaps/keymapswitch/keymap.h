@@ -17,15 +17,16 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-
-#ifndef KEYMAP_H
-#define KEYMAP_H
 #include <stdint.h>
 #include "hid_keycodes.h"
 #include "keyboard_config.h"
 #include "advanced_keycodes.h"
 #include "KeyScanner.h"
+#include "Key.h"
 #include <array>
+#ifndef KEYMAP_H
+#define KEYMAP_H
+
 
 #define KC_CAP_D MOD(MOD_LSHIFT, KC_D)
 #define NUM_LAYERS 2
