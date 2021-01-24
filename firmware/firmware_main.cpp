@@ -110,7 +110,7 @@ void resetConfig()
 
   keyboardconfig.enableDisplay = false; // no displays yet
 
-  keyboardconfig.enableSerial = true; // no serial logic yet  TODO: take care of the bluemicro 2.0x where serial is on top of GPIOs
+  keyboardconfig.enableSerial = SERIAL_DEBUG_CLI_DEFAULT_ON;   
 
   keyboardconfig.matrixscaninterval=HIDREPORTINGINTERVAL;
   keyboardconfig.batteryinterval=BATTERYINTERVAL;
@@ -144,13 +144,22 @@ void saveConfig()
 /**************************************************************************************************************************/
 // cppcheck-suppress unusedFunction
 void setup() {
+
   setupGpio();                                                                // checks that NFC functions on GPIOs are disabled.
   setupWDT();
   setupConfig();
 
-  if (keyboardconfig.enableSerial)
+  if (keyboardconfig.enableSerial) 
   {
-   Serial.begin(115200);
+  Serial.begin(115200);
+        Serial.println(" ____  _            __  __ _                   ____  _     _____ ");
+        Serial.println("| __ )| |_   _  ___|  \\/  (_) ___ _ __ ___    | __ )| |   | ____|");
+        Serial.println("|  _ \\| | | | |/ _ \\ |\\/| | |/ __| '__/ _ \\   |  _ \\| |   |  _|  ");
+        Serial.println("| |_) | | |_| |  __/ |  | | | (__| | | (_) |  | |_) | |___| |___ ");
+        Serial.println("|____/|_|\\__,_|\\___|_|  |_|_|\\___|_|  \\___/___|____/|_____|_____|");
+        Serial.println("                                         |_____|                 ");
+        Serial.println("");
+        Serial.println("Type 'h' to get a list of commands with descriptions");
   }
  
   LOG_LV1("BLEMIC","Starting %s" ,DEVICE_NAME);
@@ -354,6 +363,7 @@ void process_keyboard_function(uint16_t keycode)
     case DEBUG:
       keyboardconfig.enableSerial = !keyboardconfig.enableSerial;
       keyboardstate.save2flash = true;
+      keyboardstate.needReset = true;
       break;
     case EEPROM_RESET:
       keyboardstate.needFSReset = true;
