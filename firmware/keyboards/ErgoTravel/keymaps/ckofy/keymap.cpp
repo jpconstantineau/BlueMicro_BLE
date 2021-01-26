@@ -17,6 +17,35 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 #include "keymap.h"
 
+#if KEYBOARD_SIDE == SINGLE
+std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
+    KEYMAP2ARRAY(KEYMAP(
+        KC_1,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,  KC_Y, 
+        KC_2,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,  KC_H,
+        KC_3,  KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,  KC_N,
+        KC_4,  KC_5,    KC_6,    KC_7,    KC_8,    KC_9,  KC_0 
+    ));
+
+void setupKeymap() {
+
+   // no layers for SINGLE keymap
+   // this is a keymap that's used for testing that each key is responding properly to key presses
+   // flash this keymap to both left and right to test whether each half works properly.
+   // once tested, you can flash the left and right to their respective halves.
+
+}
+
+void process_user_macros(uint16_t macroid)
+{
+	
+}
+	
+void process_user_layers(uint16_t layermask) 
+{
+
+}
+
+#endif
 
 #if KEYBOARD_SIDE == LEFT
 
