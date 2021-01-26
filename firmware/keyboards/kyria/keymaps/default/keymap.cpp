@@ -24,7 +24,7 @@ std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
     KEYMAP2ARRAY(KEYMAP(
               KC_7,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,
               KC_8,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,
-              KC_9,  KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,  KC_N, KC_M
+              KC_9,  KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,  KC_N, KC_M,
                                        KC_P,    KC_O,    KC_I,  KC_L, KC_K                      
     ));
 
@@ -52,6 +52,10 @@ void encoder_callback(int step)
   }  
 }
 
+void process_user_layers(uint16_t layermask) 
+{
+
+}
 
 #endif
 
@@ -61,38 +65,47 @@ void encoder_callback(int step)
 
 std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
     KEYMAP2ARRAY(KEYMAP(
-        KC_ESC,   KC_Q,   KC_W,    KC_E,    KC_R,    KC_T, \
-        KC_TAB,   KC_A,   KC_S,    KC_D,    KC_F,    KC_G,\
-        KC_LSFT,  KC_Z,   KC_X,    KC_C,    KC_V,    KC_B,    KC_BSPC, KC_LSFT,\
-                                   KC_LGUI, KC_LALT, LAYER_1, KC_SPC,  KC_LCTRL \
+        KC_TAB,   KC_Q,   KC_W,    KC_E,    KC_R,    KC_T, \
+        KC_LSFT,  KC_A,   KC_S,    KC_D,    KC_F,    KC_G,\
+        KC_LCTL,  KC_Z,   KC_X,    KC_C,    KC_V,    KC_B,    KC_BSPC, KC_ESC,\
+                                   KC_LGUI, KC_LALT, L_LOWER, KC_SPC,  KC_LCTRL \
     ));
 
  
 void setupKeymap() {
 
 
-    uint32_t layer1[MATRIX_ROWS][MATRIX_COLS] =
+    uint32_t lower[MATRIX_ROWS][MATRIX_COLS] =
         KEYMAP( \
               KC_GRV,  KC_1,    KC_2,   KC_3,    KC_4,    KC_5,  \
               _______, KC_EXLM, KC_AT,  KC_HASH, KC_DLR,  KC_PERC, \
-              _______, KC_EQL, KC_MINS, KC_PLUS, KC_LCBR, KC_RCBR, _______, PRINT_BATTERY,\
+              _______, KC_EQL, KC_MINS, KC_PLUS, KC_LCBR, KC_RCBR, KC_LSFT, _______,\
                                         _______, _______, _______, _______, _______ \
         );
 
 
-    uint32_t layer2[MATRIX_ROWS][MATRIX_COLS] =
+    uint32_t raise[MATRIX_ROWS][MATRIX_COLS] =
         KEYMAP( \
-              _______, KC_INS,  KC_PSCR, KC_APP,  XXXXXXX, XXXXXXX,\
-              _______, KC_LALT, KC_LCTL, KC_LSFT, XXXXXXX, KC_CAPS,\
-              _______, KC_UNDO, KC_CUT,  KC_COPY, KC_PASTE,XXXXXXX, _______, _______,\
+              _______, KC_INS,    KC_PSCR,   XXXXXXX,   XXXXXXX,   XXXXXXX,\
+              _______, KC_LALT,   KC_LCTL,   KC_LSFT,   XXXXXXX,   KC_CAPS,\
+              _______, LCTL(KC_Z),LCTL(KC_X),LCTL(KC_C),LCTL(KC_V),XXXXXXX, _______, _______,\
+                                              _______,  _______,   _______, _______, _______ \
+        );
+		
+    uint32_t adjust[MATRIX_ROWS][MATRIX_COLS] =
+        KEYMAP( \
+              _______, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,  \
+              _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
+              _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______, _______,\
                                          _______, _______, _______, _______, _______ \
         );
     /*
      * add the other layers on the regular presses.
      */
   
-ADDLAYER(_L1, Method::PRESS , layer1);
-ADDLAYER(_L2, Method::PRESS , layer2);
+ADDLAYER(_LOWER, Method::PRESS , lower);
+ADDLAYER(_RAISE, Method::PRESS , raise);
+ADDLAYER(_ADJUST, Method::PRESS, adjust);
     // if you want to add Tap/Hold or Tap/Doubletap activations, then you add them below.
 
 // Code below makes sure that the encoder gets configured.
@@ -108,21 +121,24 @@ void encoder_callback(int step)
   {
       switch(KeyScanner::localLayer)
       {
-        //  case _L0: break;
-          case _L1: break;
-          case _L2: break;
+          case _LOWER: break;
+          case _RAISE: break;
           default: KeyScanner::add_to_encoderKeys(KC_AUDIO_VOL_DOWN);
       }
   }else
   {
       switch(KeyScanner::localLayer)
       {
-         // case _L0: break;
-          case _L1: break;
-          case _L2: break;
+          case _LOWER: break;
+          case _RAISE: break;
           default: KeyScanner::add_to_encoderKeys(KC_AUDIO_VOL_UP);
       }
   }  
+}
+
+void process_user_layers(uint16_t layermask)
+{
+    KeyScanner::process_for_tri_layers(_LOWER, _RAISE, _ADJUST);
 }
 
 #endif  // left
@@ -131,70 +147,46 @@ void encoder_callback(int step)
 
 #if KEYBOARD_SIDE == RIGHT
 
-/* Qwerty
- * ,-----------------------------------------.
- * |   Y  |   U  |   I  |   O  |   P  | Bksp |
- * |------+------+------+------+-------------|
- * |   H  |   J  |   K  |   L  |   ;  |  "   |
- * |------+------+------+------+------|------|
- * |   N  |   M  |   ,  |   .  |   /  |Enter |
- * |------+------+------+------+------+------|
- * | Space| L(2) | Left | Down |  Up  |Right |
- * `-----------------------------------------'
- */
 
 std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
     KEYMAP2ARRAY(KEYMAP( \
                          KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,      KC_BSPC, \
                          KC_H,    KC_J,    KC_K,    KC_L,    KC_SCOLON, KC_QUOT,\
-        KC_RSFT, KC_DEL, KC_N,    KC_M,    KC_COMMA,KC_DOT,  KC_SLSH,   KC_RSFT,\
-        KC_ENT,  KC_SPC, LAYER_2, KC_RALT, KC_RGUI ));
+        KC_RSFT, KC_DEL, KC_N,    KC_M,    KC_COMMA,KC_DOT,  KC_SLSH,   KC_ENT,\
+        KC_ENT,  KC_SPC, L_RAISE, KC_RALT, KC_RGUI 
+	));
 
 void setupKeymap() {
 
-/* Layer 1 (Raise)
- * ,-----------------------------------------.
- * |   Y  |   U  |   I  |   O  |   P  | Del  |
- * |------+------+------+------+-------------|
- * |   H  |   J  |   K  |   L  |   ;  |  "   |
- * |------+------+------+------+------|------|
- * |   N  |   M  |   ,  |   .  |   /  |Enter |
- * |------+------+------+------+------+------|
- * | Space| L(2) | Left |      |      |      |
- * `-----------------------------------------'
- */
-    uint32_t layer1[MATRIX_ROWS][MATRIX_COLS] =
+    uint32_t lower[MATRIX_ROWS][MATRIX_COLS] =
         KEYMAP( \
-                          KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_F12, \
+                          KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______,\
                           KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_PIPE,\
         _______, _______, KC_LBRC, KC_RBRC, KC_SCLN, KC_COLN, KC_BSLS, _______,\
         _______, _______, _______, _______, _______\
         );
 
-    /* Layer 2 (lower)
- * ,-----------------------------------------.
- * |   ^  |   &  |   *  |   (  |   )  | Bspc |
- * |------+------+------+------+-------------|
- * |   -  |   =  |   {  |   }  |   |  |  `   |
- * |------+------+------+------+------|------|
- * |   _  |   +  |   [  |   ]  |   \  |  ~   |
- * |------+------+------+------+------+------|
- * | Space| L(2) |  Alt |      |      |      |
- * `-----------------------------------------'
- */
-    uint32_t layer2[MATRIX_ROWS][MATRIX_COLS] =
+    uint32_t raise[MATRIX_ROWS][MATRIX_COLS] =
         KEYMAP( \
-                          KC_PGUP, XXXXXXX, KC_UP,   XXXXXXX, XXXXXXX, KC_BSPC,\
+                          KC_PGUP, KC_HOME, KC_UP,   KC_END,  XXXXXXX, KC_BSPC,\
                           KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT, KC_DEL,  KC_BSPC, \
+        _______, _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,\
+        _______, _______, _______, _______, _______\
+        );
+		
+    uint32_t adjust[MATRIX_ROWS][MATRIX_COLS] =
+        KEYMAP( \
+                          KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  _______,\
+                          XXXXXXX, XXXXXXX, XXXXXXX, KC_F11,  KC_F12,  _______,\
         _______, _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,\
         _______, _______, _______, _______, _______\
         );
     /*
      * add the other layers
      */
-ADDLAYER(_L1, Method::PRESS , layer1);
-ADDLAYER(_L2, Method::PRESS , layer2);
-
+ADDLAYER(_LOWER, Method::PRESS , lower);
+ADDLAYER(_RAISE, Method::PRESS , raise);
+ADDLAYER(_ADJUST, Method::PRESS, adjust);
 // Code below makes sure that the encoder gets configured.
 
   RotaryEncoder.begin(ENCODER_PAD_A, ENCODER_PAD_B);    // Initialize Encoder
@@ -208,22 +200,23 @@ void encoder_callback(int step)
   {
       switch(KeyScanner::localLayer)
       {
-         // case _L0: break;
-          case _L1: break;
-          case _L2: break;
-          default: KeyScanner::add_to_encoderKeys(KC_AUDIO_VOL_UP);
+          case _LOWER: break;
+          case _RAISE: break;
+          default: KeyScanner::add_to_encoderKeys(KC_PGDN);
       }
   }else
   {
       switch(KeyScanner::localLayer)
       {
-         // case _L0: break;
-          case _L1: break;
-          case _L2: break;
-          default: KeyScanner::add_to_encoderKeys(KC_AUDIO_VOL_DOWN);
+          case _LOWER: break;
+          case _RAISE: break;
+          default: KeyScanner::add_to_encoderKeys(KC_PGUP);
       }
   }  
 }
 
+void process_user_layers(uint16_t layermask)
+{
+    KeyScanner::process_for_tri_layers(_LOWER, _RAISE, _ADJUST);
+}
 #endif
-

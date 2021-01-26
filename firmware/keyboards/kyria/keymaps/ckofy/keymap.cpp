@@ -24,7 +24,7 @@ std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
     KEYMAP2ARRAY(KEYMAP(
               KC_7,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,
               KC_8,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,
-              KC_9,  KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,  KC_N, KC_M
+              KC_9,  KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,  KC_N, KC_M,
                                        KC_P,    KC_O,    KC_I,  KC_L, KC_K                      
     ));
 
