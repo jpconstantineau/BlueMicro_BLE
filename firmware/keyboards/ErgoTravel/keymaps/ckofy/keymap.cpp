@@ -168,16 +168,16 @@ uint32_t mac[MATRIX_ROWS][MATRIX_COLS] =
      break;
 
      case HOME_ADD:
-     addStringToQueue("2472 Palazzo Ct.");
+     addStringToQueue("123 Quiet Crescent");
      break;
      case WORK_ADD:
-     addStringToQueue("gvQ233aw$%1!");
+     addStringToQueue("456 Work Place");
       break;
      case EMAIL_1:
-     addStringToQueue("kolbunov@gmail.com");
+     addStringToQueue("Primary@Email");
       break;
      case EMAIL_2:
-     addStringToQueue("skolbunov@zebra.com");
+     addStringToQueue("Secondary@Email");
       break;   
  }
 }
