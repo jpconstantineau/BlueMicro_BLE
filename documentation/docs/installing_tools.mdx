@@ -4,9 +4,20 @@ title: Installing Tools
 slug: /tools
 ---
 
-## Windows
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
-Install the Arduino IDE via the installer (NOT the Windows App Store variant): https://www.arduino.cc/en/main/software
+<Tabs
+  defaultValue="windows"
+  values={[
+    {label: 'Windows', value: 'windows'},
+    {label: 'MacOS', value: 'macos'},
+    {label: 'Linux', value: 'linux'},
+  ]}>
+  <TabItem value="windows">
+
+  
+  Install the Arduino IDE via the installer (NOT the Windows App Store variant): https://www.arduino.cc/en/main/software
 
 Open Arduino, add `https://www.adafruit.com/package_adafruit_index.json` as an `Additional Board Manager URL` in Preferences. While you're at it, checking the two "verbose" checkboxes in preferences will help you see compilation details and the commands being used from the IDE.
 
@@ -15,9 +26,10 @@ Install required packages from `Tools -> Board: "some boardName" -> Boards manag
 * Adafruit nRF52
 
 After this you are ready to build using `build.ps1` in `build/windows` in PowerShell
+  </TabItem>
+  <TabItem value="macos">
 
-## MacOS
-
+  
 ```
 $ brew cask install arduino
 ```
@@ -31,5 +43,13 @@ Install required packages from `Tools -> Board: "some boardName" -> Boards manag
 * Adafruit SAMD Boards (note: It's unclear if this is really needed)
 
 After this you are ready to build using `build-macos` in `build/macos/`
+  
+  </TabItem>
+  <TabItem value="linux">
+  This is a banana 🍌
 
-## Linux
+  We need your help documenting the steps needed for Linux installs.
+  </TabItem>
+</Tabs>
+
+
