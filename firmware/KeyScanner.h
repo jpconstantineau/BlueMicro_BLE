@@ -41,7 +41,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 void process_user_layers(uint16_t layermask);
 #endif
 
-
+extern DynamicState keyboardstate;
 class KeyScanner {
     public:
         KeyScanner();

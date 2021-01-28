@@ -43,5 +43,5 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 void setupKeymap();
 void encoder_callback(int step);
 extern std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix;
-
+extern DynamicState keyboardstate;
 #endif /* KEYMAP_H */
