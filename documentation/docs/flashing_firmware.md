@@ -83,8 +83,8 @@ Examples
 ## Building from Linux
 
 Follow the instructions [here](https://learn.adafruit.com/bluefruit-nrf52-feather-learning-guide/arduino-bsp-setup), then 
-find your arduino avr installation (should be somewhere in /usr/share/arduino/hardware/) and replace the arduinoAvrPath
-variable in build-linux with yours.
+find your arduino avr installation (should be somewhere in `/usr/share/arduino/hardware/`) and replace the `arduinoAvrPath`
+variable in `build/build-archlinux` or `build/build-ubuntu` with yours.
 
 Usage is the same as detailed in the windows and mac sections.
 
