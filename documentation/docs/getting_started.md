@@ -7,7 +7,8 @@ slug: /
 
 ## Getting Started: in 4 simple steps
 
-Getting started with 
+Getting started with flashing your nRF52 board is as simple as installing the Arduino IDE for your operating system, adding the board support packages and compiling the firmware.
+
 
 ### Step 1: Option 1 - Install Arduino IDE
 <iframe width="572" height="320" src="https://www.youtube.com/embed/0skX6HPSZnU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -18,6 +19,11 @@ These are the steps followed in the video (Original Instructions by [Adafruit](h
 - Download and install the Arduino IDE (At least v1.8). Download it from [here](https://www.arduino.cc/en/Main/Software). Do not install it from the App Store.
 - Start the Arduino IDE
 - Add `https://www.adafruit.com/package_adafruit_index.json` as an **Additional Board Manager URL** (see image below)
+- To add board Community nRF52 board support, start Arduino and open the Preferences window (**File** > **Preferences**). Now copy and paste the following 2 URLs into the 'Additional Boards Manager URLs' input field:
+
+	https://www.adafruit.com/package_adafruit_index.json
+	https://github.com/jpconstantineau/Community_nRF52_Arduino/releases/latest/download/package_jpconstantineau_boards_index.json
+
 ![Board Manager](https://cdn-learn.adafruit.com/assets/assets/000/040/294/large1024/microcontrollers_Screen_Shot_2017-03-19_at_22.16.49.png)
 - Open the **Boards Manager** option from the **Tools -> Board** menu and install `Adafruit nRF52 by Adafruit` (see image below)
 ![Board Manager](https://cdn-learn.adafruit.com/assets/assets/000/039/907/large1024/microcontrollers_nRF52BSP.png?1488964156)
@@ -27,7 +33,11 @@ It will take up to a few minutes to finish installing the cross-compiling toolch
 __The delay during the installation stage shown in the image below is normal__, please be patient and let the installation terminate normally:
 ![Board Manager install progress](https://cdn-learn.adafruit.com/assets/assets/000/040/938/large1024/microcontrollers_Screen_Shot_2017-04-19_at_20.23.20.png)
 
-Once the BSP is installed, select the relevant board from the **Tools -> Board** menu, which will update your system config to use the right compiler and settings for your nRF52 board:
+Once the Adafruit BSP is installed, click anywhere in the "Community Add on Adafruit nrf52 boards" box, and click "Install". This is a smaller installation and will happen much faster.
+
+![Community Add-on to Adafruit nRF52 Boards](https://github.com/jpconstantineau/Community_nRF52_Arduino/wiki/img/install_steps_board_manager.png)
+
+Once the two BSP are installed, select the relevant board from the **Tools -> Board** menu, which will update your system config to use the right compiler and settings for your nRF52 board:
 ![Board Selection](https://cdn-learn.adafruit.com/assets/assets/000/094/506/large1024/microcontrollers_image.png?1598977463)
 
 ### Step 1: Option 2 - Install Arduino CLI (Windows script)
