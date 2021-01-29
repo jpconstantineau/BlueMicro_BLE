@@ -38,7 +38,7 @@ DynamicState keyboardstate;
 
 led_handler statusLEDs(&keyboardconfig, &keyboardstate);  /// Typically a Blue LED and a Red LED
 
-KeyScanner keys;
+KeyScanner keys(&keyboardconfig, &keyboardstate);
 Battery batterymonitor;
 
 static std::vector<uint16_t> stringbuffer; // buffer for macros to type into...
@@ -175,7 +175,7 @@ void setup() {
   }
 
   keyscantimer.begin(keyboardconfig.matrixscaninterval, keyscantimer_callback);
-  batterytimer.begin(keyboardconfig.batteryinterval, batterytimer_callback);
+  //batterytimer.begin(keyboardconfig.batteryinterval, batterytimer_callback);
   bt_setup(keyboardconfig.BLEProfile);
   usb_setup(); // does nothing for 832 - see usb.cpp
 
@@ -184,7 +184,7 @@ void setup() {
   setupMatrix();
   bt_startAdv(); 
   keyscantimer.start();
-  batterytimer.start();
+  //batterytimer.start();
 
   stringbuffer.clear();
 
@@ -204,7 +204,7 @@ void setup() {
   statusLEDs.enable();
   statusLEDs.hello();  // blinks Status LEDs a couple as last step of setup.
   Scheduler.startLoop(LowestPriorityloop, 1024, TASK_PRIO_LOWEST, "l1"); // this loop contains LED,RGB & PWM and Display updates.
-  Scheduler.startLoop(NormalPriorityloop, 1024, TASK_PRIO_NORMAL, "n1"); // this loop contains keypress send.
+  //Scheduler.startLoop(NormalPriorityloop, 1024, TASK_PRIO_NORMAL, "n1"); // this has nothing in it...
 };
 /**************************************************************************************************************************/
 //
@@ -249,7 +249,9 @@ void setupMatrix(void) {
 #define PINDATATYPE uint32_t
 #endif
 /**************************************************************************************************************************/
-// Better scanning with debounce Keyboard Scanning
+// THIS FUNCTION TAKES CARE OF SCANNING THE MATRIX AS WELL AS DEBOUNCING THE KEY PRESSES
+// IF YOU ARE USING A DIFFERENT METHOD TO READ/WRITE TO GPIOS (SUCH AS SHIFT REGISTERS OR GPIO EXPANDERS), YOU WILL
+// NEED TO RE-WORK THIS ROUTINE.  IDEALLY WE SHOULD HAVE THIS AS A COMPILE-TIME OPTION TO SWITCH BETWEEN ROUTINES.
 /**************************************************************************************************************************/
 void scanMatrix() {
 
@@ -295,6 +297,7 @@ void scanMatrix() {
 
 
 /**************************************************************************************************************************/
+// THIS IS THE DEFAULT process_user_macros FUNCTION WHICH IS OVERRIDEN BY USER ONE.
 /**************************************************************************************************************************/
 #if USER_MACRO_FUNCTION == 1  
     void process_user_macros(uint16_t macroid)
@@ -1062,24 +1065,39 @@ void loop() {  // has task priority TASK_PRIO_LOW
 void LowestPriorityloop()
 { // this loop has LOWEST priority (HIGHEST>HIGH>NORMAL>LOW>LOWEST)
    keyboardstate.lastuseractiontime = max(KeyScanner::getLastPressed(),keyboardstate.lastuseractiontime); // use the latest time to check for sleep...
+   
    unsigned long timesincelastkeypress = keyboardstate.timestamp - keyboardstate.lastuseractiontime;
+   unsigned long timesincelastbatteryupdate = keyboardstate.timestamp - keyboardstate.batterytimer;
+
   updateBLEStatus();
   statusLEDs.update(); //slow update in 25 millisecond loop
 
+  if (timesincelastbatteryupdate > keyboardconfig.batteryinterval)
+  {
+    if (timesincelastkeypress > 10000)
+    {
+      batterymonitor.updateBattery(); 
+      keyboardstate.batterytimer = keyboardstate.timestamp;
+    }
+  }
+  else  // do battery or update displays/LEDs - not both...
+  {
   if(keyboardconfig.enableDisplay)
-  {
-    // updateDisplay(timesincelastkeypress);
+    {
+      // updateDisplay(timesincelastkeypress);
+    }
+
+    if(keyboardconfig.enablePWMLED) // TODO: is this timer fast for this?
+    {
+      updatePWM(timesincelastkeypress);
+    }
+
+    if(keyboardconfig.enableRGBLED)// TODO: is thistimer fast  for this?
+    {
+      updateRGB(timesincelastkeypress);
+    }
   }
 
-  if(keyboardconfig.enablePWMLED) // TODO: is this timer fast for this?
-  {
-    updatePWM(timesincelastkeypress);
-  }
-
-  if(keyboardconfig.enableRGBLED)// TODO: is thistimer fast  for this?
-  {
-     updateRGB(timesincelastkeypress);
-  }
   delay(keyboardconfig.lowestpriorityloopinterval);              // wait not too long  
 }
 

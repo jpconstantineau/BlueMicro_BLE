@@ -20,54 +20,9 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "KeyScanner.h"
 #include <tuple>
 
-// ToDo: There seems to be lots of redundency in data.
-// ToDo: consider interrupts or GPIOTE
-// ToDo: there must be a better way to debounce
-// ToDo: consider multiple boards and the merging of multiple buffers/modifiers and layer requests.
-
-
-
-
-KeyScanner::KeyScanner() {    // Constructor
-    ;
-}
-
-
-/**************************************************************************************************************************/
-// KEY SCANNING - THIS ROUTINE ONLY TAKES CARE OF THE DEBOUNCING LOGIC FOR EACH KEY
-/**************************************************************************************************************************/
-bool KeyScanner::scanMatrix(const int& currentState,unsigned long currentMillis, const int& row, const int& col)
-{
-    // 
-#if DIODE_DIRECTION == COL2ROW
-        if (currentState == 0 ) //if key pressed
-#else
-        if (currentState == 1 ) //if key pressed
-#endif
-        {
-            if (timestamps[row][col] > 0) //if key was previously pressed
-            {
-                if((currentMillis - timestamps[row][col]) >= DEBOUNCETIME)
-                {
-                    matrix[row][col].press(currentMillis);
-                    lastPressed = currentMillis;
-                }
-                else // not enough debounce time
-                {
-                    ; // do nothing
-                }
-            }
-
-            else //if key was NOT previously pressed
-            {
-                timestamps[row][col] = currentMillis;
-            }
-        }
-        else // key not pressed
-        {
-            matrix[row][col].clear(currentMillis);
-            timestamps[row][col] = 0;
-        }
+KeyScanner::KeyScanner(PersistentState* cfg, DynamicState* stat) {    // Constructor
+    config=cfg;
+    status=stat;
 }
 
 /**************************************************************************************************************************/
@@ -181,7 +136,7 @@ process_user_layers(detectedlayerkeys);
 
 uint8_t layer = getlayer(detectedlayerkeys);
 
-keyboardstate.layer = layer;
+status->layer = layer;
 
     for(int row = 0; row < MATRIX_ROWS; ++row) {
         for (auto& key : matrix[row]) 
@@ -250,19 +205,10 @@ keyboardstate.layer = layer;
      */
     
     std::copy(toggleBuffer.begin(), toggleBuffer.end(), back_inserter(activeKeys));
-   /* for (auto activation : toggleBuffer) 
-    {
-        activeKeys.push_back(activation);
-    }*/
 
     if (emptyOneshot) 
     {
-        std::copy(oneshotBuffer.begin(), oneshotBuffer.end(), back_inserter(activeKeys));
-       /* for (auto activation : oneshotBuffer) 
-        {
-            activeKeys.push_back(activation);
-        }*/
-        
+        std::copy(oneshotBuffer.begin(), oneshotBuffer.end(), back_inserter(activeKeys));        
         oneshotBuffer.clear();
         oneshotLayer = 0;
     }
@@ -279,12 +225,10 @@ void KeyScanner::process_for_tri_layers(uint8_t if_layer1, uint8_t and_layer2, u
     detectedlayerkeys = (detectedlayerkeys & mask12) == mask12 ? ((detectedlayerkeys & ~mask12) | mask3) : (detectedlayerkeys); // if detectedlayerkeys has mask12 in it,remove mask12 and add extra layer; otherwise return as is.
 }
 
-
 void KeyScanner::add_to_encoderKeys(uint16_t keycode)
 {
     encoderKeys.push_back(keycode);
 }
-
 
 #if USER_LAYER_FUNCTION == 1 
 void process_user_layers(uint16_t layermask)
@@ -442,16 +386,16 @@ uint16_t KeyScanner::remoteLayer = 0;
 uint16_t KeyScanner::remotespecialkeycode = 0;
 
 uint16_t KeyScanner::oneshotLayer = 0;
-uint8_t KeyScanner::ledStatus = 0;
 uint8_t KeyScanner::remoteMod = 0;
 uint8_t KeyScanner::currentMod = 0;
-unsigned long KeyScanner::timestamps[MATRIX_ROWS][MATRIX_COLS]  = {0};
 unsigned long KeyScanner::lastPressed = 0;
 uint8_t KeyScanner::bufferposition = 0;
-//uint8_t KeyScanner::layerMode = 0;
 std::vector<uint16_t> KeyScanner::activeKeys {};
 std::vector<uint16_t> KeyScanner::encoderKeys {};
 std::vector<uint16_t> KeyScanner::macroBuffer {};
 std::vector<uint16_t> KeyScanner::toggleBuffer {};
 std::vector<uint16_t> KeyScanner::leaderBuffer {};
 std::vector<uint16_t> KeyScanner::oneshotBuffer {};
+
+PersistentState*  KeyScanner::config = NULL;
+DynamicState*  KeyScanner::status  = NULL;
