@@ -18,6 +18,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 */
 //#include <array>
+
 #ifndef KEYSCANNER_H
 #define KEYSCANNER_H
 #include <utility>
@@ -30,10 +31,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "firmware_config.h"
 #include "keymap.h"
 #include "KeyState.h"
-
 #include "advanced_keycodes.h"
 #include "Key.h" //already included through keymap.h do we need it here?
-
 
 
 #ifndef USER_LAYER_FUNCTION  
@@ -41,12 +40,11 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 void process_user_layers(uint16_t layermask);
 #endif
 
-extern DynamicState keyboardstate;
 class KeyScanner {
     public:
-        KeyScanner();
- 
-        static bool scanMatrix(const int& currentState,unsigned long millis, const int& row, const int& col);
+        
+        KeyScanner(PersistentState* cfg, DynamicState* stat);
+
         static void press(unsigned long millis, const int& row, const int& col);
         static void release(unsigned long millis, const int& row, const int& col);
         static void updateRemoteReport(uint8_t data0 , uint8_t data1, uint8_t data2,uint8_t data3, uint8_t data4, uint8_t data5,uint8_t data6);
@@ -63,12 +61,10 @@ class KeyScanner {
         static uint16_t mouse;
         static uint16_t localLayer;
         static uint16_t special_key;
-       // static uint8_t layerMode;
         static uint16_t remotespecialkeycode;
         static uint8_t currentReport[8];
         
         static uint8_t bufferposition;
-        static uint8_t ledStatus;
 
     private:
         static void resetReport();
@@ -83,19 +79,21 @@ class KeyScanner {
         static uint16_t oneshotLayer;
         static uint8_t remoteReport[8];
         static uint8_t previousReport[8];
-        static unsigned long timestamps[MATRIX_ROWS][MATRIX_COLS]; 
         static unsigned long lastPressed;
         static uint16_t detectedlayerkeys;
         static uint16_t remoteLayer;
         
         static uint8_t remoteMod;
-         static uint8_t currentMod;
+        static uint8_t currentMod;
 
         static std::vector<uint16_t> activeKeys; 
         static std::vector<uint16_t> encoderKeys; 
-        static std::vector<uint16_t> macroBuffer; 
+        static std::vector<uint16_t> macroBuffer; // not used
         static std::vector<uint16_t> toggleBuffer; 
-        static std::vector<uint16_t> leaderBuffer; 
+        static std::vector<uint16_t> leaderBuffer; // not used
         static std::vector<uint16_t> oneshotBuffer; 
+
+        static PersistentState* config;
+        static DynamicState* status;
 };
 #endif /* KEYSCANNER_H */
