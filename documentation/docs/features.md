@@ -13,7 +13,7 @@ BlueMicro is currently missing some features found in other popular firmware. Th
 | **Connectivity and Power Saving Options**                                                                              |            |     |    |
 | Low Latency BLE Support                                                                                                |     ✅    |      | ✅  |
 | Multi-Device BLE Support (Several Computers) <sup>1</sup>                                                              |     ✅    |      | ✅  | 
-| USB HID <sup>1,2</sup>                                                                                                 |     🚧    | ✅  | ✅  |
+| USB HID <sup>1,2</sup>                                                                                                 |     ✅    | ✅  | ✅  |
 | Battery Reporting (BLE Battery Service)                                                                                |     ✅    |      | 🚧  |
 | Low Power Sleep States                                                                                                 |     ✅    |      | 🚧  |
 | Low Active Power Usage                                                                                                 |            |      | ✅  |
@@ -30,7 +30,7 @@ BlueMicro is currently missing some features found in other popular firmware. Th
 | Ghosted Keys Support                                                                                                   |     🚧     | ✅  |    |
 | Split Keyboard Support                                                                                                 |     ✅     | ✅  | ✅  |
 | Key Backlight LED PWM Control                                                                                          |     ✅     | ✅  |      |
-| RGB Underglow                                                                                                          |     ✅     | ✅  | ✅  |
+| RGB Underglow <sup>1</sup>                                                                                             |     ✅     | ✅  | ✅  |
 | Encoders                                                                                                               |     ✅     | ✅  | ✅  |
 | OLED Display Support <sup>1</sup>                                                                                      |     🚧     | ✅  | 🚧  |
 | Low Power Mode (VCC Shutoff)                                                                                           |     ✅     |     | 🚧  |

@@ -39,6 +39,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
         #endif
     #endif
 
+
+
     // these functions will be defined for all cases (nrf52832 and nrf52840) but will work differently.
     void usb_setup();
     bool usb_isConnected();
