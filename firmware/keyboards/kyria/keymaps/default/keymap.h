@@ -17,6 +17,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
+#ifndef KEYMAP_H
+#define KEYMAP_H
 #include <stdint.h>
 #include "hid_keycodes.h"
 #include "keyboard_config.h"
@@ -25,23 +27,22 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "KeyScanner.h"
 #include <array>
 
-#ifndef KEYMAP_H
-#define KEYMAP_H
+#define _QWERTY 0
+#define _LOWER  1
+#define _RAISE  2
+#define _ADJUST 3
 
-#define KC_CAP_D MOD(MOD_LSHIFT, KC_D)
+#define L_QWERTY  (LAYER_0 + _QWERTY)
+#define L_LOWER   (LAYER_0 + _LOWER)
+#define L_RAISE   (LAYER_0 + _RAISE)
+#define L_ADJUST  (LAYER_0 + _ADJUST)
 
-#define _L0  0
-#define _L1  1
-#define _L2  2
 
-#define _PRESS 0
-#define _MT_TAP 1
-#define _MT_HOLD 2
-#define _DT_TAP 3
-#define _DT_DOUBLETAP 4
+#define USER_LAYER_FUNCTION   0 
+void process_user_layers(uint16_t layermask);
 
 void setupKeymap();
 void encoder_callback(int step);
 extern std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix;
-extern DynamicState keyboardstate;
+
 #endif /* KEYMAP_H */

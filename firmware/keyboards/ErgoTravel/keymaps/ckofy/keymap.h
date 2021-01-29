@@ -17,6 +17,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
+#ifndef KEYMAP_H
+#define KEYMAP_H
 #include <stdint.h>
 #include "hid_keycodes.h"
 #include "keyboard_config.h"
@@ -25,23 +27,67 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "KeyScanner.h"
 #include <array>
 
-#ifndef KEYMAP_H
-#define KEYMAP_H
 
-#define KC_CAP_D MOD(MOD_LSHIFT, KC_D)
+// Layers Definitions
 
-#define _L0  0
-#define _L1  1
-#define _L2  2
+#define _COLEMAK 0
+#define _MAC 0
+#define _LOWER 1
+#define _RAISE 2
+#define _MLOWER 3
+#define _ADJUST 4
 
-#define _PRESS 0
-#define _MT_TAP 1
-#define _MT_HOLD 2
-#define _DT_TAP 3
-#define _DT_DOUBLETAP 4
+// Layers keycodes Definitions
+
+#define L_COLEMAK  (LAYER_0 + _COLEMAK)
+#define L_MAC    (LAYER_0 + _MAC)
+#define L_LOWER    (LAYER_0 + _LOWER)
+#define L_RAISE    (LAYER_0 + _RAISE)
+#define L_MLOWER   (LAYER_0 + _MLOWER)
+#define L_ADJUST   (LAYER_0 + _ADJUST)
+
+
+#define _______ KC_TRNS
+#define XXXXXXX KC_NO
+// #define OS(KC_LSFT) OSM_SFT 
+#define KC_CUT  LCTL(KC_X)	// CUT
+#define KC_CPY  LCTL(KC_C)	// COPY
+#define KC_PST  LCTL(KC_V)	// PASTE
+#define KC_UND  LCTL(KC_Z)	// UNDO
+#define KC_SVE  LCTL(KC_S)  // Save
+#define KC_LOCK LGUI(KC_L)  // Lock
+
+#define KC_BRK  LCTL(KC_B)    // LabVIEW remove broken wires
+#define KC_SWP  LCTL(KC_E)    // LabVIEW show block diagram/show front panel
+
+// Mac shortcuts
+#define KC_MCUT  LGUI(KC_X)	// CUT
+#define KC_MCPY  LGUI(KC_C)	// COPY
+#define KC_MPST  LGUI(KC_V)	// PASTE
+#define KC_MUND  LGUI(KC_Z)	// UNDO
+#define KC_MSVE  LGUI(KC_S)  // Save
+
+
+// define macro hooks
+
+#define KM_COLEMAK  MC(KC_1)
+#define KM_MAC  MC(KC_2)
+
+#define HOME_ADD MC(KC_A)
+#define WORK_ADD MC(KC_B)
+#define EMAIL_1  MC(KC_C)
+#define EMAIL_2  MC(KC_D)
+
+#define USER_MACRO_FUNCTION   0 
+void process_user_macros(uint16_t macroid);
+
+
+#define USER_LAYER_FUNCTION   0 
+void process_user_layers(uint16_t layermask);
 
 void setupKeymap();
-void encoder_callback(int step);
 extern std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix;
-extern DynamicState keyboardstate;
+extern void addStringToQueue(const char* str);
+extern void addKeycodeToQueue(const uint16_t keycode);
+
 #endif /* KEYMAP_H */

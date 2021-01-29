@@ -181,6 +181,8 @@ process_user_layers(detectedlayerkeys);
 
 uint8_t layer = getlayer(detectedlayerkeys);
 
+keyboardstate.layer = layer;
+
     for(int row = 0; row < MATRIX_ROWS; ++row) {
         for (auto& key : matrix[row]) 
         {
@@ -319,7 +321,7 @@ bool KeyScanner::updateLayer()
         }
     }
     
-
+    
     layerChanged = (prevlayer != localLayer);
     return layerChanged;
 }
@@ -385,6 +387,7 @@ bool KeyScanner::getReport()
 
     currentReport[0] = currentMod;
     currentReport[7] = localLayer;
+    
 
 if (activeKeys.empty() && processingmacros) {processingmacros = false;}
 
