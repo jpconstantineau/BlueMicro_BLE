@@ -18,6 +18,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 */
 /**************************************************************************************************************************/
+#include <Arduino.h>
 #include <bluefruit.h>
 #include "firmware.h"
 #include <Adafruit_LittleFS.h>
@@ -37,6 +38,9 @@ PersistentState keyboardconfig;
 DynamicState keyboardstate;
 
 led_handler statusLEDs(&keyboardconfig, &keyboardstate);  /// Typically a Blue LED and a Red LED
+#ifdef BLUEMICRO_CONFIGURED_DISPLAY
+  BlueMicro_Display OLED(&keyboardconfig, &keyboardstate);  /// Typically a Blue LED and a Red LED
+#endif
 
 KeyScanner keys(&keyboardconfig, &keyboardstate);
 Battery batterymonitor;
@@ -108,7 +112,12 @@ void resetConfig()
   keyboardconfig.enableChargerControl=VCC_ENABLE_CHARGER;
   keyboardconfig.polarityChargerControl=true;
 
-  keyboardconfig.enableDisplay = false; // no displays yet
+  #ifdef BLUEMICRO_CONFIGURED_DISPLAY
+    keyboardconfig.enableDisplay = true;// enabled if it's compiled with one...
+  #else
+    keyboardconfig.enableDisplay = false;// disabled if it's not compiled with one...
+  #endif
+
 
   keyboardconfig.enableSerial = SERIAL_DEBUG_CLI_DEFAULT_ON;   
 
@@ -139,6 +148,9 @@ void saveConfig()
   }
 }
 
+
+
+
 /**************************************************************************************************************************/
 // put your setup code here, to run once:
 /**************************************************************************************************************************/
@@ -147,6 +159,10 @@ void setup() {
 
   setupGpio();                                                                // checks that NFC functions on GPIOs are disabled.
   setupWDT();
+  #ifdef BLUEMICRO_CONFIGURED_DISPLAY
+     OLED.begin();
+  #endif
+ 
   setupConfig();
 
   if (keyboardconfig.enableSerial) 
@@ -197,14 +213,21 @@ void setup() {
   {
     setupRGB();//keyboardconfig.pinRGBLED
   }
-  if(keyboardconfig.enableDisplay)
-  {
-    // setupDisplay(i2cpins);
-  }
+
   statusLEDs.enable();
   statusLEDs.hello();  // blinks Status LEDs a couple as last step of setup.
   Scheduler.startLoop(LowestPriorityloop, 1024, TASK_PRIO_LOWEST, "l1"); // this loop contains LED,RGB & PWM and Display updates.
   //Scheduler.startLoop(NormalPriorityloop, 1024, TASK_PRIO_NORMAL, "n1"); // this has nothing in it...
+  #ifdef BLUEMICRO_CONFIGURED_DISPLAY
+    if(keyboardconfig.enableDisplay)
+    {
+      OLED.changeUpdateMode(DISPLAY_UPDATE_STATUS);
+    }
+    else
+    {
+      OLED.sleep();
+    }
+  #endif
 };
 /**************************************************************************************************************************/
 //
@@ -951,7 +974,6 @@ void batterytimer_callback(TimerHandle_t _handle)
 // this loop has NORMAL priority(HIGHEST>HIGH>NORMAL>LOW>LOWEST)
 void NormalPriorityloop(void)
 {
-
   delay (keyboardconfig.keysendinterval);
 }
 
@@ -1032,7 +1054,6 @@ void loop() {  // has task priority TASK_PRIO_LOW
   }
 
   // TODO: check for battery filtering when switching USB in/out
-
   // none of these things can be done in the timer event callbacks
   if (keyboardstate.needUnpair)
   {
@@ -1068,33 +1089,51 @@ void LowestPriorityloop()
    
    unsigned long timesincelastkeypress = keyboardstate.timestamp - keyboardstate.lastuseractiontime;
    unsigned long timesincelastbatteryupdate = keyboardstate.timestamp - keyboardstate.batterytimer;
-
+   unsigned long timesincelastdisplayupdate = keyboardstate.timestamp - keyboardstate.displaytimer;
   updateBLEStatus();
   statusLEDs.update(); //slow update in 25 millisecond loop
 
-  if (timesincelastbatteryupdate > keyboardconfig.batteryinterval)
+  if (timesincelastbatteryupdate > keyboardconfig.batteryinterval)  // this is typically every 30 seconds...
   {
-    if (timesincelastkeypress > 10000)
+    if (timesincelastkeypress > 10000) // update if we haven't typed for 10 seconds
     {
       batterymonitor.updateBattery(); 
       keyboardstate.batterytimer = keyboardstate.timestamp;
+      keyboardstate.batt_type = batterymonitor.batt_type;
+      keyboardstate.vbat_mv = batterymonitor.vbat_mv;
+      keyboardstate.vbat_per = batterymonitor.vbat_per;
+      keyboardstate.vbat_vdd = batterymonitor.vbat_vdd;
     }
   }
   else  // do battery or update displays/LEDs - not both...
   {
-  if(keyboardconfig.enableDisplay)
+    if (timesincelastdisplayupdate > 250)  // update even if we type but update 4 times a second. 
     {
-      // updateDisplay(timesincelastkeypress);
-    }
+    #ifdef BLUEMICRO_CONFIGURED_DISPLAY
+       if(keyboardconfig.enableDisplay)
+        {
 
-    if(keyboardconfig.enablePWMLED) // TODO: is this timer fast for this?
-    {
-      updatePWM(timesincelastkeypress);
+          OLED.update();
+          keyboardstate.displaytimer = keyboardstate.timestamp;
+          }
+        
+        else
+        {
+          OLED.sleep();
+        }
+    #endif
     }
-
-    if(keyboardconfig.enableRGBLED)// TODO: is thistimer fast  for this?
+    else // update display or update LEDs - not both...
     {
-      updateRGB(timesincelastkeypress);
+      if(keyboardconfig.enablePWMLED) // TODO: is this timer fast for this?
+      {
+        updatePWM(timesincelastkeypress);
+      }
+
+      if(keyboardconfig.enableRGBLED)// TODO: is thistimer fast  for this?
+      {
+        updateRGB(timesincelastkeypress);
+      }
     }
   }
 

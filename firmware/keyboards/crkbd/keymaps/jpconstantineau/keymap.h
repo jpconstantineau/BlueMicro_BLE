@@ -19,16 +19,20 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 #ifndef KEYMAP_H
 #define KEYMAP_H
-
 #include <stdint.h>
 #include "hid_keycodes.h"
 #include "keyboard_config.h"
 #include "advanced_keycodes.h"
+#include "BlueMicro_display.h"
 #include "KeyScanner.h"
 #include "Key.h"
 #include <array>
 
 
+#ifdef BLUEMICRO_CONFIGURED_DISPLAY
+extern BlueMicro_Display OLED;        // needed to assign the update display callback
+extern DISPLAY_U8G2_CONSTRUCTOR u8g2; // needed to call the display functions
+#endif
 
 #define  _QWERTY 0
 #define  _LOWER 1
@@ -89,5 +93,8 @@ void setupKeymap();
 extern std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix;
 extern void addStringToQueue(const char* str);
 extern void addKeycodeToQueue(const uint16_t keycode);
+
+
+void updateDisplay(PersistentState* cfg, DynamicState* stat);
 
 #endif /* KEYMAP_H */

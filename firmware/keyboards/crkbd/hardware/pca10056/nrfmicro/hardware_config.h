@@ -52,7 +52,11 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
      //#define  STATUS_KB_LED_PIN 0  //no RED LED
      #define STATUS_BLE_LED_PIN 42 //1.10  = 32+10
 
-
+//  OLED DEFINITION
+    #define I2C_SDA_PIN 15
+    #define I2C_SCK_PIN 17
+    #define DISPLAY_U8G2_CONSTRUCTOR U8G2_SSD1306_128X32_UNIVISION_F_HW_I2C // see https://github.com/olikraus/u8g2/wiki/u8g2setupcpp for reference
+ 
         // nrfmicro pinout reference
         // https://github.com/joric/nrfmicro/wiki/Pinout
    /*     #define D3      6  

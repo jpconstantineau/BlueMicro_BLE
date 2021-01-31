@@ -34,6 +34,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "datastructures.h"
 #include "debug_cli.h"
 #include "usb.h"
+#include "BlueMicro_display.h"
 
 
     void setupConfig(void);

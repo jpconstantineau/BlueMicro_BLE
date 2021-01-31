@@ -136,17 +136,21 @@ This enables setting up the following configuration:
 	#define WS2812B_LED_COUNT 1
 	#define WS2812B_LED_ON 1 
 ```
+
 If `WS2812B_LED_PIN` is left undefined, LED functionality will not be enabled in the firmware.
 If `WS2812B_LED_ON` is set to 0, RGB functionality will not be enabled in the firmware. Note that this will not power down VCC power to the RGB LEDs, impacting power consumption of your keyboard.  External VCC to the RGB LEDs is controlled through the __External VCC Switch__ functionality described above.
 
 ### OLED Definition
 
-To Do - Still being implemented.
+OLED displays are implemented using the U8g2 Library and assumes that the display uses I2C as the communication interface.  This interface is defined by the SDA and SCK pins.  For all keyboards designed to work with Arduino Pro Micros, these relate to the D1 and D0 AVR ports. nRF52 chips can relocate this interface to other GPIOs.
 
 ``` c++
-#define OLED_SDA_PIN        25
-#define OLED_SCL_PIN        26
+    #define I2C_SDA_PIN 15
+    #define I2C_SCK_PIN 17
+	#define DISPLAY_U8G2_CONSTRUCTOR U8G2_SSD1306_128X32_UNIVISION_F_HW_I2C // see https://github.com/olikraus/u8g2/wiki/u8g2setupcpp for reference
 ```
+
+Since the U8g2 library supports a large number of displays by changing the type (hence changing the constructor method), changing the disply type is as simple as selecting a different constructor.  See [the u8g2 setup documentation](https://github.com/olikraus/u8g2/wiki/u8g2setupcpp) for more information.  The firmware assumes hardware I2C as parameters passed to the constructors.
 
 
 ### Rotary Encoder Definition

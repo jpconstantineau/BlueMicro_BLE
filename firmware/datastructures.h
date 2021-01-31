@@ -21,7 +21,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define DATASTRUCTURES_H
 #include <array>
 
-#define BLUEMICRO_CONFIG_VERSION 1  // this should be incremented every time the PersistentState structure definition is updated.  This will ensure that the SETTINGS_FILE file is reset when the structure is updated.
+#define BLUEMICRO_CONFIG_VERSION 2  // this should be incremented every time the PersistentState structure definition is updated.  This will ensure that the SETTINGS_FILE file is reset when the structure is updated.
 
     typedef union {
         struct { 
@@ -85,6 +85,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
         uint8_t  vbat_per;
         uint8_t  batt_type;
         uint32_t batterytimer;
+        uint32_t displaytimer;
 
         char peer_name_prph[32];
         uint16_t conn_handle_prph;
@@ -114,6 +115,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
     // TODO: Add the structures and function definitions for keycode buffer for user processing
 
     typedef void (*ledupdateCallback)(PersistentState* config, DynamicState* status);
+    typedef void (*updateDisplay_cb_t)(PersistentState* cfg, DynamicState* stat ); 
 
     enum connectionState
     {
