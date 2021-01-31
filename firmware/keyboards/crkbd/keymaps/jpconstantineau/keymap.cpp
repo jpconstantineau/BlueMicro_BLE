@@ -18,7 +18,6 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "keymap.h"
 
 
-
 #if KEYBOARD_SIDE == SINGLE
 std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
     {KEYMAP(
@@ -71,7 +70,7 @@ void setupKeymap() {
     uint32_t lower[MATRIX_ROWS][MATRIX_COLS] =
         KEYMAP( \
         KC_GRAVE,KC_1,   KC_2,   KC_3,   KC_4,   KC_5,  \
-        KC_DEL  ,KC_F1  ,KC_F2  ,KC_F3  ,KC_F4  ,KC_F5  ,    \
+        PRINT_BATTERY  ,KC_F1  ,KC_F2  ,KC_F3  ,KC_F4  ,KC_F5  ,    \
         KC_LSFT ,KC_F7  ,KC_F8  ,KC_F9  ,KC_F10 ,KC_F11 ,   \
                                   L_EXTRAL, L_LOWER, KC_SPC \
         );
@@ -156,7 +155,9 @@ void setupKeymap() {
     }
 
     // if you want to add Tap/Hold or Tap/Doubletap activations, then you add them below.
-
+    #ifdef BLUEMICRO_CONFIGURED_DISPLAY
+    OLED.setStatusDisplayCallback(updateDisplay);
+    #endif
 }
 
 #endif  // left
@@ -259,7 +260,9 @@ void setupKeymap() {
             matrix[row][col].addActivation(_MACRO,  Method::PRESS,   macro[row][col]);
         }
     }
-
+    #ifdef BLUEMICRO_CONFIGURED_DISPLAY
+    OLED.setStatusDisplayCallback(updateDisplay);
+    #endif
 }
 
 
@@ -267,42 +270,32 @@ void setupKeymap() {
 
 
 
-/*
-void setupKeymap() {
-   
+void updateDisplay(PersistentState* cfg, DynamicState* stat)
+{
+    #ifdef BLUEMICRO_CONFIGURED_DISPLAY
+    u8g2.setFontMode(1);	// Transparent
+    u8g2.setFontDirection(0);
+    battery(22,19,stat->vbat_per);
+    printline(0,28,stat->peer_name_prph);
 
-    uint32_t lower[MATRIX_ROWS][MATRIX_COLS] =
-        KEYMAP(
-        KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR,    KC_ASTR,    KC_LPRN, KC_RPRN, KC_BSPC,
-        KC_DEL,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_UNDS,    KC_PLUS,    KC_LCBR, KC_RCBR, KC_PIPE,
-        _______, KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  S(KC_NUHS), S(KC_NUBS), KC_HOME, KC_END,  _______,
-        _______, _______, _______, _______, L_LOWER, _______, _______, L_RAISE,    KC_MNXT,    KC_VOLD, KC_VOLU, KC_MPLY);
-
-    uint32_t raise[MATRIX_ROWS][MATRIX_COLS] =
-        KEYMAP(
-    KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSPC,
-    KC_DEL,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_MINS, KC_EQL,  KC_LBRC, KC_RBRC, KC_BSLS,
-    _______, KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_NUHS, KC_NUBS, KC_PGUP, KC_PGDN, _______,
-    _______, _______, _______, _______, L_LOWER, _______, _______, L_RAISE, KC_MNXT, KC_VOLD, KC_VOLU, KC_MPLY);
-
-    uint32_t adjust[MATRIX_ROWS][MATRIX_COLS] =
-        KEYMAP(
-    _______, RESET,   _______,  RGB_TOG, RGB_MOD, RGB_HUI, RGB_HUD, RGB_SAI,   RGB_SAD,    RGB_VAI,   RGB_VAD,   KC_DEL ,
-    _______, _______, _______,  _______, _______, _______, _______, KM_QWERTY, KM_COLEMAK, KM_DVORAK, KM_PLOVER, _______,
-    _______, _______, _______,  _______, _______, _______, _______, _______,   _______,    _______,   _______,   _______,
-    _______, _______, _______,  _______, L_LOWER, _______, _______, L_RAISE,   _______,    _______,   _______,   _______);
-
-    uint32_t macro[MATRIX_ROWS][MATRIX_COLS] =            // XXXXXXX = nothing    _______ = transparent = use lower layer keycode
-        KEYMAP(
-    PRINT_BATTERY, HOME_ADD, EMAIL_1,  NAME_1,  CBR_FN,  PHONE_1, TAB_DOWN_RTRN, INOWORD,  IN_R,      IPADDR,     SMILE,     IPSUM ,
-    PRINT_INFO   , WORK_ADD, EMAIL_2,  NAME_2,  BRC_FN,  PHONE_2, TAB_UP_RTRN,   FOREXMPL, XXXXXXX,   XXXXXXX,    XXXXXXX,   XXXXXXX,
-    XXXXXXX      , XXXXXXX,  XXXXXXX,  NAME_3,  PRN_FN,  XXXXXXX, XXXXXXX,       FF_TEXT,  XXXXXXX,   LARW_L,     LARW_R,    XXXXXXX,
-    L_MACRO      , XXXXXXX,  XXXXXXX,  XXXXXXX, L_LOWER, XXXXXXX, XXXXXXX,       L_RAISE,  KM_QWERTY, KM_COLEMAK, KM_DVORAK, KM_PLOVER);
-
-
-
+    char buffer [50];
+    u8g2.setFont(u8g2_font_helvB12_tf);	// choose a suitable font
+    switch(stat->layer)
+    {
+        case _QWERTY:     u8g2.drawStr(0,128,""); break;
+        case _LOWER:      u8g2.drawStr(0,128,"L");break;
+        case _RAISE:     u8g2.drawStr(0,128,"R");break;
+        case _ADJUST:     u8g2.drawStr(0,128,"A");break;
+        case _EXTRAL:     u8g2.drawStr(0,128,"EL");break;
+        case _EXTRAR:     u8g2.drawStr(0,128,"ER");break; 
+        case _MACROL:     u8g2.drawStr(0,128,"ML");break;
+        case _MACROR:     u8g2.drawStr(0,128,"MR");break; 
+        case _MACRO:     u8g2.drawStr(0,128,"M");break;    
+    }
+    #endif
 }
-*/
+
+
 
 void process_user_macros(uint16_t macroid)
 {   

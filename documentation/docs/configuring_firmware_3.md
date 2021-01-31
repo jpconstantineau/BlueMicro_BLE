@@ -111,3 +111,60 @@ void encoder_callback(int step)
 ```
 
 If you rotate in one direction and the keycodes are for the other direction, simply change the `if ( step > 0 )` statement to `if ( step < 0 )` or swap the keycodes around.
+
+### OLED Definition
+
+The default screens can be overriden by assigning a new callback. 
+
+You will need to add a few things to your keymap.h file.
+
+``` c++
+#include "BlueMicro_display.h"
+
+#ifdef BLUEMICRO_CONFIGURED_DISPLAY
+extern BlueMicro_Display OLED;        // needed to assign the update display callback
+extern DISPLAY_U8G2_CONSTRUCTOR u8g2; // needed to call the display functions
+#endif
+
+void updateDisplay(PersistentState* cfg, DynamicState* stat);
+
+```
+
+You will also need to add a few things to your keymap.cpp file.  For example, you will need to add the following 3 lines in the `setupKeymap()` function:
+
+``` c++
+
+    #ifdef BLUEMICRO_CONFIGURED_DISPLAY
+    OLED.setStatusDisplayCallback(updateDisplay);
+    #endif
+
+```
+
+You will then need to define the `updateDisplay()` function with your own requirements.  The following is an example that provides a battery icon, the computer or half it is connected to and the currently active layer. 
+
+``` c++
+void updateDisplay(PersistentState* cfg, DynamicState* stat)
+{
+    #ifdef BLUEMICRO_CONFIGURED_DISPLAY
+    u8g2.setFontMode(1);	// Transparent
+    u8g2.setFontDirection(0);
+    battery(22,19,stat->vbat_per);
+    printline(0,28,stat->peer_name_prph);
+
+    char buffer [50];
+    u8g2.setFont(u8g2_font_helvB12_tf);	// choose a suitable font
+    switch(stat->layer)
+    {
+        case _QWERTY:     u8g2.drawStr(0,128,""); break;
+        case _LOWER:      u8g2.drawStr(0,128,"L");break;
+        case _RAISE:     u8g2.drawStr(0,128,"R");break;
+        case _ADJUST:     u8g2.drawStr(0,128,"A");break;
+        case _EXTRAL:     u8g2.drawStr(0,128,"EL");break;
+        case _EXTRAR:     u8g2.drawStr(0,128,"ER");break; 
+        case _MACROL:     u8g2.drawStr(0,128,"ML");break;
+        case _MACROR:     u8g2.drawStr(0,128,"MR");break; 
+        case _MACRO:     u8g2.drawStr(0,128,"M");break;    
+    }
+    #endif
+}
+```

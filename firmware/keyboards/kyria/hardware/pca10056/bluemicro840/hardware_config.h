@@ -50,25 +50,9 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define  STATUS_BLE_LED_PIN  19  //blue = 0.19
 #define  STATUS_KB_LED_PIN 17  //red = 0.17
 
- /*     #define D3      6  
-        #define D2      8   
-        #define D1      15  
-        #define D0      17  
-        #define D4      20
-        #define C6      13
-        #define D7      24
-        #define E6      9
-        #define B4      10
-        #define B5      38 //1.06 = 32+6
-
-        #define F4      30
-        #define F5      26  
-        #define F6      29
-        #define F7      2
-        #define B1      45 //1.13  = 32+13
-        #define B3      3
-        #define B2      28
-        #define B6      43 //1.11 = 32+11
-        #define NC      32 //1.00 = 32+0 // NC is for not connected....*/
+//  OLED DEFINITION
+    #define I2C_SDA_PIN 15
+    #define I2C_SCK_PIN 17
+ //   #define DISPLAY_U8G2_CONSTRUCTOR U8G2_SSD1306_128X32_UNIVISION_F_HW_I2C // see https://github.com/olikraus/u8g2/wiki/u8g2setupcpp for reference
 
 #endif /* HARDWARE_CONFIG_H */

@@ -27,10 +27,13 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "nrf52gpio.h"
 #include "LedRGB.h"
 #include "LedPwm.h"
+#include "BlueMicro_display.h"
 // Keyboard Matrix
 extern byte rows[]  ;      // Contains the GPIO Pin Numbers defined in keyboard_config.h
 extern byte columns[] ;     // Contains the GPIO Pin Numbers defined in keyboard_config.h  
-
+#ifdef BLUEMICRO_CONFIGURED_DISPLAY
+extern BlueMicro_Display OLED;
+#endif
 void prepareSleep(void);
 void sleepNow(void);
 void gotoSleep(unsigned long timesincelastkeypress,bool connected);

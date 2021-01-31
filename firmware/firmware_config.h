@@ -213,4 +213,21 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
   #define SERIAL_DEBUG_CLI_DEFAULT_ON 1
 #endif
 
+// OLED DISPLAY CONFIG
+#ifdef ARDUINO_NRF52_ADAFRUIT
+            // do nothing since the Adafruit BSP doesn't have U8g2lib included
+#endif
+#ifdef ARDUINO_NRF52_COMMUNITY
+    #ifdef DISPLAY_U8G2_CONSTRUCTOR
+        #ifdef I2C_SDA_PIN
+            #ifdef I2C_SCK_PIN   // everything needed is defined!
+                #define BLUEMICRO_CONFIGURED_DISPLAY 1
+                #ifndef DISPLAY_U8G2_ROTATION  // check for overriding default rotation
+                    #define DISPLAY_U8G2_ROTATION U8G2_R1 // options are here: https://github.com/olikraus/u8g2/wiki/u8g2setupcpp#rotation
+                #endif               
+            #endif
+        #endif
+    #endif
+#endif
+
 #endif /* FIRMWARE_CONFIG_H */
