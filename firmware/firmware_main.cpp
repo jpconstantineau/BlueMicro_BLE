@@ -1109,12 +1109,13 @@ void LowestPriorityloop()
   {
     if (timesincelastdisplayupdate > 250)  // update even if we type but update 4 times a second. 
     {
+      keyboardstate.displaytimer = keyboardstate.timestamp;
     #ifdef BLUEMICRO_CONFIGURED_DISPLAY
        if(keyboardconfig.enableDisplay)
         {
 
           OLED.update();
-          keyboardstate.displaytimer = keyboardstate.timestamp;
+          
           }
         
         else
