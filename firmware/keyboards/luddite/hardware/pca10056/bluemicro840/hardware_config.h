@@ -43,6 +43,6 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 //#define I2C_SDA_PIN 15  // no display for the luddite
 //#define I2C_SCK_PIN 17  // no display for the luddite
 
-//#define SPEAKER_PIN 10
+#define SPEAKER_PIN 10
     
 #endif /* HARDWARE_CONFIG_H */

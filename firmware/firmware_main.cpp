@@ -229,7 +229,7 @@ void setup() {
     }
   #endif
 
- /* #ifdef SPEAKER_PIN
+  #ifdef SPEAKER_PIN
     pinMode(SPEAKER_PIN, OUTPUT);
   digitalWrite(SPEAKER_PIN, LOW);
         tone(SPEAKER_PIN, NOTE_E4, 50);
@@ -239,7 +239,8 @@ void setup() {
         tone(SPEAKER_PIN, NOTE_E5, 50);
         delay(65);
           digitalWrite(SPEAKER_PIN, LOW);
-  #endif*/
+          pinMode(SPEAKER_PIN, INPUT);
+  #endif
 };
 /**************************************************************************************************************************/
 //
@@ -1121,12 +1122,13 @@ void LowestPriorityloop()
   {
     if (timesincelastdisplayupdate > 250)  // update even if we type but update 4 times a second. 
     {
+      keyboardstate.displaytimer = keyboardstate.timestamp;
     #ifdef BLUEMICRO_CONFIGURED_DISPLAY
        if(keyboardconfig.enableDisplay)
         {
 
           OLED.update();
-          keyboardstate.displaytimer = keyboardstate.timestamp;
+          
           }
         
         else

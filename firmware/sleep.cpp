@@ -45,13 +45,26 @@ void prepareSleep() {
       OLED.sleep();
       #endif
 
+  #ifdef SPEAKER_PIN
+    pinMode(SPEAKER_PIN, OUTPUT);
+  digitalWrite(SPEAKER_PIN, LOW);
+        tone(SPEAKER_PIN, NOTE_E5, 50);
+        delay(65);
+        tone(SPEAKER_PIN, NOTE_A4, 50);
+        delay(65);
+        tone(SPEAKER_PIN, NOTE_E4, 50);
+        delay(65);
+          digitalWrite(SPEAKER_PIN, LOW);
+          pinMode(SPEAKER_PIN, INPUT);
+  #endif
+
       #if VCC_ENABLE_GPIO ==1 
       switchVCC(false); // turn off VCC when going to sleep. This isn't an optional thing...
       #endif
 
   statusLEDs.sleep(); 
   sendPWM(0);  // forces PWM backlight off
-  NRF_PWM2->ENABLE = 0; // Turn off PWM peripheral
+  NRF_PWM1->ENABLE = 0; // Turn off PWM peripheral
 }
 
 void sleepNow()
