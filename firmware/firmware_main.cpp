@@ -228,6 +228,18 @@ void setup() {
       OLED.sleep();
     }
   #endif
+
+ /* #ifdef SPEAKER_PIN
+    pinMode(SPEAKER_PIN, OUTPUT);
+  digitalWrite(SPEAKER_PIN, LOW);
+        tone(SPEAKER_PIN, NOTE_E4, 50);
+        delay(65);
+        tone(SPEAKER_PIN, NOTE_A4, 50);
+        delay(65);
+        tone(SPEAKER_PIN, NOTE_E5, 50);
+        delay(65);
+          digitalWrite(SPEAKER_PIN, LOW);
+  #endif*/
 };
 /**************************************************************************************************************************/
 //

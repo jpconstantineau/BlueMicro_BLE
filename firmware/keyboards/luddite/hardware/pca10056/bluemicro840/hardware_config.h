@@ -40,8 +40,9 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define VCC_POLARITY_ON 1
 
 
-#define I2C_SDA_PIN 15
-#define I2C_SCK_PIN 17
+//#define I2C_SDA_PIN 15  // no display for the luddite
+//#define I2C_SCK_PIN 17  // no display for the luddite
 
+//#define SPEAKER_PIN 10
     
 #endif /* HARDWARE_CONFIG_H */
