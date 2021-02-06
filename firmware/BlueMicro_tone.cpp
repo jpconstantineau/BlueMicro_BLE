@@ -138,6 +138,34 @@ void BlueMicro_tone::processTones()
   }
 }
 
+// Play a note of the specified frequency and for the specified duration.
+// Hold is an optional bool that specifies if this note should be held a
+// little longer, i.e. for eigth notes that are tied together.
+// While waiting for a note to play the waitBreath delay function is used
+// so breath detection and pixel animation continues to run.  No tones
+// will play if the slide switch is in the -/off position or all the
+// candles have been blown out.
+void BlueMicro_tone::playNoteNow(int frequency, int duration, bool hold=false) {
+
+  if (hold) {
+    // For a note that's held play it a little longer than the specified duration
+    // so it blends into the next tone (but there's still a small delay to 
+    // hear the next note).
+    tone(_pin, frequency, duration + duration/32);
+  }
+  else {
+    // For a note that isn't held just play it for the specified duration.
+    tone(_pin, frequency, duration);
+  }
+
+  delay(duration + duration/16);
+}
+
+void BlueMicro_tone::playNoteNow(int frequency, int duration)
+{
+    playNoteNow( frequency,  duration, false);
+}
+
 std::queue<toneList_t> BlueMicro_tone::toneQueue;
 uint32_t BlueMicro_tone::toneDelay = 0;
 PersistentState*  BlueMicro_tone::config = NULL;

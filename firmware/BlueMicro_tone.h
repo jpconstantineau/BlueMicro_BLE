@@ -124,7 +124,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 // Define note durations.  You only need to adjust the whole note
 // time and other notes will be subdivided from it directly.
-#define WHOLE         2200       // Length of time in milliseconds of a whole note (i.e. a full bar).
+#define WHOLE         2000       // Length of time in milliseconds of a whole note (i.e. a full bar).
 #define HALF          WHOLE/2
 #define QUARTER       HALF/2
 #define EIGHTH        QUARTER/2
@@ -151,6 +151,8 @@ class BlueMicro_tone {
         void setSpeakerPin(uint8_t pin);
         void playTone(toneList_t toneToPlay);
         void playToneNow(unsigned int frequency, unsigned long duration);
+        void playNoteNow(int frequency, int duration, bool hold);
+        void playNoteNow(int frequency, int duration);
         void playAllQueuedTonesNow();
         void clearAllQueuedTones();
         void processTones();

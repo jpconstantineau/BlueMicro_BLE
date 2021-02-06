@@ -37,7 +37,7 @@ void setupKeymap() {
         KC_NO,KC_NO,KC_NO,KC_NO,KC_NO,KC_NO,KC_NO,KC_NO,KC_PSCR,KC_SLCK,KC_PAUS, KC_UP, KC_NO,KC_BSPC, \
         LAYER_2,KC_VOLDOWN,KC_VOLUP,KC_MUTE,KC_NO,KC_NO,KC_PAST,KC_PSLS,KC_HOME,KC_PGUP,KC_LEFT,KC_RGHT,KC_PENT, \
         KC_NO,KC_NO,KC_NO,KC_NO,KC_NO,KC_PPLS,KC_PMNS,KC_END, KC_PGDN,KC_DOWN,KC_NO,KC_NO, \
-        KC_NO,KC_NO,KC_NO,          KC_NO,                      LAYER_1,KC_NO,KC_NO,KC_NO);
+        KC_NO,KC_NO,KC_NO,          BIRTHDAY,                      LAYER_1,KC_NO,KC_NO,KC_NO);
 
 
 
@@ -48,7 +48,7 @@ void setupKeymap() {
         KC_NO,KC_NO,WIN_E_GRAVE,WIN_E_ACUTE,WIN_E_CIRCU,KC_NO,KC_NO,KC_NO,KC_NO,KC_NO,KC_NO,PRINT_BATTERY,PRINT_INFO,PRINT_BLE, \
         LAYER_2,UF2_DFU,KC_NO,KC_NO,KC_NO,KC_NO,KC_NO,KC_NO,KC_NO,KC_NO,KC_NO,BATTERY_CALC_TEST,BATTERY_CALC_DEFAULT, \
         KC_NO,KC_NO,KC_NO,KC_NO,KC_NO,KC_NO,KC_NO,KC_NO,KC_NO,KC_NO,KC_NO,KC_UP, \
-        DEBUG,KC_NO,KC_NO,          KC_NO,                    LAYER_1,KC_LEFT,KC_DOWN,KC_RIGHT);
+        DEBUG,KC_NO,KC_NO,          CHARGE,                    LAYER_1,KC_LEFT,KC_DOWN,KC_RIGHT);
 
 
 
@@ -67,5 +67,74 @@ void setupKeymap() {
 }
 
 
+void process_user_macros(uint16_t macroid)
+{
+    switch ((macroid))
+    { 
+        case GITCOMMIT:
+            addStringToQueue("git add .");
+            addKeycodeToQueue(KC_ENTER);
+            addStringToQueue("git commit -m \"\""); 
+            addKeycodeToQueue(KC_LEFT);
+        break;
+        case (CBR_FN):
+            addStringToQueue("{}"); 
+            addKeycodeToQueue(KC_LEFT);
+        break;
+        case (BRC_FN):
+            addStringToQueue("[]");
+            addKeycodeToQueue(KC_LEFT);
+        break;
+        case PRN_FN:
+            addStringToQueue("()"); 
+            addKeycodeToQueue(KC_LEFT);
+        break;
+        case IPADDR:
+            addStringToQueue("192.168.1.");
+        break;
+        case SMILE:
+            addStringToQueue(":)");
+        break;
+        case CHARGE:
+            // Play a little charge melody, from:
+            //  https://en.wikipedia.org/wiki/Charge_(fanfare)
+            speaker.playNoteNow(NOTE_G4, EIGHTH_TRIPLE, true);
+            speaker.playNoteNow(NOTE_C5, EIGHTH_TRIPLE, true);
+            speaker.playNoteNow(NOTE_E5, EIGHTH_TRIPLE, false);
+            speaker.playNoteNow(NOTE_G5, EIGHTH, true);
+            speaker.playNoteNow(NOTE_E5, SIXTEENTH, false);
+            speaker.playNoteNow(NOTE_G5, HALF, false);
+        break;
+        case BIRTHDAY:
+            // Play happy birthday tune, from:
+            //  http://www.irish-folk-songs.com/happy-birthday-tin-whistle-sheet-music.html#.WXFJMtPytBw
+            speaker.playNoteNow(NOTE_D4, EIGHTH, true);
+            speaker.playNoteNow(NOTE_D4, EIGHTH);
+            speaker.playNoteNow(NOTE_E4, QUARTER);       // Bar 1
+            speaker.playNoteNow(NOTE_D4, QUARTER);
+            speaker.playNoteNow(NOTE_G4, QUARTER);
+            speaker.playNoteNow(NOTE_FS4, HALF);         // Bar 2
+            speaker.playNoteNow(NOTE_D4, EIGHTH, true);
+            speaker.playNoteNow(NOTE_D4, EIGHTH);
+            speaker.playNoteNow(NOTE_E4, QUARTER);       // Bar 3
+            speaker.playNoteNow(NOTE_D4, QUARTER);
+            speaker.playNoteNow(NOTE_A4, QUARTER);
+            speaker.playNoteNow(NOTE_G4, HALF);          // Bar 4
+            speaker.playNoteNow(NOTE_D4, EIGHTH, true);
+            speaker.playNoteNow(NOTE_D4, EIGHTH);
+            speaker.playNoteNow(NOTE_D5, QUARTER);       // Bar 5
+            speaker.playNoteNow(NOTE_B4, QUARTER);
+            speaker.playNoteNow(NOTE_G4, QUARTER);
+            speaker.playNoteNow(NOTE_FS4, QUARTER);      // Bar 6
+            speaker.playNoteNow(NOTE_E4, QUARTER);
+            speaker.playNoteNow(NOTE_C5, EIGHTH, true);
+            speaker.playNoteNow(NOTE_C5, EIGHTH);
+            speaker.playNoteNow(NOTE_B4, QUARTER);       // Bar 7
+            speaker.playNoteNow(NOTE_G4, QUARTER);
+            speaker.playNoteNow(NOTE_A4, QUARTER);
+            speaker.playNoteNow(NOTE_G4, HALF);          // Bar 8
+        break;
+    }
+}
 
 
