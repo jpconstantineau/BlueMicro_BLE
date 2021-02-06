@@ -37,7 +37,9 @@ File file(InternalFS);
 PersistentState keyboardconfig;
 DynamicState keyboardstate;
 
+BlueMicro_tone speaker(&keyboardconfig, &keyboardstate);  /// A speaker to play notes and tunes...
 led_handler statusLEDs(&keyboardconfig, &keyboardstate);  /// Typically a Blue LED and a Red LED
+
 #ifdef BLUEMICRO_CONFIGURED_DISPLAY
   BlueMicro_Display OLED(&keyboardconfig, &keyboardstate);  /// Typically a Blue LED and a Red LED
 #endif
@@ -165,6 +167,10 @@ void setup() {
  
   setupConfig();
 
+ #ifdef SPEAKER_PIN
+ speaker.setSpeakerPin(SPEAKER_PIN);
+ #endif
+
   if (keyboardconfig.enableSerial) 
   {
   Serial.begin(115200);
@@ -229,18 +235,9 @@ void setup() {
     }
   #endif
 
-  #ifdef SPEAKER_PIN
-    pinMode(SPEAKER_PIN, OUTPUT);
-  digitalWrite(SPEAKER_PIN, LOW);
-        tone(SPEAKER_PIN, NOTE_E4, 50);
-        delay(65);
-        tone(SPEAKER_PIN, NOTE_A4, 50);
-        delay(65);
-        tone(SPEAKER_PIN, NOTE_E5, 50);
-        delay(65);
-          digitalWrite(SPEAKER_PIN, LOW);
-          pinMode(SPEAKER_PIN, INPUT);
-  #endif
+  speaker.playTone(TONE_STARTUP);
+  speaker.playTone(TONE_BLE_PROFILE);
+
 };
 /**************************************************************************************************************************/
 //
@@ -396,7 +393,6 @@ void process_keyboard_function(uint16_t keycode)
    switch(keycode)
   {
     case RESET:
-    
       NVIC_SystemReset();
       break;
     case DEBUG:
@@ -413,12 +409,18 @@ void process_keyboard_function(uint16_t keycode)
         //Bluefruit.Central.clearBonds();
       break;      
     case DFU:
+      speaker.playTone(TONE_SLEEP);
+      speaker.playAllQueuedTonesNow();
       enterOTADfu();
       break;
     case SERIAL_DFU:
+      speaker.playTone(TONE_SLEEP);
+      speaker.playAllQueuedTonesNow();
       enterSerialDfu();
       break;
     case UF2_DFU:
+      speaker.playTone(TONE_SLEEP);
+      speaker.playAllQueuedTonesNow();
       enterUf2Dfu();
       break;
 
@@ -996,6 +998,9 @@ void NormalPriorityloop(void)
 // cppcheck-suppress unusedFunction
 void loop() {  // has task priority TASK_PRIO_LOW     
   updateWDT();
+
+  speaker.processTones();
+
   if (keyboardconfig.enableSerial)
   {
     handleSerial();

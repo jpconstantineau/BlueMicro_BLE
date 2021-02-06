@@ -1,5 +1,5 @@
 /*
-Copyright 2018-2020 <Pierre Constantineau>
+Copyright 2018-2021 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -20,7 +20,9 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 #ifndef BLUEMICRO_TONE_H
 #define BLUEMICRO_TONE_H
-
+#include <bluefruit.h>
+#include <queue>
+#include "datastructures.h"
 /**************************************************************************************************
 // A few music note frequencies as defined in this tone example:
 //   https://www.arduino.cc/en/Tutorial/toneMelody
@@ -116,6 +118,9 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define NOTE_D8  4699
 #define NOTE_DS8 4978
 
+#define TONE_LOCK_HIGH    NOTE_C6
+#define TONE_LOCK_LOW     NOTE_C5
+#define TONE_A320_CLICK   1570
 
 // Define note durations.  You only need to adjust the whole note
 // time and other notes will be subdivided from it directly.
@@ -128,8 +133,36 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 
 /**************************************************************************************************
-// A few music note frequencies as defined in this tone example:
-//   https://www.arduino.cc/en/Tutorial/toneMelody
+ * 
  **************************************************************************************************/
+
+  typedef enum {
+    TONE_STARTUP,
+    TONE_BLE_PROFILE,
+    TONE_BLE_CONNECT,
+    TONE_BLE_DISCONNECT,
+    TONE_SLEEP
+  } toneList_t;
+
+
+class BlueMicro_tone {
+    public:
+        BlueMicro_tone(PersistentState* cfg, DynamicState* stat);
+        void setSpeakerPin(uint8_t pin);
+        void playTone(toneList_t toneToPlay);
+        void playToneNow(unsigned int frequency, unsigned long duration);
+        void playAllQueuedTonesNow();
+        void clearAllQueuedTones();
+        void processTones();
+
+    private:
+        uint8_t _pin;
+        static std::queue<toneList_t> toneQueue;
+        static uint32_t toneDelay;
+        static PersistentState* config;
+        static DynamicState* status;
+};
+
+
 
 #endif
