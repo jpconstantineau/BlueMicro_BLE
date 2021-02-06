@@ -12,8 +12,8 @@ BlueMicro is currently missing some features found in other popular firmware. Th
 | ---------------------------------------------------------------------------------------------------------------------- |  :-------: | :-: | :-: |
 | **Connectivity and Power Saving Options**                                                                              |            |     |    |
 | Low Latency BLE Support                                                                                                |     ✅    |      | ✅  |
-| Multi-Device BLE Support (Several Computers) <sup>1</sup>                                                              |     ✅    |      | ✅  | 
-| USB HID <sup>1,2</sup>                                                                                                 |     ✅    | ✅  | ✅  |
+| Multi-Device BLE Support (Several Computers) [^1]                                                                      |     ✅    |      | ✅  | 
+| USB HID [^1],[^2]                                                                                                      |     ✅    | ✅  | ✅  |
 | Battery Reporting (BLE Battery Service)                                                                                |     ✅    |      | 🚧  |
 | Low Power Sleep States                                                                                                 |     ✅    |      | 🚧  |
 | Low Active Power Usage                                                                                                 |            |      | ✅  |
@@ -30,9 +30,10 @@ BlueMicro is currently missing some features found in other popular firmware. Th
 | Ghosted Keys Support                                                                                                   |     🚧     | ✅  |    |
 | Split Keyboard Support                                                                                                 |     ✅     | ✅  | ✅  |
 | Key Backlight LED PWM Control                                                                                          |     ✅     | ✅  |      |
-| RGB Underglow <sup>1</sup>                                                                                             |     ✅     | ✅  | ✅  |
+| RGB Underglow [^1]                                                                                                     |     ✅     | ✅  | ✅  |
 | Encoders                                                                                                               |     ✅     | ✅  | ✅  |
-| OLED Display Support <sup>1</sup>                                                                                      |     🚧     | ✅  | 🚧  |
+| OLED Display Support [^1]                                                                                              |     🚧     | ✅  | 🚧  |
+| Audio/Speaker Support                                                                                                  |     ✅     | ✅  |     |
 | Low Power Mode (VCC Shutoff)                                                                                           |     ✅     |     | 🚧  |
 | **Microcontroller Support**                                                                                            |            |     |    |
 | Support for Nordic nRF52 Microcontrollers                                                                              |     ✅     |     |  ✅  |
@@ -50,6 +51,6 @@ This __Features Compared__ page is licenced under [CC-BY-NC-SA-4.0](https://crea
 
 **Notes**
 
-<sup>1</sup>: Requires Community nRF52 Support Package instead of Adafruit nRF52 Board Support Package
+[^1]: Requires Community nRF52 Support Package instead of Adafruit nRF52 Board Support Package
 
-<sup>2</sup>: Requires nRF52840 SoC.
+[^2]: Requires nRF52840 SoC.
