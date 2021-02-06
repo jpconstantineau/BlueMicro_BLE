@@ -72,9 +72,7 @@ void updatePWM(int mode, unsigned long timesincelastkeypress)
   switch (mode)
   {
   case 0: // OFF.
-
       sendPWM(0);
-      NRF_PWM2->ENABLE = 0;
     break;
 
   case 1: // Bright when typing, dim when not typing
@@ -89,8 +87,7 @@ void updatePWM(int mode, unsigned long timesincelastkeypress)
           sendPWM(cie_lightness(pwmval));
           if (pwmval<pwmstepsize)
           {
-                  sendPWM(0);
-                  NRF_PWM2->ENABLE = 0;
+            sendPWM(0);
           }
     break;
         
@@ -106,8 +103,7 @@ case 2: // Breathing
           sendPWM(cie_lightness(pwmval));
           if (pwmval<pwmstepsize)
           {
-                  sendPWM(0);
-                  NRF_PWM2->ENABLE = 0;
+            sendPWM(0);
           }
 
  break;

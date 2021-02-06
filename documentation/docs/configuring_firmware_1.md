@@ -165,3 +165,14 @@ Add these lines to your `hardware_config.h`
 ```
 
 From a hardware point of view, the A an B lines of the encoder should be wired directly to the nRF52 GPIO. The C (or common) line should be wired to ground. By default, the configuration uses the hardware QDEC peripheral (Quadrature Decoder) that's part of the nRF52 SoC and uses callbacks to handle rotation.
+
+
+### Speaker/Buzzer/Audio Definition
+
+Audio functions are based on the Tone functionality of the Adafruit nRF52 Arduino Core.  They send a PWM Signal to the `SPEAKER_PIN` GPIO.  If `SPEAKER_PIN` is not defined, audio functions won't work.   Add this line to your `hardware_config.h`
+
+``` c++
+#define SPEAKER_PIN 10
+```
+
+With only this definition, you will have basic audio feedback functionality enabled.

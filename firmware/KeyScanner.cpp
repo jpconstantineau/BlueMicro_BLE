@@ -18,7 +18,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 */
 #include "KeyScanner.h"
-#include <tuple>
+
 
 KeyScanner::KeyScanner(PersistentState* cfg, DynamicState* stat) {    // Constructor
     config=cfg;

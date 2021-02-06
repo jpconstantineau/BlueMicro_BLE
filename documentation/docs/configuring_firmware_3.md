@@ -168,3 +168,15 @@ void updateDisplay(PersistentState* cfg, DynamicState* stat)
     #endif
 }
 ```
+
+
+### Speaker/Buzzer/Audio Definition
+
+If you want to add additional audio feedback to your macros or user functions, you will need to add a few lines to your keymap.h file:
+
+``` c++
+#include "BlueMicro_tone.h"
+extern BlueMicro_tone speaker; 
+```
+
+Refer to the Luddite, default keymap for an example how to add music to your macros.
