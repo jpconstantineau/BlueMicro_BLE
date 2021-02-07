@@ -25,7 +25,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include <cstdint>
 #include <vector>
 #include <algorithm>
-
+#include <tuple>
 #include "hid_keycodes.h"
 #include "keyboard_config.h"
 #include "firmware_config.h"

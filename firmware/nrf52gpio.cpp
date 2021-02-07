@@ -156,30 +156,30 @@ void setupGpio()
 }
 
 /**************************************************************************************************************************/
+static uint8_t ledpinsaved;
 
 static int16_t buf[] = {(int16_t)(1 << 15) | (int16_t) DEFAULT_PWM_VALUE}; // Inverse polarity (bit 15), 1500us duty cycle
 void setupPWM(uint8_t ledpin)
 {
-  
+  ledpinsaved = ledpin;
   // Configure BACKLIGHT_LED_PIN as output, and set it to 0
-  NRF_GPIO->DIRSET = (1 << ledpin);
-  NRF_GPIO->OUTCLR = (1 << ledpin);
+  pinMode(ledpinsaved, OUTPUT);
+  digitalWrite(ledpinsaved, LOW);
   
-  
-  NRF_PWM2->PRESCALER   = PWM_PRESCALER_PRESCALER_DIV_8; // 1 us
-  NRF_PWM2->PSEL.OUT[0] = ledpin ;
-  NRF_PWM2->MODE        = (PWM_MODE_UPDOWN_Up << PWM_MODE_UPDOWN_Pos);
-  NRF_PWM2->DECODER     = (PWM_DECODER_LOAD_Common     << PWM_DECODER_LOAD_Pos) | 
+  NRF_PWM1->PRESCALER   = PWM_PRESCALER_PRESCALER_DIV_8; // 1 us
+  NRF_PWM1->PSEL.OUT[0] = ledpinsaved; // Supports Port 0 and 1 of nRF52840
+  NRF_PWM1->MODE        = (PWM_MODE_UPDOWN_Up << PWM_MODE_UPDOWN_Pos);
+  NRF_PWM1->DECODER     = (PWM_DECODER_LOAD_Common     << PWM_DECODER_LOAD_Pos) | 
                           (PWM_DECODER_MODE_RefreshCount   << PWM_DECODER_MODE_Pos);
-  NRF_PWM2->LOOP        = (PWM_LOOP_CNT_Disabled       << PWM_LOOP_CNT_Pos);
-  NRF_PWM2->COUNTERTOP  = 10000; // 5ms period = 200 Hz PWM frequency
+  NRF_PWM1->LOOP        = (PWM_LOOP_CNT_Disabled       << PWM_LOOP_CNT_Pos);
+  NRF_PWM1->COUNTERTOP  = 10000; // 5ms period = 200 Hz PWM frequency
   
   
-  NRF_PWM2->SEQ[0].CNT = ((sizeof(buf) / sizeof(uint16_t)) << PWM_SEQ_CNT_CNT_Pos);
-  NRF_PWM2->SEQ[0].ENDDELAY = 0;
-  NRF_PWM2->SEQ[0].PTR = (uint32_t)&buf[0];
-  NRF_PWM2->SEQ[0].REFRESH = 0;
-  NRF_PWM2->SHORTS = 0;
+  NRF_PWM1->SEQ[0].CNT = ((sizeof(buf) / sizeof(uint16_t)) << PWM_SEQ_CNT_CNT_Pos);
+  NRF_PWM1->SEQ[0].ENDDELAY = 0;
+  NRF_PWM1->SEQ[0].PTR = (uint32_t)&buf[0];
+  NRF_PWM1->SEQ[0].REFRESH = 0;
+  NRF_PWM1->SHORTS = 0;
   
   }
 
@@ -190,12 +190,18 @@ void sendPWM(uint16_t value)
 // max value for PWM is 15 bits
 // 16th bit is used for inverse polarity
 {
-
     value = value & 0x7FFF;  // dropping the 16th bit.  DEFAULT_PWM_MAX_VALUE
-    buf[0] = (1 << 15) | value; // Inverse polarity (bit 15), 1500us duty cycle
-    NRF_PWM2->SEQ[0].PTR = (uint32_t)&buf[0];
-    NRF_PWM2->ENABLE = 1;
-    NRF_PWM2->TASKS_SEQSTART[0] = 1;
+    if (value == 0)
+    {
+      NRF_PWM1->ENABLE = 0; // Turn off PWM peripheral  
+    }
+    else
+    {
+      buf[0] = (1 << 15) | value; // Inverse polarity (bit 15), 1500us duty cycle
+      NRF_PWM1->SEQ[0].PTR = (uint32_t)&buf[0];
+      NRF_PWM1->ENABLE = 1;
+      NRF_PWM1->TASKS_SEQSTART[0] = 1;
+    }
 }
 
 

@@ -24,6 +24,8 @@ extern led_handler statusLEDs; /// Typically a Blue and Red LED
 // Prepare sense pins for waking up from complete shutdown
 /**************************************************************************************************************************/
 void prepareSleep() {
+  
+
   for(int j = 0; j < MATRIX_ROWS; ++j) {                             
     //set the current row as OUPUT and LOW
     pinMode(rows[j], OUTPUT);
@@ -45,22 +47,35 @@ void prepareSleep() {
       OLED.sleep();
       #endif
 
+  #ifdef SPEAKER_PIN
+    pinMode(SPEAKER_PIN, OUTPUT);
+    digitalWrite(SPEAKER_PIN, LOW);
+        tone(SPEAKER_PIN, NOTE_E5, 50);
+        delay(65);
+        tone(SPEAKER_PIN, NOTE_A4, 50);
+        delay(65);
+        tone(SPEAKER_PIN, NOTE_E4, 50);
+        delay(65);
+          digitalWrite(SPEAKER_PIN, LOW);
+          pinMode(SPEAKER_PIN, INPUT);
+  #endif
+
       #if VCC_ENABLE_GPIO ==1 
       switchVCC(false); // turn off VCC when going to sleep. This isn't an optional thing...
       #endif
 
   statusLEDs.sleep(); 
   sendPWM(0);  // forces PWM backlight off
-  NRF_PWM2->ENABLE = 0; // Turn off PWM peripheral
+  
 }
 
 void sleepNow()
 {
+  delay(300);    // delay to let any keys be released
   prepareSleep();
   #if WS2812B_LED_ON == 1 
     suspendRGB();
   #endif
-  delay(3000);    // delay to let any keys be released
   sd_power_system_off();
 }
 
