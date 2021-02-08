@@ -21,7 +21,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define DATASTRUCTURES_H
 #include <array>
 
-#define BLUEMICRO_CONFIG_VERSION 2  // this should be incremented every time the PersistentState structure definition is updated.  This will ensure that the SETTINGS_FILE file is reset when the structure is updated.
+#define BLUEMICRO_CONFIG_VERSION 3  // this should be incremented every time the PersistentState structure definition is updated.  This will ensure that the SETTINGS_FILE file is reset when the structure is updated.
 
     typedef union {
         struct { 
@@ -57,9 +57,9 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
         bool    enableDisplay;
 
         bool    enableSerial;
+        bool    enableAudio;
         bool    dummy1;
         bool    dummy2;
-        bool    dummy3;
 
         uint8_t connectionMode;
         uint8_t BLEProfile;
@@ -86,6 +86,10 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
         uint8_t  batt_type;
         uint32_t batterytimer;
         uint32_t displaytimer;
+        uint32_t audiotimer;
+        uint32_t rgbledtimer;
+        uint32_t pwmledtimer;
+        uint32_t statusledtimer;
 
         char peer_name_prph[32];
         uint16_t conn_handle_prph;
@@ -129,6 +133,17 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
     CONNECTION_MODE_AUTO,
     CONNECTION_MODE_USB_ONLY,
     CONNECTION_MODE_BLE_ONLY
+    };
+
+    enum backgroundTaskID
+    {
+    BACKGROUND_TASK_NONE,
+    BACKGROUND_TASK_AUDIO,
+    BACKGROUND_TASK_BATTERY,
+    BACKGROUND_TASK_DISPLAY,
+    BACKGROUND_TASK_STATUSLED,
+    BACKGROUND_TASK_PWMLED,
+    BACKGROUND_TASK_RGBLED
     };
     #endif 
 

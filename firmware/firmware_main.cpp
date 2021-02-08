@@ -120,6 +120,11 @@ void resetConfig()
     keyboardconfig.enableDisplay = false;// disabled if it's not compiled with one...
   #endif
 
+  #ifdef SPEAKER_PIN
+    keyboardconfig.enableAudio = true;// enabled if it's compiled with one...
+  #else
+    keyboardconfig.enableAudio = false;// disabled if it's not compiled with one...
+  #endif
 
   keyboardconfig.enableSerial = SERIAL_DEBUG_CLI_DEFAULT_ON;   
 
@@ -127,7 +132,7 @@ void resetConfig()
   keyboardconfig.batteryinterval=BATTERYINTERVAL;
   keyboardconfig.keysendinterval=HIDREPORTINGINTERVAL;
   keyboardconfig.lowpriorityloopinterval=LOWPRIORITYLOOPINTERVAL;
-  keyboardconfig.lowestpriorityloopinterval = HIDREPORTINGINTERVAL*4;
+  keyboardconfig.lowestpriorityloopinterval = HIDREPORTINGINTERVAL*2;
   keyboardconfig.connectionMode  = CONNECTION_MODE_AUTO;
   keyboardconfig.BLEProfile = 0;
   keyboardconfig.BLEProfileEdiv[0] = 0xFFFF;
@@ -1103,59 +1108,94 @@ void loop() {  // has task priority TASK_PRIO_LOW
 /**************************************************************************************************************************/
 void LowestPriorityloop()
 { // this loop has LOWEST priority (HIGHEST>HIGH>NORMAL>LOW>LOWEST)
-   keyboardstate.lastuseractiontime = max(KeyScanner::getLastPressed(),keyboardstate.lastuseractiontime); // use the latest time to check for sleep...
-   
-   unsigned long timesincelastkeypress = keyboardstate.timestamp - keyboardstate.lastuseractiontime;
-   unsigned long timesincelastbatteryupdate = keyboardstate.timestamp - keyboardstate.batterytimer;
-   unsigned long timesincelastdisplayupdate = keyboardstate.timestamp - keyboardstate.displaytimer;
-  updateBLEStatus();
-  statusLEDs.update(); //slow update in 25 millisecond loop
+  // it's setup to do 1 thing every call.  This way, we won't take too much time from keyboard functions.
+  
+  backgroundTaskID toprocess = BACKGROUND_TASK_NONE;
+  
 
-  if (timesincelastbatteryupdate > keyboardconfig.batteryinterval)  // this is typically every 30 seconds...
+   keyboardstate.lastuseractiontime = max(KeyScanner::getLastPressed(),keyboardstate.lastuseractiontime); // use the latest time to check for sleep...
+   unsigned long timesincelastkeypress = keyboardstate.timestamp - keyboardstate.lastuseractiontime;
+
+  updateBLEStatus();
+  
+  if ((keyboardstate.timestamp - keyboardstate.batterytimer) > keyboardconfig.batteryinterval)  // this is typically every 30 seconds...
   {
-    if (timesincelastkeypress > 10000) // update if we haven't typed for 10 seconds
+    if (timesincelastkeypress > 1000) // update if we haven't typed for 1 second
     {
+      toprocess = BACKGROUND_TASK_BATTERY;
+    }
+  }
+    if ((keyboardstate.timestamp - keyboardstate.displaytimer) > 250)  // update even if we type but update 4 times a second. 
+    { // TODO check if there is new data to display too!
+      toprocess = BACKGROUND_TASK_DISPLAY;
+    }
+
+    if ((keyboardstate.timestamp - keyboardstate.audiotimer) > 500)  
+    { // TODO: check if there is new audio to play!
+      toprocess = BACKGROUND_TASK_AUDIO;
+    }
+      if(keyboardconfig.enableRGBLED)
+      {
+          if ((keyboardstate.timestamp - keyboardstate.rgbledtimer) > 50)  
+          { 
+            toprocess = BACKGROUND_TASK_RGBLED;
+          }      
+      }
+
+      if(keyboardconfig.enablePWMLED)
+      {
+          if ((keyboardstate.timestamp - keyboardstate.pwmledtimer) > 50)  
+          { 
+            toprocess = BACKGROUND_TASK_PWMLED;
+          }
+      }
+    
+     if ((keyboardstate.timestamp - keyboardstate.statusledtimer) > 100)  
+    { // TODO: check if there is new audio to play!
+      toprocess = BACKGROUND_TASK_STATUSLED;
+    }
+
+switch (toprocess)
+{
+  case BACKGROUND_TASK_NONE: 
+    break;
+  case BACKGROUND_TASK_AUDIO: 
+    keyboardstate.audiotimer = keyboardstate.timestamp;
+    break;
+  case BACKGROUND_TASK_BATTERY: 
       batterymonitor.updateBattery(); 
       keyboardstate.batterytimer = keyboardstate.timestamp;
       keyboardstate.batt_type = batterymonitor.batt_type;
       keyboardstate.vbat_mv = batterymonitor.vbat_mv;
       keyboardstate.vbat_per = batterymonitor.vbat_per;
       keyboardstate.vbat_vdd = batterymonitor.vbat_vdd;
-    }
-  }
-  else  // do battery or update displays/LEDs - not both...
-  {
-    if (timesincelastdisplayupdate > 250)  // update even if we type but update 4 times a second. 
-    {
-      keyboardstate.displaytimer = keyboardstate.timestamp;
-    #ifdef BLUEMICRO_CONFIGURED_DISPLAY
+    break;
+  case BACKGROUND_TASK_DISPLAY: 
+       keyboardstate.displaytimer = keyboardstate.timestamp;
+       #ifdef BLUEMICRO_CONFIGURED_DISPLAY
        if(keyboardconfig.enableDisplay)
         {
-
-          OLED.update();
-          
-          }
-        
+          OLED.update(); 
+        }
         else
         {
           OLED.sleep();
         }
-    #endif
-    }
-    else // update display or update LEDs - not both...
-    {
-      if(keyboardconfig.enablePWMLED) // TODO: is this timer fast for this?
-      {
-        updatePWM(timesincelastkeypress);
-      }
-
-      if(keyboardconfig.enableRGBLED)// TODO: is thistimer fast  for this?
-      {
-        updateRGB(timesincelastkeypress);
-      }
-    }
-  }
-
+      #endif
+    break;
+  case BACKGROUND_TASK_STATUSLED: 
+    keyboardstate.statusledtimer = keyboardstate.timestamp;
+    statusLEDs.update();
+    break;
+  case BACKGROUND_TASK_PWMLED: 
+    keyboardstate.pwmledtimer = keyboardstate.timestamp;
+    updatePWM(timesincelastkeypress);
+    break;
+  case BACKGROUND_TASK_RGBLED: 
+    keyboardstate.rgbledtimer = keyboardstate.timestamp;
+    updateRGB(timesincelastkeypress);
+    break;
+}
   delay(keyboardconfig.lowestpriorityloopinterval);              // wait not too long  
 }
 
