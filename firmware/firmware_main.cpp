@@ -983,19 +983,19 @@ void keyscantimer_callback(TimerHandle_t _handle) {
 //********************************************************************************************//
 // TODO: move to lower priority loop.  updating battery infomation isnt critical
 // timers have NORMAL priorities (HIGHEST>HIGH>NORMAL>LOW>LOWEST)
-void batterytimer_callback(TimerHandle_t _handle)
-{ 
-      batterymonitor.updateBattery();
-}
+//void batterytimer_callback(TimerHandle_t _handle)
+//{ 
+//      batterymonitor.updateBattery();
+//}
 
 //********************************************************************************************//
 //* Loop to send keypresses - moved to loop instead of timer due to delay() in processing macros *//
 //********************************************************************************************//
 // this loop has NORMAL priority(HIGHEST>HIGH>NORMAL>LOW>LOWEST)
-void NormalPriorityloop(void)
-{
-  delay (keyboardconfig.keysendinterval);
-}
+//void NormalPriorityloop(void)
+//{
+//  delay (keyboardconfig.keysendinterval);
+//}
 
 /**************************************************************************************************************************/
 // put your main code here, to run repeatedly:
@@ -1060,10 +1060,7 @@ void loop() {  // has task priority TASK_PRIO_LOW
     case CONNECTION_MODE_BLE_ONLY:
         if (bt_isConnected())
         {
-          if (keyboardstate.connectionState != CONNECTION_BT)
-          {
             keyboardstate.connectionState = CONNECTION_BT;
-          }
         }
         else
         {

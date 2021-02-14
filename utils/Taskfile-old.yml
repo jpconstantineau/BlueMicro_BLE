@@ -1,0 +1,48 @@
+# https://taskfile.dev
+
+version: '3'
+
+tasks:
+  default:
+    cmds:
+      - task: compile
+
+  compile:
+    vars:
+      FQBN: '{{default "adafruit:nrf52:pca10056" .FQBN}}'
+      SOURCEPATH: '{{default "../firmware" .SOURCEPATH}}'
+      BUILDCACHEPATH:  '{{default "../.build-cache" .BUILDCACHEPATH}}'
+      BUILDPATH: '{{default "../.build" .BUILDPATH}}'
+    cmds:
+      - arduino-cli compile --fqbn {{.FQBN}}  --build-cache-path {{.BUILDCACHEPATH}} {{.SOURCEPATH}}/firmware.ino  --output-dir {{.BUILDPATH}}/firmware
+
+  upload:
+    vars:
+      FQBN: '{{default "adafruit:nrf52:pca10056" .FQBN}}'
+      SERIALPORT: '{{default "COM45" .SERIALPORT}}'
+      SOURCEPATH: '{{default "../firmware" .SOURCEPATH}}'
+      BUILDPATH: '{{default "../.build" .BUILDPATH}}'
+    cmds:
+      - arduino-cli upload --fqbn {{.FQBN}}  {{.SOURCEPATH}}/firmware.ino  --input-dir {{.BUILDPATH}}/firmware --port {{.SERIALPORT}}
+
+  install:
+    cmds:
+      - arduino-cli core update-index
+      - arduino-cli core upgrade
+      - arduino-cli core search nrf52
+      - arduino-cli core install adafruit:nrf52
+      - arduino-cli core install community_nrf52:nrf52
+      - arduino-cli version
+
+  cleanup:
+    vars:
+      BUILDCACHEPATH:  '{{default "../.build-cache" .BUILDCACHEPATH}}'
+      BUILDPATH: '{{default "../.build" .BUILDPATH}}'
+      SCRIPTPATH: '{{default "../output" .SCRIPTPATH}}'
+    cmds:
+      - cmd: rm -r {{.BUILDPATH}}
+        ignore_error: true
+      - cmd: rm -r {{.BUILDCACHEPATH}}
+        ignore_error: true
+      - cmd: rm -r {{.SCRIPTPATH}}
+        ignore_error: true

@@ -1,0 +1,88 @@
+# https://taskfile.dev
+
+version: '3'
+
+output: prefixed
+
+includes:
+  arduino: ./ArduinoTasks.yml
+
+tasks:
+  default:
+    cmds:
+      - task: build
+
+  build:
+    deps:
+      - task: build-luddite
+      - task: build-contra
+      - task: build-crkbd-left
+      - task: build-crkbd-right
+      - task: build-sofle-left
+      - task: build-sofle-right
+
+  build-contra:
+    cmds:
+      - task: arduino:buildboard
+        vars:
+          KEYBOARD: 'contra'
+          KEYBOARDCONFIG: 'single'
+          FQBNFOLDER: 'pca10056'
+          CONTROLLERFOLDER: 'bluemicro840v1_0'
+          KEYMAP: 'default'
+          FQBN: 'community_nrf52:nrf52:pca10056'
+
+  build-luddite:
+    cmds:
+      - task: arduino:buildboard
+        vars:
+          KEYBOARD: 'luddite'
+          KEYBOARDCONFIG: 'single'
+          FQBNFOLDER: 'pca10056'
+          CONTROLLERFOLDER: 'bluemicro840'
+          KEYMAP: 'default'
+          FQBN: 'community_nrf52:nrf52:pca10056'
+
+  build-crkbd-left:
+    cmds:
+      - task: arduino:buildboard
+        vars:
+          KEYBOARD: 'crkbd'
+          KEYBOARDCONFIG: 'left'
+          FQBNFOLDER: 'pca10056'
+          CONTROLLERFOLDER: 'bluemicro840'
+          KEYMAP: 'jpconstantineau'
+          FQBN: 'community_nrf52:nrf52:pca10056'
+
+  build-crkbd-right:
+    cmds:
+      - task: arduino:buildboard
+        vars:
+          KEYBOARD: 'crkbd'
+          KEYBOARDCONFIG: 'right'
+          FQBNFOLDER: 'pca10056'
+          CONTROLLERFOLDER: 'bluemicro840'
+          KEYMAP: 'jpconstantineau'
+          FQBN: 'community_nrf52:nrf52:pca10056'
+
+  build-sofle-left:
+    cmds:
+      - task: arduino:buildboard
+        vars:
+          KEYBOARD: 'sofle'
+          KEYBOARDCONFIG: 'left'
+          FQBNFOLDER: 'pca10056'
+          CONTROLLERFOLDER: 'bluemicro840'
+          KEYMAP: 'default'
+          FQBN: 'community_nrf52:nrf52:pca10056'
+
+  build-sofle-right:
+    cmds:
+      - task: arduino:buildboard
+        vars:
+          KEYBOARD: 'sofle'
+          KEYBOARDCONFIG: 'right'
+          FQBNFOLDER: 'pca10056'
+          CONTROLLERFOLDER: 'bluemicro840'
+          KEYMAP: 'default'
+          FQBN: 'community_nrf52:nrf52:pca10056'
