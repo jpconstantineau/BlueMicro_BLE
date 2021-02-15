@@ -5,6 +5,10 @@ sidebar_label: Getting Started
 slug: /
 ---
 
+## BlueMicro Youtube Channel
+
+See a number of tutorials, builds and other keyboard related videos on the [BlueMicro Youtube Channel](https://www.youtube.com/channel/UCFpGp4hHe03nvF9c8_gF_jA/featured).
+
 ## Getting Started: in 4 simple steps
 
 Getting started with flashing your nRF52 board is as simple as installing the Arduino IDE for your operating system, adding the board support packages and compiling the firmware.

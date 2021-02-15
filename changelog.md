@@ -4,6 +4,10 @@
 
 Special thanks to @akudaikon, @ckofy, @tomsaleeba, @garyjohnson, @wizarddata, @bcat for contributing and helping with this release.
 
+### Known Issues
+
+See the [list of issues](https://github.com/jpconstantineau/BlueMicro_BLE/issues) for the latest details.
+
 ### BREAKING CHANGES 
 
 For most breaking changes, you will need to install and compile with the Community nrf52 BSP instead of the Adafruit nrf52 Board Support Package. See [here](https://github.com/jpconstantineau/Community_nRF52_Arduino/wiki/Installation-Instructions) for instructions how to install the Community nRF52 Board Support Package.
@@ -42,5 +46,6 @@ Migrated documentation web pages to docusaurus. See them [here](http://bluemicro
 - **Iris**
 - **5x5x5 (5x15)**
 - **Sofle**
+- **BlueZero with Keypad Zero**
 
 ## 0.3.0 and other Past Releases
