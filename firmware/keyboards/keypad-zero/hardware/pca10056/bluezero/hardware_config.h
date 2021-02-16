@@ -1,5 +1,5 @@
 /*
-Copyright 2019-2020 <Pierre Constantineau>
+Copyright 2020 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -17,25 +17,20 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
+#ifndef HARDWARE_CONFIG_H
+#define HARDWARE_CONFIG_H
+#include "hardware_variants.h"
 
-#ifndef HARDWAREVARIANTS_H
-#define HARDWAREVARIANTS_H
-#include "datastructures.h"
+/* HARDWARE DEFINITION*/
+/* key matrix size */
+#define MATRIX_ROWS 8
+#define MATRIX_COLS 5
 
-// putting this here since it's called in every keyboard_config and we need this for all the keymaps.
-// THIS FILE CONTAINS THE MACRO DEFINITIONS THAT USERS MAY USE IN THEIR keymap.cpp/h FILES.
-// FOR DATASTRUCTURES USED BY USER FUNCTIONS, SEE datastructures.h
+#define MATRIX_ROW_PINS {22,17,20,15,24,29,2,28}
+#define MATRIX_COL_PINS {5,7,12,4,8}
+#define UNUSED_PINS {}
 
-#define NODIODES      0
-#define COL2ROW       0  // TODO: add automatic selection of ANTI-GHOSTING...
-#define ROW2COL       1
-
-#define TEST 0
-#define LEFT 1
-#define RIGHT 2
-#define SINGLE 3
-
-#define KEYMAP2ARRAY(OTHERMACROHERE) {OTHERMACROHERE}
-#define ADDLAYER(LAYER_INPUT,METHOD_INPUT,KEYMAP_INPUT )  for (int row = 0; row < MATRIX_ROWS; ++row) { for (int col = 0; col < MATRIX_COLS; ++col){ matrix[row][col].addActivation(LAYER_INPUT, METHOD_INPUT, KEYMAP_INPUT[row][col]);}}
-#define _PINNUM(port, pin) ((port)*32 + (pin))
-#endif  /*HARDWAREVARIANTS_H*/
+/* COL2ROW or ROW2COL */
+#define DIODE_DIRECTION NODIODES
+    
+#endif /* HARDWARE_CONFIG_H */
