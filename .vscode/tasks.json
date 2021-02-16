@@ -6,99 +6,84 @@
         "panel": "new"
       },
     "tasks": [
-        {
-            "label": "Build BlueMicro All",
-            "type": "shell",
-            "windows": {
-                "command": "./build/windows/build.ps1 all"
-            },
-            "linux": {
-                "command": "./build/build-ubuntu all"
-            },
-            "osx": {
-                "command": "./build/macos/build-macos"
-            },
-            "group": "build",
-            "problemMatcher": []
+      {
+        "label": "Build BlueMicro All",
+        "type": "shell",
+        "windows": {
+          "command": "./build/windows/build.ps1 all"
         },
-        {
-            "label": "Build BlueMicro single",
-            "type": "shell",
-            "windows": {
-                "command": "./utils/compile.bat"
-            },
-            "linux": {
-                "command": "./build/build-ubuntu all"
-            },
-            "osx": {
-                "command": "./build/macos/build-macos"
-            },
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "problemMatcher": [
-                {
-                    "owner": "cpp",
-                    // The file name for reported problems is relative to the opened folder.
-                    "fileLocation": ["relative", "${workspaceFolder}\\firmware"],
-                    // The actual pattern to match problems in the output.
-                    "pattern": {
-                      // The regular expression. Example to match: helloWorld.c:5:3: warning: implicit declaration of function ‘printf’ [-Wimplicit-function-declaration]
-                      "regexp": "sketch\\\\(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
-                      // The first match group matches the file name which is relative.
-                      "file": 1,
-                      // The second match group matches the line on which the problem occurred.
-                      "line": 2,
-                      // The third match group matches the column at which the problem occurred.
-                      "column": 3,
-                      // The fourth match group matches the problem's severity. Can be ignored. Then all problems are captured as errors.
-                      "severity": 4,
-                      // The fifth match group matches the message.
-                      "message": 5
-                    }
-                  },
-                  {
-                    "owner": "h",
-                    // The file name for reported problems is relative to the opened folder.
-                    "fileLocation": ["relative", "${workspaceFolder}\\firmware"],
-                    // The actual pattern to match problems in the output.
-                    "pattern": {
-                      // The regular expression. Example to match: helloWorld.c:5:3: warning: implicit declaration of function ‘printf’ [-Wimplicit-function-declaration]
-                      "regexp": "sketch\\\\(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
-                      // The first match group matches the file name which is relative.
-                      "file": 1,
-                      // The second match group matches the line on which the problem occurred.
-                      "line": 2,
-                      // The third match group matches the column at which the problem occurred.
-                      "column": 3,
-                      // The fourth match group matches the problem's severity. Can be ignored. Then all problems are captured as errors.
-                      "severity": 4,
-                      // The fifth match group matches the message.
-                      "message": 5
-                    }
-                  },
-                  {
-                    "owner": "ino",
-                    // The file name for reported problems is relative to the opened folder.
-                    "fileLocation": ["relative", "${workspaceFolder}\\firmware"],
-                    // The actual pattern to match problems in the output.
-                    "pattern": {
-                      // The regular expression. Example to match: helloWorld.c:5:3: warning: implicit declaration of function ‘printf’ [-Wimplicit-function-declaration]
-                      "regexp": "firmware\\\\(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
-                      // The first match group matches the file name which is relative.
-                      "file": 1,
-                      // The second match group matches the line on which the problem occurred.
-                      "line": 2,
-                      // The third match group matches the column at which the problem occurred.
-                      "column": 3,
-                      // The fourth match group matches the problem's severity. Can be ignored. Then all problems are captured as errors.
-                      "severity": 4,
-                      // The fifth match group matches the message.
-                      "message": 5
-                    }
-                  }
-            ]
-        }
+        "linux": {
+          "command": "./build/build-ubuntu all"
+        },
+        "osx": {
+          "command": "./build/macos/build-macos"
+        },
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "Build BlueMicro single",
+        "type": "shell",
+        "windows": {
+          "command": "./utils/compile.bat"
+        },
+        "linux": {
+          "command": "./build/build-ubuntu all"
+        },
+        "osx": {
+          "command": "./build/macos/build-macos"
+        },
+        "group": "build",
+        "problemMatcher": [
+          {
+            "owner": "cpp",
+            "fileLocation": [
+              "relative",
+              "${workspaceFolder}\\firmware"
+            ],
+            "pattern": {
+              "regexp": "sketch\\\\(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+              "file": 1,
+              "line": 2,
+              "column": 3,
+              "severity": 4,
+              "message": 5
+            }
+          },
+          {
+            "owner": "h",
+            "fileLocation": [
+              "relative",
+              "${workspaceFolder}\\firmware"
+            ],
+            "pattern": {
+              "regexp": "sketch\\\\(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+              "file": 1,
+              "line": 2,
+              "column": 3,
+              "severity": 4,
+              "message": 5
+            }
+          },
+          {
+            "owner": "ino",
+            "fileLocation": [
+              "relative",
+              "${workspaceFolder}\\firmware"
+            ],
+            "pattern": {
+              "regexp": "firmware\\\\(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+              "file": 1,
+              "line": 2,
+              "column": 3,
+              "severity": 4,
+              "message": 5
+            }
+          }
+        ]
+      }
     ]
 }

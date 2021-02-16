@@ -123,11 +123,11 @@ void KeyScanner::updateBuffer()
     activeKeys.clear();
     bool emptyOneshot = false;
     //bool emptyOneshotLayer = false;
-
-    for (auto keycode : encoderKeys) 
-    {
-        activeKeys.push_back(keycode);
-    }
+    std::copy(encoderKeys.begin(), encoderKeys.end(), back_inserter(activeKeys));
+    //for (auto keycode : encoderKeys) //Consider using std::copy algorithm instead of a raw loop.
+   // {
+   //   activeKeys.push_back(keycode);
+   // }
 
     encoderKeys.clear();
 

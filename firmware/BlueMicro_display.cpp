@@ -143,7 +143,7 @@ void printline(uint8_t x, uint8_t y,uint32_t data)
 {
     #ifdef BLUEMICRO_CONFIGURED_DISPLAY
         char buffer [50];
-        sprintf(buffer, "%d", data);
+        sprintf(buffer, "%u", data);
         u8g2.setFont(u8g2_font_t0_12_mf);	// choose a suitable font
         u8g2.drawStr(x,y,buffer);
     #endif
