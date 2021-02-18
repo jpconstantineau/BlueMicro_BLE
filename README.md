@@ -21,6 +21,10 @@ See the pages [Here](http://bluemicro.jpconstantineau.com/#)
 
 You can contribute to the documentation by editing the markdown files located in the docs folder of the repository.
 
+## BlueMicro Youtube Channel
+
+See a number of tutorials, builds and other keyboard related videos on the [BlueMicro Youtube Channel](https://www.youtube.com/channel/UCFpGp4hHe03nvF9c8_gF_jA/featured).
+
 **Compatible Hardware**  
 
 Any nRF52832 or nRF52840 boards that support either of the following 2 Arduino Board Support Packages:
