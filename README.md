@@ -21,11 +21,13 @@ See the pages [Here](http://bluemicro.jpconstantineau.com/#)
 
 You can contribute to the documentation by editing the markdown files located in the docs folder of the repository.
 
-## BlueMicro Youtube Channel
+
+## Video Documentation - BlueMicro Youtube Channel
 
 See a number of tutorials, builds and other keyboard related videos on the [BlueMicro Youtube Channel](https://www.youtube.com/channel/UCFpGp4hHe03nvF9c8_gF_jA/featured).
 
-**Compatible Hardware**  
+
+# Compatible Hardware 
 
 Any nRF52832 or nRF52840 boards that support either of the following 2 Arduino Board Support Packages:
 
@@ -42,7 +44,7 @@ If you use the Adafruit nRF52 Boards in the Arduino IDE, you should select eithe
 If your board needs a **special bootloader** or a configuration that's not compatible with the above boards, you should consider adding your board to the Community Add-on to the Adafruit_nRF52_Arduino Board Support Package.  This will make it simpler for others to re-use your special configuration and flashing the bootloader.
 
 
-# Contributing
+# Contrigitbuting
 
 We're very happy to have your contributions in BlueMicro_BLE Firmware
 
