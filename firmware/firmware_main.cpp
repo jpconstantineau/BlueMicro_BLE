@@ -60,6 +60,7 @@ void setupConfig() {
   keyboardstate.helpmode = false;
   keyboardstate.timestamp = millis();
   keyboardstate.lastupdatetime = keyboardstate.timestamp;
+  keyboardstate.lastreporttime = 0;
 
   keyboardstate.connectionState = CONNECTION_NONE;
   keyboardstate.needReset = false;
