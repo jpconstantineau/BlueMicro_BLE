@@ -1,5 +1,5 @@
 /*
-Copyright 2018-2020 <Pierre Constantineau, Julian Komaromy>
+Copyright 2018-2021 <Pierre Constantineau, Julian Komaromy>
 
 3-Clause BSD License
 

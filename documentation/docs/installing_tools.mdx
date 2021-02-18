@@ -1,0 +1,60 @@
+---
+id: tools
+title: Installing Tools
+slug: /tools
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs
+  defaultValue="windows"
+  values={[
+    {label: 'Windows', value: 'windows'},
+    {label: 'MacOS', value: 'macos'},
+    {label: 'Linux', value: 'linux'},
+  ]}>
+  <TabItem value="windows">
+
+  
+- Download and install the Arduino IDE (At least v1.8). Download it from [here](https://www.arduino.cc/en/Main/Software). Do not install it from the App Store.
+- Start the Arduino IDE
+- Add `https://www.adafruit.com/package_adafruit_index.json` as an **Additional Board Manager URL** in Preferences.
+- Also add `https://github.com/jpconstantineau/Community_nRF52_Arduino/releases/latest/download/package_jpconstantineau_boards_index.json` as an **Additional Board Manager URL** 
+- While you're at it, checking the two "verbose" checkboxes in preferences will help you see compilation details and the commands being used from the IDE.
+
+Install required packages from `Tools -> Board: "some boardName" -> Boards manager`.
+
+* Adafruit nRF52
+* Community add-on to Adafruit nRF52
+
+After this you are ready to build using `build.ps1` in `build/windows` in PowerShell
+  </TabItem>
+  <TabItem value="macos">
+
+  
+```
+$ brew cask install arduino
+```
+
+- Start the Arduino IDE
+- Add `https://www.adafruit.com/package_adafruit_index.json` as an **Additional Board Manager URL** in Preferences.
+- Also add `https://github.com/jpconstantineau/Community_nRF52_Arduino/releases/latest/download/package_jpconstantineau_boards_index.json` as an **Additional Board Manager URL** 
+- While you're at it, checking the two "verbose" checkboxes in preferences will help you see compilation details and the commands being used from the IDE.
+
+Install required packages from `Tools -> Board: "some boardName" -> Boards manager`.
+
+* Adafruit nRF52
+* Community add-on to Adafruit nRF52
+
+After this you are ready to build using `build-macos` in `build/macos/`
+  
+  </TabItem>
+  <TabItem value="linux">
+  This is a banana 🍌
+
+  We need your help documenting the steps needed for Linux installs.
+  </TabItem>
+</Tabs>
+
+

@@ -1,5 +1,5 @@
 /*
-Copyright 2018-2020 <Pierre Constantineau>
+Copyright 2018-2021 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -72,7 +72,6 @@ void updatePWM(int mode, unsigned long timesincelastkeypress)
   switch (mode)
   {
   case 0: // OFF.
-      // send PWM config to PWM NRF52 device
       sendPWM(0);
     break;
 
@@ -86,6 +85,10 @@ void updatePWM(int mode, unsigned long timesincelastkeypress)
           if (pwmval > pwmstepsize) {pwmval = pwmval-pwmstepsize ;} else {pwmval = 0 ;}
         }
           sendPWM(cie_lightness(pwmval));
+          if (pwmval<pwmstepsize)
+          {
+            sendPWM(0);
+          }
     break;
         
 case 2: // Breathing
@@ -98,6 +101,10 @@ case 2: // Breathing
           if (pwmval > pwmstepsize) {pwmval = pwmval-pwmstepsize ;} else {pwmval = 0 ;breathingincreasing = true;}
         }
           sendPWM(cie_lightness(pwmval));
+          if (pwmval<pwmstepsize)
+          {
+            sendPWM(0);
+          }
 
  break;
     case 3: // on all the time...

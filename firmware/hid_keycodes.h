@@ -1,5 +1,5 @@
 /*
-Copyright 2018-2020 <Pierre Constantineau>
+Copyright 2018-2021 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -450,8 +450,16 @@ enum hid_keyboard_keypad_usage {
 #define PRINT_BATTERY       KB(KC_F4)
 #define PRINT_INFO          KB(KC_F5)
 #define PRINT_BLE           KB(KC_F6)
-
+#define PRINT_HELP          KB(KC_F7)
+#define BLEPROFILE_1        KB(KC_F8)       
+#define BLEPROFILE_2        KB(KC_F9)
+#define BLEPROFILE_3        KB(KC_F10)
+#define SLEEP_NOW           KB(KC_F11)
 #define HELP_MODE           KB(KC_F12)
+
+#define BATTERY_CALC_DEFAULT  KB(KC_F13)
+#define BATTERY_CALC_TEST     KB(KC_F14)
+#define BATTERY_CALC_FILTERED KB(KC_F15) // TODO: bring the akudaikon filtered method for switching between USB connected/not connected.
 
 // Power Control
 #define KC_SYSTEM_POWER      MK(KC_A) //HID_USAGE_CONSUMER_POWER  
@@ -537,6 +545,7 @@ enum hid_keyboard_keypad_usage {
 #define KC_MS_BTN5   MS(KC_J)
 #define KC_MS_WH_UP     MS(KC_K)
 #define KC_MS_WH_DOWN   MS(KC_L)
+#define KC_MS_WH_DN             KC_MS_WH_DOWN
 #define KC_MS_WH_LEFT   MS(KC_M)
 #define KC_MS_WH_RIGHT  MS(KC_N)
 #define KC_MS_ACCEL0  MS(KC_O)  // Slow speed = 1
@@ -616,6 +625,8 @@ enum hid_keyboard_keypad_usage {
 
 #define WIN_Z_CARON        KI(KC_F13) //Alt 0154 z caron
 #define WIN_Z_CARON_CAP    KI(KC_F14) //Alt 0138 Z caron
+
+#define SYM_DEGREE         KI(KC_F15) //alt 0176 degree symbol
 
 #define EXPAND_ALT_CODE(CODE1, CODE2, CODE3, CODE4)  addKeycodeToQueue(CODE1,BIT_LALT); addKeycodeToQueue(CODE2,BIT_LALT); addKeycodeToQueue(CODE3,BIT_LALT); addKeycodeToQueue(CODE4,BIT_LALT);
 

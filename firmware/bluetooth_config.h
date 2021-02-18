@@ -1,5 +1,5 @@
 /*
-Copyright 2018-2020 <Pierre Constantineau>
+Copyright 2018-2021 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -29,36 +29,52 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define UUID128_CHR_KEYBOARD_BUFFER           0x220f9018372a46da81d3cd196a57d5ab           // 7 Bytes for passing HID MODS and BUFFER from Slave to Master
 #define UUID128_COUNT 4
 
-// Set max power. Accepted values are: -40, -30, -20, -16, -12, -8, -4, 0, 4
-#define DEVICE_POWER                        4                                          // Use 0.  This uses less power and allows for a longer battery life.
 
+/***************************************************************************/
+/*   Maximum current (current peaks) when radio is ON broadcasting         */
+/*   Measured on E73 modules without power circuitry                       */
+/*   Measured and Powered using a Nordic Power Profiler                    */
+/*   over a measurement window of 17.8 seconds                             */
+/*                                                                         */
+/*   DEVICE_POWER                   nrf52832                nrf52840       */
+/*   -40                                                    16.245mA       */
+/*   -30                                                    20.23 mA (1)   */
+/*   -20                                                    16.63 mA       */
+/*   -16                                                    17.35 mA       */
+/*   -12                                                    17.93 mA       */
+/*    -8                                                    18.87 mA       */
+/*    -4                                                    19.03 mA       */
+/*     0                                                    19.99 mA       */ 
+/*     4                                                    30.52 mA (1)   */    
+/*     8                              n/a                   42.64 mA (1)   */
+/*                                                                         */
+/*   Notes:                                                                */
+/*   (1) Measured twice for double-checking...                             */
+/*   (2) The table above show max current over a long period and is only   */
+/*       representative of peak current needed.  Average current needed    */
+/*       is much lower. For example, during another test at a power of 0,  */
+/*       average current consumption over a period of 17.8 seconds was     */
+/*       975 uA while max current was 20.62 mA, When bluetooth is off,     */
+/*       average current consumption is only 152 uA indicating that peak   */
+/*       contribution is 43% of the total time                             */
+/*       Enabling PWM device increases the baseline                        */
+/*       current consumption to 723 uA                                     */
+/*   (3) updating the slave_latency to a non-zero value decreased average  */
+/*       current consumption by about 300uA                                */
+/*       Note that this only applies when connected                        */
+/***************************************************************************/
+
+// Set max power. Accepted values are: -40, -30, -20, -16, -12, -8, -4, 0, 4 
+#ifndef DEVICE_POWER
+  #define DEVICE_POWER                        0                    // Use 0.  This uses less power and allows for a longer battery life. See above...
+#endif
 #define FILTER_RSSI_BELOW_STRENGTH -90
-
-
-
-
-
-
-/*
-  Power     mA    dbm  
-  -40   
-  -30
-  -20
-  -16
-  -12
-  -8
-  -4    
-  0     
-  4     
-  8  only available for nrf52840
-*/
 
 // These can be modified.  Not sure of what values are allowed.
 #define PNP_ID_VENDOR_ID_SOURCE             0x02                                       /**< Vendor ID Source. */
 #define PNP_ID_VENDOR_ID                    0x1915                                     /**< Vendor ID. */
 #define PNP_ID_PRODUCT_ID                   0xEEEE                                     /**< Product ID. */
 #define PNP_ID_PRODUCT_VERSION              0x0001                                     /**< Product Version. */
-
 
 
 #endif /* BLUETOOTH_CONFIG_H */

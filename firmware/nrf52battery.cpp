@@ -1,5 +1,5 @@
 /*
-Copyright 2018-2020 <Pierre Constantineau>
+Copyright 2018-2021 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -24,7 +24,12 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
   BLEBas blebas;                                                                    // Battery Service
 
 Battery::Battery() {    // Constructor
-    ;
+    vbat_raw = 0;
+    vbat_mv = 0;
+    vbat_vdd = 0;
+    vbat_per = 0;
+    batt_type = BATT_UNKNOWN;
+    _mvToPercent_cb = mvToPercent_default;
 }
 
 
@@ -96,31 +101,6 @@ uint32_t Battery::readVBAT(void) {
   return vbat_raw;
 };
 /**************************************************************************************************************************/
-uint8_t Battery::mvToPercent(uint32_t mvolts) 
-{
-  switch (batt_type)
-  {
-    case BATT_UNKNOWN:
-       return 50;
-    break;
-    case BATT_CR2032:
-      if(mvolts<2600) return 0;
-      if(mvolts >3000) return 100;
-      mvolts -= 2600;
-      return (mvolts /4 );  // the range really meeds testing...  /4 = 2600 to 3000 /2 = 2800 to 3000
-    break;
-    case BATT_LIPO:
-      if(mvolts<3300) return 0;
-      if(mvolts <3600) {
-        mvolts -= 3300;
-        return mvolts/30;
-      }
-      mvolts -= 3600;
-      return (uint8_t) 10 + (uint8_t)((mvolts * 15)/100);  // thats mvolts /6.66666666
-    break;    
-  } 
-}
-/**************************************************************************************************************************/
 void Battery::updateBattery(void)
 {
   switch (batt_type)
@@ -146,14 +126,46 @@ void Battery::updateBattery(void)
     break;
   }
     
-  vbat_per = mvToPercent(vbat_mv);       // Convert from raw mv to percentage (based on LIPO chemistry)
+  _mvToPercent_cb(vbat_per, vbat_mv, batt_type);            // Convert from raw mv to percentage (default is based on LIPO chemistry)
   blebas.notify(vbat_per);                                  // update the Battery Service.  Use notify instead of write to ensure that subscribers receive the new value.
+}
+
+/**************************************************************************************************************************/
+void Battery::setmvToPercentCallback(mvToPercent_cb_t callback)
+{
+  _mvToPercent_cb = callback;
+}
+/**************************************************************************************************************************/
+// Callbacks must be defined outside of the class.
+/**************************************************************************************************************************/
+void mvToPercent_default(uint8_t & vbat_per, uint32_t mvolts, uint8_t batt_type)
+{
+  switch (batt_type)
+  {
+    case BATT_UNKNOWN:
+       vbat_per = 50;
+    break;
+    case BATT_CR2032:
+      if(mvolts<2600) vbat_per= 0;
+      if(mvolts >3000) vbat_per= 100;
+      mvolts -= 2600;
+      vbat_per= (mvolts /4 );  // the range really meeds testing...  /4 = 2600 to 3000 /2 = 2800 to 3000
+    break;
+    case BATT_LIPO:
+      if(mvolts<3300) vbat_per= 0;
+      if(mvolts <3600) {
+        mvolts -= 3300;
+        vbat_per= mvolts/30;
+      }
+      mvolts -= 3600;
+      vbat_per= (uint8_t) 10 + (uint8_t)((mvolts * 15)/100);  // thats mvolts /6.66666666
+      if (vbat_per>100){vbat_per=100;} // checks if we are higher than 100%. when this is the case windows doesn't show anything...
+    break;    
+  } 
 }
 /**************************************************************************************************************************/
 
-uint32_t Battery::vbat_raw = 0;
-uint32_t Battery::vbat_mv = 0;
-uint32_t Battery::vbat_vdd = 0;
-uint8_t Battery::vbat_per = 0;
-uint8_t Battery::batt_type = BATT_UNKNOWN;
-
+void mvToPercent_test(uint8_t & vbat_per, uint32_t mvolts, uint8_t batt_type)
+{
+  vbat_per = mvolts/100; // converts mvolts (3000 - 4200 mv on lipo) to 30-42% to see mv directly in battery service...
+}

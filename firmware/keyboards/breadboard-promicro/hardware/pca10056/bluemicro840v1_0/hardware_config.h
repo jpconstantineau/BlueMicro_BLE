@@ -1,5 +1,5 @@
 /*
-Copyright 2020 <Pierre Constantineau>
+Copyright 2020-2021 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -35,6 +35,9 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
         #define VBAT_PIN  31
         #define VCC_PIN 12
 #define VCC_POLARITY_ON 1
+
+#define  STATUS_BLE_LED_PIN  19  //blue = 0.19
+#define  STATUS_KB_LED_PIN 17  //red = 0.17
    /*     #define D3      6  
         #define D2      8   
         #define D1      15  

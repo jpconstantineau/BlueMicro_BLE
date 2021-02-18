@@ -1,5 +1,5 @@
 /*
-Copyright 2020 <Pierre Constantineau>
+Copyright 2020-2021 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -28,12 +28,15 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define MATRIX_ROW_PINS { 13, 24, 9, 10, 38  }
 #define MATRIX_COL_PINS { 29, 2, 45, 3, 28, 43 }
 
-// NOT IMPLEMENTED YET; THESE ARE JUST FOR FUTURE FUNCTIONALITY. WILL PROBABLY DO THINGS VERY DIFFERENTLY...
-#define ENCODERS_PAD_A { 26 }
-#define ENCODERS_PAD_B { 30 }
-#define ENCODERS_PAD_A_RIGHT { 30 }
-#define ENCODERS_PAD_B_RIGHT { 26 }
-#define ENCODER_RESOLUTION 2
+//  OLED DEFINITION
+    #define I2C_SDA_PIN 15
+    #define I2C_SCK_PIN 17
+    #define DISPLAY_U8G2_CONSTRUCTOR U8G2_SSD1306_128X32_UNIVISION_F_HW_I2C // see https://github.com/olikraus/u8g2/wiki/u8g2setupcpp for reference
+
+// NOTE ONLY A SINGLE ENCODER IS POSSIBLE.
+#define ENCODER_PAD_A  26 
+#define ENCODER_PAD_B  30 
+#define ENCODER_RESOLUTION 2 // This doesn't do anything.
 
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW

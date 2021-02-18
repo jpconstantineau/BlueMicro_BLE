@@ -29,12 +29,21 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 	#define MATRIX_ROW_PINS {25, 26, 27, 28}
 	#define MATRIX_COL_PINS {29, 30, 2, 3}
 
-	#define BACKLIGHT_LED_PIN 23
-	#define BACKLIGHT_PWM_ON 1 
+	#define BACKLIGHT_LED_PIN 23  // white = 0.23
+	#define BACKLIGHT_PWM_ON 0 
 
 	#define WS2812B_LED_PIN 24
 	#define WS2812B_LED_COUNT 1
-	#define WS2812B_LED_ON 1 
+	#define WS2812B_LED_ON 0
+
+	#define  STATUS_BLE_LED_PIN  19  //blue = 0.19
+//	#define  BLE_LED_ACTIVE 1
+///	#define  BLE_LED_POLARITY 1
+
+	#define  STATUS_KB_LED_PIN 17  //red = 0.17
+//	#define  STATUS_KB_LED_ACTIVE 1
+//	#define  STATUS_KB_LED_POLARITY 1
+	
 
 #define BATTERY_TYPE BATT_LIPO
 #define VBAT_PIN  31

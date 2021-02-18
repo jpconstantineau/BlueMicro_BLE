@@ -1,5 +1,5 @@
 /*
-Copyright 2018-2020 <Pierre Constantineau>
+Copyright 2018-2021 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -23,6 +23,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 BLEDis bledis;                                                                    // Device Information Service
 extern KeyScanner keys;
+extern PersistentState keyboardconfig;
 extern DynamicState keyboardstate;
 extern Battery batterymonitor;
 
@@ -53,13 +54,23 @@ StatePayload  statedata;
   BLEClientCharacteristic KBLinkClientChar_Buffer        = BLEClientCharacteristic(UUID128_CHR_KEYBOARD_BUFFER); 
 #endif
 /**************************************************************************************************************************/
-void setupBluetooth(void)
+void bt_setup(uint8_t BLEProfile)
 {
+ble_gap_conn_params_t _ppcp;
+  _ppcp = ((ble_gap_conn_params_t) {
+    .min_conn_interval = 6,
+    .max_conn_interval = 12,
+    .slave_latency     = 5,
+    .conn_sup_timeout  = 2000 / 10 // in 10ms unit
+  });
+  
   //Bluefruit.configPrphBandwidth(BANDWIDTH_MAX); // OK for nrf52840
-  Bluefruit.configPrphBandwidth(BANDWIDTH_HIGH);
+//  Bluefruit.configPrphBandwidth(BANDWIDTH_HIGH);
  // Bluefruit.configCentralBandwidth(BANDWIDTH_HIGH);
   Bluefruit.begin(PERIPHERAL_COUNT,CENTRAL_COUNT);                            // Defined in firmware_config.h
-  Bluefruit.autoConnLed(BLE_LED_ACTIVE);                                      // make sure the BlueFruit connection LED is not toggled.
+
+  
+  Bluefruit.autoConnLed(false);                                               // make sure the BlueFruit connection LED is not toggled.
   Bluefruit.setTxPower(DEVICE_POWER);                                         // Defined in bluetooth_config.h
   Bluefruit.setName(DEVICE_NAME);                                             // Defined in keyboard_config.h
   Bluefruit.configUuid128Count(UUID128_COUNT);                                // Defined in bluetooth_config.h
@@ -67,7 +78,25 @@ void setupBluetooth(void)
   Bluefruit.setAppearance(BLE_APPEARANCE_HID_KEYBOARD);                       // How the device appears once connected
   Bluefruit.setRssiCallback(rssi_changed_callback);
   //********Bluefruit.setConnInterval(9, 12);                                 // 0.10.1: not needed for master...
-  Bluefruit.Periph.setConnInterval(6, 12); // 7.5 - 15 ms
+  //https://devzone.nordicsemi.com/nordic/power/w/opp/2/online-power-profiler-for-ble
+ // Bluefruit.Periph.setConnInterval(6, 12); // 7.5 - 15 ms
+ // Bluefruit.Periph.setConnSlaveLatency(10); // TODO: add this when 0.22.0 gets released!  This will reduce power consumption significantly.
+ 
+//sd_ble_gap_ppcp_get(&_ppcp);
+//_ppcp.slave_latency = 30;
+sd_ble_gap_ppcp_set(&_ppcp);
+
+  Bluefruit.Periph.setConnectCallback(prph_connect_callback);
+  Bluefruit.Periph.setDisconnectCallback(prph_disconnect_callback);  
+
+  // Set MAC address based on active BLE profile
+  if (BLEProfile > 0)
+  {
+    ble_gap_addr_t gap_addr;
+    gap_addr = Bluefruit.getAddr();
+    gap_addr.addr[0] += BLEProfile;
+    Bluefruit.setAddr(&gap_addr);
+  }
 
   // Configure and Start Device Information Service
   bledis.setManufacturer(MANUFACTURER_NAME);                                  // Defined in keyboard_config.h
@@ -78,7 +107,7 @@ void setupBluetooth(void)
   // Configure and Start Battery Service
   blebas.begin();
   blebas.write(100); // put the battery level at 100% - until it is updated by the battery monitoring loop.
-  Battery::readVBAT(); // Get a single ADC sample and throw it away
+  batterymonitor.readVBAT(); // Get a single ADC sample and throw it away
   
   statedata.command =0;
   statedata.layer =0;
@@ -135,6 +164,7 @@ void setupBluetooth(void)
    * up to 11.25 ms. Therefore BLEHidAdafruit::begin() will try to set the min and max
    * connection interval to 11.25  ms and 15 ms respectively for best performance.
    */
+   
 #if BLE_HID == 1
   blehid.begin();
   // Set callback for set LED from central
@@ -145,7 +175,7 @@ void setupBluetooth(void)
    * Note: It is already set by BLEHidAdafruit::begin() to 11.25ms - 15ms
    * min = 9*1.25=11.25 ms, max = 12*1.25= 15 ms 
    */
- 
+
  #if BLE_CENTRAL == 1                                   // CENTRAL IS THE MASTER BOARD
 
   KBLinkClientService.begin();
@@ -154,8 +184,7 @@ void setupBluetooth(void)
   KBLinkClientChar_Buffer.begin();
   KBLinkClientChar_Buffer.setNotifyCallback(notify_callback);
   KBLinkClientChar_Layer_Request.begin(); 
-  Bluefruit.Periph.setConnectCallback(prph_connect_callback);
-  Bluefruit.Periph.setDisconnectCallback(prph_disconnect_callback);  
+
   Bluefruit.Scanner.setRxCallback(scan_callback);
   Bluefruit.Scanner.restartOnDisconnect(true);
   Bluefruit.Scanner.filterRssi(FILTER_RSSI_BELOW_STRENGTH);                                              // limits very far away devices - reduces load
@@ -170,11 +199,17 @@ void setupBluetooth(void)
 
 }
 
+ble_gap_addr_t bt_getMACAddr(void)
+{
+  ble_gap_addr_t gap_addr;
+  gap_addr = Bluefruit.getAddr();
+  return gap_addr;
+}
 
 /**************************************************************************************************************************/
 //
 /**************************************************************************************************************************/
-void startAdv(void)
+void bt_startAdv(void)
 {  
   // Advertising packet
   Bluefruit.Advertising.addFlags(BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE);
@@ -214,23 +249,68 @@ void startAdv(void)
   Bluefruit.Advertising.setInterval(32, 244);    // in unit of 0.625 ms
   Bluefruit.Advertising.setFastTimeout(30);      // number of seconds in fast mode
   Bluefruit.Advertising.start(0);                // 0 = Don't stop advertising after n seconds
+  
+  Bluefruit.Advertising.setSlowCallback(advertizing_slow_callback);
+  Bluefruit.Advertising.setStopCallback(advertizing_stop_callback);
 }
+
+void bt_stopAdv()
+{
+  Bluefruit.Advertising.stop();
+}
+
+ // typedef void (*stop_callback_t) (void);
+  //typedef void (*slow_callback_t) (void);
+  void advertizing_slow_callback(void)
+  {
+     // drop fast
+     keyboardstate.statusble = keyboardstate.statusble & (~1); // bitwise AND NOT
+     // add is_running
+     keyboardstate.statusble = keyboardstate.statusble | (4); // bitwise OR
+     // add slow
+     keyboardstate.statusble = keyboardstate.statusble | (2); // bitwise OR
+  }
+  void advertizing_stop_callback(void)
+  {
+     // drop slow
+     keyboardstate.statusble = keyboardstate.statusble & (~2); // bitwise AND NOT
+     // drop is_running
+     keyboardstate.statusble = keyboardstate.statusble & (~4); // bitwise AND NOT
+  }
 
 void rssi_changed_callback(uint16_t conn_hdl, int8_t rssi)
 {
   if (conn_hdl == keyboardstate.conn_handle_prph)
   {
     keyboardstate.rssi_prph = rssi;
+    keyboardstate.rssi_prph_updated = true;
   } else
   if (conn_hdl == keyboardstate.conn_handle_cent)
   {
     keyboardstate.rssi_cent = rssi;
+    keyboardstate.rssi_cent_updated = true;
   } else
   if (conn_hdl == keyboardstate.conn_handle_cccd)
   {
     keyboardstate.rssi_cccd = rssi;
+    keyboardstate.rssi_cccd_updated = true;
   }  
      
+}
+
+void updateBLEStatus(void)
+{
+  keyboardstate.statusble = 0;
+  if (Bluefruit.Advertising.isRunning())
+  { 
+    keyboardstate.statusble = keyboardstate.statusble | (4); // bitwise OR
+  }
+    if (Bluefruit.connected()>0)
+  { 
+    keyboardstate.statusble = keyboardstate.statusble | (32); // bitwise OR
+  }
+
+
 }
 
 /**************************************************************************************************************************/
@@ -303,7 +383,7 @@ void cccd_callback(uint16_t conn_hdl, BLECharacteristic* chr, uint16_t cccd_valu
             LOG_LV1("CBCCCD","KBLinkChar_Buffer 'Notify' disabled");
           }
       }
-      
+
 }
 /**************************************************************************************************************************/
 // This callback is called layer_request when characteristic is being written to.  This occurs on the server (Peripheral)
@@ -321,6 +401,67 @@ LOG_LV1("CB_CHR","layer_request_callback: len %i offset %i  data %i" ,len, data[
 #endif
 
 /**************************************************************************************************************************/
+// This callback is called when the master connects to a slave
+/**************************************************************************************************************************/
+void prph_connect_callback(uint16_t conn_handle)
+{
+char peer_name[32] = { 0 };
+BLEConnection* connection = Bluefruit.Connection(conn_handle);
+connection->getPeerName(peer_name, sizeof(peer_name));
+LOG_LV1("PRPH","Connected to %i %s",conn_handle,peer_name  );
+connection->monitorRssi(6);
+strcpy (keyboardstate.peer_name_prph,peer_name);
+
+  if (strncmp(peer_name, keyboardconfig.BLEProfileName[keyboardconfig.BLEProfile], sizeof(peer_name)))
+  {
+    strncpy(keyboardconfig.BLEProfileName[keyboardconfig.BLEProfile], peer_name, sizeof(peer_name));
+    keyboardstate.save2flash = true;
+  }
+#ifdef ARDUINO_NRF52_COMMUNITY
+  uint16_t ediv = connection->getEdiv();
+#endif
+#ifdef ARDUINO_NRF52_ADAFRUIT
+  uint16_t ediv = keyboardconfig.BLEProfile; // we have to do something different for it to compile fine...
+#endif
+  if (ediv != keyboardconfig.BLEProfileEdiv[keyboardconfig.BLEProfile])
+  {
+    keyboardconfig.BLEProfileEdiv[keyboardconfig.BLEProfile] = ediv;
+    keyboardstate.save2flash = true;
+  }
+
+keyboardstate.conn_handle_prph = conn_handle;
+
+keyboardstate.statusble = keyboardstate.statusble | (8); // bitwise OR
+
+     // drop fast
+     keyboardstate.statusble = keyboardstate.statusble & (~1); // bitwise AND NOT
+     // drop slow
+     keyboardstate.statusble = keyboardstate.statusble & (~2); // bitwise AND NOT
+     // drop is_running
+     keyboardstate.statusble = keyboardstate.statusble & (~4); // bitwise AND NOT
+
+// if HID then save connection handle to HID_connection handle
+#if BLE_HID == 1
+hid_conn_hdl = conn_handle;
+#endif
+}
+/**************************************************************************************************************************/
+// This callback is called when the master disconnects from a slave
+/**************************************************************************************************************************/
+void prph_disconnect_callback(uint16_t conn_handle, uint8_t reason)
+{
+  (void) conn_handle;
+  (void) reason;
+  LOG_LV1("PRPH","Disconnected"  );
+
+//keyboardstate.statusble = keyboardstate.statusble & (~8); // bitwise AND NOT
+keyboardstate.statusble = 0;
+// if HID then save connection handle to HID_connection handle
+#if BLE_HID == 1
+hid_conn_hdl = 0;
+#endif
+}
+/**************************************************************************************************************************/
 // This callback is called when the scanner finds a device. This happens on the Client/Central
 /**************************************************************************************************************************/
 #if BLE_CENTRAL == 1    // CENTRAL IS THE MASTER BOARD
@@ -333,39 +474,8 @@ void scan_callback(ble_gap_evt_adv_report_t* report)
     } 
 }
 
-/**************************************************************************************************************************/
-// This callback is called when the master connects to a slave
-/**************************************************************************************************************************/
-void prph_connect_callback(uint16_t conn_handle)
-{
-char peer_name[32] = { 0 };
-BLEConnection* connection = Bluefruit.Connection(conn_handle);
-connection->getPeerName(peer_name, sizeof(peer_name));
-LOG_LV1("PRPH","Connected to %i %s",conn_handle,peer_name  );
-connection->monitorRssi(6);
-strcpy (keyboardstate.peer_name_prph,peer_name);
-keyboardstate.conn_handle_prph = conn_handle;
 
-// if HID then save connection handle to HID_connection handle
-#if BLE_HID == 1
-hid_conn_hdl = conn_handle;
-#endif
-}
 
-/**************************************************************************************************************************/
-// This callback is called when the master disconnects from a slave
-/**************************************************************************************************************************/
-void prph_disconnect_callback(uint16_t conn_handle, uint8_t reason)
-{
-  (void) conn_handle;
-  (void) reason;
-  LOG_LV1("PRPH","Disconnected"  );
-
-// if HID then save connection handle to HID_connection handle
-#if BLE_HID == 1
-hid_conn_hdl = 0;
-#endif
-}
 
 /**************************************************************************************************************************/
 // This callback is called when the central connects to a peripheral
@@ -398,7 +508,8 @@ keyboardstate.conn_handle_cent = conn_handle;
     LOG_LV1("CENTRL","No KBLink Service on this connection"  );
     // disconect since we couldn't find KBLink service
     Bluefruit.disconnect(conn_handle);
-  }   
+  } 
+  keyboardstate.statusble = keyboardstate.statusble | (16); // bitwise OR
 }
 /**************************************************************************************************************************/
 // This callback is called when the central disconnects from a peripheral
@@ -411,6 +522,7 @@ void cent_disconnect_callback(uint16_t conn_handle, uint8_t reason)
   // if the half disconnects, we need to make sure that the received buffer is set to empty.
             KeyScanner::updateRemoteLayer(0);  // Layer is only a single uint8
            KeyScanner::updateRemoteReport(0,0,0, 0,0, 0, 0);
+           keyboardstate.statusble = keyboardstate.statusble & (~16); // bitwise AND NOT  
 }
 #endif
 
@@ -426,15 +538,31 @@ void set_keyboard_led(uint16_t conn_handle, uint8_t led_bitmap)
 {
   (void) conn_handle;
   // light up Red Led if any bits is set
-  if ( led_bitmap )
+/*  if ( led_bitmap )
   {
     ledOn( STATUS_KB_LED_PIN );
   }
   else
   {
     ledOff( STATUS_KB_LED_PIN );
-  }
+  }*/
+
+  keyboardstate.statuskb = led_bitmap;
+  //KeyScanner::ledStatus = led_bitmap;
 }
+
+bool bt_isConnected()
+{
+  return Bluefruit.connected();
+}
+
+void bt_disconnect()
+{
+  #if BLE_HID == 1
+  Bluefruit.disconnect(hid_conn_hdl);
+  #endif
+}
+
 /**************************************************************************************************************************/
 void sendlayer(uint8_t layer)
 {     
@@ -451,7 +579,7 @@ void sendlayer(uint8_t layer)
         #endif 
 }
 /**************************************************************************************************************************/
-void sendKeys(uint8_t currentReport[8])
+void bt_sendKeys(uint8_t currentReport[8])
 {
     #if BLE_HID == 1  
         uint8_t keycode[6];
@@ -491,7 +619,7 @@ void sendKeys(uint8_t currentReport[8])
 #ifndef MOVE_STEP
   #define MOVE_STEP   8
 #endif
-void sendMouseKey(uint16_t keycode)
+void bt_sendMouseKey(uint16_t keycode)
 {
   static uint8_t movestep = MOVE_STEP;
 
@@ -540,54 +668,12 @@ void sendMouseKey(uint16_t keycode)
          ; // Don't send keys to slaves
     #endif 
 }
-void sendMediaKey(uint16_t keycode)
+void bt_sendMediaKey(uint16_t keycode)
 {
-uint16_t usagecode = 0;
-#if BLE_HID == 1
-  switch (keycode) 
-  {
-    case KC_SYSTEM_POWER: usagecode = HID_USAGE_CONSUMER_POWER; break;
-    case KC_SYSTEM_RESET: usagecode = HID_USAGE_CONSUMER_RESET; break;
-    case KC_SYSTEM_SLEEP: usagecode = HID_USAGE_CONSUMER_SLEEP; break;
-    case KC_DISPLAY_BRIGHTI: usagecode = HID_USAGE_CONSUMER_BRIGHTNESS_INCREMENT; break;
-    case KC_DISPLAY_BRIGHTD: usagecode = HID_USAGE_CONSUMER_BRIGHTNESS_DECREMENT; break;
-    case KC_RADIO_CONTROL: usagecode = HID_USAGE_CONSUMER_WIRELESS_RADIO_CONTROLS; break;
-    case KC_RADIO_BUTTONS: usagecode = HID_USAGE_CONSUMER_WIRELESS_RADIO_BUTTONS; break;
-    case KC_RADIO_LED: usagecode = HID_USAGE_CONSUMER_WIRELESS_RADIO_LED; break;
-    case KC_RADIO_SWITCH: usagecode = HID_USAGE_CONSUMER_WIRELESS_RADIO_SLIDER_SWITCH; break;
-    case KC_MEDIA_PLAY_PAUSE: usagecode = HID_USAGE_CONSUMER_PLAY_PAUSE; break;
-    case KC_MEDIA_NEXT_TRACK: usagecode = HID_USAGE_CONSUMER_SCAN_NEXT; break;
-    case KC_MEDIA_PREV_TRACK: usagecode = HID_USAGE_CONSUMER_SCAN_PREVIOUS; break;
-    case KC_MEDIA_STOP: usagecode = HID_USAGE_CONSUMER_STOP; break;
-    case KC_AUDIO_VOL: usagecode = HID_USAGE_CONSUMER_VOLUME; break;
-    case KC_AUDIO_MUTE: usagecode = HID_USAGE_CONSUMER_MUTE; break;
-    case KC_AUDIO_BASS: usagecode = HID_USAGE_CONSUMER_BASS; break;
-    case KC_AUDIO_TREBLE: usagecode = HID_USAGE_CONSUMER_TREBLE; break;
-    case KC_AUDIO_BASS_BOOST: usagecode = HID_USAGE_CONSUMER_BASS_BOOST; break;
-    case KC_AUDIO_VOL_UP: usagecode = HID_USAGE_CONSUMER_VOLUME_INCREMENT; break;
-    case KC_AUDIO_VOL_DOWN: usagecode = HID_USAGE_CONSUMER_VOLUME_DECREMENT; break;
-    case KC_AUDIO_BASS_UP: usagecode = HID_USAGE_CONSUMER_BASS_INCREMENT; break;
-    case KC_AUDIO_BASS_DOWN: usagecode = HID_USAGE_CONSUMER_BASS_DECREMENT; break;
-    case KC_AUDIO_TREBLE_UP: usagecode = HID_USAGE_CONSUMER_TREBLE_INCREMENT; break;
-    case KC_AUDIO_TREBLE_DOWN: usagecode = HID_USAGE_CONSUMER_TREBLE_DECREMENT; break;
-    case KC_MSEL: usagecode = HID_USAGE_CONSUMER_AL_CONSUMER_CONTROL_CONFIGURATION; break;
-    case KC_WWW: usagecode = HID_USAGE_CONSUMER_AL_EMAIL_READER; break;
-    case KC_CALCULATOR: usagecode = HID_USAGE_CONSUMER_AL_CALCULATOR; break;
-    case KC_MYCM: usagecode = HID_USAGE_CONSUMER_AL_LOCAL_BROWSER; break;
-
-    case KC_WWW_SEARCH: usagecode = HID_USAGE_CONSUMER_AC_SEARCH; break;
-    case KC_WWW_HOME: usagecode = HID_USAGE_CONSUMER_AC_HOME; break;
-    case KC_WWW_BACK: usagecode = HID_USAGE_CONSUMER_AC_BACK; break;
-    case KC_WWW_FORWARD: usagecode = HID_USAGE_CONSUMER_AC_FORWARD; break;
-    case KC_WWW_STOP: usagecode = HID_USAGE_CONSUMER_AC_STOP; break;
-    case KC_WWW_REFRESH: usagecode = HID_USAGE_CONSUMER_AC_REFRESH; break;
-    case KC_WWW_FAVORITES: usagecode = HID_USAGE_CONSUMER_AC_BOOKMARKS; break;
-    case KC_AC_PAN: usagecode = HID_USAGE_CONSUMER_AC_PAN; break;
-  }
-  
-    blehid.consumerKeyPress(hid_conn_hdl, usagecode);
+  #if BLE_HID == 1
+    blehid.consumerKeyPress(hid_conn_hdl, hid_GetMediaUsageCode(keycode));
     delay(HIDREPORTINGINTERVAL);
-    blehid.consumerKeyRelease();
+    blehid.consumerKeyRelease();// TODO: do I need this here???
   #endif 
         #if BLE_PERIPHERAL ==1    // PERIPHERAL IS THE SLAVE BOARD
           Linkdata.report[0] = 0;  // initialize the slave to master link data...

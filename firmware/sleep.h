@@ -1,5 +1,5 @@
 /*
-Copyright 2018-2020 <Pierre Constantineau>
+Copyright 2018-2021 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -25,11 +25,18 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "keyboard_config.h"
 #include "firmware_config.h"
 #include "nrf52gpio.h"
+#include "LedRGB.h"
+#include "LedPwm.h"
+#include "BlueMicro_display.h"
+#include "BlueMicro_tone.h"
 // Keyboard Matrix
 extern byte rows[]  ;      // Contains the GPIO Pin Numbers defined in keyboard_config.h
 extern byte columns[] ;     // Contains the GPIO Pin Numbers defined in keyboard_config.h  
-
-void setupWakeUp(void);
+#ifdef BLUEMICRO_CONFIGURED_DISPLAY
+extern BlueMicro_Display OLED;
+#endif
+void prepareSleep(void);
+void sleepNow(void);
 void gotoSleep(unsigned long timesincelastkeypress,bool connected);
 
 #endif

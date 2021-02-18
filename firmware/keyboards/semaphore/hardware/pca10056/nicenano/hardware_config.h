@@ -1,5 +1,5 @@
 /*
-Copyright 2020 <Pierre Constantineau>
+Copyright 2020-2021 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -31,6 +31,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define MATRIX_COL_PINS {31, 29, 2, 47, 45, 43 }
 #define UNUSED_PINS {}
 
+
+
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW
 
@@ -38,6 +40,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
         #define VBAT_PIN  4
         #define VCC_PIN 13
         #define VCC_POLARITY_ON 0
+        #define  STATUS_BLE_LED_PIN  15  //blue = 0.15
+     //#define  STATUS_KB_LED_PIN 0  //no RED LED
    /*     #define D3      6  
         #define D2      8   
         #define D1      17  

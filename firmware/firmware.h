@@ -1,5 +1,5 @@
 /*
-Copyright 2018-2020 <Pierre Constantineau>
+Copyright 2018-2021 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -33,18 +33,20 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "nrf52gpio.h"
 #include "datastructures.h"
 #include "debug_cli.h"
+#include "usb.h"
+#include "BlueMicro_display.h"
+#include "BlueMicro_tone.h"
 
-// need to add this to resolve an issue when linking.
-// see https://forum.arduino.cc/index.php?topic=319795.0
-namespace std {
-  void __throw_length_error(char const*) {
-  }
-}
+
     void setupConfig(void);
+    void loadConfig(void);
+    void saveConfig(void);
+    void resetConfig(void);
     void setupMatrix(void);
     void scanMatrix(void);
     void sendKeyPresses(void);
-
+    void LowestPriorityloop(void);
+    void NormalPriorityloop(void);
     void keyscantimer_callback(TimerHandle_t _handle);
     void batterytimer_callback(TimerHandle_t _handle);
     void RGBtimer_callback(TimerHandle_t _handle);

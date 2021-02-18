@@ -1,5 +1,5 @@
 /*
-Copyright 2018-2020 <Pierre Constantineau, Julian Komaromy>
+Copyright 2018-2021 <Pierre Constantineau, Julian Komaromy>
 
 3-Clause BSD License
 
@@ -27,10 +27,11 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 #include <vector>
 #include <algorithm>
-
+#include "firmware.h"
 #include "firmware_config.h"
 #include "bluetooth_config.h"
 #include "nrf52battery.h"
+#include "nrf52gpio.h"
 #include "datastructures.h"
 
 typedef volatile uint32_t REG32;

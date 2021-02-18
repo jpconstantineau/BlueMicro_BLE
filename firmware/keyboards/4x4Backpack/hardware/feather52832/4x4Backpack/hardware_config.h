@@ -1,5 +1,5 @@
 /*
-Copyright 2020 <Pierre Constantineau>
+Copyright 2020-2021 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -34,5 +34,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 #define BATTERY_TYPE BATT_CR2032
 #define VBAT_PIN  31
+
+
 
 #endif /* HARDWARE_CONFIG_H */

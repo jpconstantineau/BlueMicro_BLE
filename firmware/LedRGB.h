@@ -1,5 +1,5 @@
 /*
-Copyright 2019-2020 <Pierre Constantineau>
+Copyright 2019-2021 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -23,15 +23,17 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include <Arduino.h>
 #include "keyboard_config.h"
 #include "firmware_config.h"
-#include "Adafruit_NeoPixel.h"
+
 #include "hid_keycodes.h"
 #include "advanced_keycodes.h"
 
-// IMPORTANT NOTES:
-// See https://arduino.stackexchange.com/questions/34095/how-do-i-configure-the-arduino-ide-to-look-for-source-code-in-a-subdirectory-wit
-// We need to copy the adafruit library files and copy to the firmware folder.
-// This is because the arduino IDE can't really work with folders properly
-// if one renames the "libraries" folder to "src", then it tries to compile all the examples and link everything.  Something we don't want to do (and ultimately fails)
+#ifdef ARDUINO_NRF52_ADAFRUIT
+            // do nothing since the Adafruit BSP doesn't have NeoPixel included
+#endif
+#ifdef ARDUINO_NRF52_COMMUNITY
+    #include <Adafruit_NeoPixel.h>
+    #define NEOPIXEL_AVAILABLE 1
+#endif
 
   typedef struct rgb_color
   {
@@ -40,7 +42,10 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
     rgb_color(uint8_t r, uint8_t g, uint8_t b) : red(r), green(g), blue(b) {};
   } rgb_color;
 
-extern Adafruit_NeoPixel pixels;
+#ifdef ARDUINO_NRF52_COMMUNITY
+  extern Adafruit_NeoPixel pixels;
+#endif
+
 void setupRGB(void);
 void updateRGBmode(uint32_t mode);
 void updateRGB(unsigned long timesincelastkeypress);

@@ -1,5 +1,5 @@
 /*
-Copyright 2020 <Pierre Constantineau>
+Copyright 2020-2021 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -36,6 +36,9 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 	#define WS2812B_LED_ON 1 
 #define BATTERY_TYPE BATT_LIPO
 #define VBAT_PIN  31
+
+#define  STATUS_BLE_LED_PIN  19  //blue = 0.19
+#define  STATUS_KB_LED_PIN 17  //red = 0.17
 
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW

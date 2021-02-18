@@ -16,6 +16,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 */
 #include "keymap.h"
+#include "RotaryEncoder.h"
 
 
 #if KEYBOARD_SIDE == MASTER
@@ -35,7 +36,23 @@ void setupKeymap() {
    // flash this keymap to both left and right to test whether each half works properly.
    // once tested, you can flash the left and right to their respective halves.
 
+  // Code below makes sure that the encoder gets configured.  
+  RotaryEncoder.begin(ENCODER_PAD_A, ENCODER_PAD_B);    // Initialize Encoder
+  RotaryEncoder.setCallback(encoder_callback);    // Set callback
+  RotaryEncoder.start();    // Start encoder
 }
+
+void encoder_callback(int step)
+{
+  if ( step > 0 )
+  {
+    KeyScanner::add_to_encoderKeys(KC_AUDIO_VOL_DOWN);
+  }else
+  {
+    KeyScanner::add_to_encoderKeys(KC_AUDIO_VOL_UP);
+  }  
+}
+
 #endif
 
 
@@ -81,48 +98,49 @@ ADDLAYER(_L1, Method::PRESS , layer1);
 ADDLAYER(_L2, Method::PRESS , layer2);
     // if you want to add Tap/Hold or Tap/Doubletap activations, then you add them below.
 
-//NOTE ROTARY ENCODERS ARE NOT IMPLEMENTED IN FIRMWARE YET
+// Code below makes sure that the encoder gets configured.
+
+  RotaryEncoder.begin(ENCODER_PAD_A, ENCODER_PAD_B);    // Initialize Encoder
+  RotaryEncoder.setCallback(encoder_callback);    // Set callback
+  RotaryEncoder.start();    // Start encoder
+}
+
+void encoder_callback(int step)
+{
+  uint8_t layer = keyboardstate.layer;
+  if ( step > 0 )
+  {
+      switch(layer)
+      {
+          case _L0: KeyScanner::add_to_encoderKeys(KC_AUDIO_VOL_UP); break;
+          case _L1: KeyScanner::add_to_encoderKeys(KC_RIGHT); break;
+          case _L2: KeyScanner::add_to_encoderKeys(LSFT(KC_RIGHT)); break;
+          default: ;
+      }
+  }else
+  {
+      switch(layer)
+      {
+          case _L0: KeyScanner::add_to_encoderKeys(KC_AUDIO_VOL_DOWN); break;
+          case _L1: KeyScanner::add_to_encoderKeys(KC_LEFT);break;
+          case _L2: KeyScanner::add_to_encoderKeys(LSFT(KC_LEFT));break;
+          default: ;
+      }
+  }  
 }
 
 #endif  // left
 
-
-
 #if KEYBOARD_SIDE == RIGHT
-
-/* Qwerty
- * ,-----------------------------------------.
- * |   Y  |   U  |   I  |   O  |   P  | Bksp |
- * |------+------+------+------+-------------|
- * |   H  |   J  |   K  |   L  |   ;  |  "   |
- * |------+------+------+------+------|------|
- * |   N  |   M  |   ,  |   .  |   /  |Enter |
- * |------+------+------+------+------+------|
- * | Space| L(2) | Left | Down |  Up  |Right |
- * `-----------------------------------------'
- */
-
 std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
     KEYMAP2ARRAY(KEYMAP( \
-             KC_6,    KC_7,    KC_8,    KC_9,    KC_0,  KC_GRV, \
+             KC_6,    KC_7,    KC_8,    KC_9,    KC_0,  KC_BSPACE, \
             KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,      KC_QUOTE, \
             KC_H,    KC_J,    KC_K,    KC_L,    KC_SCOLON, KC_QUOT,\
             KC_N,    KC_M,    KC_COMMA,KC_DOT,  KC_SLSH,   KC_RSFT,\
-            XXXXXXX, KC_SPACE,  LAYER_2, KC_RCTRL, KC_RALT, KC_RGUI ));
+            KC_MUTE, KC_SPACE,  LAYER_2, KC_RCTRL, KC_RALT, KC_RGUI ));
 
 void setupKeymap() {
-
-/* Layer 1 (Raise)
- * ,-----------------------------------------.
- * |   Y  |   U  |   I  |   O  |   P  | Del  |
- * |------+------+------+------+-------------|
- * |   H  |   J  |   K  |   L  |   ;  |  "   |
- * |------+------+------+------+------|------|
- * |   N  |   M  |   ,  |   .  |   /  |Enter |
- * |------+------+------+------+------+------|
- * | Space| L(2) | Left |      |      |      |
- * `-----------------------------------------'
- */
     uint32_t layer1[MATRIX_ROWS][MATRIX_COLS] =
         KEYMAP( \
             KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,\
@@ -132,17 +150,7 @@ void setupKeymap() {
             _______, _______, _______, _______, _______, _______\
         );
 
-    /* Layer 2 (lower)
- * ,-----------------------------------------.
- * |   ^  |   &  |   *  |   (  |   )  | Bspc |
- * |------+------+------+------+-------------|
- * |   -  |   =  |   {  |   }  |   |  |  `   |
- * |------+------+------+------+------|------|
- * |   _  |   +  |   [  |   ]  |   \  |  ~   |
- * |------+------+------+------+------+------|
- * | Space| L(2) |  Alt |      |      |      |
- * `-----------------------------------------'
- */
+
     uint32_t layer2[MATRIX_ROWS][MATRIX_COLS] =
         KEYMAP( \
              _______,  _______  , _______,  _______ ,  _______ ,_______,\
@@ -157,6 +165,35 @@ void setupKeymap() {
 ADDLAYER(_L1, Method::PRESS , layer1);
 ADDLAYER(_L2, Method::PRESS , layer2);
 
+// Code below makes sure that the encoder gets configured.
+
+  RotaryEncoder.begin(ENCODER_PAD_A, ENCODER_PAD_B);    // Initialize Encoder
+  RotaryEncoder.setCallback(encoder_callback);    // Set callback
+  RotaryEncoder.start();    // Start encoder
+}
+
+void encoder_callback(int step)
+{
+  uint8_t layer = keyboardstate.layer;
+  if ( step > 0 )
+  {
+      switch(layer)
+      {
+          case _L0: KeyScanner::add_to_encoderKeys(KC_AUDIO_VOL_DOWN); break;
+          case _L1: KeyScanner::add_to_encoderKeys(KC_LEFT); break;
+          case _L2: break;
+          default: ;
+      }
+  }else
+  {
+      switch(layer)
+      {
+          case _L0: KeyScanner::add_to_encoderKeys(KC_AUDIO_VOL_UP); break;
+          case _L1: KeyScanner::add_to_encoderKeys(KC_RIGHT);break;
+          case _L2: break;
+          default: ;
+      }
+  }  
 }
 
 #endif

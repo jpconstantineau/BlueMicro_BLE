@@ -63,7 +63,7 @@ arduino_compile() {
    #sleep 2
 
    #Compile
-   cmdCompile="arduino-cli compile -v --fqbn adafruit:nrf52:$fqbn --build-path $buildPath --build-cache-path $buildCachePath $sourcePath/firmware.ino"
+   cmdCompile="arduino-cli compile -v --fqbn community_nrf52:nrf52:$fqbn --build-path $buildPath --build-cache-path $buildCachePath $sourcePath/firmware.ino"
     if $verbose; then 
       $cmdCompile
     else
@@ -82,6 +82,7 @@ arduino_compile() {
    
      cp -f $buildPath/firmware.ino.zip $outputPath/$keyboard/$keyboard-$fqbn-$hardware-$keymap-$target.zip
      cp -f $buildPath/firmware.ino.hex $outputPath/$keyboard/$keyboard-$fqbn-$hardware-$keymap-$target.hex
+     cp -f $buildPath/firmware.ino.elf $outputPath/$keyboard/$keyboard-$fqbn-$hardware-$keymap-$target.elf
 
      successfulBuilds=$((successfulBuilds+1))
      printf "${GREEN}OK${NC} "

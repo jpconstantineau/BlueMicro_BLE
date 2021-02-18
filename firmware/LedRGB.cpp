@@ -1,5 +1,5 @@
 /*
-Copyright 2019-2020 <Pierre Constantineau>
+Copyright 2019-2021 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -19,8 +19,10 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 #include "LedRGB.h"
 
+#ifdef NEOPIXEL_AVAILABLE
+   Adafruit_NeoPixel pixels = Adafruit_NeoPixel();
+#endif
 
-Adafruit_NeoPixel pixels = Adafruit_NeoPixel();
 uint8_t RGBval = 150;
 uint8_t RGBcounter = 0;
 rgb_color colors[WS2812B_LED_COUNT];
@@ -52,9 +54,11 @@ rgb_color hsvToRgb(uint16_t h, uint8_t s, uint8_t v)
 
 void setupRGB(void)
 {
-   pixels.begin(); // INITIALIZE NeoPixel strip object (REQUIRED)
-   pixels.setPin(WS2812B_LED_PIN);
-   pixels.updateLength(WS2812B_LED_COUNT);
+    #ifdef NEOPIXEL_AVAILABLE
+    pixels.begin(); // INITIALIZE NeoPixel strip object (REQUIRED)
+    pixels.setPin(WS2812B_LED_PIN);
+    pixels.updateLength(WS2812B_LED_COUNT);  
+    #endif
 }
 void updateRGBmode(uint32_t mode)
 {
@@ -82,6 +86,7 @@ if (timesincelastkeypress<PWM_TOUCH_INTERVAL)
  
  
 }
+#ifdef NEOPIXEL_AVAILABLE
 pixels.clear();
 
 switch (rgb_mode)
@@ -135,15 +140,18 @@ switch (rgb_mode)
     }
   pixels.setBrightness(RGBval);
   pixels.show();   // Send the updated pixel colors to the hardware.
+  #endif
 }
 
 void suspendRGB(void)
 {
+  #ifdef NEOPIXEL_AVAILABLE
     pixels.clear();
     // cppcheck-suppress unsignedLessThanZero
   for(int i=0; i<WS2812B_LED_COUNT; i++) { // For each pixel...
     pixels.setPixelColor(i, 0, 0, 0); 
   }
   pixels.show();   // Send the updated pixel colors to the hardware.
+  #endif
 }
 

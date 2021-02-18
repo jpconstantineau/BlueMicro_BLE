@@ -1,5 +1,5 @@
 /*
-Copyright 2018-2020 <Pierre Constantineau, Julian Komaromy>
+Copyright 2018-2021 <Pierre Constantineau, Julian Komaromy>
 
 3-Clause BSD License
 
@@ -18,46 +18,144 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 */
 /**************************************************************************************************************************/
+#include <Arduino.h>
 #include <bluefruit.h>
 #include "firmware.h"
 #include <Adafruit_LittleFS.h>
 #include <InternalFileSystem.h>
 
-using namespace Adafruit_LittleFS_Namespace;
 /**************************************************************************************************************************/
 // Keyboard Matrix
 byte rows[] MATRIX_ROW_PINS;        // Contains the GPIO Pin Numbers defined in keyboard_config.h
 byte columns[] MATRIX_COL_PINS;     // Contains the GPIO Pin Numbers defined in keyboard_config.h  
-//uint32_t lastupdatetime =0;
+
 SoftwareTimer keyscantimer, batterytimer;
 
+using namespace Adafruit_LittleFS_Namespace;
+#define SETTINGS_FILE "/settings"
+File file(InternalFS);
 PersistentState keyboardconfig;
 DynamicState keyboardstate;
 
-KeyScanner keys;
+BlueMicro_tone speaker(&keyboardconfig, &keyboardstate);  /// A speaker to play notes and tunes...
+led_handler statusLEDs(&keyboardconfig, &keyboardstate);  /// Typically a Blue LED and a Red LED
+
+#ifdef BLUEMICRO_CONFIGURED_DISPLAY
+  BlueMicro_Display OLED(&keyboardconfig, &keyboardstate);  /// Typically a Blue LED and a Red LED
+#endif
+
+KeyScanner keys(&keyboardconfig, &keyboardstate);
 Battery batterymonitor;
 
 static std::vector<uint16_t> stringbuffer; // buffer for macros to type into...
-//static bool helpmode = false;
 
 /**************************************************************************************************************************/
 void setupConfig() {
-  keyboardconfig.ledbacklight=BACKLIGHT_PWM_ON;
-  keyboardconfig.ledrgb=WS2812B_LED_ON;
-  keyboardconfig.timerkeyscaninterval=HIDREPORTINGINTERVAL;
-  keyboardconfig.timerbatteryinterval=BATTERYINTERVAL;
-  keyboardconfig.VCCSwitchAvailable=(VCC_ENABLE_GPIO==1);
-  keyboardconfig.VCCSwitchEnabled=true;
-  keyboardconfig.ChargerControlAvailable=(VCC_ENABLE_CHARGER==1);
-  keyboardconfig.ChargerControlEnabled=true;
+  InternalFS.begin();
+  loadConfig();
 
-  keyboardconfig.WakeUpBLELED=true;
-  keyboardconfig.WakeUpKBLED=true;
+  keyboardstate.statusble=0;  //initialize to a known state.
+  keyboardstate.statuskb=0;   //initialize to a known state.
 
   keyboardstate.helpmode = false;
   keyboardstate.timestamp = millis();
   keyboardstate.lastupdatetime = keyboardstate.timestamp;
+
+  keyboardstate.connectionState = CONNECTION_NONE;
+  keyboardstate.needReset = false;
+  keyboardstate.needUnpair = false;
+  keyboardstate.needFSReset = false;
+  keyboardstate.save2flash = false;
 }
+
+/**************************************************************************************************************************/
+void loadConfig()
+{
+  file.open(SETTINGS_FILE, FILE_O_READ);
+
+  if(file)
+  {
+    file.read(&keyboardconfig, sizeof(keyboardconfig));
+    file.close();
+  }
+  else
+  {
+    resetConfig();
+    saveConfig();
+  }
+
+ if (keyboardconfig.version != BLUEMICRO_CONFIG_VERSION) // SETTINGS_FILE format changed. we need to reset and re-save it.
+ {
+    resetConfig();
+    saveConfig();
+ }
+}
+
+/**************************************************************************************************************************/
+void resetConfig()
+{
+  keyboardconfig.version=BLUEMICRO_CONFIG_VERSION;
+  keyboardconfig.pinPWMLED=BACKLIGHT_LED_PIN;
+  keyboardconfig.pinRGBLED=WS2812B_LED_PIN;
+  keyboardconfig.pinBLELED=STATUS_BLE_LED_PIN;  
+  keyboardconfig.pinKBLED=STATUS_KB_LED_PIN;
+
+  keyboardconfig.enablePWMLED=BACKLIGHT_PWM_ON;
+  keyboardconfig.enableRGBLED=WS2812B_LED_ON;
+  keyboardconfig.enableBLELED=BLE_LED_ACTIVE;
+  keyboardconfig.enableKBLED=STATUS_KB_LED_ACTIVE;
+
+  keyboardconfig.polarityBLELED=BLE_LED_POLARITY;
+  keyboardconfig.polarityKBLED=STATUS_KB_LED_POLARITY;
+
+  keyboardconfig.enableVCCSwitch=VCC_ENABLE_GPIO;
+  keyboardconfig.polarityVCCSwitch=VCC_DEFAULT_ON;
+
+  keyboardconfig.enableChargerControl=VCC_ENABLE_CHARGER;
+  keyboardconfig.polarityChargerControl=true;
+
+  #ifdef BLUEMICRO_CONFIGURED_DISPLAY
+    keyboardconfig.enableDisplay = true;// enabled if it's compiled with one...
+  #else
+    keyboardconfig.enableDisplay = false;// disabled if it's not compiled with one...
+  #endif
+
+  #ifdef SPEAKER_PIN
+    keyboardconfig.enableAudio = true;// enabled if it's compiled with one...
+  #else
+    keyboardconfig.enableAudio = false;// disabled if it's not compiled with one...
+  #endif
+
+  keyboardconfig.enableSerial = SERIAL_DEBUG_CLI_DEFAULT_ON;   
+
+  keyboardconfig.matrixscaninterval=HIDREPORTINGINTERVAL;
+  keyboardconfig.batteryinterval=BATTERYINTERVAL;
+  keyboardconfig.keysendinterval=HIDREPORTINGINTERVAL;
+  keyboardconfig.lowpriorityloopinterval=LOWPRIORITYLOOPINTERVAL;
+  keyboardconfig.lowestpriorityloopinterval = HIDREPORTINGINTERVAL*2;
+  keyboardconfig.connectionMode  = CONNECTION_MODE_AUTO;
+  keyboardconfig.BLEProfile = 0;
+  keyboardconfig.BLEProfileEdiv[0] = 0xFFFF;
+  keyboardconfig.BLEProfileEdiv[1] = 0xFFFF;
+  keyboardconfig.BLEProfileEdiv[2] = 0xFFFF;
+  strcpy(keyboardconfig.BLEProfileName[0], "unpaired");
+  strcpy(keyboardconfig.BLEProfileName[1], "unpaired");
+  strcpy(keyboardconfig.BLEProfileName[2], "unpaired");
+}
+
+/**************************************************************************************************************************/
+void saveConfig()
+{
+  InternalFS.remove(SETTINGS_FILE);
+
+  if (file.open(SETTINGS_FILE, FILE_O_WRITE))
+  {
+    file.write((uint8_t*)&keyboardconfig, sizeof(keyboardconfig));
+    file.close();
+  }
+}
+
+
 
 
 /**************************************************************************************************************************/
@@ -65,47 +163,85 @@ void setupConfig() {
 /**************************************************************************************************************************/
 // cppcheck-suppress unusedFunction
 void setup() {
- setupConfig();
-
- Serial.begin(115200);
- // while ( !Serial ) delay(10);   // for nrf52840 with native usb this makes the nrf52840 stall and wait for a serial connection.  Something not wanted for a keyboard...
-
-  LOG_LV1("BLEMIC","Starting %s" ,DEVICE_NAME);
 
   setupGpio();                                                                // checks that NFC functions on GPIOs are disabled.
-  if(keyboardconfig.VCCSwitchAvailable)
-  {
-    switchVCC(keyboardconfig.VCCSwitchEnabled); // turn on VCC when starting up if needed.
-  }
-  if(keyboardconfig.ChargerControlAvailable)
-  {
-    switchCharger(keyboardconfig.ChargerControlEnabled); // turn on Charger when starting up if needed.
-  }
-  setupStatusLEDs(keyboardconfig.WakeUpBLELED,keyboardconfig.WakeUpKBLED); 
-   
-  keyscantimer.begin(keyboardconfig.timerkeyscaninterval, keyscantimer_callback);
-  batterytimer.begin(keyboardconfig.timerbatteryinterval, batterytimer_callback);
-  setupBluetooth();
+  setupWDT();
+  #ifdef BLUEMICRO_CONFIGURED_DISPLAY
+     OLED.begin();
+  #endif
+ 
+  setupConfig();
 
-  if(keyboardconfig.ledbacklight)
+ #ifdef SPEAKER_PIN
+ speaker.setSpeakerPin(SPEAKER_PIN);
+ #endif
+
+  if (keyboardconfig.enableSerial) 
   {
-    setupPWM(BACKLIGHT_LED_PIN);
+  Serial.begin(115200);
+        Serial.println(" ____  _            __  __ _                   ____  _     _____ ");
+        Serial.println("| __ )| |_   _  ___|  \\/  (_) ___ _ __ ___    | __ )| |   | ____|");
+        Serial.println("|  _ \\| | | | |/ _ \\ |\\/| | |/ __| '__/ _ \\   |  _ \\| |   |  _|  ");
+        Serial.println("| |_) | | |_| |  __/ |  | | | (__| | | (_) |  | |_) | |___| |___ ");
+        Serial.println("|____/|_|\\__,_|\\___|_|  |_|_|\\___|_|  \\___/___|____/|_____|_____|");
+        Serial.println("                                         |_____|                 ");
+        Serial.println("");
+        Serial.println("Type 'h' to get a list of commands with descriptions");
+  }
+ 
+  LOG_LV1("BLEMIC","Starting %s" ,DEVICE_NAME);
+
+  if(keyboardconfig.enableVCCSwitch)
+  {
+    switchVCC(keyboardconfig.polarityVCCSwitch); // turn on VCC when starting up if needed.
   }
 
-  if(keyboardconfig.ledrgb)
+  if(keyboardconfig.enableChargerControl)
   {
-    setupRGB();
+    switchCharger(keyboardconfig.polarityChargerControl); // turn on Charger when starting up if needed.
   }
+
+  keyscantimer.begin(keyboardconfig.matrixscaninterval, keyscantimer_callback);
+  //batterytimer.begin(keyboardconfig.batteryinterval, batterytimer_callback);
+  bt_setup(keyboardconfig.BLEProfile);
+  usb_setup(); // does nothing for 832 - see usb.cpp
+
   // Set up keyboard matrix and start advertising
-  setupKeymap();
+  setupKeymap(); // this is where we can change the callback for our LEDs...
   setupMatrix();
-  startAdv(); 
+  bt_startAdv(); 
   keyscantimer.start();
-  batterytimer.start();
-  //suspendLoop(); // this commands suspends the main loop.  We are no longer using the loop but scheduling things using the timers.
+  //batterytimer.start();
+
   stringbuffer.clear();
 
-  
+  if(keyboardconfig.enablePWMLED)
+  {
+    setupPWM(keyboardconfig.pinPWMLED); //PWM contributes 500uA to the bottom line on a 840 device. see https://devzone.nordicsemi.com/f/nordic-q-a/40912/pwm-power-consumption-nrf52840 (there is no electrical specification)
+  }
+
+  if(keyboardconfig.enableRGBLED)
+  {
+    setupRGB();//keyboardconfig.pinRGBLED
+  }
+
+  statusLEDs.enable();
+  statusLEDs.hello();  // blinks Status LEDs a couple as last step of setup.
+  Scheduler.startLoop(LowestPriorityloop, 1024, TASK_PRIO_LOWEST, "l1"); // this loop contains LED,RGB & PWM and Display updates.
+  //Scheduler.startLoop(NormalPriorityloop, 1024, TASK_PRIO_NORMAL, "n1"); // this has nothing in it...
+  #ifdef BLUEMICRO_CONFIGURED_DISPLAY
+    if(keyboardconfig.enableDisplay)
+    {
+      OLED.changeUpdateMode(DISPLAY_UPDATE_STATUS);
+    }
+    else
+    {
+      OLED.sleep();
+    }
+  #endif
+
+  speaker.playTone(TONE_STARTUP);
+  speaker.playTone(TONE_BLE_PROFILE);
 
 };
 /**************************************************************************************************************************/
@@ -151,12 +287,13 @@ void setupMatrix(void) {
 #define PINDATATYPE uint32_t
 #endif
 /**************************************************************************************************************************/
-// Better scanning with debounce Keyboard Scanning
+// THIS FUNCTION TAKES CARE OF SCANNING THE MATRIX AS WELL AS DEBOUNCING THE KEY PRESSES
+// IF YOU ARE USING A DIFFERENT METHOD TO READ/WRITE TO GPIOS (SUCH AS SHIFT REGISTERS OR GPIO EXPANDERS), YOU WILL
+// NEED TO RE-WORK THIS ROUTINE.  IDEALLY WE SHOULD HAVE THIS AS A COMPILE-TIME OPTION TO SWITCH BETWEEN ROUTINES.
 /**************************************************************************************************************************/
 void scanMatrix() {
 
     keyboardstate.timestamp  = millis();   // lets call it once per scan instead of once per key in the matrix
-    //take care when selecting debouncetime - each row has a delay of 1ms inbetween - so if you have 5 rows, setting debouncetime to 2 is at least 5ms...
     
     static PINDATATYPE pindata[MATRIX_ROWS][DEBOUNCETIME];
 
@@ -198,6 +335,7 @@ void scanMatrix() {
 
 
 /**************************************************************************************************************************/
+// THIS IS THE DEFAULT process_user_macros FUNCTION WHICH IS OVERRIDEN BY USER ONE.
 /**************************************************************************************************************************/
 #if USER_MACRO_FUNCTION == 1  
     void process_user_macros(uint16_t macroid)
@@ -263,21 +401,31 @@ void process_keyboard_function(uint16_t keycode)
       NVIC_SystemReset();
       break;
     case DEBUG:
+      keyboardconfig.enableSerial = !keyboardconfig.enableSerial;
+      keyboardstate.save2flash = true;
+      keyboardstate.needReset = true;
       break;
     case EEPROM_RESET:
-      InternalFS.format();
+      keyboardstate.needFSReset = true;
       break;
     case CLEAR_BONDS:
-        Bluefruit.clearBonds();
-        Bluefruit.Central.clearBonds();
+       // Bluefruit.clearBonds(); //removed in next BSP?
+       if (keyboardstate.connectionState == CONNECTION_BT) keyboardstate.needUnpair = true;
+        //Bluefruit.Central.clearBonds();
       break;      
     case DFU:
+      speaker.playTone(TONE_SLEEP);
+      speaker.playAllQueuedTonesNow();
       enterOTADfu();
       break;
     case SERIAL_DFU:
+      speaker.playTone(TONE_SLEEP);
+      speaker.playAllQueuedTonesNow();
       enterSerialDfu();
       break;
     case UF2_DFU:
+      speaker.playTone(TONE_SLEEP);
+      speaker.playAllQueuedTonesNow();
       enterUf2Dfu();
       break;
 
@@ -286,10 +434,34 @@ void process_keyboard_function(uint16_t keycode)
       break;  
 
     case OUT_AUTO:
+      keyboardconfig.connectionMode = CONNECTION_MODE_AUTO;
+      if ( keyboardstate.helpmode) {
+        addStringToQueue("Automatic USB/BLE - Active");addKeycodeToQueue(KC_ENTER);
+        addStringToQueue("USB Only");addKeycodeToQueue(KC_ENTER);
+        addStringToQueue("BLE Only");addKeycodeToQueue(KC_ENTER);
+      }
       break;
     case OUT_USB:
+      #ifdef NRF52840_XXAA  // only the 840 has USB available.
+        keyboardconfig.connectionMode = CONNECTION_MODE_USB_ONLY;
+        if ( keyboardstate.helpmode) {
+          addStringToQueue("Automatic USB/BLE");addKeycodeToQueue(KC_ENTER);
+          addStringToQueue("USB Only - Active");addKeycodeToQueue(KC_ENTER);
+          addStringToQueue("BLE Only");addKeycodeToQueue(KC_ENTER);
+        }
+      #else
+        if ( keyboardstate.helpmode) {
+          addStringToQueue("USB not available on NRF52832");addKeycodeToQueue(KC_ENTER);
+        }   
+      #endif
       break;
     case OUT_BT:
+      keyboardconfig.connectionMode = CONNECTION_MODE_BLE_ONLY;
+      if ( keyboardstate.helpmode) {
+        addStringToQueue("Automatic USB/BLE");addKeycodeToQueue(KC_ENTER);
+        addStringToQueue("USB Only");addKeycodeToQueue(KC_ENTER);
+        addStringToQueue("BLE Only - Active");addKeycodeToQueue(KC_ENTER);
+      }
       break;  
 
     // BACKLIGHT FUNCTIONS
@@ -452,6 +624,32 @@ void process_keyboard_function(uint16_t keycode)
       addKeycodeToQueue(KC_ENTER);
       sprintf(buffer,"Device Power   : %f", DEVICE_POWER*1.0);
       addStringToQueue(buffer); addKeycodeToQueue(KC_ENTER);
+        switch (keyboardconfig.connectionMode)
+        {
+          case CONNECTION_MODE_AUTO:
+          addStringToQueue("CONNECTION_MODE_AUTO"); addKeycodeToQueue(KC_ENTER);
+          break;
+          case CONNECTION_MODE_USB_ONLY:
+          addStringToQueue("CONNECTION_MODE_USB_ONLY"); addKeycodeToQueue(KC_ENTER);
+          break;
+          case CONNECTION_MODE_BLE_ONLY:
+          addStringToQueue("CONNECTION_MODE_BLE_ONLY"); addKeycodeToQueue(KC_ENTER);
+          break;
+        }
+            switch (keyboardstate.connectionState)
+            {
+              case CONNECTION_USB:
+                addStringToQueue("CONNECTION_USB"); addKeycodeToQueue(KC_ENTER);
+              break;
+
+              case CONNECTION_BT:
+                addStringToQueue("CONNECTION_BLE"); addKeycodeToQueue(KC_ENTER);
+              break;
+
+              case CONNECTION_NONE:
+                addStringToQueue("CONNECTION_NONE"); addKeycodeToQueue(KC_ENTER);
+              break;
+            }
       break;  
     case PRINT_BLE:
       addStringToQueue("Keyboard Name: " DEVICE_NAME " "); addKeycodeToQueue(KC_ENTER);
@@ -461,7 +659,31 @@ void process_keyboard_function(uint16_t keycode)
       sprintf(buffer,"cent\t %i\t %s",keyboardstate.rssi_cent, keyboardstate.peer_name_cent);addStringToQueue(buffer); addKeycodeToQueue(KC_ENTER); 
       sprintf(buffer,"prph\t %i\t %s",keyboardstate.rssi_prph, keyboardstate.peer_name_prph);addStringToQueue(buffer); addKeycodeToQueue(KC_ENTER);
       sprintf(buffer,"cccd\t %i\t %s",keyboardstate.rssi_cccd, keyboardstate.peer_name_cccd);addStringToQueue(buffer); addKeycodeToQueue(KC_ENTER);
+       sprintf(buffer,  "Profile 1:   %s", keyboardconfig.BLEProfileName[0]);
+      addStringToQueue(buffer);
+      if (keyboardconfig.BLEProfile == 0) addStringToQueue(" (active)");
+      addKeycodeToQueue(KC_ENTER);
+      sprintf(buffer,  "Profile 2:   %s", keyboardconfig.BLEProfileName[1]);
+      addStringToQueue(buffer);
+      if (keyboardconfig.BLEProfile == 1) addStringToQueue(" (active)");
+      addKeycodeToQueue(KC_ENTER);
+      sprintf(buffer,  "Profile 3:   %s", keyboardconfig.BLEProfileName[2]);
+      addStringToQueue(buffer);
+      if (keyboardconfig.BLEProfile == 2) addStringToQueue(" (active)");
+      addKeycodeToQueue(KC_ENTER);
+      addKeycodeToQueue(KC_ENTER);
+      ble_gap_addr_t gap_addr;
+      gap_addr = bt_getMACAddr();
+      sprintf(buffer,  "BT MAC Addr: %02X:%02X:%02X:%02X:%02X:%02X", gap_addr.addr[5], gap_addr.addr[4], gap_addr.addr[3], gap_addr.addr[2], gap_addr.addr[1], gap_addr.addr[0]);
+      addStringToQueue(buffer);
+      addKeycodeToQueue(KC_ENTER);
+      addKeycodeToQueue(KC_ENTER);
       break;
+    case PRINT_HELP:
+      break;
+    case SLEEP_NOW:
+      if (keyboardstate.connectionState != CONNECTION_USB) sleepNow();
+    break;
 
     case WIN_A_GRAVE: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_2, KC_KP_4) break; //Alt 0224 a grave
     case WIN_A_ACUTE: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_2, KC_KP_5) break;//Alt 0225 a acute
@@ -529,6 +751,59 @@ void process_keyboard_function(uint16_t keycode)
 
     case  WIN_Z_CARON: EXPAND_ALT_CODE(KC_KP_0, KC_KP_1, KC_KP_5, KC_KP_4) break; //Alt 0154 z caron
     case  WIN_Z_CARON_CAP: EXPAND_ALT_CODE(KC_KP_0, KC_KP_1, KC_KP_3, KC_KP_8) break;  //Alt 0138 Z caron
+
+    case SYM_DEGREE: EXPAND_ALT_CODE(KC_KP_0, KC_KP_1, KC_KP_7, KC_KP_6) break; // Alt 0176 degree symbol
+
+    case BLEPROFILE_1:
+      if (keyboardstate.connectionState != CONNECTION_USB) // reseting/rebooting KB when BLE Profile switching on USB would be ennoying...
+        {
+        #ifdef ARDUINO_NRF52_COMMUNITY
+          keyboardconfig.BLEProfile = 0;
+          keyboardstate.save2flash = true;
+          keyboardstate.needReset = true;
+        #endif
+        #ifdef ARDUINO_NRF52_ADAFRUIT
+          ; // do nothing since the Adafruit BSP doesn't support ediv.
+        #endif
+      }
+    break;
+
+    case BLEPROFILE_2:
+      if (keyboardstate.connectionState != CONNECTION_USB) // reseting/rebooting KB when BLE Profile switching on USB would be ennoying...
+      {
+        #ifdef ARDUINO_NRF52_COMMUNITY
+          keyboardconfig.BLEProfile = 1;
+          keyboardstate.save2flash = true;
+          keyboardstate.needReset = true;
+        #endif
+        #ifdef ARDUINO_NRF52_ADAFRUIT
+          ; // do nothing since the Adafruit BSP doesn't support ediv.
+        #endif
+      }
+    break;
+
+    case BLEPROFILE_3:
+      if (keyboardstate.connectionState != CONNECTION_USB) // reseting/rebooting KB when BLE Profile switching on USB would be ennoying...
+      {
+        #ifdef ARDUINO_NRF52_COMMUNITY
+          keyboardconfig.BLEProfile = 2;
+          keyboardstate.save2flash = true;
+          keyboardstate.needReset = true;
+        #endif
+        #ifdef ARDUINO_NRF52_ADAFRUIT
+          ; // do nothing since the Adafruit BSP doesn't support ediv.
+        #endif
+      }
+    break;
+
+    case BATTERY_CALC_DEFAULT:
+      batterymonitor.setmvToPercentCallback(mvToPercent_default);
+      batterymonitor.updateBattery(); // force an update
+    break;
+    case BATTERY_CALC_TEST:
+      batterymonitor.setmvToPercentCallback(mvToPercent_test);
+      batterymonitor.updateBattery(); // force an update
+    break;     
      
   }
 }
@@ -565,8 +840,7 @@ void process_user_special_keys()
 /**************************************************************************************************************************/
 void sendKeyPresses() {
 
-
-   KeyScanner::getReport();                                            // get state data - Data is in KeyScanner::currentReport 
+   KeyScanner::getReport();                                         // get state data - Data is in KeyScanner::currentReport 
 
   if (KeyScanner::special_key > 0){
       process_user_special_keys();
@@ -586,14 +860,22 @@ void sendKeyPresses() {
     
     report[0] = static_cast<uint8_t>((keyreport & 0xFF00) >> 8);// mods
     report[1] = static_cast<uint8_t>(keyreport & 0x00FF);
-    sendKeys(report);
-    delay(keyboardconfig.timerkeyscaninterval*3);
+    switch (keyboardstate.connectionState)
+    {
+      case CONNECTION_USB: usb_sendKeys(report); break;
+      case CONNECTION_BT: bt_sendKeys(report); break;
+    }
+    delay(keyboardconfig.keysendinterval*2);
     if (stringbuffer.empty()) // make sure to send an empty report when done...
     { 
       report[0] = 0;
       report[1] = 0;
-      sendKeys(report);
-      delay(keyboardconfig.timerkeyscaninterval*3);
+      switch (keyboardstate.connectionState)
+      {
+        case CONNECTION_USB: usb_sendKeys(report); break;
+        case CONNECTION_BT: bt_sendKeys(report); break;
+      }
+      delay(keyboardconfig.keysendinterval*2);
     }
     else
     {
@@ -603,15 +885,23 @@ void sendKeyPresses() {
       {
         report[0] = static_cast<uint8_t>((keyreport & 0xFF00) >> 8);// mods;
         report[1] = 0;
-        sendKeys(report);
-        delay(keyboardconfig.timerkeyscaninterval*3);
+        switch (keyboardstate.connectionState)
+        {
+          case CONNECTION_USB: usb_sendKeys(report); break;
+          case CONNECTION_BT: bt_sendKeys(report); break;
+        }
+        delay(keyboardconfig.keysendinterval*2);
       }
     }
    // KeyScanner::processingmacros=0;
   }
   else if ((KeyScanner::reportChanged))  //any new key presses anywhere?
   {                                                                              
-        sendKeys(KeyScanner::currentReport);
+    switch (keyboardstate.connectionState)
+    {
+      case CONNECTION_USB: usb_sendKeys(KeyScanner::currentReport); break;
+      case CONNECTION_BT: bt_sendKeys(KeyScanner::currentReport); break;
+    }
         LOG_LV1("MXSCAN","SEND: %i %i %i %i %i %i %i %i %i " ,keyboardstate.timestamp,KeyScanner::currentReport[0], KeyScanner::currentReport[1],KeyScanner::currentReport[2],KeyScanner::currentReport[3], KeyScanner::currentReport[4],KeyScanner::currentReport[5], KeyScanner::currentReport[6],KeyScanner::currentReport[7] );        
   } else if (KeyScanner::specialfunction > 0)
   {
@@ -619,11 +909,19 @@ void sendKeyPresses() {
     KeyScanner::specialfunction = 0; 
   } else if (KeyScanner::consumer > 0)
   {
-    sendMediaKey(KeyScanner::consumer);
+    switch (keyboardstate.connectionState)
+    {
+      case CONNECTION_USB: usb_sendMediaKey(KeyScanner::consumer); break;
+      case CONNECTION_BT: bt_sendMediaKey(KeyScanner::consumer); break;
+    }
     KeyScanner::consumer = 0; 
   } else if (KeyScanner::mouse > 0)
   {
-    sendMouseKey(KeyScanner::mouse);
+    switch (keyboardstate.connectionState)
+    {
+      case CONNECTION_USB: usb_sendMouseKey(KeyScanner::mouse); break;
+      case CONNECTION_BT: bt_sendMouseKey(KeyScanner::mouse); break;
+    }
     KeyScanner::mouse = 0; 
   }
   
@@ -638,54 +936,266 @@ void sendKeyPresses() {
     } 
   #endif                                                                /**************************************************/
 }
-/**************************************************************************************************************************/
-// put your main code here, to run repeatedly:
-/**************************************************************************************************************************/
-// cppcheck-suppress unusedFunction
-void loop() {
-  handleSerial();
-  delay(1000);
-};  // loop is called for serials comms and saving to flash.
+
 // keyscantimer is being called instead
 /**************************************************************************************************************************/
 void keyscantimer_callback(TimerHandle_t _handle) {
-    #if MATRIX_SCAN == 1
+  // timers have NORMAL priorities (HIGHEST>HIGH>NORMAL>LOW>LOWEST)
+  // since timers are repeated non stop, we dont want the duration of code running within the timer to vary and potentially
+  // go longer than the interval time.
+
+  #if MATRIX_SCAN == 1
     scanMatrix();
   #endif
   #if SEND_KEYS == 1
-    sendKeyPresses();    // how often does this really run?
+    sendKeyPresses();  
   #endif
-   unsigned long timesincelastkeypress = keyboardstate.timestamp - KeyScanner::getLastPressed();
+   keyboardstate.lastuseractiontime = max(KeyScanner::getLastPressed(),keyboardstate.lastuseractiontime); // use the latest time to check for sleep...
+   unsigned long timesincelastkeypress = keyboardstate.timestamp - keyboardstate.lastuseractiontime;
 
   #if SLEEP_ACTIVE == 1
-    gotoSleep(timesincelastkeypress,Bluefruit.connected());
+    switch (keyboardstate.connectionState)
+    {
+      case CONNECTION_USB:
+        // never sleep in this case
+      break;
+
+      case CONNECTION_BT:
+        gotoSleep(timesincelastkeypress, true);
+      break;
+
+      case CONNECTION_NONE:
+        gotoSleep(timesincelastkeypress, false);
+      break;
+    }
   #endif
 
-  #if BLE_CENTRAL == 1  
+  #if BLE_CENTRAL == 1  // this is for the master half...
     if ((timesincelastkeypress<10)&&(!Bluefruit.Central.connected()&&(!Bluefruit.Scanner.isRunning())))
     {
       Bluefruit.Scanner.start(0);                                             // 0 = Don't stop scanning after 0 seconds  ();
     }
   #endif
 
-  if(keyboardconfig.ledbacklight)
-  {
-    updatePWM(timesincelastkeypress);
-  }
-
-  if(keyboardconfig.ledrgb)
-  {
-     updateRGB(timesincelastkeypress);
-  }
-
 }
 //********************************************************************************************//
 //* Battery Monitoring Task - runs infrequently                                              *//
 //********************************************************************************************//
-void batterytimer_callback(TimerHandle_t _handle)
-{ 
-      batterymonitor.updateBattery();
+// TODO: move to lower priority loop.  updating battery infomation isnt critical
+// timers have NORMAL priorities (HIGHEST>HIGH>NORMAL>LOW>LOWEST)
+//void batterytimer_callback(TimerHandle_t _handle)
+//{ 
+//      batterymonitor.updateBattery();
+//}
+
+//********************************************************************************************//
+//* Loop to send keypresses - moved to loop instead of timer due to delay() in processing macros *//
+//********************************************************************************************//
+// this loop has NORMAL priority(HIGHEST>HIGH>NORMAL>LOW>LOWEST)
+//void NormalPriorityloop(void)
+//{
+//  delay (keyboardconfig.keysendinterval);
+//}
+
+/**************************************************************************************************************************/
+// put your main code here, to run repeatedly:
+/**************************************************************************************************************************/
+// cppcheck-suppress unusedFunction
+void loop() {  // has task priority TASK_PRIO_LOW     
+  updateWDT();
+
+  speaker.processTones();
+
+  if (keyboardconfig.enableSerial)
+  {
+    handleSerial();
+  }
+
+  switch (keyboardconfig.connectionMode)
+  {
+    case CONNECTION_MODE_AUTO:  // automatically switch between BLE and USB when connecting/disconnecting USB
+        if (usb_isConnected())  
+        {
+          if (keyboardstate.connectionState != CONNECTION_USB)
+          {
+            if (bt_isConnected()) bt_disconnect();
+            bt_stopAdv();
+            keyboardstate.connectionState = CONNECTION_USB;
+            keyboardstate.lastuseractiontime = millis(); // a USB connection will reset sleep timer... 
+          }
+        }
+      else if (bt_isConnected())
+        {
+          if (keyboardstate.connectionState != CONNECTION_BT)
+          {
+            keyboardstate.connectionState = CONNECTION_BT;
+            keyboardstate.lastuseractiontime = millis(); // a BLE connection will reset sleep timer...
+          }
+        }
+        else
+        {
+          if (keyboardstate.connectionState != CONNECTION_NONE)
+          {
+            bt_startAdv();
+            keyboardstate.connectionState = CONNECTION_NONE;
+            // disconnecting won't reset sleep timer.
+          }
+        }
+      break;
+    case CONNECTION_MODE_USB_ONLY:
+        if (usb_isConnected())  
+        {
+          if (keyboardstate.connectionState != CONNECTION_USB)
+          {
+            if (bt_isConnected()) bt_disconnect();
+            bt_stopAdv();
+            keyboardstate.connectionState = CONNECTION_USB;
+          }
+        }
+        else // if USB not connected but we are in USB Mode only...
+        {
+          keyboardstate.connectionState = CONNECTION_NONE;
+        }
+      break;
+    case CONNECTION_MODE_BLE_ONLY:
+        if (bt_isConnected())
+        {
+            keyboardstate.connectionState = CONNECTION_BT;
+        }
+        else
+        {
+          if (keyboardstate.connectionState != CONNECTION_NONE)
+          {
+            bt_startAdv();
+            keyboardstate.connectionState = CONNECTION_NONE;
+          }
+        }
+      break;
+  }
+
+  // TODO: check for battery filtering when switching USB in/out
+  // none of these things can be done in the timer event callbacks
+  if (keyboardstate.needUnpair)
+  {
+    bt_disconnect();
+    char filename[32] = { 0 };
+    sprintf(filename, "/adafruit/bond_prph/%04x", keyboardconfig.BLEProfileEdiv[keyboardconfig.BLEProfile]);
+    InternalFS.remove(filename);
+
+    keyboardconfig.BLEProfileEdiv[keyboardconfig.BLEProfile] = 0xFFFF;
+    strcpy(keyboardconfig.BLEProfileName[keyboardconfig.BLEProfile], "unpaired");
+    keyboardstate.save2flash = true;
+    keyboardstate.needReset = true;
+  }
+  if (keyboardstate.save2flash)
+  {
+    saveConfig();
+    keyboardstate.save2flash = false;
+  }
+  if (keyboardstate.needFSReset)
+  {
+    InternalFS.format();
+    keyboardstate.needReset = true;
+  }
+  if (keyboardstate.needReset) NVIC_SystemReset(); // this reboots the keyboard.
+
+  delay (keyboardconfig.lowpriorityloopinterval);
+  
+};  // loop is called for serials comms and saving to flash.
+/**************************************************************************************************************************/
+void LowestPriorityloop()
+{ // this loop has LOWEST priority (HIGHEST>HIGH>NORMAL>LOW>LOWEST)
+  // it's setup to do 1 thing every call.  This way, we won't take too much time from keyboard functions.
+  
+  backgroundTaskID toprocess = BACKGROUND_TASK_NONE;
+  
+
+   keyboardstate.lastuseractiontime = max(KeyScanner::getLastPressed(),keyboardstate.lastuseractiontime); // use the latest time to check for sleep...
+   unsigned long timesincelastkeypress = keyboardstate.timestamp - keyboardstate.lastuseractiontime;
+
+  updateBLEStatus();
+  
+  if ((keyboardstate.timestamp - keyboardstate.batterytimer) > keyboardconfig.batteryinterval)  // this is typically every 30 seconds...
+  {
+    if (timesincelastkeypress > 1000) // update if we haven't typed for 1 second
+    {
+      toprocess = BACKGROUND_TASK_BATTERY;
+    }
+  }
+    if ((keyboardstate.timestamp - keyboardstate.displaytimer) > 250)  // update even if we type but update 4 times a second. 
+    { // TODO check if there is new data to display too!
+      toprocess = BACKGROUND_TASK_DISPLAY;
+    }
+
+    if ((keyboardstate.timestamp - keyboardstate.audiotimer) > 500)  
+    { // TODO: check if there is new audio to play!
+      toprocess = BACKGROUND_TASK_AUDIO;
+    }
+      if(keyboardconfig.enableRGBLED)
+      {
+          if ((keyboardstate.timestamp - keyboardstate.rgbledtimer) > 50)  
+          { 
+            toprocess = BACKGROUND_TASK_RGBLED;
+          }      
+      }
+
+      if(keyboardconfig.enablePWMLED)
+      {
+          if ((keyboardstate.timestamp - keyboardstate.pwmledtimer) > 50)  
+          { 
+            toprocess = BACKGROUND_TASK_PWMLED;
+          }
+      }
+    
+     if ((keyboardstate.timestamp - keyboardstate.statusledtimer) > 100)  
+    { // TODO: check if there is new audio to play!
+      toprocess = BACKGROUND_TASK_STATUSLED;
+    }
+
+switch (toprocess)
+{
+  case BACKGROUND_TASK_NONE: 
+    break;
+  case BACKGROUND_TASK_AUDIO: 
+    keyboardstate.audiotimer = keyboardstate.timestamp;
+    break;
+  case BACKGROUND_TASK_BATTERY: 
+      batterymonitor.updateBattery(); 
+      keyboardstate.batterytimer = keyboardstate.timestamp;
+      keyboardstate.batt_type = batterymonitor.batt_type;
+      keyboardstate.vbat_mv = batterymonitor.vbat_mv;
+      keyboardstate.vbat_per = batterymonitor.vbat_per;
+      keyboardstate.vbat_vdd = batterymonitor.vbat_vdd;
+    break;
+  case BACKGROUND_TASK_DISPLAY: 
+       keyboardstate.displaytimer = keyboardstate.timestamp;
+       #ifdef BLUEMICRO_CONFIGURED_DISPLAY
+       if(keyboardconfig.enableDisplay)
+        {
+          OLED.update(); 
+        }
+        else
+        {
+          OLED.sleep();
+        }
+      #endif
+    break;
+  case BACKGROUND_TASK_STATUSLED: 
+    keyboardstate.statusledtimer = keyboardstate.timestamp;
+    statusLEDs.update();
+    break;
+  case BACKGROUND_TASK_PWMLED: 
+    keyboardstate.pwmledtimer = keyboardstate.timestamp;
+    updatePWM(timesincelastkeypress);
+    break;
+  case BACKGROUND_TASK_RGBLED: 
+    keyboardstate.rgbledtimer = keyboardstate.timestamp;
+    updateRGB(timesincelastkeypress);
+    break;
 }
+  delay(keyboardconfig.lowestpriorityloopinterval);              // wait not too long  
+}
+
 
 
 //********************************************************************************************//
@@ -696,6 +1206,8 @@ void batterytimer_callback(TimerHandle_t _handle)
 extern "C" void vApplicationIdleHook(void) {
   // Don't call any other FreeRTOS blocking API()
   // Perform background task(s) here
-    sd_power_mode_set(NRF_POWER_MODE_LOWPWR);
+  // this task has LOWEST priority (HIGHEST>HIGH>NORMAL>LOW>LOWEST)
+    sd_power_mode_set(NRF_POWER_MODE_LOWPWR); // 944uA
+    //sd_power_mode_set(NRF_POWER_MODE_CONSTLAT); // 1.5mA
     sd_app_evt_wait();  // puts the nrf52 to sleep when there is nothing to do.  You need this to reduce power consumption. (removing this will increase current to 8mA)
 };

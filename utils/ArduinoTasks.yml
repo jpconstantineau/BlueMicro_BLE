@@ -1,0 +1,85 @@
+
+version: '3'
+
+tasks:
+  buildboard:
+    vars:
+      KEYBOARD: '{{default "luddite" .KEYBOARD}}'
+      KEYBOARDCONFIG: '{{default "single" .KEYBOARDCONFIG}}'
+      FQBNFOLDER: '{{default "pca10056" .FQBNFOLDER}}'
+      CONTROLLERFOLDER: '{{default "bluemicro840" .CONTROLLERFOLDER}}'
+      HARDWARECONFIG: '{{default .FQBNFOLDER .FQBNFOLDER}}/{{.CONTROLLERFOLDER}}'
+      KEYMAP: '{{default "default" .KEYMAP}}'
+      FIRMWAREPATH: '{{default "../firmware" .FIRMWAREPATH}}'
+      BUILDPATH: '{{default "../.build" .BUILDPATH}}'
+      SOURCEPATH: '{{default .BUILDPATH .BUILDPATH}}/{{.KEYBOARD}}-{{.FQBNFOLDER}}-{{.CONTROLLERFOLDER}}-{{.KEYBOARDCONFIG}}-{{.KEYMAP}}'
+      BUILDCACHEPATH:  '{{default "SOURCEPATH" .SOURCEPATH}}/.build-cache'
+      OUTPUTPATH:  '{{default "SOURCEPATH" .SOURCEPATH}}/output'
+      FQBN: '{{default "adafruit:nrf52:pca10056" .FQBN}}'
+    cmds: 
+      - task: cleanup
+        vars:
+          SOURCEPATH: '{{.SOURCEPATH}}'
+      - cmd: mkdir {{.BUILDPATH}}
+        ignore_error: true
+      - cmd: mkdir {{.SOURCEPATH}}
+      - cmd: mkdir {{.BUILDCACHEPATH}}
+      - cmd: mkdir {{.OUTPUTPATH}}
+      - mkdir {{.SOURCEPATH}}/firmware
+      - cp {{.FIRMWAREPATH}}/*.ino {{.SOURCEPATH}}/firmware/
+      - cp {{.FIRMWAREPATH}}/*.cpp {{.SOURCEPATH}}/firmware/
+      - cp {{.FIRMWAREPATH}}/*.h {{.SOURCEPATH}}/firmware/
+      - cp {{.FIRMWAREPATH}}/keyboards/{{.KEYBOARD}}/config/{{.KEYBOARDCONFIG}}/*.* {{.SOURCEPATH}}/firmware/
+      - cp {{.FIRMWAREPATH}}/keyboards/{{.KEYBOARD}}/hardware/{{.HARDWARECONFIG}}/*.* {{.SOURCEPATH}}/firmware/
+      - cp {{.FIRMWAREPATH}}/keyboards/{{.KEYBOARD}}/keymaps/{{.KEYMAP}}/*.* {{.SOURCEPATH}}/firmware/
+      - arduino-cli compile --fqbn {{.FQBN}}  --build-cache-path {{.BUILDCACHEPATH}} {{.SOURCEPATH}}/firmware/firmware.ino  --output-dir {{.OUTPUTPATH}}
+      - cmd: rm -r {{.BUILDCACHEPATH}}
+      - cmd: rm -r {{.SOURCEPATH}}/firmware/
+    prefix: "{{.KEYBOARD}}-{{.FQBNFOLDER}}-{{.CONTROLLERFOLDER}}-{{.KEYBOARDCONFIG}}-{{.KEYMAP}}"  
+
+  compile:
+    vars:
+      FQBN: '{{default "adafruit:nrf52:pca10056" .FQBN}}'
+      SOURCEPATH: '{{default "../firmware" .SOURCEPATH}}'
+      BUILDCACHEPATH:  '{{default "../.build-cache" .BUILDCACHEPATH}}'
+      BUILDPATH: '{{default "../.build" .BUILDPATH}}'
+    cmds:
+      - arduino-cli compile --fqbn {{.FQBN}}  --build-cache-path {{.BUILDCACHEPATH}} {{.SOURCEPATH}}/firmware.ino  --output-dir {{.BUILDPATH}}/firmware
+
+  upload:
+    vars:
+      FQBN: '{{default "adafruit:nrf52:pca10056" .FQBN}}'
+      SERIALPORT: '{{default "COM45" .SERIALPORT}}'
+      SOURCEPATH: '{{default "../firmware" .SOURCEPATH}}'
+      BUILDPATH: '{{default "../.build" .BUILDPATH}}'
+    cmds:
+      - arduino-cli upload --fqbn {{.FQBN}}  {{.SOURCEPATH}}/firmware.ino  --input-dir {{.BUILDPATH}}/firmware --port {{.SERIALPORT}}
+
+  install:
+    cmds:
+      - arduino-cli core update-index
+      - arduino-cli core upgrade
+      - arduino-cli core search nrf52
+      - arduino-cli core install adafruit:nrf52
+      - arduino-cli core install community_nrf52:nrf52
+      - arduino-cli version
+
+  cleanup:
+    vars:
+      SOURCEPATH: '{{default "adafruit:nrf52:pca10056" .SOURCEPATH}}'
+    cmds:
+      - cmd: rm -r {{.SOURCEPATH}}
+        ignore_error: true
+
+  cleanupall:
+    vars:
+      BUILDCACHEPATH:  '{{default "../.build-cache" .BUILDCACHEPATH}}'
+      BUILDPATH: '{{default "../.build" .BUILDPATH}}'
+      SCRIPTPATH: '{{default "../output" .SCRIPTPATH}}'
+    cmds:
+      - cmd: rm -r {{.BUILDPATH}}
+        ignore_error: true
+      - cmd: rm -r {{.BUILDCACHEPATH}}
+        ignore_error: true
+      - cmd: rm -r {{.SCRIPTPATH}}
+        ignore_error: true

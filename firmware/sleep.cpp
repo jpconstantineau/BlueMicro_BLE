@@ -1,5 +1,5 @@
 /*
-Copyright 2018-2020 <Pierre Constantineau>
+Copyright 2018-2021 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -18,11 +18,14 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 */
 #include "sleep.h"
-#include "LedRGB.h"
+
+extern led_handler statusLEDs; /// Typically a Blue and Red LED
 /**************************************************************************************************************************/
 // Prepare sense pins for waking up from complete shutdown
 /**************************************************************************************************************************/
-void setupWakeUp() {
+void prepareSleep() {
+  
+
   for(int j = 0; j < MATRIX_ROWS; ++j) {                             
     //set the current row as OUPUT and LOW
     pinMode(rows[j], OUTPUT);
@@ -40,10 +43,40 @@ void setupWakeUp() {
         pinMode(columns[i], INPUT_PULLDOWN_SENSE);            // 'enables' the column High Value on the diode; becomes "LOW" when pressed - Sense makes it wake up when sleeping
       #endif
   }
+      #ifdef BLUEMICRO_CONFIGURED_DISPLAY
+      OLED.sleep();
+      #endif
+
+  #ifdef SPEAKER_PIN
+    pinMode(SPEAKER_PIN, OUTPUT);
+    digitalWrite(SPEAKER_PIN, LOW);
+        tone(SPEAKER_PIN, NOTE_E5, 50);
+        delay(65);
+        tone(SPEAKER_PIN, NOTE_A4, 50);
+        delay(65);
+        tone(SPEAKER_PIN, NOTE_E4, 50);
+        delay(65);
+          digitalWrite(SPEAKER_PIN, LOW);
+          pinMode(SPEAKER_PIN, INPUT);
+  #endif
 
       #if VCC_ENABLE_GPIO ==1 
       switchVCC(false); // turn off VCC when going to sleep. This isn't an optional thing...
       #endif
+
+  statusLEDs.sleep(); 
+  sendPWM(0);  // forces PWM backlight off
+  
+}
+
+void sleepNow()
+{
+  delay(300);    // delay to let any keys be released
+  prepareSleep();
+  #if WS2812B_LED_ON == 1 
+    suspendRGB();
+  #endif
+  sd_power_system_off();
 }
 
 /**************************************************************************************************************************/
@@ -53,21 +86,13 @@ void gotoSleep(unsigned long timesincelastkeypress,bool connected)
   if ((timesincelastkeypress>SLEEPING_DELAY)&&(!connected))
   {
     LOG_LV2("SLEEP","Not Connected Sleep %i", timesincelastkeypress);
-    #if WS2812B_LED_ON == 1 
-    suspendRGB();
-    #endif
-    setupWakeUp();
-    sd_power_system_off();
+    sleepNow();
   } 
 
   // shutdown when unconnected and no keypresses for SLEEPING_DELAY_CONNECTED ms
   if ((timesincelastkeypress>SLEEPING_DELAY_CONNECTED)&&(connected))
   {
     LOG_LV2("SLEEP","Connected Sleep %i", timesincelastkeypress);
-    #if WS2812B_LED_ON == 1 
-    suspendRGB();
-    #endif
-    setupWakeUp();
-    sd_power_system_off();
+    sleepNow();
   } 
 }

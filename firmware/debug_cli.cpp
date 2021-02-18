@@ -1,5 +1,5 @@
 /*
-Copyright 2018-2020 <Pierre Constantineau, Julian Komaromy>
+Copyright 2018-2021 <Pierre Constantineau, Julian Komaromy>
 
 3-Clause BSD License
 
@@ -117,6 +117,7 @@ void matrix_key_test(bool singlekey)
     static  std::vector<uint8_t> negpins; 
   while (Serial.available() == 0)
   {
+    updateWDT();
     if(singlekey){
       pospins.clear();
       negpins.clear();    
@@ -268,6 +269,7 @@ void handleSerial() {
     char buffer [50];
   uint8_t intval;
  while (Serial.available() > 0) {
+   
    char incomingCharacter = Serial.read();
    switch (incomingCharacter) {
      case 'd':
@@ -283,8 +285,7 @@ void handleSerial() {
         Serial.println("----- Before -----\n");
         bond_print_list(BLE_GAP_ROLE_PERIPH);
         bond_print_list(BLE_GAP_ROLE_CENTRAL);
-
-        Bluefruit.clearBonds();
+       // Bluefruit.clearBonds(); //removed in next BSP?
         Bluefruit.Central.clearBonds();
 
         Serial.println();
@@ -348,6 +349,7 @@ void handleSerial() {
         Serial.println("u  Enter UF2 DFU - Warning! Disconnects BLE from Computer!");
         Serial.println("e  flash reset - Warning! Disconnects BLE from Computer!");
         Serial.println("r  reboot - Warning! Disconnects BLE from Computer!");
+        Serial.println("c  restore default configuration - Warning! Disconnects BLE from Computer!");
 
 
 
@@ -356,7 +358,7 @@ void handleSerial() {
         Serial.println("g  run GPIO Tester");
         Serial.println("m  full matrix gpio tester");
         Serial.println("k  single key matrix gpio tester");
-                Serial.println("");
+        Serial.println("");
       break;
       case 'p':
             intval = batterymonitor.vbat_per;
@@ -410,6 +412,10 @@ void handleSerial() {
             matrix_key_end(true);
             keyscantimer.start();
             batterytimer.start();
+      break;
+    case 'c':
+          resetConfig();
+          saveConfig();
       break;
     }
  }

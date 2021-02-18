@@ -1,0 +1,24 @@
+name: Build on Docker - Community
+on:
+  # Trigger the workflow on push or pull request,
+  # but only for the master branch
+  push:
+    branches:
+      - master
+      - develop
+  pull_request:
+    branches:
+      - master
+      - develop 
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        fqbn: ['feather52832', 'pca10056', 'feather52840']
+    runs-on: self-hosted
+    container: jpconstantineau/arduino-cli-community-nrf52
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build fqbn
+      run: ./build/docker/gha-docker-communitynrf52.sh all:all:all:all:${{ matrix.fqbn }}    

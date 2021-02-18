@@ -1,5 +1,5 @@
 /*
-Copyright 2019-2020 <Pierre Constantineau>
+Copyright 2019-2021 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -20,8 +20,14 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 #ifndef HARDWAREVARIANTS_H
 #define HARDWAREVARIANTS_H
+#include "datastructures.h"
 
-#define COL2ROW       0
+// putting this here since it's called in every keyboard_config and we need this for all the keymaps.
+// THIS FILE CONTAINS THE MACRO DEFINITIONS THAT USERS MAY USE IN THEIR keymap.cpp/h FILES.
+// FOR DATASTRUCTURES USED BY USER FUNCTIONS, SEE datastructures.h
+
+#define NODIODES      0
+#define COL2ROW       0  // TODO: add automatic selection of ANTI-GHOSTING...
 #define ROW2COL       1
 
 #define TEST 0
@@ -29,8 +35,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define RIGHT 2
 #define SINGLE 3
 
-// putting this here since it's called in every keyboard_config and we need this for all the keymaps.
 #define KEYMAP2ARRAY(OTHERMACROHERE) {OTHERMACROHERE}
 #define ADDLAYER(LAYER_INPUT,METHOD_INPUT,KEYMAP_INPUT )  for (int row = 0; row < MATRIX_ROWS; ++row) { for (int col = 0; col < MATRIX_COLS; ++col){ matrix[row][col].addActivation(LAYER_INPUT, METHOD_INPUT, KEYMAP_INPUT[row][col]);}}
-
+#define _PINNUM(port, pin) ((port)*32 + (pin))
 #endif  /*HARDWAREVARIANTS_H*/
