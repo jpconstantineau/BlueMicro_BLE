@@ -44,7 +44,7 @@ If you use the Adafruit nRF52 Boards in the Arduino IDE, you should select eithe
 If your board needs a **special bootloader** or a configuration that's not compatible with the above boards, you should consider adding your board to the Community Add-on to the Adafruit_nRF52_Arduino Board Support Package.  This will make it simpler for others to re-use your special configuration and flashing the bootloader.
 
 
-# Contrigitbuting
+# Contributing
 
 We're very happy to have your contributions in BlueMicro_BLE Firmware
 
