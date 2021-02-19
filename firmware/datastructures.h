@@ -73,6 +73,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
     typedef struct { 
         uint32_t timestamp;
         uint32_t lastupdatetime;
+        uint32_t lastreporttime;
         uint32_t lastuseractiontime;
         uint16_t layer;
         uint8_t statuskb;
