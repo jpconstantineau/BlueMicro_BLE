@@ -160,3 +160,32 @@ Helpfully, if you have a STN() call of higher then C_SIZE, the compiler will get
 uint64_t				
 uint32_t				
 uint16_t	
+
+
+## notes from [gboard's repo](https://github.com/germ/qmk_firmware/tree/master/keyboards/gboards)
+
+The following table is for the Combo library...
+start | inc | inc | inc 
+-|- | - | - 
+keymap.c | "g/keymap_combo.h"   | combos.def | combos/germ-vim-helpers.def
+. | .|. | combos/germ-mouse-keys.def
+. | .|. | gergoplex.def
+. |. |. | combos/eng-combos.def
+
+start | inc | inc | inc 
+-|- | - | - 
+keymap.c | "keymap_steno.h"   | . | .
+. | g/keymap_engine.h|"g/engine.h" | .
+. | .|"dicts.def" | dicts/base.def
+. | .|. |  "dicts/sym.def"
+. | .|.|  "dicts/others.def"
+. | g/keymap_combo.h|"combos.def" | dicts/combos.def
+
+start | inc | inc | inc 
+-|- | - | - 
+keymap_engine.h |"g/engine.h" |. |.
+. |"dicts.def" |. |.
+keymap_combo.h |"combos.def" |. |.
+. |"inject.h" |. |.
+config_default.h |"engine.h" |"keymap.h" |.
+.|. |"config_engine.h" |.
