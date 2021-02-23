@@ -292,6 +292,15 @@ bool KeyScanner::getReport()
         remotespecialkeycode=0;
     }
 
+    // process combos before generating HID reports
+    if (combos.anyCombosConfigured())
+    {
+        if (combos.findActiveCombos(activeKeys))
+        {
+            activeKeys = combos.processActiveKeycodewithCombos(activeKeys);
+        }
+    }
+
     for (auto keycode : activeKeys) 
     {
         auto hidKeycode = static_cast<uint8_t>(keycode & 0x00FF);

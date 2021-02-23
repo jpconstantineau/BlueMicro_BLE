@@ -40,6 +40,8 @@ DynamicState keyboardstate;
 BlueMicro_tone speaker(&keyboardconfig, &keyboardstate);  /// A speaker to play notes and tunes...
 led_handler statusLEDs(&keyboardconfig, &keyboardstate);  /// Typically a Blue LED and a Red LED
 
+
+
 #ifdef BLUEMICRO_CONFIGURED_DISPLAY
   BlueMicro_Display OLED(&keyboardconfig, &keyboardstate);  /// Typically a Blue LED and a Red LED
 #endif

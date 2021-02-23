@@ -1,5 +1,5 @@
 /*
-Copyright 2018 <Pierre Constantineau>
+Copyright 2021-2021 <Pierre Constantineau, Julian Komaromy>
 
 3-Clause BSD License
 
@@ -17,30 +17,52 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
+#ifndef COMBO_ENGINE_H
+#define COMBO_ENGINE_H
 #include <stdint.h>
-#include "hid_keycodes.h"
-#include "keyboard_config.h"
-#include "advanced_keycodes.h"
-#include "Key.h"
-#include <array>
-#include "combo_engine.h"
+#include <vector>
+#include <utility>
+#include <algorithm>
 
 
-#ifndef KEYMAP_H
-#define KEYMAP_H
 
-#define NUM_LAYERS 2
+typedef std::vector <uint16_t> trigger_keycodes_t;
+typedef std::pair <trigger_keycodes_t , uint16_t> combo_t;
+typedef std::vector < combo_t > combolist_t;
 
-#define _L0  0
-#define _L1  1
+template <typename T>
+bool IsSubset(std::vector<T> A, std::vector<T> B)
+{
+    std::sort(A.begin(), A.end());
+    std::sort(B.begin(), B.end());
+    return std::includes(A.begin(), A.end(), B.begin(), B.end());
+}
 
-#define USER_MACRO_FUNCTION   0 
-void process_user_macros(uint32_t macroid);
+template <typename T>
+bool IsSubsetPreSorted(std::vector<T> A, std::vector<T> B)
+{
+    return std::includes(A.begin(), A.end(), B.begin(), B.end());
+}
 
-void setupKeymap();
-extern std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix;
-extern void addStringToQueue(const char* str);
-extern void addKeycodeToQueue(const uint16_t keycode);
+#define COMB(name, key, ...) combos.addComboToList(std::vector <uint16_t>{__VA_ARGS__}, key);
+
+class ComboEngine {
+    public:
+    ComboEngine();
+    void addComboToList(trigger_keycodes_t trigger, uint16_t keycode);
+    void clearComboList();
+    bool anyCombosConfigured();
+    bool findActiveCombos(trigger_keycodes_t activekeycodes);
+    trigger_keycodes_t processActiveKeycodewithCombos(trigger_keycodes_t activekeycodes);
+
+    private:
+    combo_t findLargestCombo();
+
+    combolist_t combolist;
+    combolist_t activecombos;
+};
 
 
-#endif /* KEYMAP_H */
+extern ComboEngine combos;
+
+#endif 

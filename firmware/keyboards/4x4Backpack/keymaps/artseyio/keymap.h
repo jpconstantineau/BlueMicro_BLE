@@ -1,5 +1,5 @@
 /*
-Copyright 2018 <Pierre Constantineau>
+Copyright 2021 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -29,10 +29,21 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #ifndef KEYMAP_H
 #define KEYMAP_H
 
-#define NUM_LAYERS 2
+#define NUM_LAYERS 6
 
 #define _L0  0
 #define _L1  1
+#define _L2  2
+#define _L3  3
+#define _L4  4
+#define _L5  5
+
+#define _ARTSEY_BASE _L0
+#define _ARTSEY_NUM  _L1
+#define _ARTSEY_SYM  _L2
+#define _ARTSEY_BRAC _L3
+#define _ARTSEY_NAV  _L4
+#define _ARTSEY_MOU  _L5
 
 #define USER_MACRO_FUNCTION   0 
 void process_user_macros(uint32_t macroid);
