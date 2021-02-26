@@ -52,13 +52,16 @@ class ComboEngine {
     void addComboToList(trigger_keycodes_t trigger, uint16_t keycode);
     void clearComboList();
     bool anyCombosConfigured();
-    bool findActiveCombos(trigger_keycodes_t activekeycodes);
+    uint8_t findActiveCombos(trigger_keycodes_t activekeycodes);
+    uint8_t countActiveCombosKeys(trigger_keycodes_t activekeycodes);
     trigger_keycodes_t processActiveKeycodewithCombos(trigger_keycodes_t activekeycodes);
+    trigger_keycodes_t processActiveKeycodewithComboKeys(trigger_keycodes_t activekeycodes);
 
     private:
     combo_t findLargestCombo();
 
     combolist_t combolist;
+    trigger_keycodes_t keycodesused;
     combolist_t activecombos;
 };
 

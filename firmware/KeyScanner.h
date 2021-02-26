@@ -83,7 +83,8 @@ class KeyScanner {
         static unsigned long lastPressed;
         static uint16_t detectedlayerkeys;
         static uint16_t remoteLayer;
-        
+        static uint32_t combotimer;
+        static uint32_t triggerkeytimer;
         static uint8_t remoteMod;
         static uint8_t currentMod;
 

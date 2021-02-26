@@ -28,12 +28,16 @@ ComboEngine::ComboEngine()
 {
  combolist = {};
  activecombos = {};
+ keycodesused = {};
 }
 
 void ComboEngine::addComboToList(trigger_keycodes_t trigger, uint16_t keycode)
 {
-  std::sort(trigger.begin(), trigger.end());
+  std::sort(trigger.begin(), trigger.end()); // pre-sorts before adding to combolist.
   combolist.push_back(make_pair(trigger, keycode));
+  keycodesused.insert( keycodesused.end(), trigger.begin(), trigger.end());
+  std::sort(keycodesused.begin(),keycodesused.end()); // needed for the next operation
+  std::unique(keycodesused.begin(),keycodesused.end()); // keep the unique keycodes only
 }
 
 bool ComboEngine::anyCombosConfigured()
@@ -44,20 +48,35 @@ bool ComboEngine::anyCombosConfigured()
 void ComboEngine::clearComboList()
 {
    combolist.clear(); 
+   keycodesused.clear();
 }
 
-bool ComboEngine::findActiveCombos(trigger_keycodes_t activekeycodes)
+uint8_t ComboEngine::findActiveCombos(trigger_keycodes_t activekeycodes)
 {
     activecombos.clear();
-    std::sort(activekeycodes.begin(), activekeycodes.end());
-    std::copy_if (combolist.begin(), combolist.end(), std::back_inserter(activecombos), [activekeycodes] (combo_t combo){  return IsSubsetPreSorted(activekeycodes, combo.first );}  ); 
-    return activecombos.size()>0;
+    std::sort(activekeycodes.begin(), activekeycodes.end()); // include needs both to be sorted.
+    std::copy_if (combolist.begin(), combolist.end(), std::back_inserter(activecombos), [activekeycodes] (combo_t combo){  return std::includes(activekeycodes.begin(),activekeycodes.end(), combo.first.begin(), combo.first.end() );}  ); 
+    return activecombos.size();
+}
+
+uint8_t ComboEngine::countActiveCombosKeys(trigger_keycodes_t activekeycodes)
+{
+  trigger_keycodes_t keycodesusedbycombos = keycodesused;
+  return std::count_if(activekeycodes.begin(), activekeycodes.end(), [keycodesusedbycombos] (uint16_t keycode){return (std::binary_search(keycodesusedbycombos.begin(),keycodesusedbycombos.end(),keycode));});
+  
 }
 
 combo_t ComboEngine::findLargestCombo()
 {
-  auto it = *std::max_element(activecombos.begin(), activecombos.end(),[](combo_t comboa, combo_t combob){return (comboa.first.size() < combob.first.size());} ); 
+  combo_t it = *std::max_element(activecombos.begin(), activecombos.end(),[](combo_t comboa, combo_t combob){return (comboa.first.size() < combob.first.size());} ); 
   return  it;
+}
+
+trigger_keycodes_t ComboEngine::processActiveKeycodewithComboKeys(trigger_keycodes_t activekeycodes)
+{
+   trigger_keycodes_t keycodesusedbycombos = keycodesused;
+   activekeycodes.erase(std::remove_if(activekeycodes.begin(), activekeycodes.end(), [keycodesusedbycombos] (uint16_t keycode){return (std::binary_search(keycodesusedbycombos.begin(),keycodesusedbycombos.end(),keycode));}),activekeycodes.end()); 
+   return activekeycodes;
 }
 
 trigger_keycodes_t ComboEngine::processActiveKeycodewithCombos(trigger_keycodes_t activekeycodes)

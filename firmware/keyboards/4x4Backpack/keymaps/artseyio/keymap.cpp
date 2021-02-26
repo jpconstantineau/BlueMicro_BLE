@@ -31,7 +31,7 @@ std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
  
 void setupKeymap() {
 
-    uint32_t layer_base_tap[MATRIX_ROWS][MATRIX_COLS] =
+    uint32_t layer_base_press[MATRIX_ROWS][MATRIX_COLS] =
         KEYMAP(
            KC_NO,  KC_NO,  KC_NO,   KC_NO,
            KC_NO,  KC_NO,  KC_NO,   KC_NO,
@@ -85,17 +85,26 @@ void setupKeymap() {
      * add the other layers
      */
     // from https://www.artsey.io/_FILES/images/ARTSEY.jpg
-    ADDLAYER(_ARTSEY_BASE,Method::MT_TAP, layer_base_tap);
-    ADDLAYER(_ARTSEY_BASE,Method::MT_HOLD,layer_base_hold);
+    ADDLAYER(_ARTSEY_BASE,Method::PRESS, layer_base_press);
+   // ADDLAYER(_ARTSEY_BASE,Method::MT_HOLD,layer_base_hold);
     ADDLAYER(_ARTSEY_NUM, Method::PRESS , layer_num);
     ADDLAYER(_ARTSEY_SYM, Method::PRESS , layer_sym);
     ADDLAYER(_ARTSEY_BRAC,Method::PRESS , layer_brac);
     ADDLAYER(_ARTSEY_NAV, Method::PRESS , layer_nav);
     ADDLAYER(_ARTSEY_MOU, Method::PRESS , layer_mou);
 
+   /* COMB(chord_a,    KC_A,            KC_A);
+    COMB(chord_r,    KC_R,            KC_R);
+    COMB(chord_tt,   KC_T,            KC_T);
+    COMB(chord_s,    KC_S,            KC_S);
+    COMB(chord_e,    KC_E,            KC_E);
+    COMB(chord_y,    KC_Y,            KC_Y);
+    COMB(chord_i,    KC_I,            KC_I);
+    COMB(chord_o,    KC_O,            KC_O);*/
+
     COMB(chord_b,    KC_B,            KC_E, KC_O);
     COMB(chord_c,    KC_C,            KC_E, KC_Y);
-    COMB(chord_d,    KC_M,            KC_A, KC_R, KC_T);
+    COMB(chord_d,    KC_D,            KC_A, KC_R, KC_T);
     COMB(chord_f,    KC_F,            KC_A, KC_R);
     COMB(chord_g,    KC_G,            KC_R, KC_T);
     COMB(chord_h,    KC_H,            KC_E, KC_I);

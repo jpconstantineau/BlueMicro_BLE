@@ -294,11 +294,56 @@ bool KeyScanner::getReport()
 
     // process combos before generating HID reports
     if (combos.anyCombosConfigured())
-    {
-        if (combos.findActiveCombos(activeKeys))
+    { 
+        uint8_t triggercount = combos.countActiveCombosKeys(activeKeys);
+        if  (triggercount>1)// we have a potential combo present
         {
-            activeKeys = combos.processActiveKeycodewithCombos(activeKeys);
+            uint8_t activecount = combos.findActiveCombos(activeKeys);
+            if (activecount>0) // at least 1
+            {
+                if (activecount==1) // exactly 1
+                {
+                    activeKeys = combos.processActiveKeycodewithCombos(activeKeys);
+                    combotimer = status->timestamp;  // reset timers to current timestamp.
+                    triggerkeytimer = status->timestamp;
+                }
+                else // more than 2
+                {
+                    if (status->timestamp - combotimer > 200)// timeout to send biggest one...
+                    {
+                        activeKeys = combos.processActiveKeycodewithCombos(activeKeys);
+                        combotimer = status->timestamp;  // reset timers to current timestamp.
+                        triggerkeytimer = status->timestamp;
+                    }
+                    else // we are still transitioning remove all potential combo keys...
+                    {
+                        activeKeys = combos.processActiveKeycodewithComboKeys(activeKeys);
+                    }
+                }
+            }
+            else
+            { // if none are active, we might have to remove keycodes in case we are transitionning to/from a combo 
+                if (status->timestamp - combotimer < 75)// Transitionning out of a combo
+                {
+                    activeKeys = combos.processActiveKeycodewithComboKeys(activeKeys); 
+                }
+            }
         }
+        else
+        {
+           if (triggercount==1) // we have a key used in a combo being pressed
+           {
+                if (status->timestamp - triggerkeytimer < 75)// Transitionning out/in of a combo
+                {
+                    activeKeys = combos.processActiveKeycodewithComboKeys(activeKeys); 
+                }
+           }
+           else
+           {
+                triggerkeytimer = status->timestamp;
+                combotimer = status->timestamp;
+           }
+        }    
     }
 
     for (auto keycode : activeKeys) 
@@ -393,6 +438,8 @@ uint16_t KeyScanner::mouse = 0;
 uint16_t KeyScanner::special_key = 0;
 uint16_t KeyScanner::remoteLayer = 0;
 uint16_t KeyScanner::remotespecialkeycode = 0;
+uint32_t KeyScanner::combotimer = 0;
+uint32_t KeyScanner::triggerkeytimer = 0;
 
 uint16_t KeyScanner::oneshotLayer = 0;
 uint8_t KeyScanner::remoteMod = 0;
