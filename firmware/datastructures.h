@@ -21,11 +21,14 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define DATASTRUCTURES_H
 #include <array>
 
-#define BLUEMICRO_CONFIG_VERSION 3  // this should be incremented every time the PersistentState structure definition is updated.  This will ensure that the SETTINGS_FILE file is reset when the structure is updated.
+#define BLUEMICRO_CONFIG_VERSION 4  // this should be incremented every time the PersistentState structure definition is updated.  This will ensure that the SETTINGS_FILE file is reset when the structure is updated.
 
     typedef union {
         struct { 
         uint8_t  version;
+        uint8_t  dummy1;
+        uint8_t  dummy2;
+        uint8_t  dummy3;
 
         uint32_t matrixscaninterval; // timer interval = normal priority
         uint32_t batteryinterval;  // timer interval = normal priority
@@ -64,6 +67,12 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
         uint8_t connectionMode;
         uint8_t BLEProfile;
         uint16_t BLEProfileEdiv[3];
+
+        uint8_t    mode;
+        uint8_t    user1;  
+        uint8_t    user2; 
+        uint8_t    user3;
+
 
         char BLEProfileName[3][32];
   
@@ -114,6 +123,11 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
         bool needUnpair;
         bool needFSReset;
         bool save2flash;
+
+        uint8_t    user1;  
+        uint8_t    user2; 
+        uint8_t    user3;
+        uint8_t    user4;
 
     } DynamicState; // meant for keyboard and BLE status and things that are dynamic and should not be stored in flash.
 
