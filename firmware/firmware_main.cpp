@@ -58,16 +58,22 @@ void setupConfig() {
   keyboardstate.statusble=0;  //initialize to a known state.
   keyboardstate.statuskb=0;   //initialize to a known state.
 
+  keyboardstate.user1=0;   //initialize to a known state.  
+  keyboardstate.user2=0;   //initialize to a known state. 
+  keyboardstate.user3=0;   //initialize to a known state.
+
   keyboardstate.helpmode = false;
   keyboardstate.timestamp = millis();
   keyboardstate.lastupdatetime = keyboardstate.timestamp;
   keyboardstate.lastreporttime = 0;
+  keyboardstate.lastuseractiontime = 0;
 
   keyboardstate.connectionState = CONNECTION_NONE;
   keyboardstate.needReset = false;
   keyboardstate.needUnpair = false;
   keyboardstate.needFSReset = false;
   keyboardstate.save2flash = false;
+
 }
 
 /**************************************************************************************************************************/
@@ -130,6 +136,10 @@ void resetConfig()
 
   keyboardconfig.enableSerial = SERIAL_DEBUG_CLI_DEFAULT_ON;   
 
+  keyboardconfig.mode = 0; 
+  keyboardconfig.user1 = 0;  
+  keyboardconfig.user2 = 0; 
+
   keyboardconfig.matrixscaninterval=HIDREPORTINGINTERVAL;
   keyboardconfig.batteryinterval=BATTERYINTERVAL;
   keyboardconfig.keysendinterval=HIDREPORTINGINTERVAL;
@@ -143,6 +153,8 @@ void resetConfig()
   strcpy(keyboardconfig.BLEProfileName[0], "unpaired");
   strcpy(keyboardconfig.BLEProfileName[1], "unpaired");
   strcpy(keyboardconfig.BLEProfileName[2], "unpaired");
+
+
 }
 
 /**************************************************************************************************************************/

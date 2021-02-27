@@ -78,6 +78,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
         uint32_t lastupdatetime;
         uint32_t lastreporttime;
         uint32_t lastuseractiontime;
+
         uint16_t layer;
         uint8_t statuskb;
         uint8_t statusble;
@@ -86,8 +87,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
         uint32_t vbat_mv;
         uint32_t vbat_vdd;
         uint32_t vbat_vddh;
-        uint8_t  vbat_per;
-        uint8_t  batt_type;
+  
         uint32_t batterytimer;
         uint32_t displaytimer;
         uint32_t audiotimer;
@@ -96,14 +96,21 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
         uint32_t statusledtimer;
 
         char peer_name_prph[32];
+
         uint16_t conn_handle_prph;
         int8_t rssi_prph;
+
+        uint8_t  vbat_per;
         
         char peer_name_cent[32];
+
         uint16_t conn_handle_cent;
         int8_t rssi_cent;
+
+        uint8_t  batt_type;
         
         char peer_name_cccd[32];
+        
         uint16_t conn_handle_cccd;
         int8_t rssi_cccd;
         
@@ -121,7 +128,6 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
         uint8_t    user1;  
         uint8_t    user2; 
         uint8_t    user3;
-        uint8_t    user4;
 
     } DynamicState; // meant for keyboard and BLE status and things that are dynamic and should not be stored in flash.
 
