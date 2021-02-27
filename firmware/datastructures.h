@@ -26,10 +26,10 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
     typedef union {
         struct { 
         uint8_t  version;
-        uint8_t  dummy1;
-        uint8_t  dummy2;
-        uint8_t  dummy3;
-
+        uint8_t    mode;
+        uint8_t    user1;  
+        uint8_t    user2; 
+        
         uint32_t matrixscaninterval; // timer interval = normal priority
         uint32_t batteryinterval;  // timer interval = normal priority
         uint32_t keysendinterval; //   normal priority
@@ -68,16 +68,10 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
         uint8_t BLEProfile;
         uint16_t BLEProfileEdiv[3];
 
-        uint8_t    mode;
-        uint8_t    user1;  
-        uint8_t    user2; 
-        uint8_t    user3;
-
-
         char BLEProfileName[3][32];
   
        };
-       char data[128]; } PersistentState;  // meant for configuration and things that we want to store in flash so that we can pick it up on the next reboot.
+       char data[140]; } PersistentState;  // meant for configuration and things that we want to store in flash so that we can pick it up on the next reboot.
 
     typedef struct { 
         uint32_t timestamp;
