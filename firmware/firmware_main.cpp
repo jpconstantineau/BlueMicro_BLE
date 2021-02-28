@@ -50,6 +50,7 @@ KeyScanner keys(&keyboardconfig, &keyboardstate);
 Battery batterymonitor;
 
 static std::vector<uint16_t> stringbuffer; // buffer for macros to type into...
+static std::vector<std::array<uint8_t,8>> reportbuffer; 
 
 /**************************************************************************************************************************/
 void setupConfig() {
@@ -59,15 +60,22 @@ void setupConfig() {
   keyboardstate.statusble=0;  //initialize to a known state.
   keyboardstate.statuskb=0;   //initialize to a known state.
 
+  keyboardstate.user1=0;   //initialize to a known state.  
+  keyboardstate.user2=0;   //initialize to a known state. 
+  keyboardstate.user3=0;   //initialize to a known state.
+
   keyboardstate.helpmode = false;
   keyboardstate.timestamp = millis();
   keyboardstate.lastupdatetime = keyboardstate.timestamp;
+  keyboardstate.lastreporttime = 0;
+  keyboardstate.lastuseractiontime = 0;
 
   keyboardstate.connectionState = CONNECTION_NONE;
   keyboardstate.needReset = false;
   keyboardstate.needUnpair = false;
   keyboardstate.needFSReset = false;
   keyboardstate.save2flash = false;
+
 }
 
 /**************************************************************************************************************************/
@@ -130,6 +138,10 @@ void resetConfig()
 
   keyboardconfig.enableSerial = SERIAL_DEBUG_CLI_DEFAULT_ON;   
 
+  keyboardconfig.mode = 0; 
+  keyboardconfig.user1 = 0;  
+  keyboardconfig.user2 = 0; 
+
   keyboardconfig.matrixscaninterval=HIDREPORTINGINTERVAL;
   keyboardconfig.batteryinterval=BATTERYINTERVAL;
   keyboardconfig.keysendinterval=HIDREPORTINGINTERVAL;
@@ -143,6 +155,8 @@ void resetConfig()
   strcpy(keyboardconfig.BLEProfileName[0], "unpaired");
   strcpy(keyboardconfig.BLEProfileName[1], "unpaired");
   strcpy(keyboardconfig.BLEProfileName[2], "unpaired");
+
+
 }
 
 /**************************************************************************************************************************/
@@ -216,6 +230,7 @@ void setup() {
   //batterytimer.start();
 
   stringbuffer.clear();
+  reportbuffer.clear();
 
   if(keyboardconfig.enablePWMLED)
   {
@@ -350,6 +365,13 @@ void scanMatrix() {
         }
     }
 #endif
+
+void UpdateQueue()
+{
+  stringbuffer.insert(stringbuffer.end(), combos.keycodebuffertosend.rbegin(),combos.keycodebuffertosend.rend());
+  combos.keycodebuffertosend.clear();
+}
+
 /**************************************************************************************************************************/
 // macro string queue management
 /**************************************************************************************************************************/
@@ -757,7 +779,7 @@ void process_keyboard_function(uint16_t keycode)
     case SYM_DEGREE: EXPAND_ALT_CODE(KC_KP_0, KC_KP_1, KC_KP_7, KC_KP_6) break; // Alt 0176 degree symbol
 
     case BLEPROFILE_1:
-      if (keyboardstate.connectionState != CONNECTION_USB) // reseting/rebooting KB when BLE Profile switching on USB would be ennoying...
+     // if (keyboardstate.connectionState != CONNECTION_USB) // reseting/rebooting KB when BLE Profile switching on USB would be ennoying...
         {
         #ifdef ARDUINO_NRF52_COMMUNITY
           keyboardconfig.BLEProfile = 0;
@@ -771,7 +793,7 @@ void process_keyboard_function(uint16_t keycode)
     break;
 
     case BLEPROFILE_2:
-      if (keyboardstate.connectionState != CONNECTION_USB) // reseting/rebooting KB when BLE Profile switching on USB would be ennoying...
+     // if (keyboardstate.connectionState != CONNECTION_USB) // reseting/rebooting KB when BLE Profile switching on USB would be ennoying...
       {
         #ifdef ARDUINO_NRF52_COMMUNITY
           keyboardconfig.BLEProfile = 1;
@@ -785,7 +807,7 @@ void process_keyboard_function(uint16_t keycode)
     break;
 
     case BLEPROFILE_3:
-      if (keyboardstate.connectionState != CONNECTION_USB) // reseting/rebooting KB when BLE Profile switching on USB would be ennoying...
+    //  if (keyboardstate.connectionState != CONNECTION_USB) // reseting/rebooting KB when BLE Profile switching on USB would be ennoying...
       {
         #ifdef ARDUINO_NRF52_COMMUNITY
           keyboardconfig.BLEProfile = 2;
@@ -854,46 +876,56 @@ void sendKeyPresses() {
       KeyScanner::macro = 0;
       
   } 
+  UpdateQueue();
   if (!stringbuffer.empty()) // if the macro buffer isn't empty, send the first character of the buffer... which is located at the back of the queue
   {  
-    uint8_t report[8] = {0, 0, 0 ,0, 0, 0, 0, 0}; ;
+    std::array<uint8_t,8> reportarray = {0, 0, 0 ,0, 0, 0, 0, 0};
     uint16_t keyreport = stringbuffer.back();
     stringbuffer.pop_back();
     
-    report[0] = static_cast<uint8_t>((keyreport & 0xFF00) >> 8);// mods
-    report[1] = static_cast<uint8_t>(keyreport & 0x00FF);
-    switch (keyboardstate.connectionState)
-    {
-      case CONNECTION_USB: usb_sendKeys(report); break;
-      case CONNECTION_BT: bt_sendKeys(report); break;
-    }
-    delay(keyboardconfig.keysendinterval*2);
-    if (stringbuffer.empty()) // make sure to send an empty report when done...
-    { 
-      report[0] = 0;
-      report[1] = 0;
-      switch (keyboardstate.connectionState)
-      {
-        case CONNECTION_USB: usb_sendKeys(report); break;
-        case CONNECTION_BT: bt_sendKeys(report); break;
-      }
-      delay(keyboardconfig.keysendinterval*2);
-    }
-    else
-    {
-      
+    reportarray[0] = static_cast<uint8_t>((keyreport & 0xFF00) >> 8);// mods
+    reportarray[1] = static_cast<uint8_t>(keyreport & 0x00FF);
+
+    auto it = reportbuffer.begin();
+    it = reportbuffer.insert(it, reportarray);
+
       uint16_t lookahead_keyreport = stringbuffer.back();
       if (lookahead_keyreport == keyreport) // if the next key is the same, make sure to send a key release before sending it again... but keep the mods.
       {
-        report[0] = static_cast<uint8_t>((keyreport & 0xFF00) >> 8);// mods;
-        report[1] = 0;
-        switch (keyboardstate.connectionState)
-        {
-          case CONNECTION_USB: usb_sendKeys(report); break;
-          case CONNECTION_BT: bt_sendKeys(report); break;
-        }
-        delay(keyboardconfig.keysendinterval*2);
+        reportarray[0] = static_cast<uint8_t>((keyreport & 0xFF00) >> 8);// mods;
+        reportarray[1] = 0;
+        auto it = reportbuffer.begin();
+        it = reportbuffer.insert(it, reportarray);
       }
+  }  
+
+
+ 
+  if (!reportbuffer.empty()) // if the report buffer isn't empty, send the first character of the buffer... which is located at the end of the queue
+  {  
+    std::array<uint8_t,8> reportarray = reportbuffer.back();
+    reportbuffer.pop_back();
+    switch (keyboardstate.connectionState)
+    {
+      case CONNECTION_USB: usb_sendKeys(reportarray); delay(keyboardconfig.keysendinterval*2); break;
+      case CONNECTION_BT: bt_sendKeys(reportarray); delay(keyboardconfig.keysendinterval*2); break;
+      case CONNECTION_NONE: // save the report for when we reconnect
+              auto it = reportbuffer.end();
+              it = reportbuffer.insert(it, reportarray);
+      break; 
+    }
+    
+    if (reportbuffer.empty()) // make sure to send an empty report when done...
+    { 
+      switch (keyboardstate.connectionState)
+      {
+        case CONNECTION_USB: usb_sendKeys({0,0,0,0,0,0,0,0}); delay(keyboardconfig.keysendinterval*2); break;
+        case CONNECTION_BT: bt_sendKeys({0,0,0,0,0,0,0,0}); delay(keyboardconfig.keysendinterval*2); break;
+        case CONNECTION_NONE: // save the report for when we reconnect
+                      auto it = reportbuffer.end();
+                      it = reportbuffer.insert(it, {0,0,0,0,0,0,0,0});
+        break; 
+      } 
     }
    // KeyScanner::processingmacros=0;
   }
@@ -903,6 +935,10 @@ void sendKeyPresses() {
     {
       case CONNECTION_USB: usb_sendKeys(KeyScanner::currentReport); break;
       case CONNECTION_BT: bt_sendKeys(KeyScanner::currentReport); break;
+      case CONNECTION_NONE: // save the report for when we reconnect
+                      auto it = reportbuffer.begin();
+                      it = reportbuffer.insert(it, {KeyScanner::currentReport[0], KeyScanner::currentReport[1],KeyScanner::currentReport[2],KeyScanner::currentReport[3], KeyScanner::currentReport[4],KeyScanner::currentReport[5], KeyScanner::currentReport[6],KeyScanner::currentReport[7]});    
+      break; 
     }
         LOG_LV1("MXSCAN","SEND: %i %i %i %i %i %i %i %i %i " ,keyboardstate.timestamp,KeyScanner::currentReport[0], KeyScanner::currentReport[1],KeyScanner::currentReport[2],KeyScanner::currentReport[3], KeyScanner::currentReport[4],KeyScanner::currentReport[5], KeyScanner::currentReport[6],KeyScanner::currentReport[7] );        
   } else if (KeyScanner::specialfunction > 0)
@@ -915,6 +951,7 @@ void sendKeyPresses() {
     {
       case CONNECTION_USB: usb_sendMediaKey(KeyScanner::consumer); break;
       case CONNECTION_BT: bt_sendMediaKey(KeyScanner::consumer); break;
+      case CONNECTION_NONE: speaker.playTone(TONE_BLE_DISCONNECT); break; // we have lost a report!
     }
     KeyScanner::consumer = 0; 
   } else if (KeyScanner::mouse > 0)
@@ -923,6 +960,7 @@ void sendKeyPresses() {
     {
       case CONNECTION_USB: usb_sendMouseKey(KeyScanner::mouse); break;
       case CONNECTION_BT: bt_sendMouseKey(KeyScanner::mouse); break;
+      case CONNECTION_NONE: speaker.playTone(TONE_BLE_DISCONNECT); break; // we have lost a report!
     }
     KeyScanner::mouse = 0; 
   }
@@ -1024,6 +1062,7 @@ void loop() {  // has task priority TASK_PRIO_LOW
             bt_stopAdv();
             keyboardstate.connectionState = CONNECTION_USB;
             keyboardstate.lastuseractiontime = millis(); // a USB connection will reset sleep timer... 
+            //speaker.playTone(TONE_BLE_CONNECT);
           }
         }
       else if (bt_isConnected())
@@ -1032,6 +1071,7 @@ void loop() {  // has task priority TASK_PRIO_LOW
           {
             keyboardstate.connectionState = CONNECTION_BT;
             keyboardstate.lastuseractiontime = millis(); // a BLE connection will reset sleep timer...
+            //speaker.playTone(TONE_BLE_CONNECT);
           }
         }
         else
@@ -1040,6 +1080,7 @@ void loop() {  // has task priority TASK_PRIO_LOW
           {
             bt_startAdv();
             keyboardstate.connectionState = CONNECTION_NONE;
+            //speaker.playTone(TONE_BLE_DISCONNECT);
             // disconnecting won't reset sleep timer.
           }
         }
@@ -1113,7 +1154,7 @@ void LowestPriorityloop()
   
 
    keyboardstate.lastuseractiontime = max(KeyScanner::getLastPressed(),keyboardstate.lastuseractiontime); // use the latest time to check for sleep...
-   unsigned long timesincelastkeypress = keyboardstate.timestamp - keyboardstate.lastuseractiontime;
+   unsigned long timesincelastkeypress = keyboardstate.timestamp - KeyScanner::getLastPressed();
 
   updateBLEStatus();
   

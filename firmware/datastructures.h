@@ -21,12 +21,15 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define DATASTRUCTURES_H
 #include <array>
 
-#define BLUEMICRO_CONFIG_VERSION 3  // this should be incremented every time the PersistentState structure definition is updated.  This will ensure that the SETTINGS_FILE file is reset when the structure is updated.
+#define BLUEMICRO_CONFIG_VERSION 4  // this should be incremented every time the PersistentState structure definition is updated.  This will ensure that the SETTINGS_FILE file is reset when the structure is updated.
 
     typedef union {
         struct { 
         uint8_t  version;
-
+        uint8_t    mode;
+        uint8_t    user1;  
+        uint8_t    user2; 
+        
         uint32_t matrixscaninterval; // timer interval = normal priority
         uint32_t batteryinterval;  // timer interval = normal priority
         uint32_t keysendinterval; //   normal priority
@@ -68,12 +71,14 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
         char BLEProfileName[3][32];
   
        };
-       char data[128]; } PersistentState;  // meant for configuration and things that we want to store in flash so that we can pick it up on the next reboot.
+       char data[140]; } PersistentState;  // meant for configuration and things that we want to store in flash so that we can pick it up on the next reboot.
 
     typedef struct { 
         uint32_t timestamp;
         uint32_t lastupdatetime;
+        uint32_t lastreporttime;
         uint32_t lastuseractiontime;
+
         uint16_t layer;
         uint8_t statuskb;
         uint8_t statusble;
@@ -82,8 +87,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
         uint32_t vbat_mv;
         uint32_t vbat_vdd;
         uint32_t vbat_vddh;
-        uint8_t  vbat_per;
-        uint8_t  batt_type;
+  
         uint32_t batterytimer;
         uint32_t displaytimer;
         uint32_t audiotimer;
@@ -92,14 +96,21 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
         uint32_t statusledtimer;
 
         char peer_name_prph[32];
+
         uint16_t conn_handle_prph;
         int8_t rssi_prph;
+
+        uint8_t  vbat_per;
         
         char peer_name_cent[32];
+
         uint16_t conn_handle_cent;
         int8_t rssi_cent;
+
+        uint8_t  batt_type;
         
         char peer_name_cccd[32];
+        
         uint16_t conn_handle_cccd;
         int8_t rssi_cccd;
         
@@ -113,6 +124,10 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
         bool needUnpair;
         bool needFSReset;
         bool save2flash;
+
+        uint8_t    user1;  
+        uint8_t    user2; 
+        uint8_t    user3;
 
     } DynamicState; // meant for keyboard and BLE status and things that are dynamic and should not be stored in flash.
 

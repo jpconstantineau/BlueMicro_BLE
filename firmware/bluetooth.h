@@ -57,6 +57,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
     void set_keyboard_led(uint16_t conn_handle, uint8_t led_bitmap);
 
     void bt_sendKeys(uint8_t currentReport[8]);
+    void bt_sendKeys(std::array<uint8_t,8> currentReport);
     void bt_sendMediaKey(uint16_t keycode);
     void bt_sendMouseKey(uint16_t keycode);
     void rssi_changed_callback(uint16_t conn_hdl, int8_t rssi);

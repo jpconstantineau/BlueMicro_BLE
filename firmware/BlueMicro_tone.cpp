@@ -43,16 +43,16 @@ void BlueMicro_tone::playToneNow(unsigned int frequency, unsigned long duration)
 {
     if (_pin)
     {
-  #ifdef SPEAKER_EN_PIN
-    digitalWrite(SPEAKER_EN_PIN, HIGH);
+  #ifdef SPEAKER_PIN
+    digitalWrite(SPEAKER_PIN, HIGH);
     delay(50);
   #endif
 
   tone(_pin, frequency, duration);
   delay(duration);
 
-  #ifdef SPEAKER_EN_PIN
-    digitalWrite(SPEAKER_EN_PIN, LOW);
+  #ifdef SPEAKER_PIN
+    digitalWrite(SPEAKER_PIN, LOW);
   #endif
   }
 }
@@ -82,7 +82,7 @@ void BlueMicro_tone::processTones()
     toneQueue.pop();
     if (_pin)
     {
-    #ifdef SPEAKER_EN_PIN
+    #ifdef SPEAKER_PIN
       digitalWrite(_pin, HIGH);
       delay(50);
     #endif
@@ -130,8 +130,8 @@ void BlueMicro_tone::processTones()
       break;
     }
 
-    #ifdef SPEAKER_EN_PIN
-      digitalWrite(SPEAKER_EN_PIN, LOW);
+    #ifdef SPEAKER_PIN
+      digitalWrite(SPEAKER_PIN, LOW);
     #endif
     }
     toneDelay = millis();

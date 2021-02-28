@@ -24,7 +24,7 @@ BlueMicro is currently missing some features found in other popular firmware. Th
 | Mouse Keys                                                                                                             |     ✅     | ✅  |      |
 | Hold-Tap (which includes Mod-Tap and Layer-Tap)                                                                        |     ✅     | ✅  | ✅  | 
 | One Shot Keys                                                                                                          |     ✅     | ✅  | 🚧  |
-| Combo Keys                                                                                                             |             | ✅  | 🚧  |
+| Combo Keys                                                                                                             |     ✅     | ✅  | 🚧  |
 | Macros                                                                                                                 |     ✅     | ✅  | 🚧  |
 | **Keyboard and Controller Board Hardware Options**                                                                     |            |     |    |
 | Ghosted Keys Support                                                                                                   |     🚧     | ✅  |    |

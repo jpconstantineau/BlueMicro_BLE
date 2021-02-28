@@ -1,5 +1,5 @@
 /*
-Copyright 2018-2021 <Pierre Constantineau>
+Copyright 2018 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -17,48 +17,38 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-#ifndef FIRMWARE_H
-#define FIRMWARE_H
-#undef min
-#undef max
-#include "firmware_config.h"
-#include "bluetooth_config.h"
-#include "KeyScanner.h"
-#include "keymap.h"
-#include "sleep.h"
-#include "bluetooth.h"
-#include "nrf52battery.h"
-#include "LedPwm.h"
-#include "LedRGB.h"
-#include "nrf52gpio.h"
-#include "datastructures.h"
-#include "debug_cli.h"
-#include "usb.h"
-#include "BlueMicro_display.h"
-#include "BlueMicro_tone.h"
-#include "combo_engine.h"
+#include <stdint.h>
+#include "hid_keycodes.h"
+#include "keyboard_config.h"
+#include "advanced_keycodes.h"
+#include "Key.h"
+#include <array>
+#ifndef KEYMAP_H
+#define KEYMAP_H
 
+#define NUM_LAYERS 2
 
-    void setupConfig(void);
-    void loadConfig(void);
-    void saveConfig(void);
-    void resetConfig(void);
-    void setupMatrix(void);
-    void scanMatrix(void);
-    void sendKeyPresses(void);
-    void LowestPriorityloop(void);
-    void NormalPriorityloop(void);
-    void keyscantimer_callback(TimerHandle_t _handle);
-    void batterytimer_callback(TimerHandle_t _handle);
-    void RGBtimer_callback(TimerHandle_t _handle);
-    void addStringToQueue(const char* str);
-    void UpdateQueue(void);
-    void addKeycodeToQueue(const uint16_t keycode);
-    void addKeycodeToQueue(const uint16_t keycode, const uint8_t modifier);
-    void process_keyboard_function(uint16_t keycode);
-    #ifndef USER_MACRO_FUNCTION  
-    #define USER_MACRO_FUNCTION 1  
-    void process_user_macros(uint16_t macroid);
-    #endif
+#define _L0  0
+#define _L1  1
 
-#endif /* FIRMWARE_H */
+void setupKeymap();
+extern std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix;
+extern PersistentState keyboardconfig;
+extern DynamicState keyboardstate;
+
+#define CBR_FN   MC(KC_H)
+#define BRC_FN   MC(KC_I)
+#define PRN_FN   MC(KC_J)
+#define IPADDR   MC(KC_U)
+#define SMILE    MC(KC_V)
+#define GITCOMMIT MC(KC_X)
+#define GOTOMODE0 MC(KC_Y)
+#define GOTOMODE1 MC(KC_Z)
+
+#define USER_MACRO_FUNCTION   0 
+void process_user_macros(uint16_t macroid);
+
+extern void addStringToQueue(const char* str);
+extern void addKeycodeToQueue(const uint16_t keycode);
+
+#endif /* KEYMAP_H */

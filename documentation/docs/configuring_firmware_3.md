@@ -112,9 +112,12 @@ void encoder_callback(int step)
 
 If you rotate in one direction and the keycodes are for the other direction, simply change the `if ( step > 0 )` statement to `if ( step < 0 )` or swap the keycodes around.
 
+You can change the rotary encoder callback to a different function by calling a macro.  This will enable changing the behavior of the rotary encoder at runtime.
+
+
 ### OLED Definition
 
-The default screens can be overriden by assigning a new callback. 
+The default screens can be overriden by assigning a new callback.
 
 You will need to add a few things to your keymap.h file.
 

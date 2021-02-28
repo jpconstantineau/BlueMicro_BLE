@@ -33,8 +33,8 @@ void setupKeymap() {
 
     uint32_t layer_base_press[MATRIX_ROWS][MATRIX_COLS] =
         KEYMAP(
-           KC_NO,  KC_NO,  KC_NO,   KC_NO,
-           KC_NO,  KC_NO,  KC_NO,   KC_NO,
+           MC(KC_A),  MC(KC_B),  KC_NO,   KC_NO,
+           KC_F20,  MC(KC_C),  KC_NO,   KC_NO,
            KC_A,   KC_R,   KC_T,    KC_S,  
            KC_E   ,KC_Y,   KC_I,    KC_O);
 
@@ -119,14 +119,14 @@ void setupKeymap() {
     COMB(chord_v,    KC_V,            KC_R, KC_S);
     COMB(chord_w,    KC_W,            KC_A, KC_S);
     COMB(chord_x,    KC_X,            KC_R, KC_T, KC_S);
-    COMB(chord_z,    KC_Z,            KC_A, KC_R, KC_T, KC_S);
+  //  COMB(chord_z,    KC_Z,            KC_A, KC_R, KC_T, KC_S);
     COMB(chord_enter,KC_ENTER,        KC_A, KC_E);
     COMB(chord_quote,KC_QUOTE,        KC_A, KC_Y, KC_I);
     COMB(chord_dot,  KC_DOT,          KC_A, KC_Y);
     COMB(chord_comma,KC_COMMA,        KC_A, KC_I);
     COMB(chord_slash,KC_SLASH,        KC_A, KC_O);
     COMB(chord_bspac,KC_BSPACE,       KC_E, KC_R);
-    COMB(chord_space,KC_SPACE,        KC_E, KC_Y, KC_I, KC_O);
+   // COMB(chord_space,KC_SPACE,        KC_E, KC_Y, KC_I, KC_O);
     COMB(chord_esc,  KC_ESC,          KC_A, KC_R, KC_O);
     COMB(chord_tab,  KC_TAB,          KC_A, KC_R, KC_T, KC_O);
     COMB(chord_ctrl, KC_LCTRL,        KC_E, KC_S); // to do: oneshot
@@ -148,6 +148,14 @@ void setupKeymap() {
     COMB(chord_mslck,KC_0,            KC_A, KC_Y, KC_T); // to do macro to swich layer to mouse...
     COMB(chord_msulk,KC_0,            KC_MS_BTN1, KC_MS_BTN2, KC_MS_DOWN); // to do macro to swich layer to _ARTSEY_BASE...
 
+    SUBS(string_test1,       "I'd just like to interject for a moment.",       KC_A, KC_R, KC_T, KC_S); // works
+
+    SUBS(string_test2,       "SUBS(string_test2, ... , KC_F20)",                  KC_F20); // Not working... using this we could replace process_user_macros()
+
+    KEYS(key_sequence_test1, ({LSFT(KC_H), KC_E, KC_L, KC_L, KC_O, KC_SPC, LSFT(KC_W), KC_O, KC_R, KC_L, KC_D}), KC_E, KC_Y, KC_I, KC_O); // works
+
+    KEYS(key_sequence_test2, ({LSFT(KC_H), KC_E, KC_L, KC_L, KC_O, KC_SPC, LSFT(KC_T), KC_E, KC_S, KC_T}), MC(KC_C)); // Not working... using this we could replace process_user_macros()
+
 }
 
 void process_user_macros(uint32_t macroid)
@@ -155,7 +163,7 @@ void process_user_macros(uint32_t macroid)
  switch (macroid)
  {
      case MC(KC_A):
-     addStringToQueue("Hello World!");
+     addStringToQueue("process_user_macros MC(KC_A)");
      break;
      case MC(KC_B):
      addStringToQueue("The quick brown fox jumps over the lazy dog!");

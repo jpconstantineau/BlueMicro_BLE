@@ -579,6 +579,45 @@ void sendlayer(uint8_t layer)
         #endif 
 }
 /**************************************************************************************************************************/
+void bt_sendKeys(std::array<uint8_t,8> currentReport)
+{
+      #if BLE_HID == 1  
+        uint8_t keycode[6];
+     //   uint8_t layer = 0;
+        uint8_t mods = 0;
+        mods = currentReport[0];                                                 // modifiers
+        keycode[0] = currentReport[1];                                           // Buffer 
+        keycode[1] = currentReport[2];                                           // Buffer 
+        keycode[2] = currentReport[3];                                           // Buffer 
+        keycode[3] = currentReport[4];                                           // Buffer 
+        keycode[4] = currentReport[5];                                           // Buffer 
+        keycode[5] = currentReport[6];                                           // Buffer 
+    //    layer = currentReport[7];                                                // Layer
+        blehid.keyboardReport(hid_conn_hdl,mods,  keycode); 
+        LOG_LV2("HID","Sending blehid.keyboardReport " );
+    #endif
+    #if BLE_PERIPHERAL ==1    // PERIPHERAL IS THE SLAVE BOARD
+          Linkdata.report[0] =currentReport[0];  // initialize the slave to master link data...
+          Linkdata.report[1] =currentReport[1];
+          Linkdata.report[2] =currentReport[2];
+          Linkdata.report[3] =currentReport[3];
+          Linkdata.report[4] =currentReport[4];
+          Linkdata.report[5] =currentReport[5];
+          Linkdata.report[6] =currentReport[6];
+          Linkdata.report[7] =currentReport[7];
+          Linkdata.command = 0;
+          Linkdata.timesync = 0;
+          Linkdata.specialkeycode = 0;
+          Linkdata.batterylevel = batterymonitor.vbat_per;
+          LOG_LV1("KB-P2C"," KBLinkChar_Buffer.notify sendKeys sending %i [1] %i",sizeof(Linkdata),Linkdata.report[1]);
+          KBLinkChar_Buffer.notify(&Linkdata, sizeof(Linkdata));    
+    #endif
+    #if BLE_CENTRAL ==1      // CENTRAL IS THE MASTER BOARD
+         ; // Don't send keys to slaves
+    #endif 
+}
+
+/**************************************************************************************************************************/
 void bt_sendKeys(uint8_t currentReport[8])
 {
     #if BLE_HID == 1  
@@ -616,6 +655,7 @@ void bt_sendKeys(uint8_t currentReport[8])
          ; // Don't send keys to slaves
     #endif 
 }
+/**************************************************************************************************************************/
 #ifndef MOVE_STEP
   #define MOVE_STEP   8
 #endif
@@ -668,6 +708,7 @@ void bt_sendMouseKey(uint16_t keycode)
          ; // Don't send keys to slaves
     #endif 
 }
+/**************************************************************************************************************************/
 void bt_sendMediaKey(uint16_t keycode)
 {
   #if BLE_HID == 1
