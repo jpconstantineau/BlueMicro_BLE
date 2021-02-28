@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 <Pierre Constantineau>
+Copyright 2018 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -17,39 +17,38 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
+#include <stdint.h>
+#include "hid_keycodes.h"
+#include "keyboard_config.h"
+#include "advanced_keycodes.h"
+#include "Key.h"
+#include <array>
+#ifndef KEYMAP_H
+#define KEYMAP_H
 
+#define NUM_LAYERS 2
 
+#define _L0  0
+#define _L1  1
 
-#ifndef USB_H
-#define USB_H
+void setupKeymap();
+extern std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix;
+extern PersistentState keyboardconfig;
+extern DynamicState keyboardstate;
 
-    #include <bluefruit.h>
-    #include "firmware_config.h"
-    #include "keymap.h"
-    #include "datastructures.h"
-    #include "HID.h"
+#define CBR_FN   MC(KC_H)
+#define BRC_FN   MC(KC_I)
+#define PRN_FN   MC(KC_J)
+#define IPADDR   MC(KC_U)
+#define SMILE    MC(KC_V)
+#define GITCOMMIT MC(KC_X)
+#define GOTOMODE0 MC(KC_Y)
+#define GOTOMODE1 MC(KC_Z)
 
-    #ifdef NRF52840_XXAA  // only the 840 has USB available.
-        #ifdef ARDUINO_NRF52_ADAFRUIT
-            // do nothing since the Adafruit BSP doesn't support ediv.
-        #endif
-        #ifdef ARDUINO_NRF52_COMMUNITY
-            #include "Adafruit_TinyUSB.h"
-            #define TINYUSB_AVAILABLE 1
-        #endif
-    #endif
+#define USER_MACRO_FUNCTION   0 
+void process_user_macros(uint16_t macroid);
 
+extern void addStringToQueue(const char* str);
+extern void addKeycodeToQueue(const uint16_t keycode);
 
-
-    // these functions will be defined for all cases (nrf52832 and nrf52840) but will work differently.
-    void usb_setup();
-    bool usb_isConnected();
-    void usb_wakeup();
-    void usb_sendKeys(uint8_t currentReport[8]);
-    void usb_sendKeys(std::array<uint8_t,8> currentReport);
-    void usb_sendMediaKey(uint16_t keycode);
-    void usb_sendMouseKey(uint16_t keycode);
-    void usb_sendMouseMove(uint16_t keycode, uint16_t steps);
-    void hid_report_callback(uint8_t report_id, hid_report_type_t report_type, uint8_t const* buffer, uint16_t bufsize);
-
-#endif
+#endif /* KEYMAP_H */

@@ -419,6 +419,7 @@ if (activeKeys.empty() && processingmacros) {processingmacros = false;}
               | (currentReport[7] != previousReport[7]))
     {
         reportChanged = true;
+        status->lastreporttime = status->timestamp;
         if (processingmacros)
             if ((currentReport[0] == 0 )
                 && (currentReport[1] == 0 )
@@ -433,6 +434,12 @@ if (activeKeys.empty() && processingmacros) {processingmacros = false;}
     {reportChanged = false;
     
     }
+    if ((status->timestamp)-(status->lastreporttime) > 125) // make sure we have at least 1 report every 125 ms even if we don't type.
+    {
+        reportChanged = true;
+        status->lastreporttime = status->timestamp;
+    } 
+
 
     return reportChanged;
 }
