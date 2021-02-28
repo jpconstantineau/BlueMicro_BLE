@@ -33,8 +33,8 @@ void setupKeymap() {
 
     uint32_t layer_base_press[MATRIX_ROWS][MATRIX_COLS] =
         KEYMAP(
-           MC(KC_A),  MC(KC_B),  MC(KC_C),   MC(KC_D),
-           KC_F20,  KC_NO,  KC_NO,   KC_NO,
+           MC(KC_A),  MC(KC_B),  KC_NO,   KC_NO,
+           KC_F20,  MC(KC_C),  KC_NO,   KC_NO,
            KC_A,   KC_R,   KC_T,    KC_S,  
            KC_E   ,KC_Y,   KC_I,    KC_O);
 
@@ -150,7 +150,7 @@ void setupKeymap() {
 
     SUBS(string_test1,       "I'd just like to interject for a moment.",       KC_A, KC_R, KC_T, KC_S); // works
 
-    SUBS(string_test2,       "Hello World! This is a macro!",                  KC_F20); // Not working... using this we could replace process_user_macros()
+    SUBS(string_test2,       "SUBS(string_test2, ... , KC_F20)",                  KC_F20); // Not working... using this we could replace process_user_macros()
 
     KEYS(key_sequence_test1, ({LSFT(KC_H), KC_E, KC_L, KC_L, KC_O, KC_SPC, LSFT(KC_W), KC_O, KC_R, KC_L, KC_D}), KC_E, KC_Y, KC_I, KC_O); // works
 
@@ -163,7 +163,7 @@ void process_user_macros(uint32_t macroid)
  switch (macroid)
  {
      case MC(KC_A):
-     addStringToQueue("Hello World!");
+     addStringToQueue("process_user_macros MC(KC_A)");
      break;
      case MC(KC_B):
      addStringToQueue("The quick brown fox jumps over the lazy dog!");

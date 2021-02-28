@@ -68,11 +68,14 @@ class ComboEngine {
     void clearLists();
     bool anyCombosConfigured();
     bool anySubstConfigured();
+    bool anyMacrosConfigured();
+    bool anyMacrosActive(trigger_keycodes_t activekeycodes);
     uint8_t findActiveCombos(trigger_keycodes_t activekeycodes);
     uint8_t countActiveCombosKeys(trigger_keycodes_t activekeycodes);
     trigger_keycodes_t processActiveKeycodewithCombos(trigger_keycodes_t activekeycodes);
     trigger_keycodes_t convertCStrToKeycodeVector(char* stringtoconvert);
     trigger_keycodes_t processActiveKeycodewithComboKeys(trigger_keycodes_t activekeycodes);
+    trigger_keycodes_t processActiveMacros(trigger_keycodes_t activekeycodes);
 
     trigger_keycodes_t keycodebuffertosend;
 
@@ -80,13 +83,20 @@ class ComboEngine {
     combo_t findLargestCombo();
     subst_t findLargestSubst();
 
-    combolist_t combolist;
-    substlist_t substlist;
-    trigger_keycodes_t keycodesused;
+    combolist_t combolist; // multi-key swap
+    combolist_t monolist;  // single-key swap
+    substlist_t substlist; // multi-key macro
+    substlist_t macrolist; // single-key macro
+    trigger_keycodes_t keycodesused_multi; //keys used for multi
+    trigger_keycodes_t keycodesused_single; //keys used for single
     combolist_t activecombos;
     substlist_t activesubst;
+    substlist_t activemacro;
     uint8_t activecomboscount;
     uint8_t activesubstcount;
+    uint8_t activemacrocount;
+
+    bool activemacrosent;
 };
 
 

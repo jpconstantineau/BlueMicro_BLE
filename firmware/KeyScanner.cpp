@@ -292,6 +292,15 @@ bool KeyScanner::getReport()
         remotespecialkeycode=0;
     }
 
+    // process single-key substs (macros) first.
+    if (combos.anyMacrosConfigured())
+    {
+        if(combos.anyMacrosActive(activeKeys))
+        {
+            activeKeys = combos.processActiveMacros(activeKeys);
+        }
+    }
+
     // process combos before generating HID reports
     if (combos.anyCombosConfigured())
     { 
@@ -333,6 +342,17 @@ bool KeyScanner::getReport()
         {
            if (triggercount==1) // we have a key used in a combo being pressed
            {
+               // check if we have a "mono"
+              /* if (combos.findActiveCombos(activeKeys)) // at least 1
+                {
+                    if (combos.keycodebuffertosend.empty()) // buffer has stuff in it - skip adding the "mono"
+                    {
+                    activeKeys = combos.processActiveKeycodewithCombos(activeKeys);
+                    combotimer = status->timestamp;  // reset timers to current timestamp.
+                    triggerkeytimer = status->timestamp;
+                    }
+                }
+                else */
                 if (status->timestamp - triggerkeytimer < 75)// Transitionning out/in of a combo
                 {
                     activeKeys = combos.processActiveKeycodewithComboKeys(activeKeys); 
