@@ -350,6 +350,13 @@ void scanMatrix() {
         }
     }
 #endif
+
+void UpdateQueue()
+{
+  stringbuffer.insert(stringbuffer.end(), combos.keycodebuffertosend.rbegin(),combos.keycodebuffertosend.rend());
+  combos.keycodebuffertosend.clear();
+}
+
 /**************************************************************************************************************************/
 // macro string queue management
 /**************************************************************************************************************************/
@@ -854,6 +861,7 @@ void sendKeyPresses() {
       KeyScanner::macro = 0;
       
   } 
+  UpdateQueue();
   if (!stringbuffer.empty()) // if the macro buffer isn't empty, send the first character of the buffer... which is located at the back of the queue
   {  
     uint8_t report[8] = {0, 0, 0 ,0, 0, 0, 0, 0}; ;
