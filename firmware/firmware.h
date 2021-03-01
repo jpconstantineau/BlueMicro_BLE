@@ -36,6 +36,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "usb.h"
 #include "BlueMicro_display.h"
 #include "BlueMicro_tone.h"
+#include "combo_engine.h"
 
 
     void setupConfig(void);
@@ -51,6 +52,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
     void batterytimer_callback(TimerHandle_t _handle);
     void RGBtimer_callback(TimerHandle_t _handle);
     void addStringToQueue(const char* str);
+    void UpdateQueue(void);
     void addKeycodeToQueue(const uint16_t keycode);
     void addKeycodeToQueue(const uint16_t keycode, const uint8_t modifier);
     void process_keyboard_function(uint16_t keycode);

@@ -40,6 +40,8 @@ DynamicState keyboardstate;
 BlueMicro_tone speaker(&keyboardconfig, &keyboardstate);  /// A speaker to play notes and tunes...
 led_handler statusLEDs(&keyboardconfig, &keyboardstate);  /// Typically a Blue LED and a Red LED
 
+
+
 #ifdef BLUEMICRO_CONFIGURED_DISPLAY
   BlueMicro_Display OLED(&keyboardconfig, &keyboardstate);  /// Typically a Blue LED and a Red LED
 #endif
@@ -363,6 +365,13 @@ void scanMatrix() {
         }
     }
 #endif
+
+void UpdateQueue()
+{
+  stringbuffer.insert(stringbuffer.end(), combos.keycodebuffertosend.rbegin(),combos.keycodebuffertosend.rend());
+  combos.keycodebuffertosend.clear();
+}
+
 /**************************************************************************************************************************/
 // macro string queue management
 /**************************************************************************************************************************/
@@ -867,9 +876,9 @@ void sendKeyPresses() {
       KeyScanner::macro = 0;
       
   } 
-
-  while (!stringbuffer.empty())
-  {
+  UpdateQueue();
+  if (!stringbuffer.empty()) // if the macro buffer isn't empty, send the first character of the buffer... which is located at the back of the queue
+  {  
     std::array<uint8_t,8> reportarray = {0, 0, 0 ,0, 0, 0, 0, 0};
     uint16_t keyreport = stringbuffer.back();
     stringbuffer.pop_back();

@@ -30,6 +30,14 @@ Added support for Rotary Encoders. You can refer to the configuration of the sol
 
 Added support to save the mode selected by the user so that the keymap to be loaded on bootup can be dynamically changed.  This enables a keyboard to have multiple keymaps and retain that keymap on reboot. Switching to an alternate keymap is as simple as calling a macro.  Other user variables have been added in addition to mode in order to allow for more flexibility.
 
+### Combo Engine: Combos, Substitutions and simple macros
+
+Added support for combos and longer chords. The following functions are now  available:
+
+- **COMB()** Press 2 or more keys, replace with another key.
+- **SUBS()** Press 1 or more keys, send a string.
+- **KEYS()** Press 1 or more keys, send a sequence of keycodes.
+
 ### Documentation
 
 Migrated documentation web pages to docusaurus. See them [here](http://bluemicro.jpconstantineau.com/docs/).

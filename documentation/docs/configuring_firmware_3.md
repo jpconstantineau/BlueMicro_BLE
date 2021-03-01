@@ -112,9 +112,12 @@ void encoder_callback(int step)
 
 If you rotate in one direction and the keycodes are for the other direction, simply change the `if ( step > 0 )` statement to `if ( step < 0 )` or swap the keycodes around.
 
+You can change the rotary encoder callback to a different function by calling a macro.  This will enable changing the behavior of the rotary encoder at runtime.
+
+
 ### OLED Definition
 
-The default screens can be overriden by assigning a new callback. 
+The default screens can be overriden by assigning a new callback.
 
 You will need to add a few things to your keymap.h file.
 
@@ -180,20 +183,3 @@ extern BlueMicro_tone speaker;
 ```
 
 Refer to the Luddite, default keymap for an example how to add music to your macros.
-
-### Keyboard Modes and Persistent User States
-
-When booting up, the keyboard can use pre-saved configuration information to be able to adjust the keymap according to the mode the user has previously saved.  
-
-The `PersistentState` structure that's saved in flash has the following fields available for the user to use to change the behavior of the keyboard when booting up:
-``` c++
-        uint8_t    mode;
-        uint8_t    user1;  
-        uint8_t    user2; 
-```
-
-Default values for all 3 fields are 0.
-
-See the `4x4Backpack Modes` keymap to see an example of how dynamic the selection of the keymap to be loaded on startup is performed and how saving the mode is done using Macro functionality.
-
-Since the `setupKeymap()` function also sets up the rotary encoder callback, it's possible to change the functionality of the rotary encoder depending on the mode (or other user variables) selected.
