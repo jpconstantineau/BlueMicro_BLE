@@ -886,16 +886,16 @@ void sendKeyPresses() {
     reportarray[0] = static_cast<uint8_t>((keyreport & 0xFF00) >> 8);// mods
     reportarray[1] = static_cast<uint8_t>(keyreport & 0x00FF);
 
-    auto it = reportbuffer.begin();
-    it = reportbuffer.insert(it, reportarray);
+    auto buffer_iterator = reportbuffer.begin();
+    buffer_iterator = reportbuffer.insert(buffer_iterator, reportarray);
 
       uint16_t lookahead_keyreport = stringbuffer.back();
       if (lookahead_keyreport == keyreport) // if the next key is the same, make sure to send a key release before sending it again... but keep the mods.
       {
         reportarray[0] = static_cast<uint8_t>((keyreport & 0xFF00) >> 8);// mods;
         reportarray[1] = 0;
-        auto it = reportbuffer.begin();
-        it = reportbuffer.insert(it, reportarray);
+        buffer_iterator = reportbuffer.begin();
+        buffer_iterator = reportbuffer.insert(buffer_iterator, reportarray);
       }
   }  
 
