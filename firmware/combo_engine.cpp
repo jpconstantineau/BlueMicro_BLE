@@ -26,7 +26,7 @@ ComboEngine combos;
 
 ComboEngine::ComboEngine()
 {
- combolist = {};
+ /*combolist = {};
  monolist = {}; 
  substlist = {};
  macrolist = {};
@@ -34,10 +34,14 @@ ComboEngine::ComboEngine()
  activesubst = {};
  keycodesused_multi = {};
  keycodesused_single = {};
- keycodebuffertosend = {};
+ keycodebuffertosend = {};*/ // these get initialized with empty vectors anyways...
  activemacrosent= false;
+ activecomboscount = 0;
+ activesubstcount = 0;
+ activemacrocount = 0;
 }
 
+// cppcheck-suppress unusedFunction
 void ComboEngine::clearLists()
 {
    combolist.clear();
@@ -51,7 +55,7 @@ void ComboEngine::clearLists()
 /**************************************************************************************************************************/
 /* COMBOS BELOW...                                                                                                        */
 /**************************************************************************************************************************/
-
+// cppcheck-suppress unusedFunction
 void ComboEngine::addComboToList(trigger_keycodes_t trigger, uint16_t keycode)
 {
   std::sort(trigger.begin(), trigger.end()); // pre-sorts before adding to combolist.
@@ -64,6 +68,7 @@ void ComboEngine::addComboToList(trigger_keycodes_t trigger, uint16_t keycode)
   }
 }
 
+// cppcheck-suppress unusedFunction
 bool ComboEngine::anyCombosConfigured()
 {
     return combolist.size()>0;
@@ -147,14 +152,14 @@ trigger_keycodes_t ComboEngine::convertCStrToKeycodeVector(char* stringtoconvert
   return v;
 }
 
-
-void ComboEngine::addSubstitutionToList(trigger_keycodes_t trigger,char* stringtosend)
+// cppcheck-suppress unusedFunction
+void ComboEngine::addSubstitutionToList(const trigger_keycodes_t trigger,char* stringtosend) // added const by cppcheck recommendation
 {
   trigger_keycodes_t v = convertCStrToKeycodeVector(stringtosend);   
   addKeycodeStringToList(trigger, v);
 }
 
-
+// cppcheck-suppress unusedFunction
 bool ComboEngine::anySubstConfigured()
 {
     return substlist.size()>0;
