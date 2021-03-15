@@ -128,6 +128,10 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
         uint8_t    user1;  
         uint8_t    user2; 
         uint8_t    user3;
+        int8_t     encoder1pos;
+        int8_t     encoder2pos;
+        int8_t     encoder3pos;
+        int8_t     encoder4pos;
 
     } DynamicState; // meant for keyboard and BLE status and things that are dynamic and should not be stored in flash.
 
