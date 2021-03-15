@@ -9,4 +9,4 @@ jobs:
       - name: c-linter
         uses: tonybaloney/cppcheck-action@master
         with:
-          path: ./firmware
+          path: firmware
