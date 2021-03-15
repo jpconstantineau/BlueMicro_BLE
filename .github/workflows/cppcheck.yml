@@ -6,7 +6,8 @@ jobs:
     name: cppcheck
     runs-on: ubuntu-latest
     steps:
-      - name: cpp checker check
-        uses: jsuya/cpp-linter-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: c-linter
+        uses: tonybaloney/cppcheck-action@master
+        with: 
+          path: BlueMicro_BLE/firmware
+
