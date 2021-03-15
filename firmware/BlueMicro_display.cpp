@@ -47,6 +47,7 @@ void BlueMicro_Display::setStatusDisplayCallback(updateDisplay_cb_t callback)
 _statusUpdateDisplay_cb = callback;
 }
 /**************************************************************************************************************************/
+// cppcheck-suppress unusedFunction
 void BlueMicro_Display::setDebugDisplayCallback(updateDisplay_cb_t callback)
 {
 _debugUpdateDisplay_cb = callback;
