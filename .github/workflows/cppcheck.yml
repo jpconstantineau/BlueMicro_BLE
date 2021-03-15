@@ -1,14 +1,12 @@
-name: cppcheck-action-test
-on: [push]
+name: linting
 
+on: [pull_request]
 jobs:
-  build:
-    name: cppcheck-test
+  linting:
+    name: cppcheck
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-          
-      - name: cppcheck
-        uses: deep5050/cppcheck-action@main
+      - name: c-linter
+        uses: tonybaloney/cppcheck-action@master
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN}}
+          path: ./firmware
