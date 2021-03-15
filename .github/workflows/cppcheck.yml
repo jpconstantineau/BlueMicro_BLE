@@ -6,9 +6,7 @@ jobs:
     name: cppcheck
     runs-on: ubuntu-latest
     steps:
-      - name: check folders
-        run: ls
-      - name: c-linter
-        uses: tonybaloney/cppcheck-action@master
-        with:
-          path: /firmware
+      - name: cpp checker check
+        uses: jsuya/cpp-linter-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
