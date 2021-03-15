@@ -10,3 +10,5 @@ jobs:
         uses: tonybaloney/cppcheck-action@master
         with:
           path: firmware
+      - name: check folders
+        run: ls
