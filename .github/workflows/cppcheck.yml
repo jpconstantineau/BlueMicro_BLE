@@ -16,7 +16,7 @@ jobs:
         sudo apt-get install -y cppcheck
     - name:  Run Cppcheck
       run: |
-        cppcheck $GITHUB_WORKSPACE/firmware --language=c++ --template="::{severity} file={file},line={line},col={column}::{message}" 
+        cppcheck $GITHUB_WORKSPACE/firmware --language=c++ --template=gcc --output-file=report.txt 
         ls $GITHUB_WORKSPACE
 
 
