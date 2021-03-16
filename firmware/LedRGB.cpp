@@ -67,7 +67,7 @@ void updateRGBmode(uint32_t mode)
 
 void updateRGB(unsigned long timesincelastkeypress)
 {
- uint16_t time = millis() >> 2;
+ 
 if (timesincelastkeypress<PWM_TOUCH_INTERVAL)
 {
     RGBval = 255;
@@ -88,7 +88,7 @@ if (timesincelastkeypress<PWM_TOUCH_INTERVAL)
 }
 #ifdef NEOPIXEL_AVAILABLE
 pixels.clear();
-
+uint16_t time = millis() >> 2;
 switch (rgb_mode)
     {
         case 0:                         // OFF  
@@ -98,6 +98,7 @@ switch (rgb_mode)
             }
             break;
         case RGB_MODE_PLAIN:           // RAINBOW
+             
             // cppcheck-suppress unsignedLessThanZero
             for(uint16_t i=0; i<WS2812B_LED_COUNT; i++) { // For each pixel...
                 byte x = (time >> 2) - (i << 3);

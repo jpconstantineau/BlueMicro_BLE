@@ -171,7 +171,3 @@ std::queue<toneList_t> BlueMicro_tone::toneQueue;
 uint32_t BlueMicro_tone::toneDelay = 0;
 PersistentState*  BlueMicro_tone::config = NULL;
 DynamicState*  BlueMicro_tone::status  = NULL;
-namespace std
-{
-  void __throw_bad_alloc() { while(true); }
-}

@@ -26,6 +26,11 @@ namespace std {
   }
 }
 
+namespace std
+{
+  void __throw_bad_alloc() { while(true); }
+}
+
 /* About the firmware:
  *   
  * https://github.com/jpconstantineau/BlueMicro_BLE
