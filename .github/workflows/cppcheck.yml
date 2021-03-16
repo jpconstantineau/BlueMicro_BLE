@@ -6,9 +6,20 @@ jobs:
     name: cppcheck
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: c-linter
-        uses: tonybaloney/cppcheck-action@master
-        with: 
-          path: firmware
+    - name: Check out repository
+      uses: actions/checkout@v2
+      with:
+        depth: 1
+        submodules: 'recursive'
+    - name: Run Cppcheck
+      uses: Bedzior/cppcheck-action@v1.0
+      with:
+        enabled checks: all
+        enable inconclusive: true
+        generate report: true
+    - name: Upload report
+      uses: actions/upload-artifact@v1
+      with:
+        name: report
+        path: output
 
