@@ -12,12 +12,9 @@ jobs:
         depth: 1
         submodules: 'recursive'
     - name:  Install Cppcheck
-      run: |
-        sudo apt-get install -y cppcheck
+      run: sudo apt-get install -y cppcheck
     - name:  Run Cppcheck
-      run: |
-        cppcheck $GITHUB_WORKSPACE/firmware --language=c++ --template=gcc --output-file=report.txt 
-        ls $GITHUB_WORKSPACE
+      run: cppcheck $GITHUB_WORKSPACE/firmware --language=c++ --template=gcc --force --output-file=report.txt 
     - name: Publish Report
       uses: actions/upload-artifact@v2
       with:
