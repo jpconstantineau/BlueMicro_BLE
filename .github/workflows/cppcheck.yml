@@ -12,9 +12,9 @@ jobs:
         depth: 1
         submodules: 'recursive'
     - name:  Install and run Cppcheck
-        run: |
-            apt-get install -y cppcheck
-            ls $GITHUB_WORKSPACE
-            cppcheck $GITHUB_WORKSPACE/firmware --language=c++ --template="::{severity} file={file},line={line},col={column}::{message}" 
+      run: |
+        apt-get install -y cppcheck
+        ls $GITHUB_WORKSPACE
+        cppcheck $GITHUB_WORKSPACE/firmware --language=c++ --template="::{severity} file={file},line={line},col={column}::{message}" 
 
 
