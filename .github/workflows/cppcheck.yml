@@ -18,5 +18,10 @@ jobs:
       run: |
         cppcheck $GITHUB_WORKSPACE/firmware --language=c++ --template=gcc --output-file=report.txt 
         ls $GITHUB_WORKSPACE
+    - name: Publish Report
+      uses: actions/upload-artifact@v2
+      with:
+          name: cppcheck report
+          path: $GITHUB_WORKSPACE/report.txt
 
 
