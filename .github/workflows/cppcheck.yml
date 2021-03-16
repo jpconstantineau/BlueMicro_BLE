@@ -14,7 +14,9 @@ jobs:
     - name:  Install Cppcheck
       run: sudo apt-get install -y cppcheck
     - name:  Run Cppcheck
-      run: cppcheck $GITHUB_WORKSPACE/firmware --language=c++ --template=gcc --force --output-file=report.txt 
+      run: |
+        cppcheck $GITHUB_WORKSPACE/firmware --enable=all  --force --template=gcc --inline-suppr --suppress-xml=$GITHUB_WORKSPACE/cppcheck/suppressions.xml --output-file=report.txt 
+        cat report.txt
     - name: Publish Report
       uses: actions/upload-artifact@v2
       with:
