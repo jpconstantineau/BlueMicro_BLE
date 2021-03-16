@@ -9,5 +9,5 @@ jobs:
       - name: c-linter
         uses: tonybaloney/cppcheck-action@master
         with: 
-          path: BlueMicro_BLE/firmware
+          path: ./firmware
 
