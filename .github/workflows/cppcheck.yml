@@ -6,6 +6,7 @@ jobs:
     name: cppcheck
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: c-linter
         uses: tonybaloney/cppcheck-action@master
         with: 
