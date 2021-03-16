@@ -9,13 +9,12 @@ jobs:
     - name: Check out repository
       uses: actions/checkout@v2
       with:
-        depth: 1
         submodules: 'recursive'
     - name:  Install Cppcheck
       run: sudo apt-get install -y cppcheck
     - name:  Run Cppcheck
       run: |
-        cppcheck $GITHUB_WORKSPACE/firmware --enable=all  --force --template=gcc --inline-suppr --suppress-xml=$GITHUB_WORKSPACE/cppcheck/suppressions.xml --output-file=report.txt 
+        cppcheck $GITHUB_WORKSPACE/firmware --enable=all  --force --template=gcc --inline-suppr --suppress-xml=$GITHUB_WORKSPACE/cppcheck/suppressions.xml -DSPEAKER_PIN -DCHARGER_PIN -DDISPLAY_U8G2_CONSTRUCTOR --output-file=report.txt 
         cat report.txt
     - name: Publish Report
       uses: actions/upload-artifact@v2
