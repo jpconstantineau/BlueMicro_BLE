@@ -186,8 +186,7 @@ void ComboEngine::addKeycodeStringToList(trigger_keycodes_t trigger, trigger_key
   } else {
     macrolist.push_back(make_pair(trigger, keycodestosend));
     keycodesused_single.insert(keycodesused_single.end(), trigger.begin(), trigger.end());
-    std::sort(keycodesused_single.begin(), keycodesused_single.end());   // needed for the next operation
-    auto last = ; 
+    std::sort(keycodesused_single.begin(), keycodesused_single.end());   // needed for the next operation 
     keycodesused_single.erase(std::unique(keycodesused_single.begin(), keycodesused_single.end()), keycodesused_single.end());// keep the unique keycodes only
 
   }
