@@ -64,7 +64,7 @@ void ComboEngine::addComboToList(trigger_keycodes_t trigger, uint16_t keycode) {
     combolist.push_back(make_pair(trigger, keycode));
     keycodesused_multi.insert(keycodesused_multi.end(), trigger.begin(), trigger.end());
     std::sort(keycodesused_multi.begin(), keycodesused_multi.end());   // needed for the next operation
-    std::unique(keycodesused_multi.begin(), keycodesused_multi.end()); // keep the unique keycodes only
+    keycodesused_multi.erase(std::unique(keycodesused_multi.begin(), keycodesused_multi.end()), keycodesused_multi.end()); // keep the unique keycodes only
   }
 }
 
@@ -182,12 +182,14 @@ void ComboEngine::addKeycodeStringToList(trigger_keycodes_t trigger, trigger_key
     substlist.push_back(make_pair(trigger, keycodestosend));
     keycodesused_multi.insert(keycodesused_multi.end(), trigger.begin(), trigger.end());
     std::sort(keycodesused_multi.begin(), keycodesused_multi.end());   // needed for the next operation
-    std::unique(keycodesused_multi.begin(), keycodesused_multi.end()); // keep the unique keycodes only
+    keycodesused_multi.erase(std::unique(keycodesused_multi.begin(), keycodesused_multi.end()),keycodesused_multi.end()); // keep the unique keycodes only
   } else {
     macrolist.push_back(make_pair(trigger, keycodestosend));
     keycodesused_single.insert(keycodesused_single.end(), trigger.begin(), trigger.end());
     std::sort(keycodesused_single.begin(), keycodesused_single.end());   // needed for the next operation
-    std::unique(keycodesused_single.begin(), keycodesused_single.end()); // keep the unique keycodes only
+    auto last = ; 
+    keycodesused_single.erase(std::unique(keycodesused_single.begin(), keycodesused_single.end()), keycodesused_single.end());// keep the unique keycodes only
+
   }
 }
 
