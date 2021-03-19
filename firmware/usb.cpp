@@ -47,7 +47,7 @@ void usb_setup() {
   USBDevice.setManufacturerDescriptor(MANUFACTURER_NAME);
   USBDevice.setProductDescriptor(DEVICE_NAME);
 
-  USBhid.setPollInterval(2);
+  USBhid.setPollInterval(8);// was 2
   USBhid.setReportDescriptor(desc_hid_report, sizeof(desc_hid_report));
   USBhid.setReportCallback(NULL, hid_report_callback);
   USBhid.begin();

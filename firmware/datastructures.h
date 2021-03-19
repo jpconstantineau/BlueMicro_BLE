@@ -24,9 +24,9 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVE
 #define DATASTRUCTURES_H
 #include <array>
 
-#define BLUEMICRO_CONFIG_VERSION                                                                                                                               \
-  4 // this should be incremented every time the PersistentState structure definition is updated.  This will ensure that the SETTINGS_FILE file is reset when
-    // the structure is updated.
+#define BLUEMICRO_CONFIG_VERSION 4
+// this should be incremented every time the PersistentState structure definition is updated.
+// This will ensure that the SETTINGS_FILE file is reset when the structure is updated.
 
 typedef union {
   struct {
@@ -133,6 +133,10 @@ typedef struct {
   uint8_t user1;
   uint8_t user2;
   uint8_t user3;
+  int8_t encoder1pos;
+  int8_t encoder2pos;
+  int8_t encoder3pos;
+  int8_t encoder4pos;
 
 } DynamicState; // meant for keyboard and BLE status and things that are dynamic and should not be stored in flash.
 
@@ -154,4 +158,5 @@ enum backgroundTaskID {
   BACKGROUND_TASK_PWMLED,
   BACKGROUND_TASK_RGBLED
 };
+
 #endif
