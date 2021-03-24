@@ -389,6 +389,16 @@ void handleSerial() {
               sprintf (buffer, "LIPO = %.0f mV (%3d %%)", batterymonitor.vbat_mv*1.0, intval);
             }   
         break;
+        case BATT_VDDH:
+            if (intval>99)
+            {
+              sprintf (buffer, "LIPO = %.0f mV (%4d %%)", batterymonitor.vbat_mv*1.0, intval);
+            }
+            else
+            {
+              sprintf (buffer, "LIPO = %.0f mV (%3d %%)", batterymonitor.vbat_mv*1.0, intval);
+            }   
+        break;
       }
       Serial.println(buffer);
       break;

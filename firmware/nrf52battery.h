@@ -29,6 +29,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
     BATT_UNKNOWN = 0,
     BATT_CR2032 = 1,
     BATT_LIPO = 2,
+    BATT_VDDH =  3,
 };
 
 typedef void (*mvToPercent_cb_t)(uint8_t & vbat_per, uint32_t mvolts, uint8_t batt_type ); 
@@ -42,6 +43,7 @@ typedef void (*mvToPercent_cb_t)(uint8_t & vbat_per, uint32_t mvolts, uint8_t ba
          uint8_t batt_type;
          void updateBattery(void);
          uint32_t readVBAT(void);
+         uint32_t readVDDH(void);
          void setmvToPercentCallback(mvToPercent_cb_t callback);
         
     private:

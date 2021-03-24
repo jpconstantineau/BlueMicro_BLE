@@ -101,6 +101,57 @@ uint32_t Battery::readVBAT(void) {
   return vbat_raw;
 };
 /**************************************************************************************************************************/
+uint32_t Battery::readVDDH(void) {
+    int16_t value = 0;
+    //resolution = 10;
+    #ifdef NRF52840_XXAA // VDDH is only available on the nrf52840
+      NRF_SAADC->RESOLUTION = SAADC_RESOLUTION_VAL_10bit;
+
+      NRF_SAADC->ENABLE = (SAADC_ENABLE_ENABLE_Enabled << SAADC_ENABLE_ENABLE_Pos);
+      for (int i = 0; i < 8; i++) 
+      {
+          NRF_SAADC->CH[i].PSELN = SAADC_CH_PSELP_PSELP_NC;
+          NRF_SAADC->CH[i].PSELP = SAADC_CH_PSELP_PSELP_NC;
+      }
+      NRF_SAADC->CH[0].CONFIG =   ((SAADC_CH_CONFIG_RESP_Bypass     << SAADC_CH_CONFIG_RESP_Pos)   & SAADC_CH_CONFIG_RESP_Msk)
+                                  | ((SAADC_CH_CONFIG_RESP_Bypass     << SAADC_CH_CONFIG_RESN_Pos)   & SAADC_CH_CONFIG_RESN_Msk)
+                                  | ((SAADC_CH_CONFIG_GAIN_Gain1_2    << SAADC_CH_CONFIG_GAIN_Pos)   & SAADC_CH_CONFIG_GAIN_Msk)
+                                  | ((SAADC_CH_CONFIG_REFSEL_Internal << SAADC_CH_CONFIG_REFSEL_Pos) & SAADC_CH_CONFIG_REFSEL_Msk)
+                                  | ((SAADC_CH_CONFIG_TACQ_3us        << SAADC_CH_CONFIG_TACQ_Pos)   & SAADC_CH_CONFIG_TACQ_Msk)
+                                  | ((SAADC_CH_CONFIG_MODE_SE         << SAADC_CH_CONFIG_MODE_Pos)   & SAADC_CH_CONFIG_MODE_Msk);
+      NRF_SAADC->CH[0].PSELN = SAADC_CH_PSELP_PSELP_VDDHDIV5;
+      NRF_SAADC->CH[0].PSELP = SAADC_CH_PSELP_PSELP_VDDHDIV5;
+
+
+      NRF_SAADC->RESULT.PTR = (uint32_t)&value;
+      NRF_SAADC->RESULT.MAXCNT = 1; // One sample
+
+      NRF_SAADC->TASKS_START = 0x01UL;
+
+      while (!NRF_SAADC->EVENTS_STARTED);
+      NRF_SAADC->EVENTS_STARTED = 0x00UL;
+
+      NRF_SAADC->TASKS_SAMPLE = 0x01UL;
+
+      while (!NRF_SAADC->EVENTS_END);
+      NRF_SAADC->EVENTS_END = 0x00UL;
+      NRF_SAADC->TASKS_STOP = 0x01UL;
+
+      while (!NRF_SAADC->EVENTS_STOPPED);
+      NRF_SAADC->EVENTS_STOPPED = 0x00UL;
+
+      if (value < 0) 
+      {
+          value = 0;
+      }
+
+      NRF_SAADC->ENABLE = (SAADC_ENABLE_ENABLE_Disabled << SAADC_ENABLE_ENABLE_Pos);
+    #endif
+    return value; 
+
+
+};
+/**************************************************************************************************************************/
 void Battery::updateBattery(void)
 {
   switch (batt_type)
@@ -123,6 +174,10 @@ void Battery::updateBattery(void)
                 // ADC range is 0..3000mV and resolution is 12-bit (0..4095),
                 // VBAT voltage divider is 2M + 0.806M, which needs to be added back
         vbat_mv = vbat_raw * VBAT_MV_PER_LSB * VBAT_DIVIDER_COMP;
+    break;
+    case BATT_VDDH:
+        vbat_raw = readVDDH();
+        vbat_mv = vbat_raw * VDDHDIV5DIV2SCALE * VDDHDIV5DIV2RANGE;
     break;
   }
     
@@ -152,6 +207,16 @@ void mvToPercent_default(uint8_t & vbat_per, uint32_t mvolts, uint8_t batt_type)
       vbat_per= (mvolts /4 );  // the range really meeds testing...  /4 = 2600 to 3000 /2 = 2800 to 3000
     break;
     case BATT_LIPO:
+      if(mvolts<3300) vbat_per= 0;
+      if(mvolts <3600) {
+        mvolts -= 3300;
+        vbat_per= mvolts/30;
+      }
+      mvolts -= 3600;
+      vbat_per= (uint8_t) 10 + (uint8_t)((mvolts * 15)/100);  // thats mvolts /6.66666666
+      if (vbat_per>100){vbat_per=100;} // checks if we are higher than 100%. when this is the case windows doesn't show anything...
+    break; 
+    case BATT_VDDH: // assuming VDDH is connected to Lipo battery
       if(mvolts<3300) vbat_per= 0;
       if(mvolts <3600) {
         mvolts -= 3300;
