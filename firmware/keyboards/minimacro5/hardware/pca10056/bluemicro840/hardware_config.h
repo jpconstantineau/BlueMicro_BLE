@@ -29,10 +29,10 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define MATRIX_COL_PINS { 30, 43, 28, 24, 10}
 
 
-// Multiple Encoders are possible. 
+// Multiple Encoders are possible using SwRotaryEncoder
 #define ENCODER_PAD_A  {9,  17, 15, 8,  26 }
 #define ENCODER_PAD_B  {13, 20, 2,  29, 6  }
-#define ENCODER_RESOLUTION 2 // This doesn't do anything.
+#define ENCODER_RESOLUTION 2 
 
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW
