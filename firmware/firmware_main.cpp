@@ -426,11 +426,9 @@ void process_keyboard_function(uint16_t keycode) {
     speaker.playAllQueuedTonesNow();
     enterUf2Dfu();
     break;
-
   case HELP_MODE:
     keyboardstate.helpmode = !keyboardstate.helpmode;
     break;
-
   case OUT_AUTO:
     keyboardconfig.connectionMode = CONNECTION_MODE_AUTO;
     if (keyboardstate.helpmode) {
@@ -535,7 +533,6 @@ void process_keyboard_function(uint16_t keycode) {
     }
     decPWMStepSize();
     break;
-
   case RGB_TOG:
     if (keyboardstate.helpmode) {
       addStringToQueue("RGB_TOG");
@@ -555,7 +552,6 @@ void process_keyboard_function(uint16_t keycode) {
     if (keyboardstate.helpmode) {
       addStringToQueue("RGB_HUI");
     }
-
     break;
   case RGB_HUD:
     if (keyboardstate.helpmode) {
@@ -628,7 +624,6 @@ void process_keyboard_function(uint16_t keycode) {
       break;    
     case PRINT_BATTERY:
       intval = batterymonitor.vbat_per;
-
       switch (batterymonitor.batt_type)
       {
         case BATT_UNKNOWN:
@@ -642,8 +637,7 @@ void process_keyboard_function(uint16_t keycode) {
             else
             {
               snprintf (buffer, sizeof(buffer), "VDD = %.0f mV (%3d %%)", batterymonitor.vbat_mv*1.0, intval);
-            }
-            
+            }    
         break;
         case BATT_LIPO:
             if (intval>99)
@@ -665,9 +659,7 @@ void process_keyboard_function(uint16_t keycode) {
               sprintf (buffer, "LIPO = %.0f mV (%3d %%)", batterymonitor.vbat_mv*1.0, intval);
             }   
         break;
-      }
-      break;
-    }
+      } 
     addStringToQueue(buffer);
     addKeycodeToQueue(KC_ENTER);
     break;
