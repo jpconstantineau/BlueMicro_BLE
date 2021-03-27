@@ -12,7 +12,7 @@ By starting with the simple hid_keyboard.ino example provided with the Arduino b
 
 | Branch  | Github Actions - Docker (Adafruit BSP) | Github Actions - Docker (Community BSP) |Github Actions - Ubuntu (Community BSP) | Jenkins - Windows |
 | ------  | ------           | ------       | ------                  | ------            |
-| Master  |![Build on Docker](https://github.com/jpconstantineau/BlueMicro_BLE/workflows/Build%20on%20Docker/badge.svg?branch=master)|  | ![Build on Ubuntu](https://github.com/jpconstantineau/BlueMicro_BLE/workflows/Build%20on%20Ubuntu/badge.svg?branch=master) | ![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE-master) |
+| Master  | [![Build on Docker - Adafruit](https://github.com/jpconstantineau/BlueMicro_BLE/actions/workflows/build_docker_adafruit.yml/badge.svg)](https://github.com/jpconstantineau/BlueMicro_BLE/actions/workflows/build_docker_adafruit.yml) | [![Build on Docker - Community](https://github.com/jpconstantineau/BlueMicro_BLE/actions/workflows/build_docker_community.yml/badge.svg)](https://github.com/jpconstantineau/BlueMicro_BLE/actions/workflows/build_docker_community.yml) | [![Build on Ubuntu](https://github.com/jpconstantineau/BlueMicro_BLE/actions/workflows/build_ubuntu.yml/badge.svg)](https://github.com/jpconstantineau/BlueMicro_BLE/actions/workflows/build_ubuntu.yml) | ![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE-master) |
 | Develop |![Build on Docker - Adafruit](https://github.com/jpconstantineau/BlueMicro_BLE/workflows/Build%20on%20Docker%20-%20Adafruit/badge.svg)|![Build on Docker - Community](https://github.com/jpconstantineau/BlueMicro_BLE/workflows/Build%20on%20Docker%20-%20Community/badge.svg) | ![Build on Ubuntu](https://github.com/jpconstantineau/BlueMicro_BLE/workflows/Build%20on%20Ubuntu/badge.svg?branch=develop) | ![Build Status](http://toronto.jpconstantineau.com:8585/buildStatus/icon?job=BlueMicro_BLE-develop) |
 
 
@@ -21,7 +21,13 @@ See the pages [Here](http://bluemicro.jpconstantineau.com/#)
 
 You can contribute to the documentation by editing the markdown files located in the docs folder of the repository.
 
-**Compatible Hardware**  
+
+## Video Documentation - BlueMicro Youtube Channel
+
+See a number of tutorials, builds and other keyboard related videos on the [BlueMicro Youtube Channel](https://www.youtube.com/channel/UCFpGp4hHe03nvF9c8_gF_jA/featured).
+
+
+# Compatible Hardware 
 
 Any nRF52832 or nRF52840 boards that support either of the following 2 Arduino Board Support Packages:
 
@@ -76,4 +82,4 @@ BlueMicro_BLE uses the following projects, each are licensed separately.
 | [Adafruit SSD1306](https://github.com/adafruit/Adafruit_SSD1306) | Monochrome OLEDs Library based on SSD1306 drivers  | [![Adafruit_SSD1306](https://img.shields.io/github/release/adafruit/Adafruit_SSD1306.svg)](https://github.com/adafruit/Adafruit_SSD1306) |
 | [Adafruit GFX Library](https://github.com/adafruit/Adafruit-GFX-Library) | core graphics library  | [![Adafruit-GFX-Library](https://img.shields.io/github/release/adafruit/Adafruit-GFX-Library.svg)](https://github.com/adafruit/Adafruit-GFX-Library) |
 | [Adafruit_BusIO](https://github.com/adafruit/Adafruit_BusIO) | helper libary to abstract away I2C & SPI transactions and registers  | [![Adafruit_BusIO](https://img.shields.io/github/release/adafruit/Adafruit_BusIO.svg)](https://github.com/adafruit/Adafruit_BusIO) |
-| [Olikraus U8g2](https://github.com/olikraus/u8g2) | U8g2: Library for monochrome displays, version 2 |  |
+| [Olikraus U8g2](https://github.com/olikraus/u8g2) | U8g2: Library for monochrome displays, version 2 | [![u8g2](https://img.shields.io/github/release/olikraus/U8g2_Arduino.svg)](https://github.com/olikraus/U8g2_Arduino)  |

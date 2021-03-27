@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2020, Jocelyn Turcotte <turcotte.j@gmail.com>
+Copyright (C) 2020-2021, Jocelyn Turcotte <turcotte.j@gmail.com>
 
 3-Clause BSD License
 

@@ -17,42 +17,22 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-
-
-//#include "bluefruit.h"  // needed for the macros...
-//#undef min
-//#undef max
-//#include "src/services/BLEHidAdafruit.h" //this does not exist...
-//#include "services/BLEHidAdafruit.h"
-//#include "firmware.h"
-//#include "bluetooth.h"
 #include <stdint.h>
 #include "hid_keycodes.h"
 #include "keyboard_config.h"
 #include "advanced_keycodes.h"
 #include "Key.h"
 #include <array>
-
-
-
-
+#include "combo_engine.h"
 
 
 #ifndef KEYMAP_H
 #define KEYMAP_H
 
-//extern BLEHidAdafruit blehid;        // HID Service - needed for macro functions.
-
-#define KC_CAP_D MOD(MOD_LSHIFT, KC_D)
 #define NUM_LAYERS 2
 
-#define _QWERTY 0
+#define _L0  0
 #define _L1  1
-#define _PRESS 0
-#define _MT_TAP 1
-#define _MT_HOLD 2
-#define _DT_TAP 3
-#define _DT_DOUBLETAP 4
 
 #define USER_MACRO_FUNCTION   0 
 void process_user_macros(uint32_t macroid);
@@ -61,4 +41,6 @@ void setupKeymap();
 extern std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix;
 extern void addStringToQueue(const char* str);
 extern void addKeycodeToQueue(const uint16_t keycode);
+
+
 #endif /* KEYMAP_H */

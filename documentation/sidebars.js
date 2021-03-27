@@ -9,6 +9,7 @@ module.exports = {
               'configure_hardware',
               'configure_keyboard',
               'configure_keymap',
+              'configure_combos',
               'keymaps',
               'build',
               'flash',
@@ -16,6 +17,7 @@ module.exports = {
     'Keycodes':[
                 'keycodes/keycodes_basic',
                 'keycodes/keycodes_extended',
+                'keycodes/keycodes_modifiers',
                 'keycodes/keycodes_firmware',
                 'keycodes/keycodes_hardware'
               ],

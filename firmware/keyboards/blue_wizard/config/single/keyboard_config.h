@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2020 Andrew Wells <andrew.wells88@gmail.com>
+Copyright (C) 2020-2021 Andrew Wells <andrew.wells88@gmail.com>
 
 3-Clause BSD License
 
