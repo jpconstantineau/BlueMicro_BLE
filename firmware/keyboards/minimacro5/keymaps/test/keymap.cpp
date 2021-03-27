@@ -28,17 +28,24 @@ byte encoder_pins_a[] ENCODER_PAD_A;
 byte encoder_pins_b[] ENCODER_PAD_B;
 // Code below makes sure that the encoder gets configured.
 
-  RotaryEncoder1.begin(encoder_pins_a[1], encoder_pins_b[1]);    // Initialize Encoder
+  RotaryEncoder1.begin(encoder_pins_a[0], encoder_pins_b[0]);    // Initialize Encoder
   RotaryEncoder1.setCallback(encoder_callback1);    // Set callback
 
-  RotaryEncoder2.begin(encoder_pins_a[2], encoder_pins_b[2]);    // Initialize Encoder
-  RotaryEncoder2.setCallback(encoder_callback1);    // Set callback
+  RotaryEncoder2.begin(encoder_pins_a[1], encoder_pins_b[1]);    // Initialize Encoder
+  RotaryEncoder2.setCallback(encoder_callback2);    // Set callback
 
-  RotaryEncoder3.begin(encoder_pins_a[3], encoder_pins_b[3]);    // Initialize Encoder
-  RotaryEncoder3.setCallback(encoder_callback1);    // Set callback
+  RotaryEncoder3.begin(encoder_pins_a[2], encoder_pins_b[2]);    // Initialize Encoder
+  RotaryEncoder3.setCallback(encoder_callback3);    // Set callback
 
-  RotaryEncoder4.begin(encoder_pins_a[4], encoder_pins_b[4]);    // Initialize Encoder
-  RotaryEncoder4.setCallback(encoder_callback1);    // Set callback
+  RotaryEncoder4.begin(encoder_pins_a[3], encoder_pins_b[3]);    // Initialize Encoder
+  RotaryEncoder4.setCallback(encoder_callback4);    // Set callback
+
+#ifdef ARDUINO_NRF52_COMMUNITY  // if you want to initialize more than 4, you need to compile on the Community BSP
+    RotaryEncoder5.begin(encoder_pins_a[4], encoder_pins_b[4]);    // Initialize Encoder
+  RotaryEncoder5.setCallback(encoder_callback5);    // Set callback
+#endif
+
+
   //RotaryEncoder.start();    // Start encoder
 
 }
@@ -46,30 +53,93 @@ byte encoder_pins_b[] ENCODER_PAD_B;
 void encoder_callback1(int step)
 {
   keyboardstate.encoder1pos = keyboardstate.encoder1pos + step; 
-  uint8_t layer = keyboardstate.layer;
 
   if (abs(keyboardstate.encoder1pos) > ENCODER_RESOLUTION)
   {
     if ( keyboardstate.encoder1pos < 0  )
     {
-            switch(layer)
-        {
-            case _L0: KeyScanner::add_to_encoderKeys(KC_AUDIO_VOL_UP); break;
-            case _L1: KeyScanner::add_to_encoderKeys(KC_RIGHT); break;
-            case _L2: KeyScanner::add_to_encoderKeys(LSFT(KC_RIGHT)); break;
-            default: ;
-        }
+      KeyScanner::add_to_encoderKeys(KC_AUDIO_VOL_UP); 
     }
     else 
     {
-        switch(layer)
-        {
-            case _L0: KeyScanner::add_to_encoderKeys(KC_AUDIO_VOL_DOWN); break;
-            case _L1: KeyScanner::add_to_encoderKeys(KC_LEFT);break;
-            case _L2: KeyScanner::add_to_encoderKeys(LSFT(KC_LEFT));break;
-            default: ;
-        }
+      KeyScanner::add_to_encoderKeys(KC_AUDIO_VOL_DOWN); 
     } 
     keyboardstate.encoder1pos = 0; 
+  } 
+}
+
+void encoder_callback2(int step)
+{
+  keyboardstate.encoder2pos = keyboardstate.encoder2pos + step; 
+
+  if (abs(keyboardstate.encoder2pos) > ENCODER_RESOLUTION)
+  {
+    if ( keyboardstate.encoder2pos < 0  )
+    {
+  
+      KeyScanner::add_to_encoderKeys(KC_RIGHT); 
+    }
+    else 
+    {
+      KeyScanner::add_to_encoderKeys(KC_LEFT);
+    } 
+    keyboardstate.encoder2pos = 0; 
+  } 
+}
+
+void encoder_callback3(int step)
+{
+  keyboardstate.encoder3pos = keyboardstate.encoder3pos + step; 
+
+  if (abs(keyboardstate.encoder3pos) > ENCODER_RESOLUTION)
+  {
+    if ( keyboardstate.encoder3pos < 0  )
+    {
+  
+      KeyScanner::add_to_encoderKeys(KC_L); 
+    }
+    else 
+    {
+      KeyScanner::add_to_encoderKeys(KC_J);
+    } 
+    keyboardstate.encoder3pos = 0; 
+  } 
+}
+
+void encoder_callback4(int step)
+{
+  keyboardstate.encoder4pos = keyboardstate.encoder4pos + step; 
+
+  if (abs(keyboardstate.encoder4pos) > ENCODER_RESOLUTION)
+  {
+    if ( keyboardstate.encoder4pos < 0  )
+    {
+  
+      KeyScanner::add_to_encoderKeys(KC_COMMA); 
+    }
+    else 
+    {
+      KeyScanner::add_to_encoderKeys(KC_DOT);
+    } 
+    keyboardstate.encoder4pos = 0; 
+  } 
+}
+
+void encoder_callback5(int step)
+{
+  keyboardstate.encoder5pos = keyboardstate.encoder5pos + step; 
+
+  if (abs(keyboardstate.encoder5pos) > ENCODER_RESOLUTION)
+  {
+    if ( keyboardstate.encoder5pos < 0  )
+    {
+  
+      KeyScanner::add_to_encoderKeys(KC_UP); 
+    }
+    else 
+    {
+      KeyScanner::add_to_encoderKeys(KC_DOWN);
+    } 
+    keyboardstate.encoder5pos = 0; 
   } 
 }

@@ -39,6 +39,7 @@ void encoder_callback1(int step);
 void encoder_callback2(int step);
 void encoder_callback3(int step);
 void encoder_callback4(int step);
+void encoder_callback5(int step);
 extern std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix;
 extern DynamicState keyboardstate;
 #endif /* KEYMAP_H */

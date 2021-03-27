@@ -30,8 +30,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 
 // Multiple Encoders are possible using SwRotaryEncoder
-#define ENCODER_PAD_A  {9,  17, 15, 8,  26 }
-#define ENCODER_PAD_B  {13, 20, 2,  29, 6  }
+#define ENCODER_PAD_A  {26, 8, 15, 17, 9 }
+#define ENCODER_PAD_B  {6, 29, 2, 20, 13 }
 #define ENCODER_RESOLUTION 2 
 
 /* COL2ROW or ROW2COL */
