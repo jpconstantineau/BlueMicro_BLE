@@ -426,11 +426,9 @@ void process_keyboard_function(uint16_t keycode) {
     speaker.playAllQueuedTonesNow();
     enterUf2Dfu();
     break;
-
   case HELP_MODE:
     keyboardstate.helpmode = !keyboardstate.helpmode;
     break;
-
   case OUT_AUTO:
     keyboardconfig.connectionMode = CONNECTION_MODE_AUTO;
     if (keyboardstate.helpmode) {
@@ -535,7 +533,6 @@ void process_keyboard_function(uint16_t keycode) {
     }
     decPWMStepSize();
     break;
-
   case RGB_TOG:
     if (keyboardstate.helpmode) {
       addStringToQueue("RGB_TOG");
@@ -555,7 +552,6 @@ void process_keyboard_function(uint16_t keycode) {
     if (keyboardstate.helpmode) {
       addStringToQueue("RGB_HUI");
     }
-
     break;
   case RGB_HUD:
     if (keyboardstate.helpmode) {
@@ -588,87 +584,82 @@ void process_keyboard_function(uint16_t keycode) {
     }
     updateRGBmode(RGB_MODE_PLAIN);
     break;
-  case RGB_MODE_BREATHE:
-    if (keyboardstate.helpmode) {
-      addStringToQueue("RGB_MODE_BREATHE");
-    }
-    updateRGBmode(RGB_MODE_BREATHE);
-    break;
-  case RGB_MODE_RAINBOW:
-    if (keyboardstate.helpmode) {
-      addStringToQueue("RGB_MODE_RAINBOW");
-    }
-    updateRGBmode(RGB_MODE_RAINBOW);
-    break;
-  case RGB_MODE_SWIRL:
-    if (keyboardstate.helpmode) {
-      addStringToQueue("RGB_MODE_SWIRL");
-    }
-    updateRGBmode(RGB_MODE_SWIRL);
-    break;
-  case RGB_MODE_SNAKE:
-    if (keyboardstate.helpmode) {
-      addStringToQueue("RGB_MODE_SNAKE");
-    }
-    updateRGBmode(RGB_MODE_SNAKE);
-    break;
-  case RGB_MODE_KNIGHT:
-    if (keyboardstate.helpmode) {
-      addStringToQueue("RGB_MODE_KNIGHT");
-    }
-    updateRGBmode(RGB_MODE_KNIGHT);
-    break;
-  case RGB_MODE_XMAS:
-    if (keyboardstate.helpmode) {
-      addStringToQueue("RGB_MODE_XMAS");
-    }
-    updateRGBmode(RGB_MODE_XMAS);
-    break;
-  case RGB_MODE_GRADIENT:
-    if (keyboardstate.helpmode) {
-      addStringToQueue("RGB_MODE_GRADIENT");
-    }
-    updateRGBmode(RGB_MODE_GRADIENT);
-    break;
-  case RGB_MODE_RGBTEST:
-    if (keyboardstate.helpmode) {
-      addStringToQueue("RGB_MODE_RGBTEST");
-    }
-    updateRGBmode(RGB_MODE_RGBTEST);
-    break;
-  case RGB_SPI:
-    if (keyboardstate.helpmode) {
-      addStringToQueue("RGB_SPI");
-    }
-    break;
-  case RGB_SPD:
-    if (keyboardstate.helpmode) {
-      addStringToQueue("RGB_SPD");
-    }
-    break;
-  case PRINT_BATTERY:
-    intval = batterymonitor.vbat_per;
-
-    switch (batterymonitor.batt_type) {
-    case BATT_UNKNOWN:
-      snprintf(buffer, sizeof(buffer), "VDD = %.0f mV, VBatt = %.0f mV", batterymonitor.vbat_vdd * 1.0, batterymonitor.vbat_mv * 1.0);
+    case RGB_MODE_BREATHE:
+      if ( keyboardstate.helpmode) {addStringToQueue("RGB_MODE_BREATHE");}
+      updateRGBmode(RGB_MODE_BREATHE);
       break;
-    case BATT_CR2032:
-      if (intval > 99) {
-        snprintf(buffer, sizeof(buffer), "VDD = %.0f mV (%4d %%)", batterymonitor.vbat_mv * 1.0, intval);
-      } else {
-        snprintf(buffer, sizeof(buffer), "VDD = %.0f mV (%3d %%)", batterymonitor.vbat_mv * 1.0, intval);
-      }
-
+    case RGB_MODE_RAINBOW:
+      if ( keyboardstate.helpmode) {addStringToQueue("RGB_MODE_RAINBOW");}
+      updateRGBmode(RGB_MODE_RAINBOW);
       break;
-    case BATT_LIPO:
-      if (intval > 99) {
-        sprintf(buffer, "LIPO = %.0f mV (%4d %%)", batterymonitor.vbat_mv * 1.0, intval);
-      } else {
-        sprintf(buffer, "LIPO = %.0f mV (%3d %%)", batterymonitor.vbat_mv * 1.0, intval);
-      }
+    case RGB_MODE_SWIRL:
+      if ( keyboardstate.helpmode) {addStringToQueue("RGB_MODE_SWIRL");}
+      updateRGBmode(RGB_MODE_SWIRL);
+      break;   
+    case RGB_MODE_SNAKE:
+      if ( keyboardstate.helpmode) {addStringToQueue("RGB_MODE_SNAKE");}
+      updateRGBmode(RGB_MODE_SNAKE);
       break;
-    }
+    case RGB_MODE_KNIGHT:
+      if ( keyboardstate.helpmode) {addStringToQueue("RGB_MODE_KNIGHT");}
+      updateRGBmode(RGB_MODE_KNIGHT);
+      break;
+    case RGB_MODE_XMAS:
+      if ( keyboardstate.helpmode) {addStringToQueue("RGB_MODE_XMAS");}
+      updateRGBmode(RGB_MODE_XMAS);
+      break;   
+    case RGB_MODE_GRADIENT:
+      if ( keyboardstate.helpmode) {addStringToQueue("RGB_MODE_GRADIENT");}
+      updateRGBmode(RGB_MODE_GRADIENT);
+      break;
+    case RGB_MODE_RGBTEST:
+      if ( keyboardstate.helpmode) {addStringToQueue("RGB_MODE_RGBTEST");}
+      updateRGBmode(RGB_MODE_RGBTEST);
+      break;
+    case RGB_SPI:
+      if ( keyboardstate.helpmode) {addStringToQueue("RGB_SPI");}
+      break;   
+    case RGB_SPD:
+      if ( keyboardstate.helpmode) {addStringToQueue("RGB_SPD");}
+      break;    
+    case PRINT_BATTERY:
+      intval = batterymonitor.vbat_per;
+      switch (batterymonitor.batt_type)
+      {
+        case BATT_UNKNOWN:
+            snprintf (buffer, sizeof(buffer), "VDD = %.0f mV, VBatt = %.0f mV", batterymonitor.vbat_vdd*1.0, batterymonitor.vbat_mv*1.0);
+        break;
+        case BATT_CR2032:
+            if (intval>99)
+            {
+              snprintf (buffer, sizeof(buffer), "VDD = %.0f mV (%4d %%)", batterymonitor.vbat_mv*1.0, intval);
+            }
+            else
+            {
+              snprintf (buffer, sizeof(buffer), "VDD = %.0f mV (%3d %%)", batterymonitor.vbat_mv*1.0, intval);
+            }    
+        break;
+        case BATT_LIPO:
+            if (intval>99)
+            {
+              sprintf (buffer, "LIPO = %.0f mV (%4d %%)", batterymonitor.vbat_mv*1.0, intval);
+            }
+            else
+            {
+              sprintf (buffer, "LIPO = %.0f mV (%3d %%)", batterymonitor.vbat_mv*1.0, intval);
+            }   
+        break;
+        case BATT_VDDH:
+            if (intval>99)
+            {
+              sprintf (buffer, "LIPO = %.0f mV (%4d %%)", batterymonitor.vbat_mv*1.0, intval);
+            }
+            else
+            {
+              sprintf (buffer, "LIPO = %.0f mV (%3d %%)", batterymonitor.vbat_mv*1.0, intval);
+            }   
+        break;
+      } 
     addStringToQueue(buffer);
     addKeycodeToQueue(KC_ENTER);
     break;

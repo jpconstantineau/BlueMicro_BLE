@@ -68,11 +68,20 @@ From the schematic, we identify that the connection point of the voltage divider
 #define VBAT_PIN  31
 ```
 
-If a non-rechargeable CR2032 (3V) powers your keyboard and the battery is directly connected to the nRF52 chip, you still need to define a `VBATT_PIN`  but since the nrf52 chip can measure its own supply voltage, it will not use this configuration. All you need to do is to use this definition:
+If a non-rechargeable CR2032 (3V) powers your keyboard and the battery is directly connected to the nRF5 chip through VDD, you don't need to define a `VBATT_PIN`  but since the nrf52 chip can measure its own supply voltage, it will not use this configuration. All you need to do is to use this definition:
 
 ``` c++
 #define BATTERY_TYPE BATT_CR2032
 ```
+
+If a Lithion Ion (LiPo) rechargeable battery (3.7-4.2V) powers your keyboard and the battery is directly connected to the nRF52840 chip through VDDH, you don't need to define a `VBATT_PIN` since the nrf52 chip can measure its own supply voltage All you need to do is to use this definition:
+
+``` c++
+#define BATTERY_TYPE BATT_VDDH
+```
+
+Note that only the nRF52840 has VDDH to provide power at a voltage higher than 3.6V. 
+
 
 ### External VCC Switching
 
