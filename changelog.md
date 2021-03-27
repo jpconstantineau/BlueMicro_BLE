@@ -25,6 +25,7 @@ Thanks to @akudaikon for his contributions showing a working example on how to b
 ### Rotary Encoders
 
 Added support for Rotary Encoders. You can refer to the configuration of the solfle keyboard - default configuration for a working example.
+Support was added for up to 8 rotary encoders using the Community nRF52 BSP and the software (interrupt driven) driver. The hardware driver for the on-chip quadrature decoder supports 1 rotary encoder.
 
 ### Persistent Modes and Mode Switching
 
@@ -42,6 +43,10 @@ Added support for combos and longer chords. The following functions are now  ava
 
 Migrated documentation web pages to docusaurus. See them [here](http://bluemicro.jpconstantineau.com/docs/).
 
+### Automated Firmware Initializer and UF2 Builder
+
+Head over to the [BlueMicro_Builder](https://github.com/jpconstantineau/BlueMicro_Builder) repository, use the template and run the github action to automatically setup the firmware, compile and generate a UF2 file for your nRF52840-based keyboard.  For nRF52832 boards, the firmware folder will be ready for you to use on your computer.  Thanks to @brianweyer for the help in setting up the template.
+
 ### New and Updated Keyboards/Keymaps
 
 - **cradio**
@@ -54,5 +59,8 @@ Migrated documentation web pages to docusaurus. See them [here](http://bluemicro
 - **Iris**
 - **5x5x5 (5x15)**
 - **Sofle**
+- **CNCEncoderPad**
+- **BlueHand (2x4 macropad)**
+- **miniMACRO5**
 
 ## 0.3.0 and other Past Releases
