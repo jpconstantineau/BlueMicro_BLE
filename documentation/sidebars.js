@@ -36,6 +36,7 @@ module.exports = {
                   'tutorials/tut_keymapswitch',
                   'tutorials/tut_macros'
                 ],
+    'Troubleshooting': ['trouble/trouble_flash'],
     'Contributing': ['DocumentationStyleGuide','contributing']
   },
 };
