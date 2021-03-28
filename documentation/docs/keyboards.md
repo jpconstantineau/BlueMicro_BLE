@@ -9,6 +9,9 @@ There are plenty on the list of keyboards all added by the community for others 
 
 You can use the configuration files for these keyboards as a starting point for your own.
 
+For the latest list of keyboards with configurations available, see [here](https://github.com/jpconstantineau/BlueMicro_BLE/tree/master/firmware/keyboards)
+
+The process to add your own keyboard is quite simple. All you need to edit is 4 files. See how [here](adding_keyboard.md).
 
 | Keyboard          | Contributor      |  Notes       |
 | ----------------- | ---------------- | ---------- |
@@ -18,8 +21,8 @@ You can use the configuration files for these keyboards as a starting point for 
 | airgodox          | Julian Komaromy  | The Original Inspiration  |
 | bfo9000           | ?  |   |
 | blueortho         | SouthPawEngineer   |   |
-| breadboard-feather  | JPConstantineau  | for GPIO of Adafruit Feathers  |
-| breadboard-promicro | JPConstantineau  | for GPIO of pro micro form factor boards  |
+| breadboard-feather  | JPConstantineau  | for GPIO testing of Adafruit Feathers  |
+| breadboard-promicro | JPConstantineau  | for GPIO testing of pro micro form factor boards  |
 | chocopad          | jturcotte  |   |
 | contra            | JPConstantineau  |   |
 | crkbd             | JPConstantineau  | RGB. working on OLED support |
@@ -35,9 +38,10 @@ You can use the configuration files for these keyboards as a starting point for 
 | Lily58            | ?  |   |
 | Levinson          | ResoluteFury   |   |
 | luddite           | JPConstantineau  |   |
+| miniMACRO5        | JPConstantineau  | working 5 Rotary Encoders |
 | Megatreus         | jturcotte  |   |
 | Minidox           | JPConstantineau  |   |
 | nyquist           | ?  |   |
 | Phone Keyboard    | JPConstantineau  | Custom PCB  |
 | Semaphore         | JPConstantineau  |   |
-| Sofle             | JPConstantineau  |  working on Rotary Encoders support  |
+| Sofle             | JPConstantineau  |  working Rotary Encoders |

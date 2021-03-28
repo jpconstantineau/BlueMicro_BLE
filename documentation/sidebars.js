@@ -4,7 +4,6 @@ module.exports = {
     Features: ['features'],
     'How To':[
               'tools',
-              'adding_keyboard',
               'understand_gpios',
               'configure_hardware',
               'configure_keyboard',
@@ -13,6 +12,7 @@ module.exports = {
               'keymaps',
               'build',
               'flash',
+              'adding_keyboard',
               'customize_BSP'],
     'Keycodes':[
                 'keycodes/keycodes_basic',

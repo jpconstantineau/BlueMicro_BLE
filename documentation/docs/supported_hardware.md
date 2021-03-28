@@ -9,7 +9,8 @@ slug: /hardware
 
 With the nRF52, you run all of your keyboard firmware code directly on the nRF52 and no external MCU is used or required for Bluetooth functionality!
 
-For more information on the NRF52832, see the [detailed 553 pages product specification](http://infocenter.nordicsemi.com/pdf/nRF52832_PS_v1.4.pdf)
+For more information on the nRF52832, see the [detailed 553 pages product specification](http://infocenter.nordicsemi.com/pdf/nRF52832_PS_v1.4.pdf)
+For more information on the nRF52840, see the [detailed 619 pages product specification](https://infocenter.nordicsemi.com/pdf/nRF52840_PS_v1.1.pdf)
 
 The BlueMicro firmware uses the [Adafruit nrf52 feather](https://learn.adafruit.com/bluefruit-nrf52-feather-learning-guide/introduction) bootloader, libraries and allows for the following features:
 
@@ -44,18 +45,19 @@ To be able to be used as processor for a Custom Keyboard, the NRF52832/40 module
 
 | Breakout Board       | Electrical Connection | Physical Dimensions    | Module        | Compatible with |
 | -------------------- | --------------------- | ---------------------- | ------------- | --------------- |
-| Adafruit NRF52       | Adafruit Feather      | 23mm x 51mm            | MDBT42Q       | Handwired       |
-| BlueMicro            | Arduino Pro Micro     | 22mm x 68mm            | E73-2G4M04S1B | Many Custom boards using the Pro Micro but with sufficient length |
-| BlueMicro840         | Arduino Pro Micro     | 20mm x 33mm            | E73-2G4M04S1C | Many Custom boards using the Pro Micro |
-| BlueMacro840         | Arduino Micro         | 20mm x 48mm            | E73-2G4M04S1C | Many Custom boards using the Micro |
-| nrfmicro             | Arduino Pro Micro     | 18mm x 33mm            | E73-2G4M04S1C | Many Custom boards using the Pro Micro |
-| Nice!Nano            | Arduino Pro Micro     | 18mm x 33mm            | nrf52840 chip | Many Custom boards using the Pro Micro |
+| [Adafruit nRF52 Bluefruit LE](https://www.adafruit.com/product/3406)      | Adafruit Feather      | 23mm x 51mm            | MDBT42Q       | Handwired       |
+| [Adafruit Feather nRF52840 Express](https://www.adafruit.com/product/4062)       | Adafruit Feather      | 23mm x 51mm            | MDBT50Q       | Handwired       |
+| [BlueMicro](http://nrf52.jpconstantineau.com/docs/bluemicro_v2_1)            | Arduino Pro Micro     | 22mm x 68mm            | E73-2G4M04S1B | Many Custom boards using the Pro Micro but with sufficient length |
+| [BlueMicro840](http://nrf52.jpconstantineau.com/docs/bluemicro840_v1)         | Arduino Pro Micro     | 20mm x 33mm            | E73-2G4M04S1C | Many Custom boards using the Pro Micro |
+| [BlueMacro840](http://nrf52.jpconstantineau.com/docs/bluemacro840_v1)         | Arduino Micro         | 20mm x 48mm            | E73-2G4M04S1C | Many Custom boards using the Micro |
+| [nrfmicro](https://github.com/joric/nrfmicro)             | Arduino Pro Micro     | 18mm x 33mm            | E73-2G4M04S1C | Many Custom boards using the Pro Micro |
+| [Nice!Nano](https://nicekeyboards.com/nice-nano/)            | Arduino Pro Micro     | 18mm x 33mm            | nrf52840 chip | Many Custom boards using the Pro Micro |
 
 
 ## Keyboards - Using Breakout Boards
 
-The list of keyboards that can use the NRF52 processors is countless.  However, when implemented with modules and breakout boards, compatibility most often comes down to the electrical connection and the physical dimensions available.
-For example, the BlueMicro hardware (nrf52832) has an electrical connection that's compatible with the Pro Micro, but its physical dimensions is about twice as long; limiting its use to keyboards with sufficient room in line with the Pro Micro board.
+The list of keyboards that can use the nRF52 processors is countless.  However, when implemented with modules and breakout boards, compatibility most often comes down to the electrical connection and the physical dimensions available.
+For example, the Original BlueMicro hardware (nRF52832) has an electrical connection that's compatible with the Pro Micro, but its physical dimensions is about twice as long; limiting its use to keyboards with sufficient room in line with the Pro Micro board. With the newer nRF52840 hardware, the dimensions are very similar or identical to the Pro Micro, making them compatible with even more keyboards. 
 
 Other boards uses the Teensy electrical connection to interface the ATMega32U4 to the rest of the keyboard.  Because of the row of electrical connections at the end of the Teensy board and the Keep-Out Area required around 2.4GHz antennas, it is very unlikely that any NRF52 breakout boards will be able to be compatible with the Teensy.
 
@@ -71,20 +73,16 @@ One such example is the [Blue Ortho](https://imgur.com/a/p3ZXnPM#wDFujG6).
 
 ## What about Nordic Semiconductor's...
 
-### NRF52810 and NRF52805
-
-This chip is very similar to the NRF52832 but has less features, flash space and ram. There are fewer modules available with these than with the NRF52832; often at higher prices due to their limited availability.  The NRF52 Adafruit library does not support this chip.  As such, it's recommended to go directly to the NRF52832 or nRF52840.
-
 ### NRF51822
 
 The NRF51822 is an older device that uses a 32-bit ARM Cortex M0 CPU core.  Adafruit does have a NRF51 feather, however, it does not support the NRF52 libraries.  The NRF51 based Bluefruit boards run as modules that you connect to via an external MCU sending AT style commands over SPI or UART. Not recommended.
 
+### NRF52805, NRF52810, nRF52811, nRF52820 and NRF52833
 
-### NRF52833
+These chips offer a varying amount of GPIOs, features, flash space and ram. There are fewer modules available with these than with the NRF52832 or nRF52840; often at higher prices due to their limited availability. For details on what feature each chip offer, refer to [Nordic's website](https://www.nordicsemi.com/Products/Low-power-short-range-wireless/Bluetooth-low-energy). The nRF52 Adafruit and Community nRF52 board support packages do not support these chips.  As such, it's recommended to go directly to the NRF52832 or nRF52840.
 
-This is a new chip that sits between the 832 and 840.  It's extended temperature range makes it attractive for commercial and industrial applications. Due to comparable features with the nrf52840 and their availabilities, most will select the NRF52840 instead of the NRF52833.
-
+The NRF52833 is a new chip that sits between the 832 and 840.  It's extended temperature range makes it attractive for commercial and industrial applications. Due to comparable features with the nrf52840 and their availabilities, most will select the NRF52840 instead of the NRF52833.
 
 ### NRF5340
 
-This is the newest chip from Nordic Semicomductors.  It has been announced November 2019.  Unlike previous generation chips, it has 2 cores: A 64 MHz network core for handling radio communications and an 64MHz or 128 MHz application core.  Both cores are ARM Cortex M33.  Chips aren't available for sale yet.  It's not clear if the library will support this chip.
+This is the newest chip from Nordic Semicomductors.  It has been announced November 2019.  Unlike previous generation chips, it has 2 cores: A 64 MHz network core for handling radio communications and an 64MHz or 128 MHz application core.  Both cores are ARM Cortex M33.  Chips are available for sale but are quite expensive. There are some modules available.  It's not clear if the library will support this chip in the future.
