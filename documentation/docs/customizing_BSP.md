@@ -13,7 +13,7 @@ Go to the [Community nRF52 Add-on Boards](https://github.com/jpconstantineau/Com
 **ALTERNATE OPTION**
 :::caution
 
-When Updating the BSP, you will loose all your changes
+When Updating the BSP, you will loose all your changes. It is recommended to use the Community BSP and commit your board to that project so that any changes needed by your controller will be retained. 
 
 :::
 

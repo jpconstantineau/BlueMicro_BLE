@@ -5,7 +5,7 @@ sidebar_label: Supported Processors
 slug: /hardware
 ---
 
-## Target CPU: Nordic Semiconductor nRF52832 and nRF52840
+## Nordic Semiconductor nRF52832 and nRF52840
 
 With the nRF52, you run all of your keyboard firmware code directly on the nRF52 and no external MCU is used or required for Bluetooth functionality!
 
