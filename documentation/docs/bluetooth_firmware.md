@@ -1,8 +1,7 @@
 ---
 id: bluetooth_firmware
-title: A Bluetooth First Firmware
-sidebar_label: Bluetooth First
-slug: /bluetooth_firmware
+title: A DIY Friendly Firmware
+sidebar_label: DIY Friendly
 ---
 ## Introduction
 BlueMicro_BLE is a keyboard firmware that builds on top the Adafruit nRF52 board support package (BSP) for their line of [Adafruit nRF52 Feather Boards](https://github.com/adafruit/Adafruit_nRF52_Arduino).
@@ -12,6 +11,10 @@ By starting with the simple [hid_keyboard.ino](https://github.com/adafruit/Adafr
 ## Ubiquity of the Arduino framework
 
 Since the firmware is based on the Arduino framework, it's possible to include all sorts of functionality by simply including libraries available and using them.  As there are [several thousand libraries available](https://www.arduinolibraries.info/) (although not all are compatible with the nRF52), it's quite possible that the solution to including a special feature or hardware to your keyboard is already available.
+
+## Easiest way to troubleshoot hardware
+
+As you have full access to the Arduino framework, it's easy to code hardware testers to troubleshoot your handwired build or any other DIY keyboard. 
 
 ## Design Goals
 

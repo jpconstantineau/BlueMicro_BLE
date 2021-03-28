@@ -10,9 +10,9 @@ slug: /hardware
 With the nRF52, you run all of your keyboard firmware code directly on the nRF52 and no external MCU is used or required for Bluetooth functionality!
 
 For more information on the nRF52832, see the [detailed 553 pages product specification](http://infocenter.nordicsemi.com/pdf/nRF52832_PS_v1.4.pdf)
+
 For more information on the nRF52840, see the [detailed 619 pages product specification](https://infocenter.nordicsemi.com/pdf/nRF52840_PS_v1.1.pdf)
 
-The BlueMicro firmware uses the [Adafruit nrf52 feather](https://learn.adafruit.com/bluefruit-nrf52-feather-learning-guide/introduction) bootloader, libraries and allows for the following features:
 
 | Feature              | nRF52832 Details                                  | nRF52840 Details                                  | Comments  |
 | -------------------- |:------------------------------------------------- |:-------------------------------------------------|:----- |
