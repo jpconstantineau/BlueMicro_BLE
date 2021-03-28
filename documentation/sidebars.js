@@ -17,6 +17,7 @@ module.exports = {
     'Keycodes':[
                 'keycodes/keycodes_basic',
                 'keycodes/keycodes_extended',
+                'keycodes/keycodes_media',
                 'keycodes/keycodes_modifiers',
                 'keycodes/keycodes_firmware',
                 'keycodes/keycodes_hardware'

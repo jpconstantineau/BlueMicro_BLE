@@ -10,10 +10,12 @@ slug: /
 See a number of tutorials, builds and other keyboard related videos on the [BlueMicro Youtube Channel](https://www.youtube.com/channel/UCFpGp4hHe03nvF9c8_gF_jA/featured).
 
 ## NEW: BlueMicro Builder
-A very easy way to get setup with your own firmware and compile it without installing anything on your computer! 
+A very easy way to get setup with your own firmware and compile it without installing anything on your computer[^1]! 
 
 More documentation to come...
-Find the builder [here](https://github.com/jpconstantineau/BlueMicro_Builder)
+Find the builder [here](https://github.com/jpconstantineau/BlueMicro_Builder) and follow the instructions in the readme.
+
+[^1]: nRF52840 Only.  With nRF52832, you still need software to flash.
 
 ## Getting Started: in 4 simple steps
 
