@@ -137,6 +137,10 @@ typedef struct {
   int8_t encoder2pos;
   int8_t encoder3pos;
   int8_t encoder4pos;
+  int8_t encoder5pos;
+  int8_t encoder6pos;
+  int8_t encoder7pos;
+  int8_t encoder8pos;
 
 } DynamicState; // meant for keyboard and BLE status and things that are dynamic and should not be stored in flash.
 
