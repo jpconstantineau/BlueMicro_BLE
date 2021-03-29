@@ -164,16 +164,27 @@ Since the U8g2 library supports a large number of displays by changing the type 
 
 ### Rotary Encoder Definition
 
-Currently implemented for a single Rotary encoder per side/half.
+Hardware quadrature decoder only supports a single Rotary encoder per side/half. If you need more than 1 encoder, you can use the software (interrupt driven) quadrature decoder, which supports up to 8 encoders per side.
 
-Add these lines to your `hardware_config.h`
+Add these lines to your `hardware_config.h` if you use a single encoder.
 
 ``` c++
 #define ENCODER_A_PIN  26 
-#define ENCODER_B_PIN  30 
+#define ENCODER_B_PIN  30
+#define ENCODER_RESOLUTION 2  
 ```
 
-From a hardware point of view, the A an B lines of the encoder should be wired directly to the nRF52 GPIO. The C (or common) line should be wired to ground. By default, the configuration uses the hardware QDEC peripheral (Quadrature Decoder) that's part of the nRF52 SoC and uses callbacks to handle rotation.
+If you use multiple encoders, you can expand the above to an array as follows:
+
+``` c++
+#define ENCODER_PAD_A  {26, 8, 15, 17, 9 }
+#define ENCODER_PAD_B  {6, 29, 2, 20, 13 }
+#define ENCODER_RESOLUTION 2 
+```
+
+From a hardware point of view, the A an B lines of the encoder should be wired directly to the nRF52 GPIO. The C (or common) line should be wired to ground. By default, the configuration uses the hardware QDEC peripheral (Quadrature Decoder) that's part of the nRF52 SoC and uses callbacks to handle rotation.  If you need more than 1 encoder (per side) you will need to use the software implemention.
+
+Encoder resolution is used within the encoder callbacks to divide the steps in case you get multiple steps per click. 
 
 
 ### Speaker/Buzzer/Audio Definition

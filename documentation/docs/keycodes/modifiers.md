@@ -1,6 +1,6 @@
 ---
 id: keycodes_modifiers
-title: Modifiers
+title: Toggles and One-Shot
 slug: keycodes_modifiers
 ---
 
