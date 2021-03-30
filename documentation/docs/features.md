@@ -14,7 +14,7 @@ BlueMicro is currently missing some features found in other popular firmware. Th
 | Low Latency BLE Support                                                                                                |     ✅    |      | ✅  |
 | Multi-Device BLE Support (Several Computers) [^1]                                                                      |     ✅    |      | ✅  | 
 | USB HID [^1],[^2]                                                                                                      |     ✅    | ✅  | ✅  |
-| Battery Reporting (BLE Battery Service)                                                                                |     ✅    |      | 🚧  |
+| Battery Reporting (BLE Battery Service)                                                                                |     ✅    |      | ✅  |
 | Low Power Sleep States                                                                                                 |     ✅    |      | 🚧  |
 | Low Active Power Usage                                                                                                 |            |      | ✅  |
 | **Firmware Options**                                                                                                   |            |      |    |
@@ -24,14 +24,14 @@ BlueMicro is currently missing some features found in other popular firmware. Th
 | Mouse Keys                                                                                                             |     ✅     | ✅  |      |
 | Hold-Tap (which includes Mod-Tap and Layer-Tap)                                                                        |     ✅     | ✅  | ✅  | 
 | One Shot Keys                                                                                                          |     ✅     | ✅  | 🚧  |
-| Combo Keys                                                                                                             |             | ✅  | 🚧  |
+| Combo Keys                                                                                                             |     ✅     | ✅  | 🚧  |
 | Macros                                                                                                                 |     ✅     | ✅  | 🚧  |
 | **Keyboard and Controller Board Hardware Options**                                                                     |            |     |    |
 | Ghosted Keys Support                                                                                                   |     🚧     | ✅  |    |
 | Split Keyboard Support                                                                                                 |     ✅     | ✅  | ✅  |
 | Key Backlight LED PWM Control                                                                                          |     ✅     | ✅  |      |
 | RGB Underglow [^1]                                                                                                     |     ✅     | ✅  | ✅  |
-| Encoders                                                                                                               |     ✅     | ✅  | ✅  |
+| Encoders [^3]                                                                                                          |     ✅     | ✅  | ✅  |
 | OLED Display Support [^1]                                                                                              |     🚧     | ✅  | 🚧  |
 | Audio/Speaker Support                                                                                                  |     ✅     | ✅  |     |
 | Low Power Mode (VCC Shutoff)                                                                                           |     ✅     |     | 🚧  |
@@ -43,7 +43,7 @@ BlueMicro is currently missing some features found in other popular firmware. Th
 | Serial Debug CLI                                                                                                       |      ✅   |     |    |
 | Web Bluetooth Configuration                                                                                            |      💡    |     |    |
 | Hardware Troubleshooting tools                                                                                         |      ✅   |     |    |
-| User Configuration Repositories                                                                                        |            |     | ✅  |
+| [User Configuration Repositories](https://github.com/jpconstantineau/BlueMicro_Builder)                                |      ✅    |     | ✅  |
 | Realtime Keymap Updating                                                                                               |            | ✅  |  💡  |
 
 
@@ -54,3 +54,5 @@ This __Features Compared__ page is licenced under [CC-BY-NC-SA-4.0](https://crea
 [^1]: Requires Community nRF52 Support Package instead of Adafruit nRF52 Board Support Package
 
 [^2]: Requires nRF52840 SoC.
+
+[^3]: 1 using on-chip hardware quadrature decoder, up to 8 using software interrupts. Can be on both half for split keyboards.

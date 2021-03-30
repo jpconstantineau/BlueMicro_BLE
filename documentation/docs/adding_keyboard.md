@@ -30,13 +30,10 @@ You add a new keyboard to the BlueMicro_BLE repository using the following steps
 * Create a sub-folder in the fqbn folder with your GPIO configuration name. Examples are "BlueMicro840", "NiceNano", "nrfmicro".
 * Copy hardware_config.h in the GPIO configuration folder (the one just created above). 
 
-### Edit Keyboard Config
-
-* Edit "DEVICE_NAME_R","DEVICE_NAME_L","DEVICE_NAME_M".  Default name for a single keyboard is DEVICE_NAME_M. For split boards, the other two will be used.
-* Edit "DEVICE_MODEL", "MANUFACTURER_NAME"
-* Edit "KEYMAP". If there are multiple different keymaps; for example with reversible left/right boards, define multiple KEYMAP with the appropriate reversed mapping. You can also use this macro transform the matrix into any shaped keyboard you like. For example an 8x8 matrix can be remapped to a 4x16 keyboard.
 
 ### Edit Hardware Config
+
+See [here](configuring_firmware_1.md) for more details.
 
 * Edit "MATRIX_ROWS" with the number of rows
 * Edit "MATRIX_COLS" with the number of columns
@@ -44,7 +41,17 @@ You add a new keyboard to the BlueMicro_BLE repository using the following steps
 * Edit "MATRIX_ROW_PINS" to the GPIO numbers
 * Edit "MATRIX_COL_PINS" to the GPIO numbers
 
+### Edit Keyboard Config
+
+See [here](configuring_firmware_2.md) for more details.
+
+* Edit "DEVICE_NAME_R","DEVICE_NAME_L","DEVICE_NAME_M".  Default name for a single keyboard is DEVICE_NAME_M. For split boards, the other two will be used.
+* Edit "DEVICE_MODEL", "MANUFACTURER_NAME"
+* Edit "KEYMAP". If there are multiple different keymaps; for example with reversible left/right boards, define multiple KEYMAP with the appropriate reversed mapping. You can also use this macro transform the matrix into any shaped keyboard you like. For example an 8x8 matrix can be remapped to a 4x16 keyboard.
+
 ### Edit Keymap files (.cpp and .h)
+
+See [here](configuring_firmware_3.md) for more details.
 
 * Create the necessary defines for "Layer IDs" in h file.
 * Create the KEYMAP for each layer.

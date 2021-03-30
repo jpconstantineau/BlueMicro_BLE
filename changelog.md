@@ -4,6 +4,10 @@
 
 Special thanks to @akudaikon, @ckofy, @tomsaleeba, @garyjohnson, @wizarddata, @bcat for contributing and helping with this release.
 
+### Known Issues
+
+See the [list of issues](https://github.com/jpconstantineau/BlueMicro_BLE/issues) for the latest details.
+
 ### BREAKING CHANGES 
 
 For most breaking changes, you will need to install and compile with the Community nrf52 BSP instead of the Adafruit nrf52 Board Support Package. See [here](https://github.com/jpconstantineau/Community_nRF52_Arduino/wiki/Installation-Instructions) for instructions how to install the Community nRF52 Board Support Package.
@@ -25,10 +29,27 @@ Thanks to @akudaikon for his contributions showing a working example on how to b
 ### Rotary Encoders
 
 Added support for Rotary Encoders. You can refer to the configuration of the solfle keyboard - default configuration for a working example.
+Support was added for up to 8 rotary encoders using the Community nRF52 BSP and the software (interrupt driven) driver. The hardware driver for the on-chip quadrature decoder supports 1 rotary encoder.
+
+### Persistent Modes and Mode Switching
+
+Added support to save the mode selected by the user so that the keymap to be loaded on bootup can be dynamically changed.  This enables a keyboard to have multiple keymaps and retain that keymap on reboot. Switching to an alternate keymap is as simple as calling a macro.  Other user variables have been added in addition to mode in order to allow for more flexibility.
+
+### Combo Engine: Combos, Substitutions and simple macros
+
+Added support for combos and longer chords. The following functions are now  available:
+
+- **COMB()** Press 2 or more keys, replace with another key.
+- **SUBS()** Press 1 or more keys, send a string.
+- **KEYS()** Press 1 or more keys, send a sequence of keycodes.
 
 ### Documentation
 
 Migrated documentation web pages to docusaurus. See them [here](http://bluemicro.jpconstantineau.com/docs/).
+
+### Automated Firmware Initializer and UF2 Builder
+
+Head over to the [BlueMicro_Builder](https://github.com/jpconstantineau/BlueMicro_Builder) repository, use the template and run the github action to automatically setup the firmware, compile and generate a UF2 file for your nRF52840-based keyboard.  For nRF52832 boards, the firmware folder will be ready for you to use on your computer.  Thanks to @brianweyer for the help in setting up the template.
 
 ### New and Updated Keyboards/Keymaps
 
@@ -42,5 +63,9 @@ Migrated documentation web pages to docusaurus. See them [here](http://bluemicro
 - **Iris**
 - **5x5x5 (5x15)**
 - **Sofle**
+- **BlueZero with Keypad Zero**
+- **CNCEncoderPad**
+- **BlueHand (2x4 macropad)**
+- **miniMACRO5**
 
 ## 0.3.0 and other Past Releases

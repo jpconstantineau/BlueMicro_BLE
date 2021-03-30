@@ -4,18 +4,21 @@ module.exports = {
     Features: ['features'],
     'How To':[
               'tools',
-              'adding_keyboard',
               'understand_gpios',
               'configure_hardware',
               'configure_keyboard',
               'configure_keymap',
+              'configure_combos',
               'keymaps',
               'build',
               'flash',
+              'adding_keyboard',
               'customize_BSP'],
     'Keycodes':[
                 'keycodes/keycodes_basic',
                 'keycodes/keycodes_extended',
+                'keycodes/keycodes_media',
+                'keycodes/keycodes_modifiers',
                 'keycodes/keycodes_firmware',
                 'keycodes/keycodes_hardware'
               ],
@@ -33,6 +36,7 @@ module.exports = {
                   'tutorials/tut_keymapswitch',
                   'tutorials/tut_macros'
                 ],
+    'Troubleshooting': ['trouble/trouble_flash'],
     'Contributing': ['DocumentationStyleGuide','contributing']
   },
 };

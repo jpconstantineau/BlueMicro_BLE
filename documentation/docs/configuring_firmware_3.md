@@ -55,11 +55,11 @@ The `ADDLAYER` macro wraps the Key::addActivation with a loop for all rows and c
 Note that when using `KC_NO` as the keycode within a layer, the firmware will automatically bypass this keycode for this specific key and it won't be added to its mapping.  As such, having lots of `KC_NO` keycodes in a layer won't affect the performance of the keyboard.
 
 
-### Rotary Encoder Definition
+### Rotary Encoder Definition (1 encoder)
 
-You can refer to the configuration of the solfle keyboard - default configuration for a working example.
+You can refer to the configuration of the solfle keyboard - default configuration for a working example for a single encoder.
 
- This configuration uses the hardware QDEC peripheral (Quadrature Decoder) that's part of the nRF52 SoC and uses callbacks to handle rotation.  The Adafruit library also supports software interrupts for 4 encoders but this has not been fully tested.  This limit on the number of encoders supported using software interrupts can be modified in the [library](https://github.com/jpconstantineau/Adafruit_nRF52_Arduino/blob/master/libraries/RotaryEncoder/SwRotaryEncoder.cpp).  Refer to the examples in the library if you want to implement multiple encoders.
+ This configuration uses the hardware QDEC peripheral (Quadrature Decoder) that's part of the nRF52 SoC and uses callbacks to handle rotation.
 
 You will need to add a few things to your keymap.h file.
 
@@ -112,9 +112,168 @@ void encoder_callback(int step)
 
 If you rotate in one direction and the keycodes are for the other direction, simply change the `if ( step > 0 )` statement to `if ( step < 0 )` or swap the keycodes around.
 
+You can change the rotary encoder callback to a different function by calling a macro.  This will enable changing the behavior of the rotary encoder at runtime.
+
+### Rotary Encoder Definition (Up to 8 encoders)
+
+You can refer to the configuration of the miniMACRO5 keyboard - default configuration for a working example for 5 encoders.
+
+ This configuration uses the software interrupts and uses callbacks to handle rotation.  This limit on the number of encoders supported using software interrupts can be modified in the [library](https://github.com/jpconstantineau/Adafruit_nRF52_Arduino/blob/master/libraries/RotaryEncoder/SwRotaryEncoder.cpp).  The Community BSP has a limit of 8 encoders while the adafruit BSP is set to a maximum of 4.
+
+You will need to add a few things to your keymap.h file.  The example below is from the miniMACRO5 which supports up to 5 encoders.
+
+``` c++
+#include "KeyScanner.h"  // include at the top with the other includes
+extern DynamicState keyboardstate;
+void encoder_callback1(int step);
+void encoder_callback2(int step);
+void encoder_callback3(int step);
+void encoder_callback4(int step);
+void encoder_callback5(int step);
+
+```
+
+You need to instantiate the software encoders in your keymap.cpp.  Add the following before your `setupKeymap()` function:
+
+``` c++
+SwRotaryEncoder RotaryEncoder1,RotaryEncoder2, RotaryEncoder3, RotaryEncoder4, RotaryEncoder5;
+
+```
+
+You will also need to add a few things to your keymap.cpp file.  For example, you will need to add the following lines in the `setupKeymap()` function:
+
+``` c++
+byte encoder_pins_a[] ENCODER_PAD_A;
+byte encoder_pins_b[] ENCODER_PAD_B;
+// Code below makes sure that the encoder gets configured.
+
+  RotaryEncoder1.begin(encoder_pins_a[0], encoder_pins_b[0]);    // Initialize Encoder
+  RotaryEncoder1.setCallback(encoder_callback1);    // Set callback
+
+  RotaryEncoder2.begin(encoder_pins_a[1], encoder_pins_b[1]);    // Initialize Encoder
+  RotaryEncoder2.setCallback(encoder_callback2);    // Set callback
+
+  RotaryEncoder3.begin(encoder_pins_a[2], encoder_pins_b[2]);    // Initialize Encoder
+  RotaryEncoder3.setCallback(encoder_callback3);    // Set callback
+
+  RotaryEncoder4.begin(encoder_pins_a[3], encoder_pins_b[3]);    // Initialize Encoder
+  RotaryEncoder4.setCallback(encoder_callback4);    // Set callback
+
+#ifdef ARDUINO_NRF52_COMMUNITY  // if you want to initialize more than 4, you need to compile on the Community BSP
+    RotaryEncoder5.begin(encoder_pins_a[4], encoder_pins_b[4]);    // Initialize Encoder
+  RotaryEncoder5.setCallback(encoder_callback5);    // Set callback
+#endif
+
+```
+
+You will need to add the  `encoder_callback()` functions (one per encoder):
+
+``` c++
+
+void encoder_callback1(int step)
+{
+  keyboardstate.encoder1pos = keyboardstate.encoder1pos + step; 
+
+  if (abs(keyboardstate.encoder1pos) > ENCODER_RESOLUTION)
+  {
+    if ( keyboardstate.encoder1pos < 0  )
+    {
+      KeyScanner::add_to_encoderKeys(KC_AUDIO_VOL_UP); 
+    }
+    else 
+    {
+      KeyScanner::add_to_encoderKeys(KC_AUDIO_VOL_DOWN); 
+    } 
+    keyboardstate.encoder1pos = 0; 
+  } 
+}
+
+void encoder_callback2(int step)
+{
+  keyboardstate.encoder2pos = keyboardstate.encoder2pos + step; 
+
+  if (abs(keyboardstate.encoder2pos) > ENCODER_RESOLUTION)
+  {
+    if ( keyboardstate.encoder2pos < 0  )
+    {
+  
+      KeyScanner::add_to_encoderKeys(KC_RIGHT); 
+    }
+    else 
+    {
+      KeyScanner::add_to_encoderKeys(KC_LEFT);
+    } 
+    keyboardstate.encoder2pos = 0; 
+  } 
+}
+
+void encoder_callback3(int step)
+{
+  keyboardstate.encoder3pos = keyboardstate.encoder3pos + step; 
+
+  if (abs(keyboardstate.encoder3pos) > ENCODER_RESOLUTION)
+  {
+    if ( keyboardstate.encoder3pos < 0  )
+    {
+  
+      KeyScanner::add_to_encoderKeys(KC_L); 
+    }
+    else 
+    {
+      KeyScanner::add_to_encoderKeys(KC_J);
+    } 
+    keyboardstate.encoder3pos = 0; 
+  } 
+}
+
+void encoder_callback4(int step)
+{
+  keyboardstate.encoder4pos = keyboardstate.encoder4pos + step; 
+
+  if (abs(keyboardstate.encoder4pos) > ENCODER_RESOLUTION)
+  {
+    if ( keyboardstate.encoder4pos < 0  )
+    {
+  
+      KeyScanner::add_to_encoderKeys(KC_COMMA); 
+    }
+    else 
+    {
+      KeyScanner::add_to_encoderKeys(KC_DOT);
+    } 
+    keyboardstate.encoder4pos = 0; 
+  } 
+}
+
+void encoder_callback5(int step)
+{
+  keyboardstate.encoder5pos = keyboardstate.encoder5pos + step; 
+
+  if (abs(keyboardstate.encoder5pos) > ENCODER_RESOLUTION)
+  {
+    if ( keyboardstate.encoder5pos < 0  )
+    {
+  
+      KeyScanner::add_to_encoderKeys(KC_UP); 
+    }
+    else 
+    {
+      KeyScanner::add_to_encoderKeys(KC_DOWN);
+    } 
+    keyboardstate.encoder5pos = 0; 
+  } 
+}
+
+```
+
+If you rotate in one direction and the keycodes are for the other direction, simply change the `if ( step > 0 )` statement to `if ( step < 0 )` or swap the keycodes around.
+
+You can change the rotary encoder callback to a different function by calling a macro.  This will enable changing the behavior of the rotary encoder at runtime.
+
+
 ### OLED Definition
 
-The default screens can be overriden by assigning a new callback. 
+The default screens can be overriden by assigning a new callback.
 
 You will need to add a few things to your keymap.h file.
 

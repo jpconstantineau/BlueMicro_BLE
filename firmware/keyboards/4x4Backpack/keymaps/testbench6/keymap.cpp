@@ -22,10 +22,10 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
     {{
-        {MC(KC_A),   MC(KC_B), KC_NO ,KC_NO  ,},
-        {KC_NO,    KC_NO ,    KC_NO,   KC_NO,},
-        {KC_NO,  KC_NO,   KC_NO,   KC_NO,},
-        {LAYER_1,   KC_0,     KC_NO,    RESET}
+        {KC_A,   KC_B,   KC_NO ,  KC_NO  ,},
+        {KC_NO,  KC_NO , KC_NO,   KC_NO,},
+        {KC_NO,  KC_NO,  KC_NO,   KC_NO,},
+        {LAYER_1,KC_0,   KC_NO,   RESET}
     }};
 
  
@@ -33,22 +33,24 @@ void setupKeymap() {
 
     uint32_t layer1[MATRIX_ROWS][MATRIX_COLS] =
         KEYMAP(
-           KC_NO,   KC_NO,   MC(KC_C), MC(KC_D),
-           KC_NO,     KC_NO,    KC_NO,   KC_NO,
-           KC_NO,  KC_NO,   KC_NO,   KC_NO,  
-           _______, KC_1,    KC_NO,  KC_NO );
+           KC_NO,   KC_NO,   KC_C,    KC_D,
+           KC_NO,   KC_NO,   KC_NO,   KC_NO,
+           KC_NO,   KC_NO,   KC_NO,   KC_NO,  
+           _______, KC_1,    KC_NO,   KC_NO );
 
     /*
      * add the other layers
      */
-    for (int row = 0; row < MATRIX_ROWS; ++row)
-    {
-        for (int col = 0; col < MATRIX_COLS; ++col)
-        {
-            matrix[row][col].addActivation(_L1, Method::PRESS, layer1[row][col]);
-        }
-    }
-
+    ADDLAYER(_L1, Method::PRESS , layer1);
+    COMB(test1,      KC_1,            KC_A, KC_B);
+    COMB(test2,      MC(KC_B),        KC_C, KC_D);
+    COMB(weEsc,      KC_ESC,          KC_W, KC_E);
+    COMB(sdBspc,     KC_BSPC,         KC_S, KC_D);
+    COMB(dfTab,      KC_TAB,          KC_D, KC_F);
+    COMB(cvEnt,      KC_ENT,          KC_C, KC_V);
+    COMB(uiEsc,      KC_ESC,          KC_U, KC_I);
+    COMB(jkCol,      KC_COLN,         KC_J, KC_K);
+    COMB(hnEnt,      KC_ENT,          KC_H, KC_N);
 }
 
 void process_user_macros(uint32_t macroid)
