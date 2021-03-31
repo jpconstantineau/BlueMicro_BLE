@@ -21,7 +21,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "hid_keycodes.h"
 #include "keyboard_config.h"
 #include "advanced_keycodes.h"
-#define MAX_NO_LAYERS 5 //needs to be one greater than the number of layers implimented. Too large of a number will cause crashing due to dynamic memory limits.
+#define MAX_NO_LAYERS 4 //needs to be one greater than the number of layers implimented. Too large of a number will cause crashing due to dynamic memory limits.
 #include "Key.h"
 #include <array>
 
