@@ -368,8 +368,11 @@ void scanMatrix() {
 
 void UpdateQueue()
 {
-  stringbuffer.insert(stringbuffer.end(), combos.keycodebuffertosend.rbegin(),combos.keycodebuffertosend.rend());
-  combos.keycodebuffertosend.clear();
+  #ifdef ENABLE_COMBOS
+     stringbuffer.insert(stringbuffer.end(), combos.keycodebuffertosend.rbegin(),combos.keycodebuffertosend.rend());
+     combos.keycodebuffertosend.clear();
+  #endif
+
 }
 
 /**************************************************************************************************************************/

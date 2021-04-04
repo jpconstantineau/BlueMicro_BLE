@@ -23,8 +23,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #undef max
 #include "firmware_config.h"
 #include "bluetooth_config.h"
-#include "KeyScanner.h"
 #include "keymap.h"
+#include "KeyScanner.h"
 #include "sleep.h"
 #include "bluetooth.h"
 #include "nrf52battery.h"

@@ -22,7 +22,10 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 #include "combo_engine.h"
 
-ComboEngine combos;
+#ifdef ENABLE_COMBOS
+   ComboEngine combos;
+#endif
+
 
 ComboEngine::ComboEngine()
 {

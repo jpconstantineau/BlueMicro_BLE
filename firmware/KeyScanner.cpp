@@ -292,79 +292,82 @@ bool KeyScanner::getReport()
         remotespecialkeycode=0;
     }
 
-    // process single-key substs (macros) first.
-    if (combos.anyMacrosConfigured())
-    {
-        if(combos.anyMacrosActive(activeKeys))
+    #ifdef ENABLE_COMBOS
+        // process single-key substs (macros) first.
+        if (combos.anyMacrosConfigured())
         {
-            activeKeys = combos.processActiveMacros(activeKeys);
-        }
-    }
-
-    // process combos before generating HID reports
-    if (combos.anyCombosConfigured())
-    { 
-        uint8_t triggercount = combos.countActiveCombosKeys(activeKeys);
-        if  (triggercount>1)// we have a potential combo present
-        {
-            uint8_t activecount = combos.findActiveCombos(activeKeys);
-            if (activecount>0) // at least 1
+            if(combos.anyMacrosActive(activeKeys))
             {
-                if (activecount==1) // exactly 1
+                activeKeys = combos.processActiveMacros(activeKeys);
+            }
+        }
+
+        // process combos before generating HID reports
+        if (combos.anyCombosConfigured())
+        { 
+            uint8_t triggercount = combos.countActiveCombosKeys(activeKeys);
+            if  (triggercount>1)// we have a potential combo present
+            {
+                uint8_t activecount = combos.findActiveCombos(activeKeys);
+                if (activecount>0) // at least 1
                 {
-                    activeKeys = combos.processActiveKeycodewithCombos(activeKeys);
-                    combotimer = status->timestamp;  // reset timers to current timestamp.
-                    triggerkeytimer = status->timestamp;
-                }
-                else // more than 2
-                {
-                    if (status->timestamp - combotimer > 200)// timeout to send biggest one...
+                    if (activecount==1) // exactly 1
                     {
                         activeKeys = combos.processActiveKeycodewithCombos(activeKeys);
                         combotimer = status->timestamp;  // reset timers to current timestamp.
                         triggerkeytimer = status->timestamp;
                     }
-                    else // we are still transitioning remove all potential combo keys...
+                    else // more than 2
                     {
-                        activeKeys = combos.processActiveKeycodewithComboKeys(activeKeys);
+                        if (status->timestamp - combotimer > 200)// timeout to send biggest one...
+                        {
+                            activeKeys = combos.processActiveKeycodewithCombos(activeKeys);
+                            combotimer = status->timestamp;  // reset timers to current timestamp.
+                            triggerkeytimer = status->timestamp;
+                        }
+                        else // we are still transitioning remove all potential combo keys...
+                        {
+                            activeKeys = combos.processActiveKeycodewithComboKeys(activeKeys);
+                        }
+                    }
+                }
+                else
+                { // if none are active, we might have to remove keycodes in case we are transitionning to/from a combo 
+                    if (status->timestamp - combotimer < 75)// Transitionning out of a combo
+                    {
+                        activeKeys = combos.processActiveKeycodewithComboKeys(activeKeys); 
                     }
                 }
             }
             else
-            { // if none are active, we might have to remove keycodes in case we are transitionning to/from a combo 
-                if (status->timestamp - combotimer < 75)// Transitionning out of a combo
-                {
-                    activeKeys = combos.processActiveKeycodewithComboKeys(activeKeys); 
-                }
-            }
-        }
-        else
-        {
-           if (triggercount==1) // we have a key used in a combo being pressed
-           {
-               // check if we have a "mono"
-              /* if (combos.findActiveCombos(activeKeys)) // at least 1
-                {
-                    if (combos.keycodebuffertosend.empty()) // buffer has stuff in it - skip adding the "mono"
+            {
+            if (triggercount==1) // we have a key used in a combo being pressed
+            {
+                // check if we have a "mono"
+                /* if (combos.findActiveCombos(activeKeys)) // at least 1
                     {
-                    activeKeys = combos.processActiveKeycodewithCombos(activeKeys);
-                    combotimer = status->timestamp;  // reset timers to current timestamp.
-                    triggerkeytimer = status->timestamp;
+                        if (combos.keycodebuffertosend.empty()) // buffer has stuff in it - skip adding the "mono"
+                        {
+                        activeKeys = combos.processActiveKeycodewithCombos(activeKeys);
+                        combotimer = status->timestamp;  // reset timers to current timestamp.
+                        triggerkeytimer = status->timestamp;
+                        }
                     }
-                }
-                else */
-                if (status->timestamp - triggerkeytimer < 75)// Transitionning out/in of a combo
-                {
-                    activeKeys = combos.processActiveKeycodewithComboKeys(activeKeys); 
-                }
-           }
-           else
-           {
-                triggerkeytimer = status->timestamp;
-                combotimer = status->timestamp;
-           }
-        }    
-    }
+                    else */
+                    if (status->timestamp - triggerkeytimer < 75)// Transitionning out/in of a combo
+                    {
+                        activeKeys = combos.processActiveKeycodewithComboKeys(activeKeys); 
+                    }
+            }
+            else
+            {
+                    triggerkeytimer = status->timestamp;
+                    combotimer = status->timestamp;
+            }
+            }    
+        }
+
+    #endif
 
     for (auto keycode : activeKeys) 
     {

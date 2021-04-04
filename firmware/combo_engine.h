@@ -27,6 +27,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include <string>
 #include "hid_keycodes.h"
 #include "advanced_keycodes.h"
+#include "keymap.h"
 
 
 typedef std::vector <uint16_t> trigger_keycodes_t;
@@ -99,7 +100,9 @@ class ComboEngine {
     bool activemacrosent;
 };
 
+#ifdef ENABLE_COMBOS
+   extern ComboEngine combos;
+#endif
 
-extern ComboEngine combos;
 
 #endif 
