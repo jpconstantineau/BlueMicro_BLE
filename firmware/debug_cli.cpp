@@ -263,13 +263,14 @@ Serial.println("i\tGPIO\tGPIO\tFloat \tP.Up \tP.Down\tstatus");
   }
     keyscantimer.start();
   batterytimer.start();
+  updateWDT();
 }
 /**************************************************************************************************************************/
 void handleSerial() {
     char buffer [50];
   uint8_t intval;
  while (Serial.available() > 0) {
-   
+   updateWDT();
    char incomingCharacter = Serial.read();
    switch (incomingCharacter) {
      case 'd':

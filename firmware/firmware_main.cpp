@@ -37,7 +37,9 @@ File file(InternalFS);
 PersistentState keyboardconfig;
 DynamicState keyboardstate;
 
-BlueMicro_tone speaker(&keyboardconfig, &keyboardstate);  /// A speaker to play notes and tunes...
+#ifdef ENABLE_AUDIO
+  BlueMicro_tone speaker(&keyboardconfig, &keyboardstate);  /// A speaker to play notes and tunes...
+#endif
 led_handler statusLEDs(&keyboardconfig, &keyboardstate);  /// Typically a Blue LED and a Red LED
 
 
@@ -187,9 +189,10 @@ void setup() {
   #endif
  
   setupConfig();
-
+#ifdef ENABLE_AUDIO
  #ifdef SPEAKER_PIN
  speaker.setSpeakerPin(SPEAKER_PIN);
+ #endif
  #endif
 
   if (keyboardconfig.enableSerial) 
@@ -256,9 +259,10 @@ void setup() {
       OLED.sleep();
     }
   #endif
-
+#ifdef ENABLE_AUDIO
   speaker.playTone(TONE_STARTUP);
   speaker.playTone(TONE_BLE_PROFILE);
+  #endif
 
 };
 /**************************************************************************************************************************/
@@ -441,18 +445,24 @@ void process_keyboard_function(uint16_t keycode)
     // Bluefruit.Central.clearBonds();
     break;
   case DFU:
+  #ifdef ENABLE_AUDIO
     speaker.playTone(TONE_SLEEP);
     speaker.playAllQueuedTonesNow();
+    #endif
     enterOTADfu();
     break;
   case SERIAL_DFU:
+  #ifdef ENABLE_AUDIO
     speaker.playTone(TONE_SLEEP);
     speaker.playAllQueuedTonesNow();
+    #endif
     enterSerialDfu();
     break;
   case UF2_DFU:
+  #ifdef ENABLE_AUDIO
     speaker.playTone(TONE_SLEEP);
     speaker.playAllQueuedTonesNow();
+    #endif
     enterUf2Dfu();
     break;
   case HELP_MODE:
@@ -1008,7 +1018,11 @@ void sendKeyPresses() {
     {
       case CONNECTION_USB: usb_sendMediaKey(KeyScanner::consumer); break;
       case CONNECTION_BT: bt_sendMediaKey(KeyScanner::consumer); break;
-      case CONNECTION_NONE: speaker.playTone(TONE_BLE_DISCONNECT); break; // we have lost a report!
+      case CONNECTION_NONE: 
+      #ifdef ENABLE_AUDIO
+      speaker.playTone(TONE_BLE_DISCONNECT);
+      #endif
+       break; // we have lost a report!
     }
     KeyScanner::consumer = 0; 
   } else if (KeyScanner::mouse > 0)
@@ -1017,7 +1031,11 @@ void sendKeyPresses() {
     {
       case CONNECTION_USB: usb_sendMouseKey(KeyScanner::mouse); break;
       case CONNECTION_BT: bt_sendMouseKey(KeyScanner::mouse); break;
-      case CONNECTION_NONE: speaker.playTone(TONE_BLE_DISCONNECT); break; // we have lost a report!
+      case CONNECTION_NONE: 
+      #ifdef ENABLE_AUDIO
+      speaker.playTone(TONE_BLE_DISCONNECT); 
+      #endif
+      break; // we have lost a report!
     }
     KeyScanner::mouse = 0; 
   }
@@ -1100,9 +1118,9 @@ void keyscantimer_callback(TimerHandle_t _handle) {
 // cppcheck-suppress unusedFunction
 void loop() {  // has task priority TASK_PRIO_LOW     
   updateWDT();
-
+#ifdef ENABLE_AUDIO
   speaker.processTones();
-
+#endif
   if (keyboardconfig.enableSerial)
   {
     handleSerial();

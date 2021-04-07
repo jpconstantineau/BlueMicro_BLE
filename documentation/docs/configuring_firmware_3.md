@@ -334,6 +334,7 @@ void updateDisplay(PersistentState* cfg, DynamicState* stat)
 If you want to add additional audio feedback to your macros or user functions, you will need to add a few lines to your keymap.h file:
 
 ``` c++
+#define ENABLE_AUDIO
 #include "BlueMicro_tone.h"
 extern BlueMicro_tone speaker; 
 ```

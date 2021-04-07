@@ -46,7 +46,7 @@ void prepareSleep() {
       #ifdef BLUEMICRO_CONFIGURED_DISPLAY
       OLED.sleep();
       #endif
-
+#ifdef ENABLE_AUDIO
   #ifdef SPEAKER_PIN
     pinMode(SPEAKER_PIN, OUTPUT);
     digitalWrite(SPEAKER_PIN, LOW);
@@ -58,6 +58,7 @@ void prepareSleep() {
         delay(65);
           digitalWrite(SPEAKER_PIN, LOW);
           pinMode(SPEAKER_PIN, INPUT);
+  #endif
   #endif
 
       #if VCC_ENABLE_GPIO ==1 

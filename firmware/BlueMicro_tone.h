@@ -159,10 +159,10 @@ class BlueMicro_tone {
 
     private:
         uint8_t _pin;
-        static std::queue<toneList_t> toneQueue;
-        static uint32_t toneDelay;
-        static PersistentState* config;
-        static DynamicState* status;
+        std::queue<toneList_t> toneQueue;
+        uint32_t toneDelay;
+        PersistentState* config;
+        DynamicState* status;
 };
 
 

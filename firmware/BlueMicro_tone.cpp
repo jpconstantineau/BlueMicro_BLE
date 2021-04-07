@@ -167,7 +167,11 @@ void BlueMicro_tone::playNoteNow(int frequency, int duration)
     playNoteNow( frequency,  duration, false);
 }
 
-std::queue<toneList_t> BlueMicro_tone::toneQueue;
-uint32_t BlueMicro_tone::toneDelay = 0;
-PersistentState*  BlueMicro_tone::config = NULL;
-DynamicState*  BlueMicro_tone::status  = NULL;
+
+#ifdef ENABLE_AUDIO
+ // std::queue<toneList_t> BlueMicro_tone::toneQueue;
+ // uint32_t BlueMicro_tone::toneDelay = 0;
+ // PersistentState*  BlueMicro_tone::config = NULL;
+  //DynamicState*  BlueMicro_tone::status  = NULL; 
+#endif
+
