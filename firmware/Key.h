@@ -33,8 +33,19 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVE
 #define MAX_NO_LAYERS 10 // 6
 #endif
 
-using ActArray = std::array<std::array<uint16_t, 5>, MAX_NO_LAYERS>;
-using DurArray = std::array<std::array<Duration, 5>, MAX_NO_LAYERS>;
+#define REFACTOR_KEY 1
+
+#ifndef REFACTOR_KEY
+  using ActArray = std::array<std::array<uint16_t, 5>, MAX_NO_LAYERS>;
+  using DurArray = std::array<std::array<Duration, 5>, MAX_NO_LAYERS>;
+#else
+  typedef struct {
+    uint16_t activations;
+    Duration durations;
+  } KeyDefinition; 
+
+  using KeyDefinitionArray =  std::array<std::array<KeyDefinition, 5>, MAX_NO_LAYERS>;
+#endif
 
 class Key {
 public:
@@ -50,9 +61,12 @@ private:
   Method lastMethod;
   std::pair<uint16_t, Duration> lastActivation;
   KeyState state;
-
+#ifndef REFACTOR_KEY
   ActArray activations;
   DurArray durations;
+#else
+  KeyDefinitionArray keydefs;
+#endif
 };
 
 #endif /* KEY_H */

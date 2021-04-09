@@ -24,8 +24,14 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVE
 
 // should be called with the keycode of the default layer
 Key::Key(uint32_t activation) {
+
+#ifndef REFACTOR_KEY
   activations[0][0] = static_cast<uint16_t>(activation & 0x0000FFFF);
   durations[0][0] = static_cast<Duration>((activation & 0x00FF0000) >> 16);
+#else
+  keydefs[0][0].activations = static_cast<uint16_t>(activation & 0x0000FFFF);
+  keydefs[0][0].durations = static_cast<Duration>((activation & 0x00FF0000) >> 16);
+#endif
 
   // last method is the "release" method
   lastMethod = Method::NONE;
@@ -52,12 +58,22 @@ void Key::addActivation(const uint8_t layer, const Method method, const uint32_t
       keycode = KC_NO;
       break;
     }
-
-    keycode = activations[--tempLayer][methodIndex];
+    #ifndef REFACTOR_KEY
+      keycode = activations[--tempLayer][methodIndex];
+    #else
+    keycode = keydefs[--tempLayer][methodIndex].activations;
+    #endif
   }
 
+
+
+#ifndef REFACTOR_KEY
   activations[layer][methodIndex] = keycode;
   durations[layer][methodIndex] = static_cast<Duration>((activation & 0x00FF0000) >> 16);
+#else
+  keydefs[layer][methodIndex].activations = keycode;
+  keydefs[layer][methodIndex].durations = static_cast<Duration>((activation & 0x00FF0000) >> 16);
+#endif
 
   /*
    * tell the state to make sure to look for the added
@@ -109,7 +125,13 @@ std::pair<uint16_t, Duration> Key::getActiveActivation(uint8_t layer) {
    */
   if (method != lastMethod) {
     lastMethod = method;
-    lastActivation = std::make_pair(activations[layer][methodIndex], durations[layer][methodIndex]);
+  #ifndef REFACTOR_KEY
+      lastActivation = std::make_pair(activations[layer][methodIndex], durations[layer][methodIndex]);
+  #else
+      lastActivation = std::make_pair(keydefs[layer][methodIndex].activations, keydefs[layer][methodIndex].durations);
+  #endif
+
+
     return lastActivation;
   }
   /*
