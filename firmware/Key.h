@@ -30,27 +30,40 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define MAX_NO_LAYERS 10 //6
 #endif
 
+//#define REFACTOR_KEY 1
 
-using ActArray = std::array<std::array<uint16_t, 5>, MAX_NO_LAYERS>;
-using DurArray = std::array<std::array<Duration, 5>, MAX_NO_LAYERS>;
+#ifndef REFACTOR_KEY
+  using ActArray = std::array<std::array<uint16_t, 5>, MAX_NO_LAYERS>;
+  using DurArray = std::array<std::array<Duration, 5>, MAX_NO_LAYERS>;
+#else
+  typedef struct {
+    uint16_t activations;
+    Duration durations;
+  } KeyDefinition; 
+
+  using KeyDefinitionArray =  std::array<std::array<KeyDefinition, 5>, MAX_NO_LAYERS>;
+#endif
 
 class Key {
-    public:
-    // cppcheck-suppress noExplicitConstructor     // cannot make this an explicit constructor as we are relying on conversion of keycodes to uint32_t
-        Key(uint32_t activation);
+public:
+  // cppcheck-suppress noExplicitConstructor     // cannot make this an explicit constructor as we are relying on conversion of keycodes to uint32_t
+  Key(uint32_t activation);
 
-        void press(unsigned long currentMillis);
-        void clear(unsigned long currentMillis);
-        void addActivation(const uint8_t layer, const Method method, const uint32_t activation);
-        std::pair<uint16_t, Duration> getActiveActivation(uint8_t layer);
+  void press(unsigned long currentMillis);
+  void clear(unsigned long currentMillis);
+  void addActivation(const uint8_t layer, const Method method, const uint32_t activation);
+  std::pair<uint16_t, Duration> getActiveActivation(uint8_t layer);
 
-    private:
-        Method lastMethod;
-        std::pair<uint16_t, Duration> lastActivation;
-        KeyState state;
-
-        ActArray activations;
-        DurArray durations;
+private:
+  Method lastMethod;
+  std::pair<uint16_t, Duration> lastActivation;
+  KeyState state;
+#ifndef REFACTOR_KEY
+  ActArray activations;
+  DurArray durations;
+#else
+  KeyDefinitionArray keydefs;
+#endif
 };
 
 #endif /* KEY_H */
