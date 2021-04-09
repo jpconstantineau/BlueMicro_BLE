@@ -30,15 +30,15 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define MAX_NO_LAYERS 10 //6
 #endif
 
-//#define REFACTOR_KEY 1
+#define REFACTOR_KEY 1
 
 #ifndef REFACTOR_KEY
   using ActArray = std::array<std::array<uint16_t, 5>, MAX_NO_LAYERS>;
   using DurArray = std::array<std::array<Duration, 5>, MAX_NO_LAYERS>;
 #else
-  typedef struct {
+  typedef struct   {
     uint16_t activations;
-    Duration durations;
+    Duration durations __attribute__((packed)); 
   } KeyDefinition; 
 
   using KeyDefinitionArray =  std::array<std::array<KeyDefinition, 5>, MAX_NO_LAYERS>;
