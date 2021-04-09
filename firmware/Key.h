@@ -33,7 +33,7 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVE
 #define MAX_NO_LAYERS 10 // 6
 #endif
 
-#define REFACTOR_KEY 1
+//#define REFACTOR_KEY 1
 
 #ifndef REFACTOR_KEY
   using ActArray = std::array<std::array<uint16_t, 5>, MAX_NO_LAYERS>;
