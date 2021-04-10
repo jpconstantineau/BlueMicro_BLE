@@ -30,19 +30,12 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define MAX_NO_LAYERS 10 //6
 #endif
 
-#define REFACTOR_KEY 1
+typedef struct   {
+  uint16_t activations;
+  Duration durations __attribute__((packed)); 
+} KeyDefinition; 
 
-#ifndef REFACTOR_KEY
-  using ActArray = std::array<std::array<uint16_t, 5>, MAX_NO_LAYERS>;
-  using DurArray = std::array<std::array<Duration, 5>, MAX_NO_LAYERS>;
-#else
-  typedef struct   {
-    uint16_t activations;
-    Duration durations __attribute__((packed)); 
-  } KeyDefinition; 
-
-  using KeyDefinitionArray =  std::array<std::array<KeyDefinition, 5>, MAX_NO_LAYERS>;
-#endif
+using KeyDefinitionArray =  std::array<std::array<KeyDefinition, 5>, MAX_NO_LAYERS>;
 
 class Key {
 public:
@@ -52,18 +45,13 @@ public:
   void press(unsigned long currentMillis);
   void clear(unsigned long currentMillis);
   void addActivation(const uint8_t layer, const Method method, const uint32_t activation);
-  std::pair<uint16_t, Duration> getActiveActivation(uint8_t layer);
+  KeyDefinition getActiveActivation(uint8_t layer);
 
 private:
   Method lastMethod;
-  std::pair<uint16_t, Duration> lastActivation;
+  KeyDefinition lastActivation;
   KeyState state;
-#ifndef REFACTOR_KEY
-  ActArray activations;
-  DurArray durations;
-#else
   KeyDefinitionArray keydefs;
-#endif
 };
 
 #endif /* KEY_H */
