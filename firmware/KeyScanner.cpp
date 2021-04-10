@@ -141,9 +141,9 @@ status->layer = layer;
     for(int row = 0; row < MATRIX_ROWS; ++row) {
         for (auto& key : matrix[row]) 
         {
-            uint16_t activeKeycode;
-            Duration duration;
-            std::tie(activeKeycode, duration) = key.getActiveActivation(layer);
+            KeyDefinition activeKey = key.getActiveActivation(layer);
+            uint16_t activeKeycode = activeKey.activations;
+            Duration duration = activeKey.durations;
 
             if (activeKeycode != 0) 
             {
