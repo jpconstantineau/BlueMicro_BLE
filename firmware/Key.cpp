@@ -128,7 +128,8 @@ std::pair<uint16_t, Duration> Key::getActiveActivation(uint8_t layer) {
   #ifndef REFACTOR_KEY
       lastActivation = std::make_pair(activations[layer][methodIndex], durations[layer][methodIndex]);
   #else
-      lastActivation = std::make_pair(keydefs[layer][methodIndex].activations, keydefs[layer][methodIndex].durations);
+      auto tmpduration = keydefs[layer][methodIndex].durations;
+      lastActivation = std::make_pair(keydefs[layer][methodIndex].activations, tmpduration);
   #endif
 
 
