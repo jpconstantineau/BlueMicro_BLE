@@ -163,4 +163,51 @@ enum backgroundTaskID {
   BACKGROUND_TASK_RGBLED
 };
 
+struct HIDKeyboard {
+    uint8_t modifier;
+    uint8_t keycode[6];
+    uint16_t layer; 
+
+    bool operator!= (const HIDKeyboard &c2)
+    {
+          return !(*this == c2); 
+    }
+
+    inline bool operator== (const HIDKeyboard &c2)
+    {
+          return  (keycode[0]==c2.keycode[0]) &&
+                  (modifier==c2.modifier    ) &&
+                  (layer==c2.layer          ) &&
+                  (keycode[1]==c2.keycode[1]) &&
+                  (keycode[2]==c2.keycode[2]) &&
+                  (keycode[3]==c2.keycode[3]) &&
+                  (keycode[4]==c2.keycode[4]) &&
+                  (keycode[5]==c2.keycode[5]) ;
+              
+    }
+
+  } ;
+
+
+
+
+
+typedef struct {
+    uint8_t buttons; 
+    int8_t x; 
+    int8_t y;
+    int8_t wheel; 
+    int8_t pan;
+  } HIDMouse;
+
+typedef struct {
+    uint16_t usage_code;
+  } HIDConsumer;
+
+typedef struct {
+  HIDKeyboard keyboard;
+  HIDMouse mouse;
+  HIDConsumer consumer;
+  } HIDMessages; 
+
 #endif

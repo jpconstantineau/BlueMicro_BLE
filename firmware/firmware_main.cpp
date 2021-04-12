@@ -52,7 +52,7 @@ KeyScanner keys(&keyboardconfig, &keyboardstate);
 Battery batterymonitor;
 
 static std::vector<uint16_t> stringbuffer; // buffer for macros to type into...
-static std::vector<std::array<uint8_t,8>> reportbuffer; 
+static std::vector<HIDKeyboard> reportbuffer; 
 
 /**************************************************************************************************************************/
 void setupConfig() {
@@ -903,22 +903,22 @@ void process_keyboard_function(uint16_t keycode)
 /**************************************************************************************************************************/
 void process_user_special_keys()
 {
-  uint8_t mods = KeyScanner::currentReport[0] ;
-          LOG_LV1("SPECIAL","PROCESS: %i %i %i %i %i %i %i %i %i" ,KeyScanner::special_key,mods, KeyScanner::currentReport[1],KeyScanner::currentReport[2],KeyScanner::currentReport[3], KeyScanner::currentReport[4],KeyScanner::currentReport[5], KeyScanner::currentReport[6],KeyScanner::bufferposition );  
+  uint8_t mods = KeyScanner::currentReport.modifier ;
+          LOG_LV1("SPECIAL","PROCESS: %i %i %i %i %i %i %i %i %i" ,KeyScanner::special_key,mods, KeyScanner::currentReport.keycode[0],KeyScanner::currentReport.keycode[1],KeyScanner::currentReport.keycode[2], KeyScanner::currentReport.keycode[3],KeyScanner::currentReport.keycode[4], KeyScanner::currentReport.keycode[5],KeyScanner::bufferposition );  
    switch(KeyScanner::special_key)
   {
     case KS(KC_ESC):
         switch (mods)
         {
-          case 0:          KeyScanner::currentReport[KeyScanner::bufferposition] = KC_ESC;   KeyScanner::reportChanged = true; break;
-          case BIT_LCTRL:  KeyScanner::currentReport[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::reportChanged = true; KeyScanner::currentReport[0]  = 0; break;
-          case BIT_LSHIFT: KeyScanner::currentReport[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::reportChanged = true; KeyScanner::currentReport[0]  = BIT_LSHIFT; break;
-          case BIT_LALT:   KeyScanner::currentReport[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::reportChanged = true; KeyScanner::currentReport[0]  = 0; break;
-          case BIT_LGUI:   KeyScanner::currentReport[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::reportChanged = true; KeyScanner::currentReport[0]  = 0; break;
-          case BIT_RCTRL:  KeyScanner::currentReport[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::reportChanged = true; KeyScanner::currentReport[0]  = 0; break;
-          case BIT_RSHIFT: KeyScanner::currentReport[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::reportChanged = true; KeyScanner::currentReport[0]  = 0; break;
-          case BIT_RALT:   KeyScanner::currentReport[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::reportChanged = true; KeyScanner::currentReport[0]  = 0; break;
-          case BIT_RGUI:   KeyScanner::currentReport[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::reportChanged = true; KeyScanner::currentReport[0]  = 0; break;
+          case 0:          KeyScanner::currentReport.keycode[KeyScanner::bufferposition] = KC_ESC;   KeyScanner::reportChanged = true; break;
+          case BIT_LCTRL:  KeyScanner::currentReport.keycode[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::reportChanged = true; KeyScanner::currentReport.modifier  = 0; break;
+          case BIT_LSHIFT: KeyScanner::currentReport.keycode[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::reportChanged = true; KeyScanner::currentReport.modifier  = BIT_LSHIFT; break;
+          case BIT_LALT:   KeyScanner::currentReport.keycode[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::reportChanged = true; KeyScanner::currentReport.modifier  = 0; break;
+          case BIT_LGUI:   KeyScanner::currentReport.keycode[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::reportChanged = true; KeyScanner::currentReport.modifier  = 0; break;
+          case BIT_RCTRL:  KeyScanner::currentReport.keycode[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::reportChanged = true; KeyScanner::currentReport.modifier  = 0; break;
+          case BIT_RSHIFT: KeyScanner::currentReport.keycode[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::reportChanged = true; KeyScanner::currentReport.modifier  = 0; break;
+          case BIT_RALT:   KeyScanner::currentReport.keycode[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::reportChanged = true; KeyScanner::currentReport.modifier  = 0; break;
+          case BIT_RGUI:   KeyScanner::currentReport.keycode[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::reportChanged = true; KeyScanner::currentReport.modifier  = 0; break;
         }  
       break;
     default:
@@ -946,12 +946,12 @@ void sendKeyPresses() {
   UpdateQueue();
   if (!stringbuffer.empty()) // if the macro buffer isn't empty, send the first character of the buffer... which is located at the back of the queue
   {  
-    std::array<uint8_t,8> reportarray = {0, 0, 0 ,0, 0, 0, 0, 0};
+    HIDKeyboard reportarray = {0, {0, 0 ,0, 0, 0, 0}, 0};
     uint16_t keyreport = stringbuffer.back();
     stringbuffer.pop_back();
     
-    reportarray[0] = static_cast<uint8_t>((keyreport & 0xFF00) >> 8);// mods
-    reportarray[1] = static_cast<uint8_t>(keyreport & 0x00FF);
+    reportarray.modifier = static_cast<uint8_t>((keyreport & 0xFF00) >> 8);// mods
+    reportarray.keycode[0] = static_cast<uint8_t>(keyreport & 0x00FF);
 
     auto buffer_iterator = reportbuffer.begin();
     buffer_iterator = reportbuffer.insert(buffer_iterator, reportarray);
@@ -959,8 +959,8 @@ void sendKeyPresses() {
       uint16_t lookahead_keyreport = stringbuffer.back();
       if (lookahead_keyreport == keyreport) // if the next key is the same, make sure to send a key release before sending it again... but keep the mods.
       {
-        reportarray[0] = static_cast<uint8_t>((keyreport & 0xFF00) >> 8);// mods;
-        reportarray[1] = 0;
+        reportarray.modifier = static_cast<uint8_t>((keyreport & 0xFF00) >> 8);// mods;
+        reportarray.keycode[0] = 0;
         buffer_iterator = reportbuffer.begin();
         buffer_iterator = reportbuffer.insert(buffer_iterator, reportarray);
       }
@@ -970,7 +970,7 @@ void sendKeyPresses() {
  
   if (!reportbuffer.empty()) // if the report buffer isn't empty, send the first character of the buffer... which is located at the end of the queue
   {  
-    std::array<uint8_t,8> reportarray = reportbuffer.back();
+    HIDKeyboard reportarray  = reportbuffer.back();
     reportbuffer.pop_back();
     switch (keyboardstate.connectionState)
     {
@@ -984,13 +984,14 @@ void sendKeyPresses() {
     
     if (reportbuffer.empty()) // make sure to send an empty report when done...
     { 
+      HIDKeyboard emptyReport = {0, {0, 0 ,0, 0, 0, 0}, 0}; 
       switch (keyboardstate.connectionState)
       {
-        case CONNECTION_USB: usb_sendKeys({0,0,0,0,0,0,0,0}); delay(keyboardconfig.keysendinterval*2); break;
-        case CONNECTION_BT: bt_sendKeys({0,0,0,0,0,0,0,0}); delay(keyboardconfig.keysendinterval*2); break;
+        case CONNECTION_USB: usb_sendKeys(emptyReport); delay(keyboardconfig.keysendinterval*2); break;
+        case CONNECTION_BT: bt_sendKeys(emptyReport); delay(keyboardconfig.keysendinterval*2); break;
         case CONNECTION_NONE: // save the report for when we reconnect
                       auto it = reportbuffer.end();
-                      it = reportbuffer.insert(it, {0,0,0,0,0,0,0,0});
+                      it = reportbuffer.insert(it, emptyReport);
         break; 
       } 
     }
@@ -1004,10 +1005,10 @@ void sendKeyPresses() {
       case CONNECTION_BT: bt_sendKeys(KeyScanner::currentReport); break;
       case CONNECTION_NONE: // save the report for when we reconnect
                       auto it = reportbuffer.begin();
-                      it = reportbuffer.insert(it, {KeyScanner::currentReport[0], KeyScanner::currentReport[1],KeyScanner::currentReport[2],KeyScanner::currentReport[3], KeyScanner::currentReport[4],KeyScanner::currentReport[5], KeyScanner::currentReport[6],KeyScanner::currentReport[7]});    
+                      it = reportbuffer.insert(it, KeyScanner::currentReport);    
       break; 
     }
-        LOG_LV1("MXSCAN","SEND: %i %i %i %i %i %i %i %i %i " ,keyboardstate.timestamp,KeyScanner::currentReport[0], KeyScanner::currentReport[1],KeyScanner::currentReport[2],KeyScanner::currentReport[3], KeyScanner::currentReport[4],KeyScanner::currentReport[5], KeyScanner::currentReport[6],KeyScanner::currentReport[7] );        
+        LOG_LV1("MXSCAN","SEND: %i %i %i %i %i %i %i %i %i " ,keyboardstate.timestamp,KeyScanner::currentReport.modifier, KeyScanner::currentReport.keycode[0],KeyScanner::currentReport.keycode[1],KeyScanner::currentReport.keycode[2], KeyScanner::currentReport.keycode[3],KeyScanner::currentReport.keycode[4], KeyScanner::currentReport.keycode[5],KeyScanner::currentReport.layer);        
   } else if (KeyScanner::specialfunction > 0)
   {
     process_keyboard_function(KeyScanner::specialfunction);
