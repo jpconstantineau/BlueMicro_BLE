@@ -43,8 +43,24 @@ void setupKeymap() {
   RotaryEncoder.setCallback(encoder_callback);    // Set callback
   RotaryEncoder.start();    // Start encoder
 
-resetleds();
 
+
+setled(1); delay(100);
+setled(2); delay(100);
+setled(3); delay(100);
+setled(4); delay(100);
+setled(5); delay(100);
+setled(6); delay(100);
+setled(7); delay(100);
+setled(8); delay(100);
+setled(9); delay(100);
+resetleds();
+  speaker.playNoteNow(NOTE_G4, EIGHTH_TRIPLE, true);
+  speaker.playNoteNow(NOTE_C5, EIGHTH_TRIPLE, true);
+  speaker.playNoteNow(NOTE_E5, EIGHTH_TRIPLE, false);
+  speaker.playNoteNow(NOTE_G5, EIGHTH, true);
+  speaker.playNoteNow(NOTE_E5, SIXTEENTH, false);
+  speaker.playNoteNow(NOTE_G5, HALF, false);
 }
 
     void resetleds ()
@@ -62,6 +78,72 @@ resetleds();
         digitalWrite(LEDROW1, LOW);
         digitalWrite(LEDROW2, LOW);
     } 
+
+    void setled(int lednumber)
+    {
+
+switch ((lednumber))
+    { 
+        case 0:
+            resetleds();
+        break;
+        case 1:
+            resetleds();
+            pinMode(LEDCOL0, INPUT);
+            pinMode(LEDCOL2, INPUT);            
+            digitalWrite(LEDROW0, HIGH); 
+        break;
+        case 2:
+            resetleds();
+            pinMode(LEDCOL0, INPUT);
+            pinMode(LEDCOL2, INPUT);            
+            digitalWrite(LEDROW1, HIGH); 
+        break;
+        case 3:
+            resetleds();
+            pinMode(LEDCOL0, INPUT);
+            pinMode(LEDCOL2, INPUT);            
+            digitalWrite(LEDROW2, HIGH); 
+        break;
+        case 4:
+            resetleds();
+            pinMode(LEDCOL0, INPUT);
+            pinMode(LEDCOL1, INPUT);            
+            digitalWrite(LEDROW0, HIGH); 
+        break;
+        case 5:
+            resetleds();
+            pinMode(LEDCOL0, INPUT);
+            pinMode(LEDCOL1, INPUT);            
+            digitalWrite(LEDROW1, HIGH); 
+        break;
+        case 6:
+            resetleds();
+            pinMode(LEDCOL0, INPUT);
+            pinMode(LEDCOL1, INPUT);            
+            digitalWrite(LEDROW2, HIGH); 
+        break;
+        case 7:
+            resetleds();
+            pinMode(LEDCOL1, INPUT);
+            pinMode(LEDCOL2, INPUT);            
+            digitalWrite(LEDROW0, HIGH); 
+        break;
+        case 8:
+            resetleds();
+            pinMode(LEDCOL1, INPUT);
+            pinMode(LEDCOL2, INPUT);            
+            digitalWrite(LEDROW1, HIGH); 
+        break;
+        case 9:
+            resetleds();
+            pinMode(LEDCOL1, INPUT);
+            pinMode(LEDCOL2, INPUT);            
+            digitalWrite(LEDROW2, HIGH); 
+        break;
+    }
+
+    }
 
 void encoder_callback(int step)
 {
@@ -102,42 +184,22 @@ void process_user_macros(uint16_t macroid)
     { 
         case MODE0:
             keyboardstate.user1 = 0;
-            resetleds();
         break;
         case MODE1:
-            keyboardstate.user1 = 1;
-            resetleds();
-            pinMode(LEDCOL0, INPUT);
-            pinMode(LEDCOL2, INPUT);            
-            digitalWrite(LEDROW0, HIGH); 
+            keyboardstate.user1 = 1;    
         break;
         case MODE2:
             keyboardstate.user1 = 2;
-            resetleds();
-            pinMode(LEDCOL0, INPUT);
-            pinMode(LEDCOL2, INPUT);            
-            digitalWrite(LEDROW1, HIGH); 
         break;
         case MODE3:
             keyboardstate.user1 = 3;
-            resetleds();
-            pinMode(LEDCOL0, INPUT);
-            pinMode(LEDCOL2, INPUT);            
-            digitalWrite(LEDROW2, HIGH); 
         break;
         case MODE4:
             keyboardstate.user1 = 4;
-            resetleds();
-            pinMode(LEDCOL0, INPUT);
-            pinMode(LEDCOL1, INPUT);            
-            digitalWrite(LEDROW0, HIGH); 
         break;
         case MODE5:
             keyboardstate.user1 = 0;
-            resetleds();
-            pinMode(LEDCOL0, INPUT);
-            pinMode(LEDCOL1, INPUT);            
-            digitalWrite(LEDROW1, HIGH); 
         break;
     }
+    setled(keyboardstate.user1);
 }
