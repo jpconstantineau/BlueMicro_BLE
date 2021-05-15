@@ -44,7 +44,7 @@ void setupKeymap() {
   RotaryEncoder.start();    // Start encoder
 
 
-
+/*
 setled(1); delay(100);
 setled(2); delay(100);
 setled(3); delay(100);
@@ -53,14 +53,15 @@ setled(5); delay(100);
 setled(6); delay(100);
 setled(7); delay(100);
 setled(8); delay(100);
-setled(9); delay(100);
+setled(9); delay(100);*/
 resetleds();
+/*
   speaker.playNoteNow(NOTE_G4, EIGHTH_TRIPLE, true);
   speaker.playNoteNow(NOTE_C5, EIGHTH_TRIPLE, true);
   speaker.playNoteNow(NOTE_E5, EIGHTH_TRIPLE, false);
   speaker.playNoteNow(NOTE_G5, EIGHTH, true);
   speaker.playNoteNow(NOTE_E5, SIXTEENTH, false);
-  speaker.playNoteNow(NOTE_G5, HALF, false);
+  speaker.playNoteNow(NOTE_G5, HALF, false);*/
 }
 
     void resetleds ()

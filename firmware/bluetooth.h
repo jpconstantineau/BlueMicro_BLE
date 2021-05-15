@@ -31,20 +31,23 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "datastructures.h"
 #include "HID.h"
 
-    typedef struct {      // Payload for BLE messages between split boards. Intended for slave to master
+    typedef __packed  struct {      // Payload for BLE messages between split boards. Intended for slave to master
         // BLE messages have a size limit of 20 bytes. Any extra and we have to do some ATT_MTU magic...
-        uint8_t        report[8];        // 8 bytes   
-        uint32_t       command;          // 4 bytes
-        uint32_t       timesync;         // 4 bytes
+        uint8_t        keycode[6];       // 6 bytes
+        uint8_t        modifier;         // 1 byte
         uint8_t        batterylevel;     // 1 byte
-        uint16_t       specialkeycode;   // 2 bytes = 19 bytes...  sizeof gets 20 bytes...
+        uint16_t       layer;            // 2 byte   
+        //uint32_t       command;          // 4 bytes
+        //uint32_t       timesync;         // 4 bytes
+        
+        uint16_t       specialkeycode;   // 2 bytes = 20 bytes...  
     } Payload;
 
-        typedef struct {      // Payload for BLE messages between split boards. Intended for master to slave
+        typedef __packed struct {      // Payload for BLE messages between split boards. Intended for master to slave
         // BLE messages have a size limit of 20 bytes. Any extra and we have to do some ATT_MTU magic...
-        uint8_t        layer;            // 1 byte
         uint32_t       command;          // 4 bytes
         uint32_t       timesync;         // 4 bytes
+        uint16_t       layer;            // 1 byte
     } StatePayload;
 
     void updateBLEStatus(void);
@@ -55,9 +58,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
     void bt_stopAdv(void);
     ble_gap_addr_t bt_getMACAddr(void);
     void set_keyboard_led(uint16_t conn_handle, uint8_t led_bitmap);
-
-    void bt_sendKeys(uint8_t currentReport[8]);
-    void bt_sendKeys(std::array<uint8_t,8> currentReport);
+    void bt_sendKeys(HIDKeyboard currentReport);
     void bt_sendMediaKey(uint16_t keycode);
     void bt_sendMouseKey(uint16_t keycode);
     void rssi_changed_callback(uint16_t conn_hdl, int8_t rssi);

@@ -45,8 +45,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
     void usb_setup();
     bool usb_isConnected();
     void usb_wakeup();
-    void usb_sendKeys(uint8_t currentReport[8]);
-    void usb_sendKeys(std::array<uint8_t,8> currentReport);
+    void usb_sendKeys(HIDKeyboard currentReport);
     void usb_sendMediaKey(uint16_t keycode);
     void usb_sendMouseKey(uint16_t keycode);
     void usb_sendMouseMove(uint16_t keycode, uint16_t steps);
