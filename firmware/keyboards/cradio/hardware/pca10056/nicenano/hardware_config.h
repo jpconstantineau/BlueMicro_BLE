@@ -28,7 +28,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define MATRIX_COL_PINS { 11, 47, 2, 29, 31, 45, 43, 10, 9, 6, 17, 20, 22, 24, 32, 36, 38}
 #define UNUSED_PINS {}
 
-
+#define ARDUINO_NICE_NANO 1 // used in debug_cli.cpp to bypass 0.14 and 0.16 that are directly connected to 0.18 (reset)
 
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW
@@ -37,4 +37,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
         #define VBAT_PIN  4
         #define VCC_PIN 13
         #define VCC_POLARITY_ON 0
+
+        #define  STATUS_BLE_LED_PIN  15  //blue = 0.15
+
 #endif /* HARDWARE_CONFIG_H */
