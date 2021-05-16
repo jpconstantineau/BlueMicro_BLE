@@ -39,6 +39,9 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define WS2812B_LED_COUNT 12
 #define WS2812B_LED_ON 0 // LEDs are disabled by default
  
+
+ #define ARDUINO_NICE_NANO 1 // used in debug_cli.cpp to bypass 0.14 and 0.16 that are directly connected to 0.18 (reset)
+ 
 #define BATTERY_TYPE BATT_LIPO
 #define VBAT_PIN  4
 #define VCC_PIN 13

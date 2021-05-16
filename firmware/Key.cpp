@@ -24,8 +24,9 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVE
 
 // should be called with the keycode of the default layer
 Key::Key(uint32_t activation) {
-  activations[0][0] = static_cast<uint16_t>(activation & 0x0000FFFF);
-  durations[0][0] = static_cast<Duration>((activation & 0x00FF0000) >> 16);
+
+  keydefs[0][0].activations = static_cast<uint16_t>(activation & 0x0000FFFF);
+  keydefs[0][0].durations = static_cast<Duration>((activation & 0x00FF0000) >> 16);
 
   // last method is the "release" method
   lastMethod = Method::NONE;
@@ -53,11 +54,11 @@ void Key::addActivation(const uint8_t layer, const Method method, const uint32_t
       break;
     }
 
-    keycode = activations[--tempLayer][methodIndex];
+    keycode = keydefs[--tempLayer][methodIndex].activations;
   }
 
-  activations[layer][methodIndex] = keycode;
-  durations[layer][methodIndex] = static_cast<Duration>((activation & 0x00FF0000) >> 16);
+  keydefs[layer][methodIndex].activations = keycode;
+  keydefs[layer][methodIndex].durations = static_cast<Duration>((activation & 0x00FF0000) >> 16);
 
   /*
    * tell the state to make sure to look for the added
@@ -73,7 +74,7 @@ void Key::press(const unsigned long currentMillis) { state.press(currentMillis);
 
 void Key::clear(const unsigned long currentMillis) { state.clear(currentMillis); }
 
-std::pair<uint16_t, Duration> Key::getActiveActivation(uint8_t layer) {
+KeyDefinition Key::getActiveActivation(uint8_t layer) {
   Method method;
 
   switch (state.getState()) {
@@ -94,7 +95,8 @@ std::pair<uint16_t, Duration> Key::getActiveActivation(uint8_t layer) {
     break;
   default:
     lastMethod = Method::NONE;
-    lastActivation = std::make_pair(0, Duration::MOMENTARY);
+    lastActivation.activations = 0;
+    lastActivation.durations = Duration::MOMENTARY;
     return lastActivation;
   }
 
@@ -109,7 +111,7 @@ std::pair<uint16_t, Duration> Key::getActiveActivation(uint8_t layer) {
    */
   if (method != lastMethod) {
     lastMethod = method;
-    lastActivation = std::make_pair(activations[layer][methodIndex], durations[layer][methodIndex]);
+    lastActivation = keydefs[layer][methodIndex];
     return lastActivation;
   }
   /*
@@ -119,11 +121,14 @@ std::pair<uint16_t, Duration> Key::getActiveActivation(uint8_t layer) {
    * the layer key doesn't change the meaning of a key
    * inside that layer
    */
-  else if ((lastMethod == Method::PRESS || lastMethod == Method::MT_HOLD) && lastActivation.second != Duration::TOGGLE)
+  else if ((lastMethod == Method::PRESS || lastMethod == Method::MT_HOLD) && lastActivation.durations != Duration::TOGGLE)
   // else if ((lastMethod == Method::PRESS ) && lastActivation.second != Duration::TOGGLE)
   {
     return lastActivation;
   } else {
-    return std::make_pair(0, Duration::MOMENTARY);
+    KeyDefinition elseActivation;
+        elseActivation.activations = 0;
+        elseActivation.durations = Duration::MOMENTARY;
+    return elseActivation;
   }
 }

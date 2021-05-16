@@ -14,6 +14,8 @@ The following macros work at the keycode level; not at the keypress level.  This
 
 :::
 
+You will need to add ```#define ENABLE_COMBOS``` to your keymap.h file to enable combos.
+
 
 ```COMB(name, keycode_to_send, trigger)``` : The ```COMB()``` Macro is responsible for accepting a combo and outputting ***a single keycode!***.
 

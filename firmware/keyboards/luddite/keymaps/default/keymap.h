@@ -23,6 +23,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "advanced_keycodes.h"
 #include "Key.h"
 #include <array>
+
+#define ENABLE_AUDIO
 #include "BlueMicro_tone.h"
 
 #ifndef KEYMAP_H
@@ -44,7 +46,9 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define CHARGE    MC(KC_Y)
 #define BIRTHDAY  MC(KC_Z)
 
+#ifdef ENABLE_AUDIO
 extern BlueMicro_tone speaker; 
+#endif
 
 void setupKeymap();
 extern std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix;

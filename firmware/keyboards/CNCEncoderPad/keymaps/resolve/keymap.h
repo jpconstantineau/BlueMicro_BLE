@@ -27,7 +27,9 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "RotaryEncoder.h"
 #ifndef KEYMAP_H
 #define KEYMAP_H
-
+#define ENABLE_AUDIO
+#include "BlueMicro_tone.h"
+extern BlueMicro_tone speaker;
 #define NUM_LAYERS 2
 
 #define _L0 0
@@ -45,6 +47,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 void setupKeymap();
 void encoder_callback(int step);
 void resetleds (void);
+void setled(int lednumber);
 extern std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix;
 extern DynamicState keyboardstate;
 
