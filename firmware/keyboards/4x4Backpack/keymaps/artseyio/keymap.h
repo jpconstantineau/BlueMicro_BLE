@@ -18,16 +18,18 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 */
 #include <stdint.h>
+#include <array>
 #include "hid_keycodes.h"
 #include "keyboard_config.h"
 #include "advanced_keycodes.h"
 #include "Key.h"
-#include <array>
+#define ENABLE_COMBOS
 #include "combo_engine.h"
 
 
 #ifndef KEYMAP_H
 #define KEYMAP_H
+
 
 #define NUM_LAYERS 6
 

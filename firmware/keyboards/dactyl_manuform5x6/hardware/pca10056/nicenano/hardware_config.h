@@ -46,5 +46,5 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
        #define  STATUS_BLE_LED_PIN  15  //blue = 0.15
      //#define  STATUS_KB_LED_PIN 0  //no RED LED
  
-    
+  #define ARDUINO_NICE_NANO 1 // used in debug_cli.cpp to bypass 0.14 and 0.16 that are directly connected to 0.18 (reset)  
 #endif /* HARDWARE_CONFIG_H */

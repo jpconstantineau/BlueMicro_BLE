@@ -98,16 +98,19 @@ void process_user_macros(uint16_t macroid)
         case CHARGE:
             // Play a little charge melody, from:
             //  https://en.wikipedia.org/wiki/Charge_(fanfare)
+            #ifdef ENABLE_AUDIO
             speaker.playNoteNow(NOTE_G4, EIGHTH_TRIPLE, true);
             speaker.playNoteNow(NOTE_C5, EIGHTH_TRIPLE, true);
             speaker.playNoteNow(NOTE_E5, EIGHTH_TRIPLE, false);
             speaker.playNoteNow(NOTE_G5, EIGHTH, true);
             speaker.playNoteNow(NOTE_E5, SIXTEENTH, false);
             speaker.playNoteNow(NOTE_G5, HALF, false);
+            #endif
         break;
         case BIRTHDAY:
             // Play happy birthday tune, from:
             //  http://www.irish-folk-songs.com/happy-birthday-tin-whistle-sheet-music.html#.WXFJMtPytBw
+            #ifdef ENABLE_AUDIO
             speaker.playNoteNow(NOTE_D4, EIGHTH, true);
             speaker.playNoteNow(NOTE_D4, EIGHTH);
             speaker.playNoteNow(NOTE_E4, QUARTER);       // Bar 1
@@ -133,6 +136,7 @@ void process_user_macros(uint16_t macroid)
             speaker.playNoteNow(NOTE_G4, QUARTER);
             speaker.playNoteNow(NOTE_A4, QUARTER);
             speaker.playNoteNow(NOTE_G4, HALF);          // Bar 8
+            #endif
         break;
     }
 }

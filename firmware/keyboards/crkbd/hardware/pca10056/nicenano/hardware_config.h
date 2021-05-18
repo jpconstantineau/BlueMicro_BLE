@@ -27,6 +27,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define MATRIX_ROW_PINS { 22, 24, 32, 11 }
 #define MATRIX_COL_PINS { 31, 29, 2, 47, 45, 43 }
 
+#define ARDUINO_NICE_NANO 1 // used in debug_cli.cpp to bypass 0.14 and 0.16 that are directly connected to 0.18 (reset)
+
 #define UNUSED_PINS {}
 
 /* COL2ROW or ROW2COL */
@@ -37,8 +39,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 	#define WS2812B_LED_COUNT 27
 	#define WS2812B_LED_ON 1 
      #define BATTERY_TYPE BATT_LIPO
-        #define VBAT_PIN  4
-        #define  STATUS_BLE_LED_PIN  19  //blue = 0.19
+
 #define  STATUS_KB_LED_PIN 17  //red = 0.17
         #define VCC_PIN 13
         #define VCC_POLARITY_ON 0

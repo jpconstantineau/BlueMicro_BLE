@@ -1,41 +1,16 @@
 
 
-        #define D3      6  
-        #define D2      8   
-        #define D1      15  
-        #define D0      17  
-        #define D4      20
-        #define C6      13
-        #define D7      24
-        #define E6      9
-        #define B4      10
-        #define B5      38 //1.06 = 32+6
-
-        #define F4      30
-        #define F5      26  
-        #define F6      29
-        #define F7      2
-        #define B1      45 //1.13  = 32+13
-        #define B3      3
-        #define B2      28
-        #define B6      43 //1.11 = 32+11
-        #define BLUE_LED 32+10
-        #define RED_LED 32+4
-        #define LED_RED 32+4
-
-// below tests mapped GPIOs in order above
-//uint8_t pins[]    = { D3, D2, D1, D0, D4, C6, D7, E6, B4, B5, F4, F5, F6, F7, B1, B3, B2, B6   };
-
 #ifdef NRF52840_XXAA
-// below tests all nrf52840 GPIOs except 32kHz xtal and reset
-uint8_t pins[]    = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,  19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47   };
-
-//BlueMacro
-//uint8_t pins[]    = {43, 3,28,45,30,2,29,26,6,5,8,41,4,12   ,38,10,9,20,17,15,13,22,24,32,7 , 36, 42  };
-
+  #ifdef ARDUINO_NICE_NANO
+  //Use this for nicenano - 14 and 16 are connected to 18 - reset line
+  uint8_t pins[]    = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,  15,  17,  19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47   };
+  #else
+  // below tests all nrf52840 GPIOs except 32kHz xtal and reset
+  uint8_t pins[]    = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,  19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47   };
+  #endif
 #else
-// below tests all nrf52832 GPIOs except 32kHz xtal and reset
-uint8_t pins[]    = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31   };
+  // below tests all nrf52832 GPIOs except 32kHz xtal and reset
+  uint8_t pins[]    = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31   };
 #endif
 
 uint8_t pincount = sizeof(pins)/sizeof(pins[0]);
@@ -118,7 +93,7 @@ Serial.println("i\tGPIO\tGPIO\tFloat \tP.Up \tP.Down\tstatus");
     
   }
   #ifdef NRF52840_XXAA
-delay(20);
+delay(200);
 #else
 delay(1000);
 #endif
