@@ -20,43 +20,23 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #ifndef HARDWARE_CONFIG_H
 #define HARDWARE_CONFIG_H
 #include "hardware_variants.h"
+
 /* HARDWARE DEFINITION*/
+// See http://nrf52.jpconstantineau.com/docs/bluemacro840_v1 for details
 /* key matrix size */
 #define MATRIX_ROWS 1
-#define MATRIX_COLS 18
+#define MATRIX_COLS 24
 
-#define ARDUINO_NICE_NANO 1 // used in debug_cli.cpp to bypass 0.14 and 0.16 that are directly connected to 0.18 (reset)
-
-#define MATRIX_ROW_PINS { 33 }
-#define MATRIX_COL_PINS { 6, 8, 17, 20, 22, 24, 32, 11, 36, 38, 31, 29, 2, 47, 45, 43, 10, 9 }
+#define MATRIX_ROW_PINS { 33 } //1.01?
+#define MATRIX_COL_PINS { 7, 2, 22, 13, 15, 17, 20, 9, 10, 43, 3, 28, 45, 30, 2, 29, 26, 6, 5, 8, 41, 4, 12, 38 }
 #define UNUSED_PINS {}
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW
-       #define BATTERY_TYPE BATT_LIPO
-        #define VBAT_PIN  4
-        #define VCC_PIN 13
-        #define VCC_POLARITY_ON 0
-        #define  STATUS_BLE_LED_PIN  15  //blue = 0.15
+            #define BATTERY_TYPE BATT_LIPO
+        #define VBAT_PIN  31  // 0.31
+        #define VCC_PIN 32   //1.00
+#define VCC_POLARITY_ON 1
 
-          //#define  STATUS_KB_LED_PIN 0  //no RED LED
-   /*     #define D3      6  
-        #define D2      8   
-        #define D1      17  
-        #define D0      20  
-        #define D4      22
-        #define C6      24
-        #define D7      32 //1.00  = 32+0
-        #define E6      11
-        #define B4      36 //1.04  = 32+4
-        #define B5      38 //1.06  = 32+6
-
-        #define F4      31
-        #define F5      29 
-        #define F6      2
-        #define F7      47 //1.15  = 32+15
-        #define B1      45 //1.13  = 32+13
-        #define B3      43 //1.11 = 32+11
-        #define B2      10
-        #define B6      9
-        #define NC      33 //1.01 = 32+1 // NC is for not connected....*/
+#define  STATUS_BLE_LED_PIN  42  //blue = 1.10
+#define  STATUS_KB_LED_PIN   36  //red = 1.04
 #endif /* HARDWARE_CONFIG_H */
