@@ -1,5 +1,17 @@
 # BlueMicro Firmware  [![Current Version](https://img.shields.io/github/v/tag/jpconstantineau/BlueMicro_BLE)](https://github.com/jpconstantineau/BlueMicro_BLE/tags)  ![Build on Docker](https://github.com/jpconstantineau/BlueMicro_BLE/workflows/Build%20on%20Docker/badge.svg)
 
+# WARNING: Do not upgrade Adafruit nRF52 to release 0.22.0!
+On May 19, 2021, Adafruit released version 0.22.0 of their nRF52 Arduino board support package without fixing the high power consumption issue reported in [November 2020](https://github.com/adafruit/Adafruit_nRF52_Arduino/issues/600).
+
+This release makes significant changes in how Bluetooth pairing is handled and uses the ARM CryptoCell CC310.  This component increases current consumption by a constant 6mA.  
+
+We will be testing the release to see if a fix was made but at this point, we do not recommend upgrading to the latest release.  
+
+We will be updating this note once we have tested compatibility of the new release with the BlueMicro_BLE firmware.
+
+
+
+
 **A Keyboard Firmware for nRF52832 and nRF52840 Boards**
 
 BlueMicro_BLE is a keyboard firmware that builds on top the Adafruit nRF52 board support package (BSP) for their line of Adafruit nRF52 Feather Boards.
