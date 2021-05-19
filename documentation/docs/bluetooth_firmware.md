@@ -14,7 +14,7 @@ Since the firmware is based on the Arduino framework, it's possible to include a
 
 ## Easiest way to troubleshoot hardware
 
-As you have full access to the Arduino framework, it's easy to code hardware testers to troubleshoot your handwired build or any other DIY keyboard. 
+As you have full access to the Arduino framework, it's easy to code hardware testers to troubleshoot your handwired build or any other DIY keyboard. There is already a few hardware testers located in the `arduino_tests` folder of the main repository.  Have a look [here](trouble\gpios.md) to get more details.
 
 ## Design Goals
 

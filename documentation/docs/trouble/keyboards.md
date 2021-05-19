@@ -4,9 +4,11 @@ title: Testing keyboards
 ---
 
 ## Useful Keyboard Testers
-[QMK Keyboard Tester](https://config.qmk.fm/#/test)
-[keyboard Tester](https://www.keyboardtester.com/)
-[Keyboard Checker](https://keyboardchecker.com/)
+Here are a few useful keyboard testers:
+
+* [QMK Keyboard Tester](https://config.qmk.fm/#/test)
+* [keyboard Tester](https://www.keyboardtester.com/)
+* [Keyboard Checker](https://keyboardchecker.com/)
 
 
 ## Troubleshooting tools
