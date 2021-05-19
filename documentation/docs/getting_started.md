@@ -17,6 +17,9 @@ Find the builder [here](https://github.com/jpconstantineau/BlueMicro_Builder) an
 
 [^1]: nRF52840 Only.  With nRF52832, you still need software to flash.
 
+See it in action in this video:
+<iframe width="572" height="320" src="https://www.youtube.com/embed/hKw3TPNu-BQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 ## Getting Started: in 4 simple steps
 
 Getting started with flashing your nRF52 board is as simple as installing the Arduino IDE for your operating system, adding the board support packages and compiling the firmware.
@@ -30,11 +33,13 @@ Watch the video above to see how to install the Arduino IDE and get the library 
 These are the steps followed in the video (Original Instructions by [Adafruit](https://learn.adafruit.com/bluefruit-nrf52-feather-learning-guide/arduino-bsp-setup)):
 - Download and install the Arduino IDE (At least v1.8). Download it from [here](https://www.arduino.cc/en/Main/Software). Do not install it from the App Store.
 - Start the Arduino IDE
-- Add `https://www.adafruit.com/package_adafruit_index.json` as an **Additional Board Manager URL** (see image below)
+- Add `https://www.adafruit.com/package_adafruit_index.json` and `https://github.com/jpconstantineau/Community_nRF52_Arduino/releases/latest/download/package_jpconstantineau_boards_index.json` as an **Additional Board Manager URL** (see image below)
 - To add board Community nRF52 board support, start Arduino and open the Preferences window (**File** > **Preferences**). Now copy and paste the following 2 URLs into the 'Additional Boards Manager URLs' input field:
 
-	https://www.adafruit.com/package_adafruit_index.json
-	https://github.com/jpconstantineau/Community_nRF52_Arduino/releases/latest/download/package_jpconstantineau_boards_index.json
+```
+https://www.adafruit.com/package_adafruit_index.json
+https://github.com/jpconstantineau/Community_nRF52_Arduino/releases/latest/download/package_jpconstantineau_boards_index.json
+```
 
 ![Board Manager](https://cdn-learn.adafruit.com/assets/assets/000/040/294/large1024/microcontrollers_Screen_Shot_2017-03-19_at_22.16.49.png)
 - Open the **Boards Manager** option from the **Tools -> Board** menu and install `Adafruit nRF52 by Adafruit` (see image below)

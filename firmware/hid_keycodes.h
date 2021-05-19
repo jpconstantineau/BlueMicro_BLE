@@ -461,6 +461,14 @@ enum hid_keyboard_keypad_usage {
 #define BATTERY_CALC_TEST     KB(KC_F14)
 #define BATTERY_CALC_FILTERED KB(KC_F15) // TODO: bring the akudaikon filtered method for switching between USB connected/not connected.
 
+#define VCC_ON  KB(KC_F16)
+#define VCC_OFF  KB(KC_F17)
+#define VCC_TOGGLE  KB(KC_F18)
+
+#define CHARGER_ON  KB(KC_F19)
+#define CHARGER_OFF  KB(KC_F20)
+#define CHARGER_TOGGLE  KB(KC_F21)
+
 // Power Control
 #define KC_SYSTEM_POWER      MK(KC_A) //HID_USAGE_CONSUMER_POWER  
 #define KC_SYSTEM_RESET      MK(KC_B) //HID_USAGE_CONSUMER_RESET          
