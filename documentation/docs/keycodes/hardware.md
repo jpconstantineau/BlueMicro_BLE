@@ -29,10 +29,12 @@ Hardware-specific keycodes are keycodes that trigger specific hardware functiona
 | nRF52840 USB HID    | Automatic Switch between USB and BLE   | OUT_AUTO     | ✅    |  
 | nRF52840 USB HID    | Output to USB Only       | OUT_USB                    | ✅    |  
 | nRF52840 USB HID    | Output to BLE Only       | OUT_BT                     | ✅    |  
-| Custom Hardware     | External VCC ON          |                     | 🚧  |
-| Custom Hardware     | External VCC OFF          |                    | 🚧  |
-| Custom Hardware     | Battery Charger ON          |                    | 🚧  |
-| Custom Hardware     | Battery Charger OFF          |                    | 🚧  |
+| Custom Hardware     | External VCC ON          | VCC_ON                     | ✅  |
+| Custom Hardware     | External VCC OFF         | VCC_OFF                    | ✅  |
+| Custom Hardware     | External VCC Toggle      | VCC_TOGGLE                 | ✅  |
+| Custom Hardware     | Battery Charger ON       | CHARGER_ON                 | ✅  |
+| Custom Hardware     | Battery Charger OFF      | CHARGER_OFF                | ✅  |
+| Custom Hardware     | Battery Charger Toggle   | CHARGER_TOGGLE             | ✅  |
 | LED PWM Backlight   | Toggle Backlight ON/OFF | BL_TOGG                     | ✅   | 
 | LED PWM Backlight   | Step through Backlight Modes | BL_STEP                | ✅  | 
 | LED PWM Backlight   | Turn Backlight ON        | BL_ON                      | ✅  | 

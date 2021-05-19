@@ -17,6 +17,9 @@ Find the builder [here](https://github.com/jpconstantineau/BlueMicro_Builder) an
 
 [^1]: nRF52840 Only.  With nRF52832, you still need software to flash.
 
+See it in action in this video:
+<iframe width="572" height="320" src="https://www.youtube.com/embed/hKw3TPNu-BQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 ## Getting Started: in 4 simple steps
 
 Getting started with flashing your nRF52 board is as simple as installing the Arduino IDE for your operating system, adding the board support packages and compiling the firmware.
