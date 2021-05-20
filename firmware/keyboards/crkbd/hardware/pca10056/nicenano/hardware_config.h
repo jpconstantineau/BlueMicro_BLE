@@ -40,7 +40,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 	#define WS2812B_LED_ON 1 
      #define BATTERY_TYPE BATT_LIPO
 
-#define  STATUS_KB_LED_PIN 17  //red = 0.17
+//#define  STATUS_KB_LED_PIN 17  //red = 0.17
         #define VCC_PIN 13
         #define VCC_POLARITY_ON 0
         #define  STATUS_BLE_LED_PIN  15  //blue = 0.15

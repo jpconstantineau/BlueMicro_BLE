@@ -107,6 +107,26 @@ Chapter 10: Keyboard/Keypad Page(0x07) - Page 53
 | 5D             | Keypad 5                | KC_KP_5                    |
 | 5E             | Keypad 6 and Right Arrow | KC_KP_6                    |
 | 5F             | Keypad 7 and Home       | KC_KP_7                    |
+| 60             | Keypad 8 and Up Arrow   | KC_KP_8                    |
+| 61             | Keypad 9 and PageUp     | KC_KP_9                    |
+| 62             | Keypad 0 and Insert     | KC_KP_0                      |
+| 63             | Keypad . and Delete     | KC_KP_DOT                 |
+| 64             | Keyboard non-US \\      | KC_NONUS_BSLASH                |
+| 65             | Keyboard Application    | KC_APPLICATION             |
+| 66             | Keyboard Power          | KC_POWER                |
+| 67             | Keypad =                | KC_KP_EQUAL                 |
+| 68             | Keyboard F13            | KC_F13                |
+| 69             | Keyboard F14            | KC_F14                    |
+| 6A             | Keyboard F15            | KC_F15                    |
+| 6B             | Keyboard F16            | KC_F16                    |
+| 6C             | Keyboard F17            | KC_F17                    |
+| 6D             | Keyboard F18            | KC_F18                    |
+| 6E             | Keyboard F19            | KC_F19                    |
+| 6F             | Keyboard F20            | KC_F20                    |
+| 70             | Keyboard F21            | KC_F21                    |
+| 71             | Keyboard F22            | KC_F22                    |
+| 72             | Keyboard F23            | KC_F23                    |
+| 73             | Keyboard F24            | KC_F24                    |
 | E0             | Keyboard Left Control   | KC_LCTRL                    |
 | E1             | Keyboard Left Shift     | KC_LSHIFT                    |
 | E2             | Keyboard Left Alt       | KC_LALT                      |

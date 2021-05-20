@@ -775,6 +775,37 @@ void process_keyboard_function(uint16_t keycode)
     case SLEEP_NOW:
       if (keyboardstate.connectionState != CONNECTION_USB) sleepNow();
     break;
+    case VCC_ON:
+      keyboardconfig.enableVCCSwitch = true;
+      keyboardstate.save2flash = true;
+      keyboardstate.needReset = true;
+      break;
+    case VCC_OFF:
+      keyboardconfig.enableVCCSwitch = false;
+      keyboardstate.save2flash = true;
+      keyboardstate.needReset = true;
+      break;
+    case VCC_TOGGLE:
+      keyboardconfig.enableVCCSwitch = !keyboardconfig.enableVCCSwitch;
+      keyboardstate.save2flash = true;
+      keyboardstate.needReset = true;
+      break;
+    case CHARGER_ON:
+      keyboardconfig.enableChargerControl = true;
+      keyboardstate.save2flash = true;
+      keyboardstate.needReset = true;
+      break;
+    case CHARGER_OFF:
+      keyboardconfig.enableChargerControl = false;
+      keyboardstate.save2flash = true;
+      keyboardstate.needReset = true;
+      break;
+    case CHARGER_TOGGLE:
+      keyboardconfig.enableChargerControl = ! keyboardconfig.enableChargerControl;
+      keyboardstate.save2flash = true;
+      keyboardstate.needReset = true;
+      break;
+
 
     case WIN_A_GRAVE: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_2, KC_KP_4) break; //Alt 0224 a grave
     case WIN_A_ACUTE: EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_2, KC_KP_5) break;//Alt 0225 a acute
