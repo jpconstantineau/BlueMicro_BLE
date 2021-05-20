@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        fqbn: ['feather52832', 'pca10056', 'feather52840']
+        fqbn: ['feather52840','pca10056','feather52832'  ]
 
     runs-on: self-hosted
 
@@ -58,7 +58,7 @@ jobs:
 
             
             # Install library dependency
-            arduino-cli lib install "Adafruit TinyUSB Library" "Adafruit NeoPixel"
+            # arduino-cli lib install "Adafruit TinyUSB Library" "Adafruit NeoPixel"
             # Library summary
             arduino-cli lib list
 
