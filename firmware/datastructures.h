@@ -186,6 +186,18 @@ struct HIDKeyboard {
               
     }
 
+    inline void clear()
+    {
+      modifier = 0;
+      keycode[0]=0;
+      keycode[1]=0;
+      keycode[2]=0;
+      keycode[3]=0;
+      keycode[4]=0;
+      keycode[5]=0;
+      layer = 0;
+    }
+
   } ;
 
 

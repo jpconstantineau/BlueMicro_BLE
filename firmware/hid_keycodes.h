@@ -22,6 +22,7 @@ These keycodes are based on Universal Serial Bus HID Usage Tables Document
 Version 1.12
 Chapter 10: Keyboard/Keypad Page(0x07) - Page 53
 https://www.usb.org/sites/default/files/documents/hut1_12v2.pdf
+https://www.usb.org/sites/default/files/hut1_22.pdf
  */
 
 #ifndef HID_KEYCODES_H

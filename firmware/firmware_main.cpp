@@ -370,7 +370,7 @@ void scanMatrix() {
     }
 #endif
 
-void UpdateQueue()
+void UpdateQueue() //todo: inline this function
 {
   #ifdef ENABLE_COMBOS
      stringbuffer.insert(stringbuffer.end(), combos.keycodebuffertosend.rbegin(),combos.keycodebuffertosend.rend());
@@ -974,7 +974,7 @@ void sendKeyPresses() {
       KeyScanner::macro = 0;
       
   } 
-  UpdateQueue();
+  UpdateQueue();              // processes Combos and adds them to the string buffer.
   if (!stringbuffer.empty()) // if the macro buffer isn't empty, send the first character of the buffer... which is located at the back of the queue
   {  
     HIDKeyboard reportarray = {0, {0, 0 ,0, 0, 0, 0}, 0};
@@ -1013,7 +1013,9 @@ void sendKeyPresses() {
       break; 
     }
     
-    if (reportbuffer.empty()) // make sure to send an empty report when done...
+    if (reportbuffer.empty()) // make sure to send an empty report when done...  
+    // this looks like unreacheable code but will only be reached if we just sent the last report in the buffer.
+    // TODO consider moving the delay above as the first step here - will probably help sending strings faster as we only send one per scan.
     { 
       HIDKeyboard emptyReport = {0, {0, 0 ,0, 0, 0, 0}, 0}; 
       switch (keyboardstate.connectionState)
