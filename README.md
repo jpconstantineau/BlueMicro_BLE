@@ -11,7 +11,7 @@ The Fix has been tested and successfully fixes the issue. Updated current consum
 
 We will be updating this note once the fix is released and tested with the BlueMicro_BLE firmware.
 
-
+## Adafruit 0.23.0 has been released with the cryptocell high current consumption fix.  There were many other changes with 0.22 and 0.23 releases and haven't been tested yet with BlueMicro_BLE firmware. 
 
 **A Keyboard Firmware for nRF52832 and nRF52840 Boards**
 
