@@ -50,6 +50,6 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
     { K30,   K31,   K32,   K33,   K34,   K35   },  \
     { K40,   K41,   K42,   K43,   K44,   K45   }, \
     { K40,   K41,   K42,   K43,   K44,   K45   }, \
-    { K60,   K61,   K62,   K63,   K64,   K65   }
+    { K60,   K61,   K62,   K63,   K64,   K65   } \
 }
 #endif /* KEYBOARD_CONFIG_H */
