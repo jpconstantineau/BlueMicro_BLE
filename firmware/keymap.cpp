@@ -18,17 +18,34 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "keymap.h"
 
 std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
-    {{
-        {KC_1,    KC_6,    KC_A,    KC_F,  KC_K,    KC_P,    KC_U,    KC_MINUS, KC_1,    KC_6,    KC_A,    KC_F,  KC_K,    KC_P,    KC_U,},
-        {KC_2,    KC_7,    KC_B,    KC_G,  KC_L,    KC_Q,    KC_V,    KC_LBRC,  KC_2,    KC_7,    KC_B,    KC_G,  KC_L,    KC_Q,    KC_V,},
-        {KC_3,    KC_8,    KC_C,    KC_H,  KC_M,    KC_R,    KC_W,    KC_SCOLON,KC_3,    KC_8,    KC_C,    KC_H,  KC_M,    KC_R,    KC_W,},
-        {KC_4,    KC_9,    KC_D,    KC_I,  KC_N,    KC_S,    KC_X,    KC_COMMA, KC_4,    KC_9,    KC_D,    KC_I,  KC_N,    KC_S,    KC_X, },
-        {KC_5,    KC_0,    KC_E,    KC_J,  KC_O,    KC_T,    KC_Y,    KC_DOT,   KC_5,    KC_0,    KC_E,    KC_J,  KC_O,    KC_T,    KC_Y, }
+    {{  
+        {KC_ESC,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,   KC_8,        KC_9,     KC_0,       KC_MINUS,    KC_EQUAL,    KC_BSPACE,    KC_BSPACE,},
+        {KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,   KC_I,        KC_O,     KC_P,       KC_LBRACKET, KC_RBRACKET, KC_BSLASH,    KC_PGUP,},
+        {KC_CAPS,   KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,   KC_K,        KC_L,     KC_SCOLON,  KC_QUOTE,    KC_ENTER,    KC_ENTER,     KC_PGDN,},
+        {KC_LSHIFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,   KC_COMMA,    KC_DOT,   KC_SLASH,   KC_RSHIFT,   KC_RSHIFT,   KC_UP,        KC_NO, },
+        {KC_LCTRL,  LAYER_1, KC_LGUI, KC_LALT, LAYER_1, KC_SPC,  KC_SPC,  KC_SPC, KC_SPC,      LAYER_1,  KC_RALT,    KC_RGUI,     KC_LEFT,     KC_DOWN,      KC_RIGHT, }
     }};
 
  
 void setupKeymap() {
-;
+    uint32_t layer1[MATRIX_ROWS][MATRIX_COLS] =
+        KEYMAP(
+        KC_GRV,    KC_F1,       KC_F2,    KC_F3,    KC_F4,       KC_F5,    KC_F6,    KC_F7,   KC_F8,    KC_F9,       KC_F10,   KC_F11, KC_F12,   KC_DEL,   KC_DEL,
+        KC_NO,    KC_NO,       KC_NO,    KC_NO,    KC_NO,       KC_NO,    KC_NO,    KC_NO,   KC_NO,    KC_NO,       KC_NO,    KC_NO,  KC_NO,    KC_NO,    KC_NO,
+        KC_NO,    KC_NO,       KC_NO,    KC_NO,    KC_NO,       KC_NO,    KC_NO,    KC_NO,   KC_NO,    KC_NO,       KC_NO,    KC_NO,  KC_NO,    KC_NO,    KC_NO,
+        KC_LSHIFT,   KC_NO,    KC_NO,    KC_NO,    KC_NO,       KC_NO,    KC_NO,    KC_NO,   KC_NO,    KC_NO,       KC_NO,    KC_NO,  KC_NO,    KC_NO,    KC_NO, 
+        KC_LCTRL,    LAYER_1,  KC_LGUI,  KC_LALT,  LAYER_1,     PRINT_BATTERY,    PRINT_BLE,    PRINT_INFO,   KC_NO,    LAYER_1,     KC_NO,    KC_NO,  KC_NO,    KC_NO,    KC_NO);
+
+    /*
+     * add the other layers
+     */
+    for (int row = 0; row < MATRIX_ROWS; ++row)
+    {
+        for (int col = 0; col < MATRIX_COLS; ++col)
+        {
+            matrix[row][col].addActivation(_L1, Method::PRESS, layer1[row][col]);
+        }
+    }
 
 }
 
