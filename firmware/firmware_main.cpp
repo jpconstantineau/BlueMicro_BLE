@@ -195,21 +195,6 @@ void setup() {
  #endif
  #endif
 
-  if (keyboardconfig.enableSerial) 
-  {
-  Serial.begin(115200);
-        Serial.println(" ____  _            __  __ _                   ____  _     _____ ");
-        Serial.println("| __ )| |_   _  ___|  \\/  (_) ___ _ __ ___    | __ )| |   | ____|");
-        Serial.println("|  _ \\| | | | |/ _ \\ |\\/| | |/ __| '__/ _ \\   |  _ \\| |   |  _|  ");
-        Serial.println("| |_) | | |_| |  __/ |  | | | (__| | | (_) |  | |_) | |___| |___ ");
-        Serial.println("|____/|_|\\__,_|\\___|_|  |_|_|\\___|_|  \\___/___|____/|_____|_____|");
-        Serial.println("                                         |_____|                 ");
-        Serial.println("");
-        Serial.println("Type 'h' to get a list of commands with descriptions");
-  }
- 
-  LOG_LV1("BLEMIC","Starting %s" ,DEVICE_NAME);
-
   if(keyboardconfig.enableVCCSwitch)
   {
     switchVCC(keyboardconfig.polarityVCCSwitch); // turn on VCC when starting up if needed.
@@ -263,7 +248,20 @@ void setup() {
   speaker.playTone(TONE_STARTUP);
   speaker.playTone(TONE_BLE_PROFILE);
   #endif
-
+ if (keyboardconfig.enableSerial) 
+  {
+  Serial.begin(115200);
+        Serial.println(" ____  _            __  __ _                   ____  _     _____ ");
+        Serial.println("| __ )| |_   _  ___|  \\/  (_) ___ _ __ ___    | __ )| |   | ____|");
+        Serial.println("|  _ \\| | | | |/ _ \\ |\\/| | |/ __| '__/ _ \\   |  _ \\| |   |  _|  ");
+        Serial.println("| |_) | | |_| |  __/ |  | | | (__| | | (_) |  | |_) | |___| |___ ");
+        Serial.println("|____/|_|\\__,_|\\___|_|  |_|_|\\___|_|  \\___/___|____/|_____|_____|");
+        Serial.println("                                         |_____|                 ");
+        Serial.println("");
+        Serial.println("Type 'h' to get a list of commands with descriptions");
+  }
+ 
+  LOG_LV1("BLEMIC","Starting %s" ,DEVICE_NAME);
 };
 /**************************************************************************************************************************/
 //
@@ -1130,8 +1128,11 @@ void loop() {  // has task priority TASK_PRIO_LOW
   switch (keyboardconfig.connectionMode)
   {
     case CONNECTION_MODE_AUTO:  // automatically switch between BLE and USB when connecting/disconnecting USB
+        LOG_LV1("LOOP","CONNECTION_MODE_AUTO");
         if (usb_isConnected())  
         {
+          LOG_LV1("LOOP","usb_isConnected");
+         
           if (keyboardstate.connectionState != CONNECTION_USB)
           {
             if (bt_isConnected()) bt_disconnect();
@@ -1143,6 +1144,8 @@ void loop() {  // has task priority TASK_PRIO_LOW
         }
       else if (bt_isConnected())
         {
+      
+          LOG_LV1("LOOP","bt_isConnected");
           if (keyboardstate.connectionState != CONNECTION_BT)
           {
             keyboardstate.connectionState = CONNECTION_BT;
@@ -1152,6 +1155,8 @@ void loop() {  // has task priority TASK_PRIO_LOW
         }
         else
         {
+          LOG_LV1("LOOP","CONNECTION_NONE");
+          
           if (keyboardstate.connectionState != CONNECTION_NONE)
           {
             bt_startAdv();
@@ -1162,8 +1167,11 @@ void loop() {  // has task priority TASK_PRIO_LOW
         }
       break;
     case CONNECTION_MODE_USB_ONLY:
+    LOG_LV1("LOOP","CONNECTION_MODE_USB_ONLY");
         if (usb_isConnected())  
         {
+          
+          LOG_LV1("LOOP","usb_isConnected");
           if (keyboardstate.connectionState != CONNECTION_USB)
           {
             if (bt_isConnected()) bt_disconnect();
@@ -1173,16 +1181,22 @@ void loop() {  // has task priority TASK_PRIO_LOW
         }
         else // if USB not connected but we are in USB Mode only...
         {
+          
+          LOG_LV1("LOOP","CONNECTION_NONE");
           keyboardstate.connectionState = CONNECTION_NONE;
         }
       break;
     case CONNECTION_MODE_BLE_ONLY:
+        LOG_LV1("LOOP","CONNECTION_MODE_BLE_ONLY");
         if (bt_isConnected())
         {
+          
+          LOG_LV1("LOOP","bt_isConnected");
             keyboardstate.connectionState = CONNECTION_BT;
         }
         else
         {
+          LOG_LV1("LOOP","CONNECTION_NONE");
           if (keyboardstate.connectionState != CONNECTION_NONE)
           {
             bt_startAdv();
@@ -1218,8 +1232,8 @@ void loop() {  // has task priority TASK_PRIO_LOW
   }
   if (keyboardstate.needReset) NVIC_SystemReset(); // this reboots the keyboard.
 
-  delay (keyboardconfig.lowpriorityloopinterval);
-  
+ // delay (keyboardconfig.lowpriorityloopinterval);
+  delay(100);
 };  // loop is called for serials comms and saving to flash.
 /**************************************************************************************************************************/
 void LowestPriorityloop()

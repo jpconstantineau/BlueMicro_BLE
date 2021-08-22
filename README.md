@@ -1,6 +1,6 @@
 # BlueMicro Firmware  [![Current Version](https://img.shields.io/github/v/tag/jpconstantineau/BlueMicro_BLE)](https://github.com/jpconstantineau/BlueMicro_BLE/tags)  ![Build on Docker](https://github.com/jpconstantineau/BlueMicro_BLE/workflows/Build%20on%20Docker/badge.svg)
 
-# WARNING: Do not upgrade Adafruit nRF52 to release 0.22.0 or 0.22.1!
+# WARNING: Do not use Adafruit nRF52 to release 0.22.0 or 0.22.1!
 On May 19, 2021, Adafruit released version 0.22.0 of their nRF52 Arduino board support package without fixing the high power consumption issue reported in [November 2020](https://github.com/adafruit/Adafruit_nRF52_Arduino/issues/600).
 
 This release makes significant changes in how Bluetooth pairing is handled and uses the ARM CryptoCell CC310.  This component increases current consumption by a constant 6mA.
@@ -11,7 +11,9 @@ The Fix has been tested and successfully fixes the issue. Updated current consum
 
 We will be updating this note once the fix is released and tested with the BlueMicro_BLE firmware.
 
-## Adafruit 0.23.0 has been released with the cryptocell high current consumption fix.  There were many other changes with 0.22 and 0.23 releases and haven't been tested yet with BlueMicro_BLE firmware. 
+Adafruit 0.23.0 has been released with the cryptocell high current consumption fix.  There were many other changes with 0.22 and 0.23 releases and haven't been tested yet with BlueMicro_BLE firmware. 
+
+On June 28, 2021 Adafruitt released 0.24.0.  As of August 21st, 2021, this release has been relatively stable and they are preparing for a 1.0.0 release.  As such, I will be rebasing the master branch of BlueMicro_BLE to work with this branch.  Once that is completed, work on the Community BSP will begin to bring in all the changes they have made.  There are a few changes that were made between master and develop but these will be looked at only when the rebasing is complete.
 
 **A Keyboard Firmware for nRF52832 and nRF52840 Boards**
 

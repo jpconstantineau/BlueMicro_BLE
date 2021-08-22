@@ -41,7 +41,6 @@ enum
       TUD_HID_REPORT_DESC_CONSUMER(HID_REPORT_ID(RID_CONSUMER_CONTROL))
     };
 
-    extern Adafruit_USBD_Device USBDevice;
     Adafruit_USBD_HID USBhid;
 #endif
 
@@ -49,20 +48,52 @@ enum
 void usb_setup()
 {
   #ifdef TINYUSB_AVAILABLE
-  USBDevice.setManufacturerDescriptor(MANUFACTURER_NAME);
-  USBDevice.setProductDescriptor(DEVICE_NAME);
+  //USBDevice.setManufacturerDescriptor(MANUFACTURER_NAME);
+  //USBDevice.setProductDescriptor(DEVICE_NAME);
 
-  USBhid.setPollInterval(8);// was 2
+  USBhid.setPollInterval(2);// was 2
   USBhid.setReportDescriptor(desc_hid_report, sizeof(desc_hid_report));
+  USBhid.setStringDescriptor(DEVICE_NAME);
   USBhid.setReportCallback(NULL, hid_report_callback);
   USBhid.begin();
+
+   //while( !USBDevice.mounted() ) delay(1);
   #endif
 }
 
 bool usb_isConnected()
 {
   #ifdef TINYUSB_AVAILABLE
-    return USBhid.ready() && !USBDevice.suspended();
+  if (USBDevice.mounted())
+  {
+    LOG_LV1("USB","USBDevice.mounted()");
+  if (!USBDevice.suspended())
+  {
+  
+    LOG_LV1("USB","NOT USBDevice.suspended()");
+    if (USBhid.ready())
+    {
+      LOG_LV1("USB","USBhid.ready()");
+      return true;
+    }
+    else
+    {
+      LOG_LV1("USB","NOT USBhid.ready()");
+      return true;  // TODO  why oh why
+    } 
+  }
+  else
+  {
+    LOG_LV1("USB","USBDevice.suspended()");
+    return false;
+  }
+  }
+  else
+  {
+    LOG_LV1("USB","NOT USBDevice.mounted()");
+    return false;
+  }
+
   #else
     return false;
   #endif
