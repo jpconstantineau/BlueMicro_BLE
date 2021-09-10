@@ -13,6 +13,10 @@ We will be updating this note once the fix is released and tested with the BlueM
 
 ## Adafruit 0.23.0 has been released with the cryptocell high current consumption fix.  There were many other changes with 0.22 and 0.23 releases and haven't been tested yet with BlueMicro_BLE firmware. 
 
+## Adafruit has released Adafruit_nRF52_Arduino 0.24.0 as well as Adafruit_nRF52_Arduino 1.0.0. 
+
+They haven't been tested with BlueMicro_BLE yet but appear to work fine as none of the USB HID functionality is enabled by BlueMicro_BLE when compiled with the Adafruit Board Support Package.  Work has started to refactor and merge the USB HID examples for use with the Adafruit_nRF52_Arduino.
+
 **A Keyboard Firmware for nRF52832 and nRF52840 Boards**
 
 BlueMicro_BLE is a keyboard firmware that builds on top the Adafruit nRF52 board support package (BSP) for their line of Adafruit nRF52 Feather Boards.
@@ -67,11 +71,11 @@ We're very happy to have your contributions in BlueMicro_BLE Firmware
 
 **Adding your keymaps**: First, make sure you've run a build for all keymaps applicable to your keyboard (./build.ps1 keyboardname). This will ensure that your keymap can support other hardware configurations.  Then, make a pull request to this repo. Thanks!
 
-**Looking for a feature**: Lots of features are already available; however, not everything is documented yet.  Join in on the [Discord server](https://discord.gg/8pZsrxP) and ask if it's already available, or if anyone is working on what you are looking for.  If you are willing to help adding or testing a new feature, join the team!
+**Looking for a feature**: Lots of features are already available; however, not everything is documented yet.  Join in on the [Discord server](https://discord.gg/ecnCR9P) and ask if it's already available, or if anyone is working on what you are looking for.  If you are willing to help adding or testing a new feature, join the team!
 
 **Filing an issue**: Submit issues to the [GitHub Issues](https://github.com/jpconstantineau/BlueMicro_BLE/issues) page.
 
- **Want to help**: take one of issues in the list [here](https://github.com/jpconstantineau/BlueMicro_BLE/issues) where you think you could help. Comment on it as you start work and join in on the [Discord server](https://discord.gg/8pZsrxP) for a live discussion.
+ **Want to help**: take one of issues in the list [here](https://github.com/jpconstantineau/BlueMicro_BLE/issues) where you think you could help. Comment on it as you start work and join in on the [Discord server](https://discord.gg/ecnCR9P) for a live discussion.
 
 
 # Credits
