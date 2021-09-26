@@ -18,13 +18,14 @@ uint8_t const desc_hid_report[] =
 //extern Adafruit_USBD_HID usb_hid;
 void hid_start(void);
 
+
 bool hid_ready(void);
-  bool hid_sendReport(uint8_t report_id, void const *report, uint8_t len);
+  bool hid_USB_sendReport(uint8_t report_id, void const *report, uint8_t len);
 
   // Report helpers
-  bool hid_sendReport8(uint8_t report_id, uint8_t num);
-  bool hid_sendReport16(uint8_t report_id, uint16_t num);
-  bool hid_sendReport32(uint8_t report_id, uint32_t num);
+  bool hid_USB_sendReport8(uint8_t report_id, uint8_t num);
+  bool hid_USB_sendReport16(uint8_t report_id, uint16_t num);
+  bool hid_USB_sendReport32(uint8_t report_id, uint32_t num);
 
   //------------- Keyboard API -------------//
   bool hid_keyboardReport(uint8_t report_id, uint8_t modifier, uint8_t keycode[6]);
@@ -38,5 +39,7 @@ bool hid_ready(void);
   bool hid_mouseScroll(uint8_t report_id, int8_t scroll, int8_t pan);
   bool hid_mouseButtonPress(uint8_t report_id, uint8_t buttons);
   bool hid_mouseButtonRelease(uint8_t report_id);
+
+  //------------- Common HID API -------------//
     bool hid_send_reports(uint8_t modifier, uint8_t keycode[6], uint8_t buttons, int8_t x, int8_t y,
                    int8_t vertical, int8_t horizontal , uint16_t consumer_code );
