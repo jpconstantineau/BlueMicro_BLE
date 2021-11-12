@@ -1067,7 +1067,7 @@ void keyscantimer_callback(TimerHandle_t _handle) {
     sendKeyPresses();  
   #endif
    keyboardstate.lastuseractiontime = max(KeyScanner::getLastPressed(),keyboardstate.lastuseractiontime); // use the latest time to check for sleep...
-   unsigned long timesincelastkeypress = keyboardstate.timestamp - keyboardstate.lastuseractiontime;
+   unsigned long timesincelastkeypress =  (keyboardstate.timestamp > keyboardstate.lastuseractiontime) ? keyboardstate.timestamp - keyboardstate.lastuseractiontime : 0;
 
   #if SLEEP_ACTIVE == 1
     switch (keyboardstate.connectionState)
