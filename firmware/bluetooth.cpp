@@ -341,7 +341,8 @@ void notify_callback(BLEClientCharacteristic* chr, uint8_t* data, uint16_t len)
           KeyScanner::updateRemoteReport(remotedata.modifier,remotedata.keycode[0],remotedata.keycode[1],remotedata.keycode[2], remotedata.keycode[3],remotedata.keycode[4], remotedata.keycode[5]);
           KeyScanner::updateRemoteLayer(remotedata.layer);
           KeyScanner::remotespecialkeycode = remotedata.specialkeycode;
-          keyboardstate.lastuseractiontime = millis(); 
+          if (remotedata.modifier != 0 || remotedata.keycode[0] != 0)
+              keyboardstate.lastuseractiontime = millis();
         }      
       }
       
