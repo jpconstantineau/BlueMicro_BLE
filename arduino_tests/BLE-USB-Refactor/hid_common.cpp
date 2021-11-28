@@ -3,16 +3,19 @@
 
 // BLE HID object
 BLEDis bledis;
-BLEHidAdafruit ble_hid;
+BLEHidAdafruit  ble_hid;
 
 // USB HID object
-Adafruit_USBD_HID usb_hid;
+Adafruit_USBD_HID  usb_hid(desc_hid_report, sizeof(desc_hid_report), HID_ITF_PROTOCOL_NONE, 2, false);
+
+static HIDState connection_status;
 
  //------------- HID START -------------//
 void hid_start(void)
 {
+  connection_status.connection_state = CONNECTION_NONE;
   hid_USB_start();
-  hid_BLE_start();
+ // hid_BLE_start();
 }
 
 void hid_USB_start(void)
@@ -50,6 +53,8 @@ void hid_BLE_start(void)
    * min = 9*1.25=11.25 ms, max = 12*1.25= 15 ms 
    */
   /* Bluefruit.Periph.setConnInterval(9, 12); */
+
+  startAdv();
   }
 
  /*bool hid_sendReport(uint8_t report_id, void const *report, uint8_t len){
@@ -85,6 +90,27 @@ void startAdv(void)
   Bluefruit.Advertising.start(0);                // 0 = Don't stop advertising after n seconds
 }
 
+//------------- HID_MODE Stuff -------------//
+void hid_MODE_select(connectionMode mode)
+{
+  connection_status.connection_mode = mode;
+  // testing this...
+    switch(connection_status.connection_mode){
+      case CONNECTION_MODE_USB_ONLY:
+          connection_status.connection_state = CONNECTION_USB;
+          Serial.println("CONNECTION_USB");
+        break;
+      case CONNECTION_MODE_BLE_ONLY:
+          connection_status.connection_state = CONNECTION_BLE;
+          Serial.println("CONNECTION_BLE");
+        break;    
+      case CONNECTION_MODE_AUTO:
+          Serial.println("CONNECTION_AUTO");
+        break;   
+    }
+  
+}
+
 //------------- HID_Ready -------------//
 
 bool hid_ready(void)
@@ -94,29 +120,30 @@ bool hid_ready(void)
 
 bool hid_BLE_ready(void)
 {
-  return (Bluefruit.connected()>0);
+  
+  return (connection_status.connection_state == CONNECTION_BLE) && (Bluefruit.connected()>0);
 }
 
 bool hid_USB_ready(void)
 {
-  return usb_hid.ready();
+  return (connection_status.connection_state == CONNECTION_USB) && usb_hid.ready();
 }
 
 //------------- USB only HID API -------------//
   bool hid_USB_sendReport(uint8_t report_id, void const *report, uint8_t len){
     
    
-    return hid_USB_ready() ? usb_hid.sendReport( report_id,  report, len): false;
+    return  usb_hid.sendReport( report_id,  report, len);
   }
 
   bool hid_USB_sendReport8(uint8_t report_id, uint8_t num){
-    return hid_USB_ready() ? usb_hid.sendReport8( report_id,  num): false;
+    return  usb_hid.sendReport8( report_id,  num);
   }
   bool hid_USB_sendReport16(uint8_t report_id, uint16_t num){
-    return hid_USB_ready() ? usb_hid.sendReport16( report_id, num): false;
+    return  usb_hid.sendReport16( report_id, num);
   }
   bool hid_USB_sendReport32(uint8_t report_id, uint32_t num){
-    return hid_USB_ready() ? usb_hid.sendReport32( report_id,  num): false;
+    return  usb_hid.sendReport32( report_id,  num);
   }
 
 //------------- Keyboard API -------------//
@@ -134,23 +161,24 @@ bool hid_USB_ready(void)
 
   bool hid_BLE_keyboardReport(uint8_t modifier, uint8_t keycode[6]){
     Serial.println("hid_BLE_keyboardReport");
-    return hid_BLE_ready() ?  ble_hid.keyboardReport( modifier,  keycode): false;
+    return  ble_hid.keyboardReport( modifier,  keycode);
   }
   bool hid_BLE_keyboardPress(char ch){
-    return hid_BLE_ready() ?   ble_hid.keyPress(ch): false;
+    return    ble_hid.keyPress(ch);
   }
   bool hid_BLE_keyboardRelease(){
-    return hid_BLE_ready() ?   ble_hid.keyRelease(): false;
+    return  ble_hid.keyRelease();
   }
 
   bool hid_USB_keyboardReport(uint8_t report_id, uint8_t modifier, uint8_t keycode[6]){
-    return hid_USB_ready() ? usb_hid.keyboardReport( report_id,  modifier,  keycode): false;
+    Serial.println("hid_USB_keyboardReport");
+    return usb_hid.keyboardReport( report_id,  modifier,  keycode);
   }
   bool hid_USB_keyboardPress(uint8_t report_id, char ch){
-    return hid_USB_ready() ? usb_hid.keyboardPress( report_id, ch): false;
+    return  usb_hid.keyboardPress( report_id, ch);
   }
   bool hid_USB_keyboardRelease(uint8_t report_id){
-    return hid_USB_ready() ? usb_hid.keyboardRelease( report_id): false;
+    return  usb_hid.keyboardRelease( report_id);
   }
   //------------- Mouse API -------------//
 
@@ -175,37 +203,38 @@ bool hid_USB_ready(void)
   bool hid_BLE_mouseReport( uint8_t buttons, int8_t x, int8_t y,
                    int8_t vertical, int8_t horizontal){
                     Serial.println("hid_BLE_mouseReport");
-    return hid_BLE_ready() ?    ble_hid.mouseReport(buttons,  x,  y, vertical, horizontal): false;
+    return   ble_hid.mouseReport(buttons,  x,  y, vertical, horizontal);
   }
   bool hid_BLE_mouseMove( int8_t x, int8_t y){
-    return hid_BLE_ready() ?    ble_hid.mouseMove(  x,  y): false;
+    return    ble_hid.mouseMove(  x,  y);
   }
   bool hid_BLE_mouseScroll( int8_t scroll, int8_t pan){
-    return hid_BLE_ready() ?    ble_hid.mouseScroll(  scroll,  pan): false;
+    return    ble_hid.mouseScroll(  scroll,  pan);
   }
   bool hid_BLE_mouseButtonPress( uint8_t buttons){
-    return hid_BLE_ready() ?    ble_hid.mouseButtonPress(buttons): false;
+    return  ble_hid.mouseButtonPress(buttons);
   }
   bool hid_BLE_mouseButtonRelease(){
-    return hid_BLE_ready() ?    ble_hid.mouseButtonRelease(): false;
+    return ble_hid.mouseButtonRelease();
   }
 
 
   bool hid_USB_mouseReport(uint8_t report_id, uint8_t buttons, int8_t x, int8_t y,
                    int8_t vertical, int8_t horizontal){
-    return hid_USB_ready() ? usb_hid.mouseReport( report_id,  buttons,  x,  y, vertical, horizontal): false;
+    Serial.println("hid_USB_mouseReport");
+    return usb_hid.mouseReport( report_id,  buttons,  x,  y, vertical, horizontal);
   }
   bool hid_USB_mouseMove(uint8_t report_id, int8_t x, int8_t y){
-    return hid_USB_ready() ? usb_hid.mouseMove( report_id,  x,  y): false;
+    return  usb_hid.mouseMove( report_id,  x,  y);
   }
   bool hid_USB_mouseScroll(uint8_t report_id, int8_t scroll, int8_t pan){
-    return hid_USB_ready() ? usb_hid.mouseScroll( report_id,  scroll,  pan): false;
+    return usb_hid.mouseScroll( report_id,  scroll,  pan);
   }
   bool hid_USB_mouseButtonPress(uint8_t report_id, uint8_t buttons){
-    return hid_USB_ready() ? usb_hid.mouseButtonPress( report_id,  buttons): false;
+    return usb_hid.mouseButtonPress( report_id,  buttons);
   }
   bool hid_USB_mouseButtonRelease(uint8_t report_id){
-    return hid_USB_ready() ? usb_hid.mouseButtonRelease( report_id): false;
+    return usb_hid.mouseButtonRelease( report_id);
   }
 
   //------------- Consumer API -------------//
@@ -223,31 +252,47 @@ bool hid_USB_ready(void)
   bool hid_BLE_consumerKeyPress(uint16_t usage_code)
   {
     Serial.println("hid_BLE_consumerKeyPress");
-    return hid_BLE_ready() ?   ble_hid.consumerKeyPress(usage_code): false; 
+    return  ble_hid.consumerKeyPress(usage_code); 
   }
   
   bool hid_BLE_consumerKeyRelease(void)
   {
-    return hid_BLE_ready() ?   ble_hid.consumerKeyRelease(): false; 
+    return ble_hid.consumerKeyRelease(); 
   }
 
   bool hid_USB_consumerKeyPress(uint8_t report_id,uint16_t usage_code)
   {
-    return hid_USB_ready() ?  hid_USB_sendReport16(report_id, usage_code): false;  
+    return  hid_USB_sendReport16(report_id, usage_code);  
   }
   
   bool hid_USB_consumerKeyRelease(uint8_t report_id)
   {
-    return hid_USB_ready() ?  hid_USB_sendReport16(report_id, 0): false;  
+    return hid_USB_sendReport16(report_id, 0);  
   }
 
 //------------- Common HID API -------------//
   bool hid_send_reports(uint8_t modifier, uint8_t keycode[6], uint8_t buttons, int8_t x, int8_t y,
                    int8_t vertical, int8_t horizontal , uint16_t consumer_code )                   
 {
-  Serial.println("hid_send_reports");
-  hid_USB_send_reports(modifier, keycode, buttons, x, y, vertical, horizontal, consumer_code);
-  hid_BLE_send_reports(modifier, keycode, buttons, x, y, vertical, horizontal, consumer_code);
+  Serial.print("hid_send_reports - state =");
+  connectionState state  = connection_status.connection_state;
+  Serial.println(state);
+    switch(state){
+      case CONNECTION_NONE:
+        Serial.println("hid_send_reports:CONNECTION_NONE");
+        break;
+      case CONNECTION_USB:
+        Serial.println("hid_send_reports:CONNECTION_USB");
+        hid_USB_send_reports(modifier, keycode, buttons, x, y, vertical, horizontal, consumer_code);
+        break;
+      case CONNECTION_BLE:
+        Serial.println("hid_send_reports:CONNECTION_BLE");
+        //hid_BLE_send_reports(modifier, keycode, buttons, x, y, vertical, horizontal, consumer_code);
+        break;
+      default:
+        Serial.println("hid_send_reports:Default ??? SHOULD NOT SEE THIS EVER ???");
+        break;
+    }
 }
 
 bool hid_BLE_send_reports(uint8_t modifier, uint8_t keycode[6], uint8_t buttons, int8_t x, int8_t y,
@@ -275,10 +320,16 @@ bool hid_USB_send_reports(uint8_t modifier, uint8_t keycode[6], uint8_t buttons,
         if (hid_USB_ready()) 
         {  
         hid_USB_mouseReport(RID_MOUSE, buttons,  x,  y, vertical,  horizontal); 
-        delay(10);
+        //delay(10);
+
+        while (!hid_USB_ready()) delay(1);
+
         hid_USB_keyboardReport(RID_KEYBOARD, modifier, keycode);
-        delay(10);
-        hid_USB_sendReport16(RID_CONSUMER_CONTROL, consumer_code);  
+        Serial.println("RID_KEYBOARD Sent");
+        //delay(10);
+        
+        //hid_USB_sendReport16(RID_CONSUMER_CONTROL, consumer_code);  
+        Serial.println("RID_CONSUMER_CONTROL Sent");
         return true;
         }
         else

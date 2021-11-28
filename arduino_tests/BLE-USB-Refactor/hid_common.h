@@ -11,6 +11,27 @@ enum
   RID_CONSUMER_CONTROL, // Media, volume etc ..
 };
 
+
+
+typedef enum connectionState 
+{ 
+  CONNECTION_NONE = 1, 
+  CONNECTION_USB, 
+  CONNECTION_BLE 
+} connectionState ;
+
+typedef enum connectionMode 
+{ 
+  CONNECTION_MODE_AUTO = 1, 
+  CONNECTION_MODE_USB_ONLY, 
+  CONNECTION_MODE_BLE_ONLY 
+} connectionMode;
+
+typedef struct {
+  connectionState connection_state;
+  connectionMode connection_mode;
+} HIDState;
+
 // HID report descriptor using TinyUSB's template
 uint8_t const desc_hid_report[] =
 {
@@ -25,6 +46,7 @@ uint8_t const desc_hid_report[] =
 void hid_start(void);
 void hid_USB_start(void);
 void hid_BLE_start(void);
+void hid_MODE_select(connectionMode mode);
 
 bool hid_ready(void);
 bool hid_USB_ready(void);
@@ -98,3 +120,5 @@ void startAdv(void);
 
  //------------- CALLBACK LED API -------------//
   void set_keyboard_led(uint16_t conn_handle, uint8_t led_bitmap);
+
+//  extern static HIDState connection_status;
