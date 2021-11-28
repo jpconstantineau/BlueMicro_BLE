@@ -19,10 +19,10 @@ uint8_t testlink(uint8_t setpin, uint8_t readpin)
   pinMode(setpin, OUTPUT);
   pinMode(readpin, INPUT_PULLDOWN);
   digitalWrite(setpin, LOW);
- // delay(1);
+  delay(1);
   uint8_t initial = digitalRead(readpin);
   digitalWrite(setpin, HIGH);
- // delay(1);
+  delay(1);
   uint8_t final = digitalRead(readpin);
   pinMode(setpin, INPUT);
   pinMode(readpin, INPUT);
