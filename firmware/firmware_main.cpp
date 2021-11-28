@@ -222,9 +222,9 @@ void setup() {
 
   keyscantimer.begin(keyboardconfig.matrixscaninterval, keyscantimer_callback);
   //batterytimer.begin(keyboardconfig.batteryinterval, batterytimer_callback);
-  bt_setup(keyboardconfig.BLEProfile);
+  
   usb_setup(); // does nothing for 832 - see usb.cpp
-
+  bt_setup(keyboardconfig.BLEProfile);
   // Set up keyboard matrix and start advertising
   setupKeymap(); // this is where we can change the callback for our LEDs...
   setupMatrix();
