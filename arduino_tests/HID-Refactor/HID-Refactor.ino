@@ -12,6 +12,7 @@
   #include "Adafruit_TinyUSB.h"
 #endif
 #include "hid_queues.h"
+#include "keypad.h"
 #include "std_fix.h"
 #include <bluefruit.h>
 
@@ -29,8 +30,13 @@ BLEHidAdafruit blehid;
   HID_Queues hid (&blehid);
 #endif
 
-const int pin = 7; // UserSw
+
 bool activeState = false;
+std::vector<uint8_t> pins{7, 5, 6};
+
+Keys thekeys;
+
+std::vector<KeyEventMap> keymap;
 
 void setupBLE()
 {
@@ -41,11 +47,7 @@ void setupBLE()
   bledis.begin();
   blehid.begin();
   blehid.setKeyboardLedCallback(set_keyboard_led);
-  startAdv();
-}
-
-void startAdv(void)
-{  
+  
   // Advertising packet
   Bluefruit.Advertising.addFlags(BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE);
   Bluefruit.Advertising.addTxPower();
@@ -87,6 +89,45 @@ void set_keyboard_led(uint16_t conn_handle, uint8_t led_bitmap)
   }
 }
 
+
+
+void kpa()
+{
+          uint8_t keycode[6] = { 0 };
+        keycode[0] = HID_KEY_A;
+  
+        hid.keyboardReport(0, keycode);
+}
+
+void kra()
+{
+  hid.keyboardRelease();  
+}
+
+void kpb()
+{
+         int8_t const delta = 5;
+        hid.mouseMove(delta, delta); // right + down
+}
+
+void krb()
+{
+  ;
+}
+
+
+
+void kpc()
+{
+  hid.consumerKeyPress(HID_USAGE_CONSUMER_VOLUME_DECREMENT);
+}
+
+void krc()
+{
+  hid.consumerKeyRelease();;
+}
+
+
 // the setup function runs once when you press reset or power the board
 void setup()
 {
@@ -95,69 +136,78 @@ void setup()
   // usb_hid.setReportDescriptor();
   // usb_hid.setStringDescriptor("TinyUSB HID Composite");
 
-#ifdef NRF52840_XXAA  // only the 840 has USB available.
-  usb_hid.begin();
-#endif
+  #ifdef NRF52840_XXAA  // only the 840 has USB available.
+    usb_hid.begin();
+  #endif
   setupBLE();
   // Set up button, pullup opposite to active state
-  pinMode(pin, activeState ? INPUT_PULLDOWN : INPUT_PULLUP);
+  
 
   Serial.begin(115200);
   Serial.println("Adafruit TinyUSB HID Composite example");
+  thekeys.setupPins(pins,activeState);
+  KeyEventMap km;
+  km.key_number = 0;
+  km.pressed_cb = kpa;
+  km.released_cb = kra;
+  keymap.push_back(km);
+    km.key_number = 1;
+  km.pressed_cb = kpb;
+  km.released_cb = krb;
+     km.key_number = 2;
+  km.pressed_cb = kpc;
+  km.released_cb = krc;
+  keymap.push_back(km);
+  thekeys.setupKeymap(keymap);
+
 }
 
 void loop()
 {
   // poll gpio once each 10 ms
   delay(10);
+  thekeys.scan(millis());
+  thekeys.process();
 
-  // Whether button is pressed
-  bool btn_pressed = (digitalRead(pin) == activeState);
-
-  /*------------- Mouse -------------*/
-  if (btn_pressed )
+/*  while (thekeys.anyEvent())
   {
-    int8_t const delta = 5;
-    hid.mouseMove(delta, delta); // right + down
-  }
-
-  /*------------- Keyboard -------------*/
-    // use to send key release report
-    static bool has_key = false;
-
-    if ( btn_pressed )
+    KeyEvent data = thekeys.getEvent();
+    if (data.key_number == 0)
     {
-      uint8_t keycode[6] = { 0 };
-      keycode[0] = HID_KEY_A;
-
-      hid.keyboardReport(0, keycode);
-
-      has_key = true;
-    }else
-    {
-      // send empty key report if previously has key pressed
-      if (has_key) hid.keyboardRelease();
-      has_key = false;
+      if (data.pressed)
+      {
+          kpa();
+      }
+      else
+      {
+        kra();
+      }
     }
-
-    // Consumer Control is used to control Media playback, Volume, Brightness etc ...
-    // Consumer report is 2-byte containing the control code of the key
-    // For list of control check out https://github.com/hathach/tinyusb/blob/master/src/class/hid/hid.h
-
-    // use to send consumer release report
-    static bool has_consumer_key = false;
-
-    if ( btn_pressed )
+  
+    if (data.key_number == 1)
     {
-      // send volume down (0x00EA)
-      hid.consumerKeyPress(HID_USAGE_CONSUMER_VOLUME_DECREMENT);
-      has_consumer_key = true;
-    }else
-    {
-      // release the consume key by sending zero (0x0000)
-      if (has_consumer_key) hid.consumerKeyRelease();
-      has_consumer_key = false;
+      if (data.pressed)
+      {
+        kpb();
+      }
+      else
+      {
+        krb();
+      }
     }
+  
+    if (data.key_number == 2)
+    {
+      if (data.pressed)
+      {
+        kpc();
+      }
+      else
+      {
+        krc();
+      }
+    }
+  }*/
     
   hid.processQueues(CONNECTION_MODE_AUTO);
 }
