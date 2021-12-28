@@ -1,5 +1,5 @@
 
-name: build firmware on Ubuntu with community_nrf52
+name: build firmware on Ubuntu
 
 on: [pull_request, push, 'workflow_dispatch']
 
