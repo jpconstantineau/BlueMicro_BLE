@@ -13,9 +13,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        fqbn: ['feather52832', 'pca10056', 'feather52840']
+        fqbn: ['feather52832', 'feather52840']
 
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     steps:
         - name: Fix Permissions

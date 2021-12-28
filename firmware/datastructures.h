@@ -21,7 +21,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define DATASTRUCTURES_H
 #include <array>
 
-#define BLUEMICRO_CONFIG_VERSION 4
+#define BLUEMICRO_CONFIG_VERSION 5
 // this should be incremented every time the PersistentState structure definition is updated.
 // This will ensure that the SETTINGS_FILE file is reset when the structure is updated.
 
@@ -69,11 +69,11 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
         uint8_t connectionMode;
         uint8_t BLEProfile;
         uint16_t BLEProfileEdiv[3];
-
+        uint8_t BLEProfileAddr[3][6];
         char BLEProfileName[3][32];
   
        };
-       char data[140]; } PersistentState;  // meant for configuration and things that we want to store in flash so that we can pick it up on the next reboot.
+       char data[160]; } PersistentState;  // meant for configuration and things that we want to store in flash so that we can pick it up on the next reboot.
 
 
 
