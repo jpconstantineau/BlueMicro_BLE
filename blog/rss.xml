@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+    <channel>
+        <title>BlueMicro nRF52 Keyboard Firmware Blog</title>
+        <link>http://bluemicro.jpconstantineau.com/blog</link>
+        <description>BlueMicro nRF52 Keyboard Firmware Blog</description>
+        <lastBuildDate>Tue, 27 Oct 2020 00:00:00 GMT</lastBuildDate>
+        <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
+        <generator>https://github.com/jpmonette/feed</generator>
+        <item>
+            <title><![CDATA[Welcome]]></title>
+            <link>http://bluemicro.jpconstantineau.com/blog/welcome</link>
+            <guid>welcome</guid>
+            <pubDate>Tue, 27 Oct 2020 00:00:00 GMT</pubDate>
+            <description><![CDATA[Currently working on:]]></description>
+            <content:encoded><![CDATA[<p>Currently working on:</p><ul><li>Documentation</li><li>More Documentation</li><li>Helping people out on Discord.</li></ul>]]></content:encoded>
+        </item>
+    </channel>
+</rss>
