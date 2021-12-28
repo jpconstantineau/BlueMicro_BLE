@@ -16,7 +16,7 @@ jobs:
       fail-fast: false
       matrix:
         fqbn: ['feather52832', 'pca10056', 'feather52840']
-    runs-on: self-hosted
+    runs-on:  ubuntu-latest
     container: jpconstantineau/arduino-cli-community-nrf52
     steps:
     - uses: actions/checkout@v2

@@ -15,7 +15,7 @@ jobs:
       matrix:
         fqbn: ['feather52832', 'feather52840']
 
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     steps:
         - name: Fix Permissions
