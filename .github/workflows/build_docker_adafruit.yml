@@ -15,8 +15,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        fqbn: ['feather52832', 'pca10056', 'feather52840']
-    runs-on: self-hosted
+        fqbn: ['feather52832', 'feather52840']
+    runs-on:  ubuntu-latest
     container: jpconstantineau/arduino-cli-bluefruit-nrf52
     steps:
     - uses: actions/checkout@v2

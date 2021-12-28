@@ -1,5 +1,5 @@
 /*
-Copyright 2020-2021 <Pierre Constantineau>
+Copyright 2018 <Pierre Constantineau>
 
 3-Clause BSD License
 
@@ -17,33 +17,40 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
+#ifndef KEYMAP_H
+#define KEYMAP_H
+#include <stdint.h>
+#include "hid_keycodes.h"
+#include "keyboard_config.h"
+#include "advanced_keycodes.h"
+#include "Key.h"
+#include "KeyScanner.h"
+#include <array>
 
 
+#include "BlueMicro_display.h"
 
-#ifndef USB_H
-#define USB_H
-
-    #include <bluefruit.h>
-    #include "firmware_config.h"
-    #include "keymap.h"
-    #include "datastructures.h"
-    #include "HID.h"
-
-    #ifdef NRF52840_XXAA  // only the 840 has USB available.
-            #include "Adafruit_TinyUSB.h"
-            #define TINYUSB_AVAILABLE 1
-    #endif
-
-
-
-    // these functions will be defined for all cases (nrf52832 and nrf52840) but will work differently.
-    void usb_setup();
-    bool usb_isConnected();
-    void usb_wakeup();
-    void usb_sendKeys(HIDKeyboard currentReport);
-    void usb_sendMediaKey(uint16_t keycode);
-    void usb_sendMouseKey(uint16_t keycode);
-    void usb_sendMouseMove(uint16_t keycode, uint16_t steps);
-    void hid_report_callback(uint8_t report_id, hid_report_type_t report_type, uint8_t const* buffer, uint16_t bufsize);
-
+#ifdef BLUEMICRO_CONFIGURED_DISPLAY
+extern BlueMicro_Display OLED;        // needed to assign the update display callback
+extern DISPLAY_U8G2_CONSTRUCTOR u8g2; // needed to call the display functions
 #endif
+
+#define _QWERTY 0
+#define _LOWER  1
+#define _RAISE  2
+#define _ADJUST 3
+
+#define L_QWERTY  (LAYER_0 + _QWERTY)
+#define L_LOWER   (LAYER_0 + _LOWER)
+#define L_RAISE   (LAYER_0 + _RAISE)
+#define L_ADJUST  (LAYER_0 + _ADJUST)
+
+
+#define USER_LAYER_FUNCTION   0 
+void process_user_layers(uint16_t layermask);
+
+void setupKeymap();
+void encoder_callback(int step);
+extern std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix;
+
+#endif /* KEYMAP_H */
