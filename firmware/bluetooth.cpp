@@ -425,15 +425,22 @@ strcpy (keyboardstate.peer_name_prph,peer_name);
   }
 #ifdef ARDUINO_NRF52_COMMUNITY
   uint16_t ediv = connection->getEdiv();
-#endif
-#ifdef ARDUINO_NRF52_ADAFRUIT
-  uint16_t ediv = keyboardconfig.BLEProfile; // we have to do something different for it to compile fine...
-#endif
   if (ediv != keyboardconfig.BLEProfileEdiv[keyboardconfig.BLEProfile])
   {
     keyboardconfig.BLEProfileEdiv[keyboardconfig.BLEProfile] = ediv;
     keyboardstate.save2flash = true;
   }
+#endif
+#ifdef ARDUINO_NRF52_ADAFRUIT
+  ble_gap_addr_t peerAddr;
+  peerAddr = connection->getPeerAddr();
+  if (memcmp(peerAddr.addr, keyboardconfig.BLEProfileAddr[keyboardconfig.BLEProfile], 6) != 0)
+  {
+    memcpy(keyboardconfig.BLEProfileAddr[keyboardconfig.BLEProfile], peerAddr.addr, 6);
+    keyboardstate.save2flash = true;
+  }
+#endif
+
 
 keyboardstate.conn_handle_prph = conn_handle;
 
