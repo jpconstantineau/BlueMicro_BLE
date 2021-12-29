@@ -1,0 +1,64 @@
+
+name: build firmware on Ubuntu
+
+on: [pull_request, push, 'workflow_dispatch']
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        sketch: ['firmware']
+        fqbn: ['pca10056']
+        bsp: ['community_nrf52','adafruit']
+
+    runs-on: ubuntu-latest
+    
+    steps:    
+      # First of all, we clone the repo using the checkout action.
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: Setup Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: '3.8'
+      # We use the arduino/setup-arduino-cli action to install and
+      # configure the Arduino CLI on the system.
+      - name: Setup Arduino CLI
+        uses: arduino/setup-arduino-cli@v1.1.1
+        
+      - name: Install BSP and Libraries
+        env:
+          BSP_URL: https://github.com/jpconstantineau/Community_nRF52_Arduino/releases/latest/download/package_jpconstantineau_boards_index.json
+          BSP_PATH: .arduino15/packages/community_nrf52/hardware/nrf52
+          BSP_URL_ADA: https://adafruit.github.io/arduino-board-index/package_adafruit_index.json
+          BSP_PATH_ADA: .arduino15/packages/adafruit/hardware/nrf52
+        run: |
+          pip3 install adafruit-nrfutil
+          arduino-cli config init
+          arduino-cli core update-index
+          arduino-cli core update-index --additional-urls $BSP_URL_ADA
+          arduino-cli core install adafruit:nrf52 --additional-urls $BSP_URL_ADA
+          arduino-cli core update-index --additional-urls $BSP_URL
+          arduino-cli core install community_nrf52:nrf52 --additional-urls $BSP_URL
+          arduino-cli core list
+          arduino-cli board listall
+          # Install library dependencies
+          arduino-cli lib install   "Adafruit GFX Library"  "Adafruit NeoPixel"  "Adafruit SSD1306" 
+          arduino-cli lib list
+
+      - name: Compile Sketch
+        env:
+          BSP_PATH: .arduino15/packages/adafruit/hardware/nrf52
+        run: |
+          arduino-cli compile --fqbn ${{ matrix.bsp }}:nrf52:${{ matrix.fqbn }}  ./${{ matrix.sketch }}  --output-dir ./${{ matrix.sketch }}/build
+          BSP_VERSION=`eval ls $HOME/$BSP_PATH`
+          BUILDLOC=`eval ls ./${{ matrix.sketch }}/build`
+          python $HOME/$BSP_PATH/$BSP_VERSION/tools/uf2conv/uf2conv.py ./${{ matrix.sketch }}/build/${{ matrix.sketch }}.ino.hex -c -f 0xADA52840 -o ./${{ matrix.sketch }}/build/${{ matrix.sketch }}.ino.uf2
+          ls -lR ./${{ matrix.sketch }}/build/
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.sketch }}-${{ matrix.bsp }}-${{ matrix.fqbn }}
+          path: |
+            ${{ matrix.sketch }}/build

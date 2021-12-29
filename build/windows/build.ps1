@@ -134,7 +134,7 @@ Function Compile-Board($keyboard, $target, $keymap, $fqbn, $hardware) {
     # Run compile
 
     $cmdCompile = 
-        '& "$BuilderExe" -compile -logger=machine -warnings "none" -verbose -ide-version "10807" -debug-level 0 ' + 
+        '& "$BuilderExe" -compile -logger=machine -warnings=all -verbose -ide-version "10807" -debug-level 1 ' + 
         '-hardware "$ArduinoDir\hardware" -hardware "$ArduinoDataDir\packages" ' + 
         '-tools "$ArduinoDir\tools-builder" -tools "$ArduinoDir\hardware\tools\avr" -tools "$ArduinoDataDir\packages" ' +
         '-built-in-libraries "$ArduinoDir\libraries" ' +

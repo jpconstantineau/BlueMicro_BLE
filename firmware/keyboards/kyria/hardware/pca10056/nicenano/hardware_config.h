@@ -22,24 +22,50 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "hardware_variants.h"
 /* HARDWARE DEFINITION*/
 /* key matrix size */
-#define MATRIX_ROWS 1
-#define MATRIX_COLS 18
+#define MATRIX_ROWS 4
+#define MATRIX_COLS 8
+#define MATRIX_ROW_PINS { 36, 11, 32, 22 } // // Row0 -> B4, E6, D7, D4 <- Row3 
+#define MATRIX_COL_PINS { 9, 10, 43, 45, 47, 2, 29, 31 } // Col0 -> B6, B2, B3, B1, F7, F6, F5, F4 <- Col7
 
 #define ARDUINO_NICE_NANO 1 // used in debug_cli.cpp to bypass 0.14 and 0.16 that are directly connected to 0.18 (reset)
 
-#define MATRIX_ROW_PINS { 33 }
-#define MATRIX_COL_PINS { 6, 8, 17, 20, 22, 24, 32, 11, 36, 38, 31, 29, 2, 47, 45, 43, 10, 9 }
 #define UNUSED_PINS {}
+
+// Encoder:
+// Note: not tested for Kyria, docs:
+// ENC1: ROW0, COL7
+// ENC2: ROW2, COL7
+// ENC3: ROW3, COL4
+// uncoment below to test Enc3 position
+//#define ENCODER_PAD_A  22 // ROW3 
+//#define ENCODER_PAD_B  47 // COL4
+//#define ENCODER_RESOLUTION 2
+
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW
-       #define BATTERY_TYPE BATT_LIPO
-        #define VBAT_PIN  4
-        #define VCC_PIN 13
-        #define VCC_POLARITY_ON 0
-        #define  STATUS_BLE_LED_PIN  15  //blue = 0.15
 
-          //#define  STATUS_KB_LED_PIN 0  //no RED LED
-   /*     #define D3      6  
+// #define BACKLIGHT_PWM_ON 1
+#define WS2812B_LED_PIN 6
+#define WS2812B_LED_COUNT 10
+#define WS2812B_LED_ON 1
+
+#define BATTERY_TYPE BATT_LIPO
+#define VBAT_PIN  4
+
+//#define  STATUS_KB_LED_PIN 17  //red = 0.17
+#define VCC_PIN 13
+#define VCC_POLARITY_ON 1
+#define  STATUS_BLE_LED_PIN  15  //blue = 0.15
+//#define  STATUS_KB_LED_PIN 0  //no RED LED
+
+//  OLED DEFINITION
+#define I2C_SDA_PIN 17
+#define I2C_SCK_PIN 20
+#define DISPLAY_U8G2_CONSTRUCTOR U8G2_SSD1306_128X64_NONAME_F_HW_I2C // see https://github.com/olikraus/u8g2/wiki/u8g2setupcpp for reference
+#define DISPLAY_U8G2_ROTATION U8G2_R2
+
+
+ /*     #define D3      6
         #define D2      8   
         #define D1      17  
         #define D0      20  
@@ -58,5 +84,5 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
         #define B3      43 //1.11 = 32+11
         #define B2      10
         #define B6      9
-        #define NC      33 //1.01 = 32+1 // NC is for not connected....*/
+        #define NC      33 //1.01 = 32+1 // NC is for not connected....*/  
 #endif /* HARDWARE_CONFIG_H */
