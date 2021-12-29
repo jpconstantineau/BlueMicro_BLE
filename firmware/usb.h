@@ -30,18 +30,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
     #include "HID.h"
 
     #ifdef NRF52840_XXAA  // only the 840 has USB available.
-<<<<<<< HEAD
-      ///  #ifdef ARDUINO_NRF52_ADAFRUIT
-            // do nothing since the Adafruit BSP doesn't support ediv.
-    //    #endif
-     //   #ifdef ARDUINO_NRF52_COMMUNITY
             #include "Adafruit_TinyUSB.h"
             #define TINYUSB_AVAILABLE 1
-     //   #endif
-=======
-            #include "Adafruit_TinyUSB.h"
-            #define TINYUSB_AVAILABLE 1
->>>>>>> develop
     #endif
 
 

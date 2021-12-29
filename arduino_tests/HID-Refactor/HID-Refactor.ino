@@ -106,7 +106,7 @@ void kra()
 
 void kpb()
 {
-         int8_t const delta = 5;
+         int8_t const delta = 50;
         hid.mouseMove(delta, delta); // right + down
 }
 
@@ -154,6 +154,7 @@ void setup()
     km.key_number = 1;
   km.pressed_cb = kpb;
   km.released_cb = krb;
+    keymap.push_back(km);
      km.key_number = 2;
   km.pressed_cb = kpc;
   km.released_cb = krc;
