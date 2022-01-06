@@ -25,12 +25,21 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define MATRIX_ROWS 1
 #define MATRIX_COLS 8
 #define MATRIX_ROW_PINS { 33 }
-#define MATRIX_COL_PINS { 29, 2, 28, 3, 10, 9, 24, 13}
+/* 
+   .---------------------------. 
+   |  29  |   2  |  28  |   3  | 
+   |------+------+------+------| 
+   |  13  |  24  |   9  |  10  | 
+   `---------------------------' 
+*/
+#define MATRIX_COL_PINS { 29, 2, 28, 3, 13, 24, 9, 10}
+#define LED_G 42 //Green LED
+#define LED_R 36 //Red LED, the name LED_RED is defined elsewhere
 #define UNUSED_PINS {}
 
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW
 #define BATTERY_TYPE BATT_VDDH
 
-#define SPEAKER_PIN 10
+#define SPEAKER_PIN 45
 #endif /* HARDWARE_CONFIG_H */
