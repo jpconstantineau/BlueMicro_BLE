@@ -218,3 +218,10 @@ Some people might be interested in filtering by the core type as follows:
 
 However, as you can already filter by the processor family, I doubt this will provide much value;  only those asking "Does it run on RISC-V?" will get an answer...
 
+### Awesome CircuitPython Improvements
+
+It would be neat to add a section/page/subpage to Awesome CircuitPython called *Popular Projects Enabled by CircuitPython*
+
+This could include:
+- [KMK Keyboard Firmware](https://github.com/KMKfw/kmk_firmware)
+- [Pico Ducky](https://github.com/dbisu/pico-ducky)
