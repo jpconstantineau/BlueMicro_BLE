@@ -1,6 +1,6 @@
 # BlueMicro Firmware  [![Current Version](https://img.shields.io/github/v/tag/jpconstantineau/BlueMicro_BLE)](https://github.com/jpconstantineau/BlueMicro_BLE/tags)  ![Build on Docker](https://github.com/jpconstantineau/BlueMicro_BLE/workflows/Build%20on%20Docker/badge.svg)
 
-## Currently Upgrading Adafruit nRF52 to release 1.2.0!
+## Currently Upgrading to support Adafruit nRF52 release 1.3.0!
 
 Work is currently under way to update BlueMicro_BLE to be able to use the latest release of the Adafruit Board Support Package.  This will enable the following
 
@@ -21,7 +21,7 @@ By starting with the simple hid_keyboard.ino example provided with the Arduino b
 
 | Branch  | Github Actions - Docker (Adafruit BSP) | Github Actions - Docker (Community BSP) |Github Actions - Ubuntu Builder | 
 | ------  | ------           | ------       | ------                  | 
-| Master  | [![Build on Docker - Adafruit](https://github.com/jpconstantineau/BlueMicro_BLE/actions/workflows/build_docker_adafruit.yml/badge.svg)](https://github.com/jpconstantineau/BlueMicro_BLE/actions/workflows/build_docker_adafruit.yml) | [![Build on Docker - Community](https://github.com/jpconstantineau/BlueMicro_BLE/actions/workflows/build_docker_community.yml/badge.svg)](https://github.com/jpconstantineau/BlueMicro_BLE/actions/workflows/build_docker_community.yml) | Builder Badge |
+| Master  | [![Build on Docker - Adafruit](https://github.com/jpconstantineau/BlueMicro_BLE/actions/workflows/build_docker_adafruit.yml/badge.svg)](https://github.com/jpconstantineau/BlueMicro_BLE/actions/workflows/build_docker_adafruit.yml) | [![Build on Docker - Community](https://github.com/jpconstantineau/BlueMicro_BLE/actions/workflows/build_docker_community.yml/badge.svg)](https://github.com/jpconstantineau/BlueMicro_BLE/actions/workflows/build_docker_community.yml) | [![build firmware on Ubuntu](https://github.com/jpconstantineau/BlueMicro_BLE/actions/workflows/builder-ubuntu.yml/badge.svg)](https://github.com/jpconstantineau/BlueMicro_BLE/actions/workflows/builder-ubuntu.yml) |
 | Develop |![Build on Docker - Adafruit](https://github.com/jpconstantineau/BlueMicro_BLE/workflows/Build%20on%20Docker%20-%20Adafruit/badge.svg)|![Build on Docker - Community](https://github.com/jpconstantineau/BlueMicro_BLE/workflows/Build%20on%20Docker%20-%20Community/badge.svg) |  
 
 
