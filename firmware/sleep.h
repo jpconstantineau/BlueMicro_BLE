@@ -21,7 +21,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #ifndef SLEEP_H
 #define SLEEP_H
 #include <Arduino.h>
-#include <bluefruit.h>
+#include <bluemicro_hid.h>
 #include "keyboard_config.h"
 #include "firmware_config.h"
 #include "nrf52gpio.h"

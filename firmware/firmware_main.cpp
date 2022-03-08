@@ -18,8 +18,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 */
 /**************************************************************************************************************************/
-#include <Arduino.h>
-#include <bluefruit.h>
+#include <bluemicro_hid.h>
 #include "firmware.h"
 #include <Adafruit_LittleFS.h>
 #include <InternalFileSystem.h>
@@ -183,7 +182,8 @@ void saveConfig()
 /**************************************************************************************************************************/
 // cppcheck-suppress unusedFunction
 void setup() {
-  usb_setup(); // does nothing for 832 - see usb.cpp // must be first in setup due to USB setup timing.
+  bluemicro_hid.begin(); 
+  //usb_setup(); // does nothing for 832 - see usb.cpp // must be first in setup due to USB setup timing.
   setupGpio();                                                                // checks that NFC functions on GPIOs are disabled.
   setupWDT();
   #ifdef BLUEMICRO_CONFIGURED_DISPLAY
@@ -226,11 +226,11 @@ void setup() {
   //batterytimer.begin(keyboardconfig.batteryinterval, batterytimer_callback);
   
   
-  bt_setup(keyboardconfig.BLEProfile);
+  //bt_setup(keyboardconfig.BLEProfile);
   // Set up keyboard matrix and start advertising
   setupKeymap(); // this is where we can change the callback for our LEDs...
   setupMatrix();
-  bt_startAdv(); 
+  //bt_startAdv(); 
   keyscantimer.start();
   //batterytimer.start();
 
@@ -442,7 +442,7 @@ void process_keyboard_function(uint16_t keycode)
     break;
   case CLEAR_BONDS:
     // Bluefruit.clearBonds(); //removed in next BSP?
-    if (keyboardstate.connectionState == CONNECTION_BT)
+    if (keyboardstate.connectionState == CONNECTION_BLE)
       keyboardstate.needUnpair = true;
     // Bluefruit.Central.clearBonds();
     break;
@@ -735,7 +735,7 @@ void process_keyboard_function(uint16_t keycode)
                 addStringToQueue("CONNECTION_USB"); addKeycodeToQueue(KC_ENTER);
               break;
 
-              case CONNECTION_BT:
+              case CONNECTION_BLE:
                 addStringToQueue("CONNECTION_BLE"); addKeycodeToQueue(KC_ENTER);
               break;
 
@@ -790,7 +790,7 @@ void process_keyboard_function(uint16_t keycode)
       addKeycodeToQueue(KC_ENTER);
       addKeycodeToQueue(KC_ENTER);
       ble_gap_addr_t gap_addr;
-      gap_addr = bt_getMACAddr();
+     // gap_addr = bt_getMACAddr(); // TODO MOVE THIS FUNCTION TO BE ACCESSIBLE IN LIBRARY
       sprintf(buffer,  "BT MAC Addr: %02X:%02X:%02X:%02X:%02X:%02X", gap_addr.addr[5], gap_addr.addr[4], gap_addr.addr[3], gap_addr.addr[2], gap_addr.addr[1], gap_addr.addr[0]);
       addStringToQueue(buffer);
       addKeycodeToQueue(KC_ENTER);
@@ -957,7 +957,7 @@ void sendKeyPresses() {
   UpdateQueue();
   if (!stringbuffer.empty()) // if the macro buffer isn't empty, send the first character of the buffer... which is located at the back of the queue
   {  
-    HIDKeyboard reportarray = {0, {0, 0 ,0, 0, 0, 0}, 0};
+    HIDKeyboard reportarray = {0, {0, 0 ,0, 0, 0, 0}};
     uint16_t keyreport = stringbuffer.back();
     stringbuffer.pop_back();
     
@@ -983,42 +983,20 @@ void sendKeyPresses() {
   {  
     HIDKeyboard reportarray  = reportbuffer.back();
     reportbuffer.pop_back();
-    switch (keyboardstate.connectionState)
-    {
-      case CONNECTION_USB: usb_sendKeys(reportarray); delay(keyboardconfig.keysendinterval*2); break;
-      case CONNECTION_BT: bt_sendKeys(reportarray); delay(keyboardconfig.keysendinterval*2); break;
-      case CONNECTION_NONE: // save the report for when we reconnect
-              auto it = reportbuffer.end();
-              it = reportbuffer.insert(it, reportarray);
-      break; 
-    }
+    bluemicro_hid.keyboardReport(0, reportarray.keycode);
+    
     
     if (reportbuffer.empty()) // make sure to send an empty report when done...
     { 
-      HIDKeyboard emptyReport = {0, {0, 0 ,0, 0, 0, 0}, 0}; 
-      switch (keyboardstate.connectionState)
-      {
-        case CONNECTION_USB: usb_sendKeys(emptyReport); delay(keyboardconfig.keysendinterval*2); break;
-        case CONNECTION_BT: bt_sendKeys(emptyReport); delay(keyboardconfig.keysendinterval*2); break;
-        case CONNECTION_NONE: // save the report for when we reconnect
-                      auto it = reportbuffer.end();
-                      it = reportbuffer.insert(it, emptyReport);
-        break; 
-      } 
+        bluemicro_hid.keyboardRelease();
     }
    // KeyScanner::processingmacros=0;
   }
   else if ((KeyScanner::reportChanged))  //any new key presses anywhere?
-  {                                                                              
-    switch (keyboardstate.connectionState)
-    {
-      case CONNECTION_USB: usb_sendKeys(KeyScanner::currentReport); break;
-      case CONNECTION_BT: bt_sendKeys(KeyScanner::currentReport); break;
-      case CONNECTION_NONE: // save the report for when we reconnect
-                      auto it = reportbuffer.begin();
-                      it = reportbuffer.insert(it, KeyScanner::currentReport);    
-      break; 
-    }
+  {     
+
+      bluemicro_hid.keyboardReport(0, KeyScanner::currentReport.keycode);
+                                                                      
         LOG_LV1("MXSCAN","SEND: %i %i %i %i %i %i %i %i %i " ,keyboardstate.timestamp,KeyScanner::currentReport.modifier, KeyScanner::currentReport.keycode[0],KeyScanner::currentReport.keycode[1],KeyScanner::currentReport.keycode[2], KeyScanner::currentReport.keycode[3],KeyScanner::currentReport.keycode[4], KeyScanner::currentReport.keycode[5],KeyScanner::currentReport.layer);        
   } else if (KeyScanner::specialfunction > 0)
   {
@@ -1026,29 +1004,11 @@ void sendKeyPresses() {
     KeyScanner::specialfunction = 0; 
   } else if (KeyScanner::consumer > 0)
   {
-    switch (keyboardstate.connectionState)
-    {
-      case CONNECTION_USB: usb_sendMediaKey(KeyScanner::consumer); break;
-      case CONNECTION_BT: bt_sendMediaKey(KeyScanner::consumer); break;
-      case CONNECTION_NONE: 
-      #ifdef ENABLE_AUDIO
-      speaker.playTone(TONE_BLE_DISCONNECT);
-      #endif
-       break; // we have lost a report!
-    }
+    // send consumeer code
     KeyScanner::consumer = 0; 
   } else if (KeyScanner::mouse > 0)
   {
-    switch (keyboardstate.connectionState)
-    {
-      case CONNECTION_USB: usb_sendMouseKey(KeyScanner::mouse); break;
-      case CONNECTION_BT: bt_sendMouseKey(KeyScanner::mouse); break;
-      case CONNECTION_NONE: 
-      #ifdef ENABLE_AUDIO
-      speaker.playTone(TONE_BLE_DISCONNECT); 
-      #endif
-      break; // we have lost a report!
-    }
+    // send mouse code
     KeyScanner::mouse = 0; 
   }
   
@@ -1087,7 +1047,7 @@ void keyscantimer_callback(TimerHandle_t _handle) {
         // never sleep in this case
       break;
 
-      case CONNECTION_BT:
+      case CONNECTION_BLE:
         gotoSleep(timesincelastkeypress, true);
       break;
 
@@ -1105,24 +1065,7 @@ void keyscantimer_callback(TimerHandle_t _handle) {
   #endif
 
 }
-//********************************************************************************************//
-//* Battery Monitoring Task - runs infrequently                                              *//
-//********************************************************************************************//
-// TODO: move to lower priority loop.  updating battery infomation isnt critical
-// timers have NORMAL priorities (HIGHEST>HIGH>NORMAL>LOW>LOWEST)
-//void batterytimer_callback(TimerHandle_t _handle)
-//{ 
-//      batterymonitor.updateBattery();
-//}
 
-//********************************************************************************************//
-//* Loop to send keypresses - moved to loop instead of timer due to delay() in processing macros *//
-//********************************************************************************************//
-// this loop has NORMAL priority(HIGHEST>HIGH>NORMAL>LOW>LOWEST)
-//void NormalPriorityloop(void)
-//{
-//  delay (keyboardconfig.keysendinterval);
-//}
 
 /**************************************************************************************************************************/
 // put your main code here, to run repeatedly:
@@ -1130,6 +1073,7 @@ void keyscantimer_callback(TimerHandle_t _handle) {
 // cppcheck-suppress unusedFunction
 void loop() {  // has task priority TASK_PRIO_LOW     
   updateWDT();
+  bluemicro_hid.processQueues(CONNECTION_MODE_AUTO);
 #ifdef ENABLE_AUDIO
   speaker.processTones();
 #endif
@@ -1138,76 +1082,13 @@ void loop() {  // has task priority TASK_PRIO_LOW
     handleSerial();
   }
 
-  switch (keyboardconfig.connectionMode)
-  {
-    case CONNECTION_MODE_AUTO:  // automatically switch between BLE and USB when connecting/disconnecting USB
-        if (usb_isConnected())  
-        {
-          if (keyboardstate.connectionState != CONNECTION_USB)
-          {
-            if (bt_isConnected()) bt_disconnect();
-            bt_stopAdv();
-            keyboardstate.connectionState = CONNECTION_USB;
-            keyboardstate.lastuseractiontime = millis(); // a USB connection will reset sleep timer... 
-            //speaker.playTone(TONE_BLE_CONNECT);
-          }
-        }
-      else if (bt_isConnected())
-        {
-          if (keyboardstate.connectionState != CONNECTION_BT)
-          {
-            keyboardstate.connectionState = CONNECTION_BT;
-            keyboardstate.lastuseractiontime = millis(); // a BLE connection will reset sleep timer...
-            //speaker.playTone(TONE_BLE_CONNECT);
-          }
-        }
-        else
-        {
-          if (keyboardstate.connectionState != CONNECTION_NONE)
-          {
-            bt_startAdv();
-            keyboardstate.connectionState = CONNECTION_NONE;
-            //speaker.playTone(TONE_BLE_DISCONNECT);
-            // disconnecting won't reset sleep timer.
-          }
-        }
-      break;
-    case CONNECTION_MODE_USB_ONLY:
-        if (usb_isConnected())  
-        {
-          if (keyboardstate.connectionState != CONNECTION_USB)
-          {
-            if (bt_isConnected()) bt_disconnect();
-            bt_stopAdv();
-            keyboardstate.connectionState = CONNECTION_USB;
-          }
-        }
-        else // if USB not connected but we are in USB Mode only...
-        {
-          keyboardstate.connectionState = CONNECTION_NONE;
-        }
-      break;
-    case CONNECTION_MODE_BLE_ONLY:
-        if (bt_isConnected())
-        {
-            keyboardstate.connectionState = CONNECTION_BT;
-        }
-        else
-        {
-          if (keyboardstate.connectionState != CONNECTION_NONE)
-          {
-            bt_startAdv();
-            keyboardstate.connectionState = CONNECTION_NONE;
-          }
-        }
-      break;
-  }
+  
 
   // TODO: check for battery filtering when switching USB in/out
   // none of these things can be done in the timer event callbacks
   if (keyboardstate.needUnpair)
   {
-    bt_disconnect();
+   // bt_disconnect();
     char filename[33] = { 0 };
     sprintf(filename, "/adafruit/bond_prph/%04x", keyboardconfig.BLEProfileEdiv[keyboardconfig.BLEProfile]);
     InternalFS.remove(filename);
@@ -1252,7 +1133,7 @@ void LowestPriorityloop()
    keyboardstate.lastuseractiontime = max(KeyScanner::getLastPressed(),keyboardstate.lastuseractiontime); // use the latest time to check for sleep...
    unsigned long timesincelastkeypress = keyboardstate.timestamp - KeyScanner::getLastPressed();
 
-  updateBLEStatus();
+ // updateBLEStatus(); TODO replace this
   
   if ((keyboardstate.timestamp - keyboardstate.batterytimer) > keyboardconfig.batteryinterval)  // this is typically every 30 seconds...
   {

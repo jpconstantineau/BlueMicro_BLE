@@ -77,7 +77,7 @@ void KeyScanner::resetReport() {
     currentReport.keycode[4] = 0;
     currentReport.keycode[5] = 0;
     currentReport.modifier = 0;
-    currentReport.layer = 0;
+  //  currentReport.layer = 0; TODO FIGURE OUT LAYEEERS
 }
 
 
@@ -405,7 +405,7 @@ bool KeyScanner::getReport()
     }
 
     currentReport.modifier = currentMod;
-    currentReport.layer = localLayer;
+   // currentReport.layer = localLayer;  TODO FIGURE OUOT LAYERS IN
     
 
 if (activeKeys.empty() && processingmacros) {processingmacros = false;}
@@ -444,8 +444,8 @@ unsigned long KeyScanner::getLastPressed()
 }
 /**************************************************************************************************************************/
 
-HIDKeyboard KeyScanner::currentReport = {0, {0, 0 ,0, 0, 0, 0}, 0}; 
-HIDKeyboard KeyScanner::previousReport = {0, {0, 0 ,0, 0, 0, 0}, 0}; 
+HIDKeyboard KeyScanner::currentReport = {0, {0, 0 ,0, 0, 0, 0}}; 
+HIDKeyboard KeyScanner::previousReport = {0, {0, 0 ,0, 0, 0, 0}}; 
 
 uint8_t KeyScanner::remoteReport[8]  = {0, 0, 0 ,0, 0, 0, 0, 0}; 
 

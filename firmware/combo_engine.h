@@ -19,7 +19,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 #ifndef COMBO_ENGINE_H
 #define COMBO_ENGINE_H
-#include <bluefruit.h>
+#include <bluemicro_hid.h>
 #include <stdint.h>
 #include <vector>
 #include <utility>

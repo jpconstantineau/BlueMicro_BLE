@@ -22,7 +22,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define NRF52GPIO_H
 
 #include <Arduino.h>
-#include <bluefruit.h>
+#include <bluemicro_hid.h>
 #include "hardware_variants.h"
 #include "firmware_config.h"
 

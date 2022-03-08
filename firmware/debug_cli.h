@@ -21,7 +21,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #ifndef DEBUG_CLI_H
 #define DEBUG_CLI_H
 
-#include <bluefruit.h>
+#include <bluemicro_hid.h>
 #include <Adafruit_LittleFS.h>
 #include <InternalFileSystem.h>
 

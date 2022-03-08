@@ -149,9 +149,9 @@ typedef struct {
 typedef void (*ledupdateCallback)(PersistentState *config, DynamicState *status);
 typedef void (*updateDisplay_cb_t)(PersistentState *cfg, DynamicState *stat);
 
-enum connectionState { CONNECTION_NONE, CONNECTION_USB, CONNECTION_BT };
+//enum connectionState { CONNECTION_NONE, CONNECTION_USB, CONNECTION_BT };
 
-enum connectionMode { CONNECTION_MODE_AUTO, CONNECTION_MODE_USB_ONLY, CONNECTION_MODE_BLE_ONLY };
+//enum connectionMode { CONNECTION_MODE_AUTO, CONNECTION_MODE_USB_ONLY, CONNECTION_MODE_BLE_ONLY };
 
 enum backgroundTaskID {
   BACKGROUND_TASK_NONE,
@@ -162,7 +162,7 @@ enum backgroundTaskID {
   BACKGROUND_TASK_PWMLED,
   BACKGROUND_TASK_RGBLED
 };
-
+/*
 struct HIDKeyboard {
     uint8_t modifier;
     uint8_t keycode[6];
@@ -188,10 +188,10 @@ struct HIDKeyboard {
 
   } ;
 
+*/
 
 
-
-
+/*
 typedef struct {
     uint8_t buttons; 
     int8_t x; 
@@ -209,5 +209,5 @@ typedef struct {
   HIDMouse mouse;
   HIDConsumer consumer;
   } HIDMessages; 
-
+*/
 #endif

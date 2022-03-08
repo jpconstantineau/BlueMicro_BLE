@@ -687,9 +687,10 @@ void bt_sendMouseKey(uint16_t keycode)
 void bt_sendMediaKey(uint16_t keycode)
 {
   #if BLE_HID == 1
-    blehid.consumerKeyPress(hid_conn_hdl, hid_GetMediaUsageCode(keycode));
+    //blehid.consumerKeyPress(hid_conn_hdl, hid_GetMediaUsageCode(keycode));
+    bluemicro_hid.consumerKeyPress(keycode); //TODO teeest cosumeeer codes
     delay(HIDREPORTINGINTERVAL);
-    blehid.consumerKeyRelease();// TODO: do I need this here???
+    bluemicro_hid.consumerKeyRelease();
   #endif 
         #if BLE_PERIPHERAL ==1    // PERIPHERAL IS THE SLAVE BOARD
           Linkdata.keycode[0] = 0;  // initialize the slave to master link data...

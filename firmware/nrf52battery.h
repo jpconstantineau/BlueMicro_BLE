@@ -21,6 +21,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #define BATTERY_BM_H 
 
     #include <Arduino.h>
+    #include <bluemicro_hid.h>
     #include <bluefruit.h>
     #include "firmware_config.h"
     #include "keyboard_config.h"

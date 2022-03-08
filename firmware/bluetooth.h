@@ -19,6 +19,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 #ifndef BLUETOOTH_H
 #define BLUETOOTH_H
+#include <bluemicro_hid.h>
 #include <bluefruit.h>
 #include "firmware_config.h"
 #include "bluetooth_config.h"
@@ -29,9 +30,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "KeyScanner.h"
 #include "nrf52battery.h"
 #include "datastructures.h"
-#include "HID.h"
 
-    typedef __packed  struct {      // Payload for BLE messages between split boards. Intended for slave to master
+    typedef   struct {      // Payload for BLE messages between split boards. Intended for slave to master
         // BLE messages have a size limit of 20 bytes. Any extra and we have to do some ATT_MTU magic...
         uint8_t        keycode[6];       // 6 bytes
         uint8_t        modifier;         // 1 byte
@@ -40,15 +40,15 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
         //uint32_t       command;          // 4 bytes
         //uint32_t       timesync;         // 4 bytes
         
-        uint16_t       specialkeycode;   // 2 bytes = 20 bytes...  
+        uint16_t  __attribute__((packed))     specialkeycode;   // 2 bytes = 20 bytes...  
     } Payload;
 
-        typedef __packed struct {      // Payload for BLE messages between split boards. Intended for master to slave
+        typedef  struct {      // Payload for BLE messages between split boards. Intended for master to slave
         // BLE messages have a size limit of 20 bytes. Any extra and we have to do some ATT_MTU magic...
         uint32_t       command;          // 4 bytes
         uint32_t       timesync;         // 4 bytes
         uint16_t       layer;            // 1 byte
-    } StatePayload;
+    } __attribute__((packed)) StatePayload;
 
     void updateBLEStatus(void);
     void bt_setup(uint8_t BLEProfile);

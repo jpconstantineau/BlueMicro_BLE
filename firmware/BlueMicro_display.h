@@ -20,7 +20,6 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #ifndef BLUEMICRO_DISPLAY_H
 #define BLUEMICRO_DISPLAY_H
 #include <Arduino.h>
-#include <bluefruit.h>
 #include "keyboard_config.h"
 #include "firmware_config.h"
 #include "nrf52gpio.h"

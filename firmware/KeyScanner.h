@@ -26,6 +26,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include <vector>
 #include <algorithm>
 #include <tuple>
+#include <bluemicro_hid.h>
 #include "hid_keycodes.h"
 #include "keyboard_config.h"
 #include "firmware_config.h"
