@@ -20,7 +20,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 #ifndef BLUEMICRO_TONE_H
 #define BLUEMICRO_TONE_H
-#include <arduino.h>  // needed for tone()
+//#include <arduino.h>  // needed for tone()
+#include <bluemicro_hid.h>
 #include <queue>
 #include "datastructures.h"
 /**************************************************************************************************
