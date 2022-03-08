@@ -1,7 +1,15 @@
 
 name: build firmware on Ubuntu
 
-on: [pull_request, push, 'workflow_dispatch']
+on: 
+  workflow_dispatch:
+  push:
+    branches:
+      - develop
+      - USB-refactor
+  pull_request:
+    branches:
+      - master
 
 jobs:
   build:
@@ -44,7 +52,7 @@ jobs:
           arduino-cli core list
           arduino-cli board listall
           # Install library dependencies
-          arduino-cli lib install   "Adafruit GFX Library"  "Adafruit NeoPixel"  "Adafruit SSD1306" 
+          arduino-cli lib install   "Adafruit GFX Library"  "Adafruit NeoPixel"  "Adafruit SSD1306" "bluemicro_hid"
           arduino-cli lib list
 
       - name: Compile Sketch
