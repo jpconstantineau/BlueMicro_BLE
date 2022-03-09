@@ -10,6 +10,7 @@
 #include "command_queues.h"
 #include "datastructures.h"
 #include "nrf52gpio.h"
+#include "nrf52battery.h"
 
 extern commandlist_t commandList; 
 extern commandqueue_t setupQueue;
@@ -18,7 +19,7 @@ extern PersistentState keyboardconfig;
 extern DynamicState keyboardstate;
 extern  std::vector<uint16_t> stringbuffer; // buffer for macros to type into...
 extern  std::vector<HIDKeyboard> reportbuffer; 
-
+extern Battery batterymonitor;
 extern  led_handler statusLEDs;  /// Typically a Blue LED and a Red LED
 
     void setupConfig(void);
@@ -31,3 +32,4 @@ extern  led_handler statusLEDs;  /// Typically a Blue LED and a Red LED
     void setupnrf52(void);
     void serialsplash(void);
     void addsetupcommands(void);
+    void addkeyboardcommands(void);
