@@ -64,7 +64,7 @@ You can refer to the configuration of the solfle keyboard - default configuratio
 You will need to add a few things to your keymap.h file.
 
 ``` c++
-#include "KeyScanner.h"  // include at the top with the other includes
+#include "keyscanner.h"  // include at the top with the other includes
 extern DynamicState keyboardstate;
 void encoder_callback(int step); // add right after void setupKeymap();
 
@@ -123,7 +123,7 @@ You can refer to the configuration of the miniMACRO5 keyboard - default configur
 You will need to add a few things to your keymap.h file.  The example below is from the miniMACRO5 which supports up to 5 encoders.
 
 ``` c++
-#include "KeyScanner.h"  // include at the top with the other includes
+#include "keyscanner.h"  // include at the top with the other includes
 extern DynamicState keyboardstate;
 void encoder_callback1(int step);
 void encoder_callback2(int step);

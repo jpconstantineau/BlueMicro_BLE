@@ -22,7 +22,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "keyboard_config.h"
 #include "advanced_keycodes.h"
 #define MAX_NO_LAYERS 3 //needs to be one greater than the number of layers implimented. Too large of a number will cause crashing due to dynamic memory limits.
-#include "Key.h"
+#include "key.h"
 #include <array>
 
 #ifndef KEYMAP_H

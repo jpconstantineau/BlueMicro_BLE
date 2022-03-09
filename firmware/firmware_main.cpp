@@ -1,178 +1,32 @@
-/*
-Copyright 2018-2021 <Pierre Constantineau, Julian Komaromy>
+// SPDX-FileCopyrightText: 2018-2022 BlueMicro contributors (https://github.com/jpconstantineau/BlueMicro_BLE/graphs/contributors)
+//
+// SPDX-License-Identifier: BSD-3-Clause
 
-3-Clause BSD License
-
-Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
-
-1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-
-2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-
-3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR 
-A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-*/
 /**************************************************************************************************************************/
+
 #include <bluemicro_hid.h>
 #include "firmware.h"
 #include <Adafruit_LittleFS.h>
 #include <InternalFileSystem.h>
 
+#include "command_queues.h"
+
+
 /**************************************************************************************************************************/
 // Keyboard Matrix
-byte rows[] MATRIX_ROW_PINS;        // Contains the GPIO Pin Numbers defined in keyboard_config.h
-byte columns[] MATRIX_COL_PINS;     // Contains the GPIO Pin Numbers defined in keyboard_config.h  
+// byte rows[] MATRIX_ROW_PINS;        // Contains the GPIO Pin Numbers defined in keyboard_config.h
+// byte columns[] MATRIX_COL_PINS;     // Contains the GPIO Pin Numbers defined in keyboard_config.h  
 
-SoftwareTimer keyscantimer, batterytimer;
 
-using namespace Adafruit_LittleFS_Namespace;
-#define SETTINGS_FILE "/settings"
-File file(InternalFS);
+
 PersistentState keyboardconfig;
 DynamicState keyboardstate;
 
-#ifdef ENABLE_AUDIO
-  BlueMicro_tone speaker(&keyboardconfig, &keyboardstate);  /// A speaker to play notes and tunes...
-#endif
 led_handler statusLEDs(&keyboardconfig, &keyboardstate);  /// Typically a Blue LED and a Red LED
 
-
-
-#ifdef BLUEMICRO_CONFIGURED_DISPLAY
-  BlueMicro_Display OLED(&keyboardconfig, &keyboardstate);  /// Typically a Blue LED and a Red LED
-#endif
-
 KeyScanner keys(&keyboardconfig, &keyboardstate);
+
 Battery batterymonitor;
-
-static std::vector<uint16_t> stringbuffer; // buffer for macros to type into...
-static std::vector<HIDKeyboard> reportbuffer; 
-
-/**************************************************************************************************************************/
-void setupConfig() {
-  InternalFS.begin();
-  loadConfig();
-
-  keyboardstate.statusble=0;  //initialize to a known state.
-  keyboardstate.statuskb=0;   //initialize to a known state.
-
-  keyboardstate.user1=0;   //initialize to a known state.  
-  keyboardstate.user2=0;   //initialize to a known state. 
-  keyboardstate.user3=0;   //initialize to a known state.
-
-  keyboardstate.helpmode = false;
-  keyboardstate.timestamp = millis();
-  keyboardstate.lastupdatetime = keyboardstate.timestamp;
-  keyboardstate.lastreporttime = 0;
-  keyboardstate.lastuseractiontime = 0;
-
-  keyboardstate.connectionState = CONNECTION_NONE;
-  keyboardstate.needReset = false;
-  keyboardstate.needUnpair = false;
-  keyboardstate.needFSReset = false;
-  keyboardstate.save2flash = false;
-
-}
-
-/**************************************************************************************************************************/
-void loadConfig()
-{
-  file.open(SETTINGS_FILE, FILE_O_READ);
-
-  if(file)
-  {
-    file.read(&keyboardconfig, sizeof(keyboardconfig));
-    file.close();
-  }
-  else
-  {
-    resetConfig();
-    saveConfig();
-  }
-
- if (keyboardconfig.version != BLUEMICRO_CONFIG_VERSION) // SETTINGS_FILE format changed. we need to reset and re-save it.
- {
-    resetConfig();
-    saveConfig();
- }
-}
-
-/**************************************************************************************************************************/
-void resetConfig()
-{
-  keyboardconfig.version=BLUEMICRO_CONFIG_VERSION;
-  keyboardconfig.pinPWMLED=BACKLIGHT_LED_PIN;
-  keyboardconfig.pinRGBLED=WS2812B_LED_PIN;
-  keyboardconfig.pinBLELED=STATUS_BLE_LED_PIN;  
-  keyboardconfig.pinKBLED=STATUS_KB_LED_PIN;
-
-  keyboardconfig.enablePWMLED=BACKLIGHT_PWM_ON;
-  keyboardconfig.enableRGBLED=WS2812B_LED_ON;
-  keyboardconfig.enableBLELED=BLE_LED_ACTIVE;
-  keyboardconfig.enableKBLED=STATUS_KB_LED_ACTIVE;
-
-  keyboardconfig.polarityBLELED=BLE_LED_POLARITY;
-  keyboardconfig.polarityKBLED=STATUS_KB_LED_POLARITY;
-
-  keyboardconfig.enableVCCSwitch=VCC_ENABLE_GPIO;
-  keyboardconfig.polarityVCCSwitch=VCC_DEFAULT_ON;
-
-  keyboardconfig.enableChargerControl=VCC_ENABLE_CHARGER;
-  keyboardconfig.polarityChargerControl=true;
-
-  #ifdef BLUEMICRO_CONFIGURED_DISPLAY
-    keyboardconfig.enableDisplay = true;// enabled if it's compiled with one...
-  #else
-    keyboardconfig.enableDisplay = false;// disabled if it's not compiled with one...
-  #endif
-
-  #ifdef SPEAKER_PIN
-    keyboardconfig.enableAudio = true;// enabled if it's compiled with one...
-  #else
-    keyboardconfig.enableAudio = false;// disabled if it's not compiled with one...
-  #endif
-
-  keyboardconfig.enableSerial = SERIAL_DEBUG_CLI_DEFAULT_ON;   
-
-  keyboardconfig.mode = 0; 
-  keyboardconfig.user1 = 0;  
-  keyboardconfig.user2 = 0; 
-
-  keyboardconfig.matrixscaninterval=HIDREPORTINGINTERVAL;
-  keyboardconfig.batteryinterval=BATTERYINTERVAL;
-  keyboardconfig.keysendinterval=HIDREPORTINGINTERVAL;
-  keyboardconfig.lowpriorityloopinterval=LOWPRIORITYLOOPINTERVAL;
-  keyboardconfig.lowestpriorityloopinterval = HIDREPORTINGINTERVAL*2;
-  keyboardconfig.connectionMode  = CONNECTION_MODE_AUTO;
-  keyboardconfig.BLEProfile = 0;
-  keyboardconfig.BLEProfileEdiv[0] = 0xFFFF;
-  keyboardconfig.BLEProfileEdiv[1] = 0xFFFF;
-  keyboardconfig.BLEProfileEdiv[2] = 0xFFFF;
-  memset(keyboardconfig.BLEProfileAddr[0], 0, 6);
-  memset(keyboardconfig.BLEProfileAddr[1], 0, 6);
-  memset(keyboardconfig.BLEProfileAddr[2], 0, 6);
-  strcpy(keyboardconfig.BLEProfileName[0], "unpaired");
-  strcpy(keyboardconfig.BLEProfileName[1], "unpaired");
-  strcpy(keyboardconfig.BLEProfileName[2], "unpaired");
-
-}
-
-/**************************************************************************************************************************/
-void saveConfig()
-{
-  InternalFS.remove(SETTINGS_FILE);
-
-  if (file.open(SETTINGS_FILE, FILE_O_WRITE))
-  {
-    file.write((uint8_t*)&keyboardconfig, sizeof(keyboardconfig));
-    file.close();
-  }
-}
 
 
 
@@ -182,107 +36,12 @@ void saveConfig()
 /**************************************************************************************************************************/
 // cppcheck-suppress unusedFunction
 void setup() {
-  bluemicro_hid.begin(); 
-  //usb_setup(); // does nothing for 832 - see usb.cpp // must be first in setup due to USB setup timing.
-  setupGpio();                                                                // checks that NFC functions on GPIOs are disabled.
-  setupWDT();
-  #ifdef BLUEMICRO_CONFIGURED_DISPLAY
-     OLED.begin();
-  #endif
- 
-  setupConfig();
-#ifdef ENABLE_AUDIO
- #ifdef SPEAKER_PIN
- speaker.setSpeakerPin(SPEAKER_PIN);
- #endif
- #endif
-
-  if (keyboardconfig.enableSerial) 
-  {
-  Serial.begin(115200);
-        Serial.println(" ____  _            __  __ _                   ____  _     _____ ");
-        Serial.println("| __ )| |_   _  ___|  \\/  (_) ___ _ __ ___    | __ )| |   | ____|");
-        Serial.println("|  _ \\| | | | |/ _ \\ |\\/| | |/ __| '__/ _ \\   |  _ \\| |   |  _|  ");
-        Serial.println("| |_) | | |_| |  __/ |  | | | (__| | | (_) |  | |_) | |___| |___ ");
-        Serial.println("|____/|_|\\__,_|\\___|_|  |_|_|\\___|_|  \\___/___|____/|_____|_____|");
-        Serial.println("                                         |_____|                 ");
-        Serial.println("");
-        Serial.println("Type 'h' to get a list of commands with descriptions");
-  }
- 
-  LOG_LV1("BLEMIC","Starting %s" ,DEVICE_NAME);
-
-  if(keyboardconfig.enableVCCSwitch)
-  {
-    switchVCC(keyboardconfig.polarityVCCSwitch); // turn on VCC when starting up if needed.
-  }
-
-  if(keyboardconfig.enableChargerControl)
-  {
-    switchCharger(keyboardconfig.polarityChargerControl); // turn on Charger when starting up if needed.
-  }
-
-  keyscantimer.begin(keyboardconfig.matrixscaninterval, keyscantimer_callback);
-  //batterytimer.begin(keyboardconfig.batteryinterval, batterytimer_callback);
-  
-  
-  //bt_setup(keyboardconfig.BLEProfile);
-  // Set up keyboard matrix and start advertising
-  setupKeymap(); // this is where we can change the callback for our LEDs...
-  setupMatrix();
-  //bt_startAdv(); 
-  keyscantimer.start();
-  //batterytimer.start();
-
-  stringbuffer.clear();
-  reportbuffer.clear();
-
-  if(keyboardconfig.enablePWMLED)
-  {
-    setupPWM(keyboardconfig.pinPWMLED); //PWM contributes 500uA to the bottom line on a 840 device. see https://devzone.nordicsemi.com/f/nordic-q-a/40912/pwm-power-consumption-nrf52840 (there is no electrical specification)
-  }
-
-  if(keyboardconfig.enableRGBLED)
-  {
-    setupRGB();//keyboardconfig.pinRGBLED
-  }
-
-  statusLEDs.enable();
-  statusLEDs.hello();  // blinks Status LEDs a couple as last step of setup.
-  Scheduler.startLoop(LowestPriorityloop, 1024, TASK_PRIO_LOWEST, "l1"); // this loop contains LED,RGB & PWM and Display updates.
-  //Scheduler.startLoop(NormalPriorityloop, 1024, TASK_PRIO_NORMAL, "n1"); // this has nothing in it...
-  #ifdef BLUEMICRO_CONFIGURED_DISPLAY
-    if(keyboardconfig.enableDisplay)
-    {
-      OLED.changeUpdateMode(DISPLAY_UPDATE_STATUS);
-    }
-    else
-    {
-      OLED.sleep();
-    }
-  #endif
-#ifdef ENABLE_AUDIO
-  speaker.playTone(TONE_STARTUP);
-  speaker.playTone(TONE_BLE_PROFILE);
-  #endif
-
+  addsetupcommands();
+  SORTCOMMANDS(commandList);
+  RUNCOMMANDS(setupQueue, commandList);
+  LOG_LV1("BLEMIC","Started %s" ,DEVICE_NAME); 
 };
-/**************************************************************************************************************************/
-//
-/**************************************************************************************************************************/
-void setupMatrix(void) {
-    //inits all the columns as INPUT
-   for (const auto& column : columns) {
-      LOG_LV2("BLEMIC","Setting to INPUT Column: %i" ,column);
-      pinMode(column, INPUT);
-    }
 
-   //inits all the rows as INPUT_PULLUP
-   for (const auto& row : rows) {
-      LOG_LV2("BLEMIC","Setting to INPUT_PULLUP Row: %i" ,row);
-      pinMode(row, INPUT_PULLUP);
-    }
-};
 /**************************************************************************************************************************/
 // Keyboard Scanning
 /**************************************************************************************************************************/
@@ -448,22 +207,22 @@ void process_keyboard_function(uint16_t keycode)
     break;
   case DFU:
   #ifdef ENABLE_AUDIO
-    speaker.playTone(TONE_SLEEP);
-    speaker.playAllQueuedTonesNow();
+   // speaker.playTone(TONE_SLEEP);
+  //  speaker.playAllQueuedTonesNow();
     #endif
     enterOTADfu();
     break;
   case SERIAL_DFU:
   #ifdef ENABLE_AUDIO
-    speaker.playTone(TONE_SLEEP);
-    speaker.playAllQueuedTonesNow();
+   // speaker.playTone(TONE_SLEEP);
+  //  speaker.playAllQueuedTonesNow();
     #endif
     enterSerialDfu();
     break;
   case UF2_DFU:
   #ifdef ENABLE_AUDIO
-    speaker.playTone(TONE_SLEEP);
-    speaker.playAllQueuedTonesNow();
+   // speaker.playTone(TONE_SLEEP);
+  //  speaker.playAllQueuedTonesNow();
     #endif
     enterUf2Dfu();
     break;
@@ -516,63 +275,63 @@ void process_keyboard_function(uint16_t keycode)
     if (keyboardstate.helpmode) {
       addStringToQueue("BL_TOGG");
     }
-    stepPWMMode();
+    //stepPWMMode();
     break;
   case BL_STEP: // step through modes
     if (keyboardstate.helpmode) {
       addStringToQueue("BL_STEP");
     }
-    stepPWMMode();
+    //stepPWMMode();
     break;
   case BL_ON:
     if (keyboardstate.helpmode) {
       addStringToQueue("BL_ON");
     }
-    setPWMMode(3);
-    PWMSetMaxVal();
+   // setPWMMode(3);
+   // PWMSetMaxVal();
     break;
   case BL_OFF:
     if (keyboardstate.helpmode) {
       addStringToQueue("BL_OFF");
     }
-    setPWMMode(0);
+   // setPWMMode(0);
     break;
   case BL_INC:
     if (keyboardstate.helpmode) {
       addStringToQueue("BL_INC");
     }
-    incPWMMaxVal();
+   // incPWMMaxVal();
     break;
   case BL_DEC:
     if (keyboardstate.helpmode) {
       addStringToQueue("BL_DEC");
     }
-    decPWMMaxVal();
+  //  decPWMMaxVal();
     break;
   case BL_BRTG:
     if (keyboardstate.helpmode) {
       addStringToQueue("BL_BRTG");
     }
-    setPWMMode(2);
+   // setPWMMode(2);
     break;
   case BL_REACT:
     if (keyboardstate.helpmode) {
       addStringToQueue("BL_REACT");
     }
-    setPWMMode(1);
-    PWMSetMaxVal();
+   // setPWMMode(1);
+  //  PWMSetMaxVal();
     break;
   case BL_STEPINC:
     if (keyboardstate.helpmode) {
       addStringToQueue("BL_STEPINC");
     }
-    incPWMStepSize();
+ //   incPWMStepSize();
     break;
   case BL_STEPDEC:
     if (keyboardstate.helpmode) {
       addStringToQueue("BL_STEPDEC");
     }
-    decPWMStepSize();
+  //  decPWMStepSize();
     break;
   case RGB_TOG:
     if (keyboardstate.helpmode) {
@@ -623,39 +382,39 @@ void process_keyboard_function(uint16_t keycode)
     if (keyboardstate.helpmode) {
       addStringToQueue("RGB_MODE_PLAIN");
     }
-    updateRGBmode(RGB_MODE_PLAIN);
+//    updateRGBmode(RGB_MODE_PLAIN);
     break;
     case RGB_MODE_BREATHE:
       if ( keyboardstate.helpmode) {addStringToQueue("RGB_MODE_BREATHE");}
-      updateRGBmode(RGB_MODE_BREATHE);
+    //  updateRGBmode(RGB_MODE_BREATHE);
       break;
     case RGB_MODE_RAINBOW:
       if ( keyboardstate.helpmode) {addStringToQueue("RGB_MODE_RAINBOW");}
-      updateRGBmode(RGB_MODE_RAINBOW);
+   //   updateRGBmode(RGB_MODE_RAINBOW);
       break;
     case RGB_MODE_SWIRL:
       if ( keyboardstate.helpmode) {addStringToQueue("RGB_MODE_SWIRL");}
-      updateRGBmode(RGB_MODE_SWIRL);
+    //  updateRGBmode(RGB_MODE_SWIRL);
       break;   
     case RGB_MODE_SNAKE:
       if ( keyboardstate.helpmode) {addStringToQueue("RGB_MODE_SNAKE");}
-      updateRGBmode(RGB_MODE_SNAKE);
+     // updateRGBmode(RGB_MODE_SNAKE);
       break;
     case RGB_MODE_KNIGHT:
       if ( keyboardstate.helpmode) {addStringToQueue("RGB_MODE_KNIGHT");}
-      updateRGBmode(RGB_MODE_KNIGHT);
+   //   updateRGBmode(RGB_MODE_KNIGHT);
       break;
     case RGB_MODE_XMAS:
       if ( keyboardstate.helpmode) {addStringToQueue("RGB_MODE_XMAS");}
-      updateRGBmode(RGB_MODE_XMAS);
+    //  updateRGBmode(RGB_MODE_XMAS);
       break;   
     case RGB_MODE_GRADIENT:
       if ( keyboardstate.helpmode) {addStringToQueue("RGB_MODE_GRADIENT");}
-      updateRGBmode(RGB_MODE_GRADIENT);
+     // updateRGBmode(RGB_MODE_GRADIENT);
       break;
     case RGB_MODE_RGBTEST:
       if ( keyboardstate.helpmode) {addStringToQueue("RGB_MODE_RGBTEST");}
-      updateRGBmode(RGB_MODE_RGBTEST);
+    //  updateRGBmode(RGB_MODE_RGBTEST);
       break;
     case RGB_SPI:
       if ( keyboardstate.helpmode) {addStringToQueue("RGB_SPI");}
@@ -1024,12 +783,14 @@ void sendKeyPresses() {
   #endif                                                                /**************************************************/
 }
 
-// keyscantimer is being called instead
+
+
 /**************************************************************************************************************************/
-void keyscantimer_callback(TimerHandle_t _handle) {
-  // timers have NORMAL priorities (HIGHEST>HIGH>NORMAL>LOW>LOWEST)
-  // since timers are repeated non stop, we dont want the duration of code running within the timer to vary and potentially
-  // go longer than the interval time.
+// put your main code here, to run repeatedly:
+/**************************************************************************************************************************/
+// cppcheck-suppress unusedFunction
+void loop() {  // has task priority TASK_PRIO_LOW     
+  updateWDT();
 
   #if MATRIX_SCAN == 1
     scanMatrix();
@@ -1064,25 +825,7 @@ void keyscantimer_callback(TimerHandle_t _handle) {
     }
   #endif
 
-}
-
-
-/**************************************************************************************************************************/
-// put your main code here, to run repeatedly:
-/**************************************************************************************************************************/
-// cppcheck-suppress unusedFunction
-void loop() {  // has task priority TASK_PRIO_LOW     
-  updateWDT();
   bluemicro_hid.processQueues(CONNECTION_MODE_AUTO);
-#ifdef ENABLE_AUDIO
-  speaker.processTones();
-#endif
-  if (keyboardconfig.enableSerial)
-  {
-    handleSerial();
-  }
-
-  
 
   // TODO: check for battery filtering when switching USB in/out
   // none of these things can be done in the timer event callbacks
@@ -1119,19 +862,12 @@ void loop() {  // has task priority TASK_PRIO_LOW
   }
   if (keyboardstate.needReset) NVIC_SystemReset(); // this reboots the keyboard.
 
-  delay (keyboardconfig.lowpriorityloopinterval);
-  
-};  // loop is called for serials comms and saving to flash.
-/**************************************************************************************************************************/
-void LowestPriorityloop()
-{ // this loop has LOWEST priority (HIGHEST>HIGH>NORMAL>LOW>LOWEST)
-  // it's setup to do 1 thing every call.  This way, we won't take too much time from keyboard functions.
   
   backgroundTaskID toprocess = BACKGROUND_TASK_NONE;
   
 
    keyboardstate.lastuseractiontime = max(KeyScanner::getLastPressed(),keyboardstate.lastuseractiontime); // use the latest time to check for sleep...
-   unsigned long timesincelastkeypress = keyboardstate.timestamp - KeyScanner::getLastPressed();
+//   unsigned long timesincelastkeypress = keyboardstate.timestamp - KeyScanner::getLastPressed();
 
  // updateBLEStatus(); TODO replace this
   
@@ -1189,16 +925,6 @@ switch (toprocess)
     break;
   case BACKGROUND_TASK_DISPLAY: 
        keyboardstate.displaytimer = keyboardstate.timestamp;
-       #ifdef BLUEMICRO_CONFIGURED_DISPLAY
-       if(keyboardconfig.enableDisplay)
-        {
-          OLED.update(); 
-        }
-        else
-        {
-          OLED.sleep();
-        }
-      #endif
     break;
   case BACKGROUND_TASK_STATUSLED: 
     keyboardstate.statusledtimer = keyboardstate.timestamp;
@@ -1206,14 +932,14 @@ switch (toprocess)
     break;
   case BACKGROUND_TASK_PWMLED: 
     keyboardstate.pwmledtimer = keyboardstate.timestamp;
-    updatePWM(timesincelastkeypress);
+   // updatePWM(timesincelastkeypress);
     break;
   case BACKGROUND_TASK_RGBLED: 
     keyboardstate.rgbledtimer = keyboardstate.timestamp;
-    updateRGB(timesincelastkeypress);
+   // updateRGB(timesincelastkeypress);
     break;
 }
-  delay(keyboardconfig.lowestpriorityloopinterval);              // wait not too long  
+  delay(keyboardconfig.lowpriorityloopinterval);              // wait not too long  
 }
 
 

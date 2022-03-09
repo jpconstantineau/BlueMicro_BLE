@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-#include "KeyScanner.h"
+#include "keyscanner.h"
 #include "advanced_keycodes.h"
 #include "hid_keycodes.h"
 

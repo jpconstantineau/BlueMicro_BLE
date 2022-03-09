@@ -4,7 +4,7 @@
 #include <array>
 #include <cstdint>
 
-#include "Key.h"
+#include "key.h"
 #include "keyboard_config.h"
 
 extern std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix;

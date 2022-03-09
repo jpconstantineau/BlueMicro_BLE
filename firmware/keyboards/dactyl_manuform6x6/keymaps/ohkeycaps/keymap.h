@@ -25,8 +25,8 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #include "hardware_variants.h"
 #include "keyboard_config.h"
 #include "advanced_keycodes.h"
-#include "KeyScanner.h"
-#include "Key.h"
+#include "keyscanner.h"
+#include "key.h"
 #include <array>
 
 // Layers Definitions

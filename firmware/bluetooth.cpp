@@ -1,22 +1,7 @@
-/*
-Copyright 2018-2021 <Pierre Constantineau>
+// SPDX-FileCopyrightText: 2018-2022 BlueMicro contributors (https://github.com/jpconstantineau/BlueMicro_BLE/graphs/contributors)
+//
+// SPDX-License-Identifier: BSD-3-Clause
 
-3-Clause BSD License
-
-Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
-
-1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-
-2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-
-3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR 
-A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-*/
 // To learn more about BLE, refer to https://learn.adafruit.com/introduction-to-bluetooth-low-energy/introduction
 
 #include "bluetooth.h"
@@ -257,10 +242,7 @@ void bt_startAdv(void)
   Bluefruit.Advertising.setStopCallback(advertizing_stop_callback);
 }
 
-void bt_stopAdv()
-{
-  Bluefruit.Advertising.stop();
-}
+
 
  // typedef void (*stop_callback_t) (void);
   //typedef void (*slow_callback_t) (void);
@@ -301,20 +283,6 @@ void rssi_changed_callback(uint16_t conn_hdl, int8_t rssi)
      
 }
 
-void updateBLEStatus(void)
-{
-  keyboardstate.statusble = 0;
-  if (Bluefruit.Advertising.isRunning())
-  { 
-    keyboardstate.statusble = keyboardstate.statusble | (4); // bitwise OR
-  }
-    if (Bluefruit.connected()>0)
-  { 
-    keyboardstate.statusble = keyboardstate.statusble | (32); // bitwise OR
-  }
-
-
-}
 
 /**************************************************************************************************************************/
 // This callback is called when a Notification update even occurs (This occurs on the client)
@@ -423,14 +391,7 @@ strcpy (keyboardstate.peer_name_prph,peer_name);
     strncpy(keyboardconfig.BLEProfileName[keyboardconfig.BLEProfile], peer_name, sizeof(peer_name));
     keyboardstate.save2flash = true;
   }
-#ifdef ARDUINO_NRF52_COMMUNITY
-  uint16_t ediv = connection->getEdiv();
-  if (ediv != keyboardconfig.BLEProfileEdiv[keyboardconfig.BLEProfile])
-  {
-    keyboardconfig.BLEProfileEdiv[keyboardconfig.BLEProfile] = ediv;
-    keyboardstate.save2flash = true;
-  }
-#endif
+
 #ifdef ARDUINO_NRF52_ADAFRUIT
   ble_gap_addr_t peerAddr;
   peerAddr = connection->getPeerAddr();
@@ -564,152 +525,6 @@ void set_keyboard_led(uint16_t conn_handle, uint8_t led_bitmap)
   //KeyScanner::ledStatus = led_bitmap;
 }
 
-bool bt_isConnected()
-{
-  return Bluefruit.connected();
-}
 
-void bt_disconnect()
-{
-  #if BLE_HID == 1
-  Bluefruit.disconnect(hid_conn_hdl);
-  #endif
-}
 
-/**************************************************************************************************************************/
-void sendlayer(uint8_t layer)
-{     
-        #if BLE_CENTRAL ==1
-        LOG_LV1("CENTRAL","Sending Layer %i  %i" ,millis(),layer );
-        if (KBLinkClientChar_Layer_Request.discovered()) {
-          statedata.layer =layer;
-          uint16_t msg = KBLinkClientChar_Layer_Request.write_resp(&statedata, sizeof(statedata));       // Central->Peripheral uses the write mechanism
-          LOG_LV1("CENTRAL","Sending Layer results  %i" ,msg);
-        } else
-        {
-          LOG_LV1("CENTRAL","Sending Layer failed KBLinkClientChar_Layer_Request.discover() not true ");
-        }
-        #endif 
-}
-/**************************************************************************************************************************/
-void bt_sendKeys(HIDKeyboard currentReport)
-{
 
-      #if BLE_HID == 1  
-        uint8_t keycode[6];
-        uint8_t mods = 0;
-        mods = currentReport.modifier;                                                 // modifiers
-        keycode[0] = currentReport.keycode[0];                                           // Buffer 
-        keycode[1] = currentReport.keycode[1];                                           // Buffer 
-        keycode[2] = currentReport.keycode[2];                                           // Buffer 
-        keycode[3] = currentReport.keycode[3];                                           // Buffer 
-        keycode[4] = currentReport.keycode[4];                                           // Buffer 
-        keycode[5] = currentReport.keycode[5];                                           // Buffer 
-        blehid.keyboardReport(hid_conn_hdl,mods,  keycode); 
-        LOG_LV2("HID","Sending blehid.keyboardReport " );
-    #endif
-    #if BLE_PERIPHERAL ==1    // PERIPHERAL IS THE SLAVE BOARD
-          Linkdata.modifier =currentReport.modifier;  // initialize the slave to master link data...
-          Linkdata.keycode[0] =currentReport.keycode[0];
-          Linkdata.keycode[1] =currentReport.keycode[1];
-          Linkdata.keycode[2] =currentReport.keycode[2];
-          Linkdata.keycode[3] =currentReport.keycode[3];
-          Linkdata.keycode[4] =currentReport.keycode[4];
-          Linkdata.keycode[5] =currentReport.keycode[5];
-          Linkdata.layer =currentReport.layer;
-          //Linkdata.command = 0;
-          //Linkdata.timesync = 0;
-          Linkdata.specialkeycode = 0;
-          Linkdata.batterylevel = batterymonitor.vbat_per;
-          LOG_LV1("KB-P2C"," KBLinkChar_Buffer.notify sendKeys sending %i [1] %i",sizeof(Linkdata),Linkdata.keycode[0]);
-          KBLinkChar_Buffer.notify(&Linkdata, sizeof(Linkdata));    
-    #endif
-    #if BLE_CENTRAL ==1      // CENTRAL IS THE MASTER BOARD
-         ; // Don't send keys to slaves
-    #endif 
-
-}
-
-/**************************************************************************************************************************/
-#ifndef MOVE_STEP
-  #define MOVE_STEP   8
-#endif
-void bt_sendMouseKey(uint16_t keycode)
-{
-  static uint8_t movestep = MOVE_STEP;
-
-  #if BLE_HID == 1
-  switch (keycode) 
-  {
-    case KC_MS_OFF:   blehid.mouseButtonRelease(hid_conn_hdl); break;
-    case KC_MS_UP:    blehid.mouseMove(hid_conn_hdl, 0, -movestep); break;
-    case KC_MS_DOWN:  blehid.mouseMove(hid_conn_hdl, 0,  movestep); break;
-    case KC_MS_LEFT:  blehid.mouseMove(hid_conn_hdl, -movestep, 0); break;
-    case KC_MS_RIGHT: blehid.mouseMove(hid_conn_hdl,  movestep, 0); break;
-
-    case KC_MS_ACCEL0: movestep = MOVE_STEP/MOVE_STEP; break;
-    case KC_MS_ACCEL1: movestep = MOVE_STEP; break;
-    case KC_MS_ACCEL2: movestep = MOVE_STEP+MOVE_STEP; break;
-
-    case KC_MS_BTN1:  blehid.mouseButtonPress(hid_conn_hdl, MOUSE_BUTTON_LEFT); break;
-    case KC_MS_BTN2:  blehid.mouseButtonPress(hid_conn_hdl, MOUSE_BUTTON_RIGHT); break;
-    case KC_MS_BTN3:  blehid.mouseButtonPress(hid_conn_hdl, MOUSE_BUTTON_MIDDLE); break;
-    case KC_MS_BTN4:  blehid.mouseButtonPress(hid_conn_hdl, MOUSE_BUTTON_BACKWARD); break;
-    case KC_MS_BTN5:  blehid.mouseButtonPress(hid_conn_hdl, MOUSE_BUTTON_FORWARD); break;
-
-    case KC_MS_WH_UP: blehid.mouseScroll(hid_conn_hdl,  -1); break;
-    case KC_MS_WH_DOWN: blehid.mouseScroll(hid_conn_hdl, 1); break;
-    case KC_MS_WH_LEFT: blehid.mousePan(hid_conn_hdl,   -1); break;
-    case KC_MS_WH_RIGHT: blehid.mousePan(hid_conn_hdl,   1); break;
-  }
-  #endif
-      #if BLE_PERIPHERAL ==1    // PERIPHERAL IS THE SLAVE BOARD
-          Linkdata.keycode[0] = 0;  // initialize the slave to master link data...
-          Linkdata.keycode[1] = 0;
-          Linkdata.keycode[2] = 0;
-          Linkdata.keycode[3] = 0;
-          Linkdata.keycode[4] = 0;
-          Linkdata.keycode[5] = 0;
-          Linkdata.modifier = 0;
-          Linkdata.layer = 0;
-          //Linkdata.command = 0;
-          //Linkdata.timesync = 0;
-          Linkdata.specialkeycode = keycode;
-          Linkdata.batterylevel = batterymonitor.vbat_per;
-          LOG_LV1("KB-P2C"," KBLinkChar_Buffer.notify sendMouseKey");
-          KBLinkChar_Buffer.notify(&Linkdata, sizeof(Linkdata));    
-    #endif
-    #if BLE_CENTRAL ==1      // CENTRAL IS THE MASTER BOARD
-         ; // Don't send keys to slaves
-    #endif 
-}
-/**************************************************************************************************************************/
-void bt_sendMediaKey(uint16_t keycode)
-{
-  #if BLE_HID == 1
-    //blehid.consumerKeyPress(hid_conn_hdl, hid_GetMediaUsageCode(keycode));
-    bluemicro_hid.consumerKeyPress(keycode); //TODO teeest cosumeeer codes
-    delay(HIDREPORTINGINTERVAL);
-    bluemicro_hid.consumerKeyRelease();
-  #endif 
-        #if BLE_PERIPHERAL ==1    // PERIPHERAL IS THE SLAVE BOARD
-          Linkdata.keycode[0] = 0;  // initialize the slave to master link data...
-          Linkdata.keycode[1] = 0;
-          Linkdata.keycode[2] = 0;
-          Linkdata.keycode[3] = 0;
-          Linkdata.keycode[4] = 0;
-          Linkdata.keycode[5] = 0;
-          Linkdata.layer = 0;
-          Linkdata.modifier = 0;
-          //Linkdata.command = 0;
-          //Linkdata.timesync = 0;
-          Linkdata.specialkeycode = keycode;
-          Linkdata.batterylevel = batterymonitor.vbat_per;
-          LOG_LV1("KB-P2C"," KBLinkChar_Buffer.notify sendMediaKey");
-          KBLinkChar_Buffer.notify(&Linkdata, sizeof(Linkdata));    
-    #endif
-    #if BLE_CENTRAL ==1      // CENTRAL IS THE MASTER BOARD
-         ; // Don't send keys to slaves
-    #endif 
-}
-/**************************************************************************************************************************/
