@@ -10,6 +10,7 @@ commandqueue_t setupQueue;
 commandqueue_t commandQueue;
 commandqueue_t loopQueue;
 
+
 using namespace Adafruit_LittleFS_Namespace;
 #define SETTINGS_FILE "/settings"
 File file(InternalFS);
@@ -479,27 +480,127 @@ void setbleprofile3()
       }
 }
 
+
+
+
+
+void process_user_special_keys_command()
+{
+  uint8_t mods = KeyScanner::currentReport.modifier ;
+          LOG_LV1("SPECIAL","PROCESS: %i %i %i %i %i %i %i %i %i" ,KeyScanner::special_key,mods, KeyScanner::currentReport.keycode[0],KeyScanner::currentReport.keycode[1],KeyScanner::currentReport.keycode[2], KeyScanner::currentReport.keycode[3],KeyScanner::currentReport.keycode[4], KeyScanner::currentReport.keycode[5],KeyScanner::bufferposition );  
+
+        switch (mods)
+        {
+          case 0:          KeyScanner::currentReport.keycode[KeyScanner::bufferposition] = KC_ESC;   KeyScanner::reportChanged = true; break;
+          case BIT_LCTRL:  KeyScanner::currentReport.keycode[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::reportChanged = true; KeyScanner::currentReport.modifier  = 0; break;
+          case BIT_LSHIFT: KeyScanner::currentReport.keycode[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::reportChanged = true; KeyScanner::currentReport.modifier  = BIT_LSHIFT; break;
+          case BIT_LALT:   KeyScanner::currentReport.keycode[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::reportChanged = true; KeyScanner::currentReport.modifier  = 0; break;
+          case BIT_LGUI:   KeyScanner::currentReport.keycode[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::reportChanged = true; KeyScanner::currentReport.modifier  = 0; break;
+          case BIT_RCTRL:  KeyScanner::currentReport.keycode[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::reportChanged = true; KeyScanner::currentReport.modifier  = 0; break;
+          case BIT_RSHIFT: KeyScanner::currentReport.keycode[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::reportChanged = true; KeyScanner::currentReport.modifier  = 0; break;
+          case BIT_RALT:   KeyScanner::currentReport.keycode[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::reportChanged = true; KeyScanner::currentReport.modifier  = 0; break;
+          case BIT_RGUI:   KeyScanner::currentReport.keycode[KeyScanner::bufferposition] = KC_GRAVE; KeyScanner::reportChanged = true; KeyScanner::currentReport.modifier  = 0; break;
+        }  
+}
+
+
+
+
+
 void addkeyboardcommands()
 {
-  SETUPCOMMAND(commandList,  RESET, NVIC_SystemReset() );
-  SETUPCOMMAND(commandList,  DEBUG, toggleserial() );
-  SETUPCOMMAND(commandList,  EEPROM_RESET, {keyboardstate.needFSReset = true;} );
-  SETUPCOMMAND(commandList,  CLEAR_BONDS,clearbonds());
-  SETUPCOMMAND(commandList,  DFU, enterOTADfu());
-  SETUPCOMMAND(commandList,  SERIAL_DFU, enterSerialDfu());
-  SETUPCOMMAND(commandList,  UF2_DFU, enterUf2Dfu() );
-  SETUPCOMMAND(commandList,  HELP_MODE, togglehelpmode());
-  SETUPCOMMAND(commandList,  OUT_AUTO,automode());
-  SETUPCOMMAND(commandList,  OUT_USB, usbmode());
-  SETUPCOMMAND(commandList,  OUT_BT,blemode());
-  SETUPCOMMAND(commandList,  PRINT_BATTERY, printbattery());
-  SETUPCOMMAND(commandList,  PRINT_INFO, printinfo());
-  SETUPCOMMAND(commandList,  PRINT_BLE, printble());
-  SETUPCOMMAND(commandList,  PRINT_HELP, printhelp());
-  SETUPCOMMAND(commandList,  SLEEP_NOW, sleepnow());
-  SETUPCOMMAND(commandList,  BATTERY_CALC_DEFAULT, setdefaultbatterycalc());
-  SETUPCOMMAND(commandList,  BATTERY_CALC_TEST, settestbatterycalc());
-  SETUPCOMMAND(commandList,  BLEPROFILE_1, setbleprofile1());
-  SETUPCOMMAND(commandList,  BLEPROFILE_2, setbleprofile2());
-  SETUPCOMMAND(commandList,  BLEPROFILE_3, setbleprofile3());
+    SETUPCOMMAND(commandList,  RESET, NVIC_SystemReset() );
+    SETUPCOMMAND(commandList,  DEBUG, toggleserial() );
+    SETUPCOMMAND(commandList,  EEPROM_RESET, {keyboardstate.needFSReset = true;} );
+    SETUPCOMMAND(commandList,  CLEAR_BONDS,clearbonds());
+    SETUPCOMMAND(commandList,  DFU, enterOTADfu());
+    SETUPCOMMAND(commandList,  SERIAL_DFU, enterSerialDfu());
+    SETUPCOMMAND(commandList,  UF2_DFU, enterUf2Dfu() );
+    SETUPCOMMAND(commandList,  HELP_MODE, togglehelpmode());
+    SETUPCOMMAND(commandList,  OUT_AUTO,automode());
+    SETUPCOMMAND(commandList,  OUT_USB, usbmode());
+    SETUPCOMMAND(commandList,  OUT_BT,blemode());
+    SETUPCOMMAND(commandList,  PRINT_BATTERY, printbattery());
+    SETUPCOMMAND(commandList,  PRINT_INFO, printinfo());
+    SETUPCOMMAND(commandList,  PRINT_BLE, printble());
+    SETUPCOMMAND(commandList,  PRINT_HELP, printhelp());
+    SETUPCOMMAND(commandList,  SLEEP_NOW, sleepnow());
+    SETUPCOMMAND(commandList,  BATTERY_CALC_DEFAULT, setdefaultbatterycalc());
+    SETUPCOMMAND(commandList,  BATTERY_CALC_TEST, settestbatterycalc());
+    SETUPCOMMAND(commandList,  BLEPROFILE_1, setbleprofile1());
+    SETUPCOMMAND(commandList,  BLEPROFILE_2, setbleprofile2());
+    SETUPCOMMAND(commandList,  BLEPROFILE_3, setbleprofile3());
+
+    SETUPCOMMAND(commandList,  WIN_A_GRAVE, EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_2, KC_KP_4));  //Alt 0224 a grave
+
+    SETUPCOMMAND(commandList,   WIN_A_ACUTE, EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_2, KC_KP_5) ); //Alt 0225 a acute
+    SETUPCOMMAND(commandList,   WIN_A_CIRCU, EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_2, KC_KP_6) );  //Alt 0226 a circumflex
+    SETUPCOMMAND(commandList,   WIN_A_TILDE, EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_2, KC_KP_7) );  //Alt 0227 a tilde
+    SETUPCOMMAND(commandList,   WIN_A_UMLAU, EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_2, KC_KP_8) );  //Alt 0228 a umlaut
+
+    SETUPCOMMAND(commandList,   WIN_A_GRAVE_CAP, EXPAND_ALT_CODE(KC_KP_0, KC_KP_1, KC_KP_9, KC_KP_2) );  //Alt 0192 A grave
+    SETUPCOMMAND(commandList,   WIN_A_ACUTE_CAP, EXPAND_ALT_CODE(KC_KP_0, KC_KP_1, KC_KP_9, KC_KP_3) );  //Alt 0193 A acute
+    SETUPCOMMAND(commandList,   WIN_A_CIRCU_CAP, EXPAND_ALT_CODE(KC_KP_0, KC_KP_1, KC_KP_9, KC_KP_4) );  //Alt 0194 A circumflex
+    SETUPCOMMAND(commandList,   WIN_A_TILDE_CAP, EXPAND_ALT_CODE(KC_KP_0, KC_KP_1, KC_KP_9, KC_KP_5) );  //Alt 0195 A tilde
+    SETUPCOMMAND(commandList,   WIN_A_UMLAU_CAP, EXPAND_ALT_CODE(KC_KP_0, KC_KP_1, KC_KP_9, KC_KP_6) );  //Alt 0196 A umlaut
+
+    SETUPCOMMAND(commandList,   WIN_C_CEDIL, EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_3, KC_KP_1) );  //Alt 0231 c cedilla
+    SETUPCOMMAND(commandList,   WIN_C_CEDIL_CAP, EXPAND_ALT_CODE(KC_KP_0, KC_KP_1, KC_KP_9, KC_KP_9) ); //Alt 0199 C cedilla
+
+    SETUPCOMMAND(commandList,   WIN_E_GRAVE, EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_3, KC_KP_2) ); 
+    SETUPCOMMAND(commandList,   WIN_E_ACUTE, EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_3, KC_KP_3) ); 
+    SETUPCOMMAND(commandList,   WIN_E_CIRCU, EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_3, KC_KP_4) ); 
+    SETUPCOMMAND(commandList,   WIN_E_UMLAU, EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_3, KC_KP_5) ); 
+
+    SETUPCOMMAND(commandList,    WIN_I_GRAVE, EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_3, KC_KP_6) ); //Alt 0236 i grave
+    SETUPCOMMAND(commandList,    WIN_I_ACUTE, EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_3, KC_KP_7) ); //Alt 0237 i acute
+    SETUPCOMMAND(commandList,    WIN_I_CIRCU, EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_3, KC_KP_8) ); //Alt 0238 i circumflex
+    SETUPCOMMAND(commandList,    WIN_I_UMLAU, EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_3, KC_KP_9) );  //Alt 0239 i umlaut
+
+    SETUPCOMMAND(commandList,    WIN_I_GRAVE_CAP, EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_0, KC_KP_4) ); //Alt 0204 I grave
+    SETUPCOMMAND(commandList,    WIN_I_ACUTE_CAP, EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_0, KC_KP_5) );  //Alt 0205 I acute
+    SETUPCOMMAND(commandList,    WIN_I_CIRCU_CAP, EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_0, KC_KP_6) );  //Alt 0206 I circumflex
+    SETUPCOMMAND(commandList,    WIN_I_UMLAU_CAP, EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_0, KC_KP_7) ); //Alt 0207 I umlaut
+
+    SETUPCOMMAND(commandList,    WIN_N_TILDE, EXPAND_ALT_CODE(KC_KP_0, KC_KP_1, KC_KP_6, KC_KP_4) ); //Alt 164 n tilde
+    SETUPCOMMAND(commandList,    WIN_N_TILDE_CAP, EXPAND_ALT_CODE(KC_KP_0, KC_KP_1, KC_KP_6, KC_KP_5) );  //Alt 165 N tilde
+
+    SETUPCOMMAND(commandList,    WIN_O_GRAVE, EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_4, KC_KP_2) );  //Alt 0242 o grave
+    SETUPCOMMAND(commandList,    WIN_O_ACUTE, EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_4, KC_KP_3) );  //Alt 0243 o acute
+    SETUPCOMMAND(commandList,    WIN_O_CIRCU, EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_4, KC_KP_4) );  //Alt 0244 o circumflex
+    SETUPCOMMAND(commandList,    WIN_O_TILDE, EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_4, KC_KP_5) );   //Alt 0245 o tilde
+    SETUPCOMMAND(commandList,    WIN_O_UMLAU, EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_4, KC_KP_6) );   //Alt 0246 o umlaut
+
+    SETUPCOMMAND(commandList,    WIN_O_GRAVE_CAP, EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_1, KC_KP_0) );  //Alt 0210 O grave
+    SETUPCOMMAND(commandList,    WIN_O_ACUTE_CAP, EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_1, KC_KP_1) );  //Alt 0211 O acute
+    SETUPCOMMAND(commandList,    WIN_O_CIRCU_CAP, EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_1, KC_KP_2) ); //Alt 0212 O circumflex
+    SETUPCOMMAND(commandList,    WIN_O_TILDE_CAP, EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_1, KC_KP_3) );  //Alt 0213 O tilde
+    SETUPCOMMAND(commandList,    WIN_O_UMLAU_CAP, EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_1, KC_KP_4) );  //Alt 0214 O umlaut
+
+    SETUPCOMMAND(commandList,    WIN_S_CARON, EXPAND_ALT_CODE(KC_KP_0, KC_KP_1, KC_KP_5, KC_KP_4) );  //Alt 0154 s caron
+    SETUPCOMMAND(commandList,    WIN_S_CARON_CAP, EXPAND_ALT_CODE(KC_KP_0, KC_KP_1, KC_KP_3, KC_KP_8) );   //Alt 0138 S caron
+
+    SETUPCOMMAND(commandList,   WIN_U_GRAVE, EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_4, KC_KP_9) );   //Alt 0249 u grave
+    SETUPCOMMAND(commandList,   WIN_U_ACUTE, EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_5, KC_KP_0) );  //Alt 0250 u acute
+    SETUPCOMMAND(commandList,   WIN_U_CIRCU, EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_5, KC_KP_1) );  //Alt 0251 u circumflex
+    SETUPCOMMAND(commandList,   WIN_U_UMLAU, EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_5, KC_KP_2) ); //Alt 0252 u umlaut
+
+    SETUPCOMMAND(commandList,   WIN_U_GRAVE_CAP, EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_1, KC_KP_1) );  //Alt 0217 U grave
+    SETUPCOMMAND(commandList,   WIN_U_ACUTE_CAP, EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_1, KC_KP_8) ); //Alt 0218  U acute
+    SETUPCOMMAND(commandList,   WIN_U_CIRCU_CAP, EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_1, KC_KP_9) ); //Alt 0219 U circumflex
+    SETUPCOMMAND(commandList,   WIN_U_UMLAU_CAP, EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_2, KC_KP_0) );  //Alt 0220 U umlaut
+
+    SETUPCOMMAND(commandList,    WIN_Y_ACUTE, EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_5, KC_KP_3) );  //Alt 0253 y acute
+    SETUPCOMMAND(commandList,    WIN_Y_UMLAU, EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_5, KC_KP_5) );  //Alt 0255 y umlaut
+
+    SETUPCOMMAND(commandList,    WIN_Y_ACUTE_CAP, EXPAND_ALT_CODE(KC_KP_0, KC_KP_2, KC_KP_2, KC_KP_1) );  //Alt 0221 Y tilde
+    SETUPCOMMAND(commandList,    WIN_Y_UMLAU_CAP, EXPAND_ALT_CODE(KC_KP_0, KC_KP_1, KC_KP_5, KC_KP_9) );   //Alt 0159 Y umlaut
+
+    SETUPCOMMAND(commandList,    WIN_Z_CARON, EXPAND_ALT_CODE(KC_KP_0, KC_KP_1, KC_KP_5, KC_KP_4) );  //Alt 0154 z caron
+    SETUPCOMMAND(commandList,    WIN_Z_CARON_CAP, EXPAND_ALT_CODE(KC_KP_0, KC_KP_1, KC_KP_3, KC_KP_8) );   //Alt 0138 Z caron
+
+    SETUPCOMMAND(commandList,   SYM_DEGREE, EXPAND_ALT_CODE(KC_KP_0, KC_KP_1, KC_KP_7, KC_KP_6) ); // Alt 0176 degree symbol   
+    SETUPCOMMAND(commandList,   KS(KC_ESC), process_user_special_keys_command());
+
+
 }

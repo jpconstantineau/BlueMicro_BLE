@@ -19,18 +19,10 @@
 
 #include "combo_engine.h"
 
+#include "firmware_loop.h"
 
 
-    void scanMatrix(void);
-    void sendKeyPresses(void);
-    void addStringToQueue(const char* str);
-    void UpdateQueue(void);
-    void addKeycodeToQueue(const uint16_t keycode);
-    void addKeycodeToQueue(const uint16_t keycode, const uint8_t modifier);
-    void process_keyboard_function(uint16_t keycode);
-    #ifndef USER_MACRO_FUNCTION  
-    #define USER_MACRO_FUNCTION 1  
-    void process_user_macros(uint16_t macroid);
-    #endif
+
+
 
 #endif /* FIRMWARE_H */
