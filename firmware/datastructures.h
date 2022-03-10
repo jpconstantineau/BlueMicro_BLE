@@ -129,70 +129,9 @@ typedef struct {
 
 } DynamicState; // meant for keyboard and BLE status and things that are dynamic and should not be stored in flash.
 
-// TODO: Add the structures and function definitions for keycode buffer for user processing
 
 typedef void (*ledupdateCallback)(PersistentState *config, DynamicState *status);
 typedef void (*updateDisplay_cb_t)(PersistentState *cfg, DynamicState *stat);
 
-//enum connectionState { CONNECTION_NONE, CONNECTION_USB, CONNECTION_BT };
 
-//enum connectionMode { CONNECTION_MODE_AUTO, CONNECTION_MODE_USB_ONLY, CONNECTION_MODE_BLE_ONLY };
-
-enum backgroundTaskID {
-  BACKGROUND_TASK_NONE,
-  BACKGROUND_TASK_AUDIO,
-  BACKGROUND_TASK_BATTERY,
-  BACKGROUND_TASK_DISPLAY,
-  BACKGROUND_TASK_STATUSLED,
-  BACKGROUND_TASK_PWMLED,
-  BACKGROUND_TASK_RGBLED
-};
-/*
-struct HIDKeyboard {
-    uint8_t modifier;
-    uint8_t keycode[6];
-    uint16_t layer; 
-
-    bool operator!= (const HIDKeyboard &c2)
-    {
-          return !(*this == c2); 
-    }
-
-    inline bool operator== (const HIDKeyboard &c2)
-    {
-          return  (keycode[0]==c2.keycode[0]) &&
-                  (modifier==c2.modifier    ) &&
-                  (layer==c2.layer          ) &&
-                  (keycode[1]==c2.keycode[1]) &&
-                  (keycode[2]==c2.keycode[2]) &&
-                  (keycode[3]==c2.keycode[3]) &&
-                  (keycode[4]==c2.keycode[4]) &&
-                  (keycode[5]==c2.keycode[5]) ;
-              
-    }
-
-  } ;
-
-*/
-
-
-/*
-typedef struct {
-    uint8_t buttons; 
-    int8_t x; 
-    int8_t y;
-    int8_t wheel; 
-    int8_t pan;
-  } HIDMouse;
-
-typedef struct {
-    uint16_t usage_code;
-  } HIDConsumer;
-
-typedef struct {
-  HIDKeyboard keyboard;
-  HIDMouse mouse;
-  HIDConsumer consumer;
-  } HIDMessages; 
-*/
 #endif

@@ -31,7 +31,7 @@ extern  led_handler statusLEDs;  /// Typically a Blue LED and a Red LED
     void UpdateQueue(void);
     void addKeycodeToQueue(const uint16_t keycode);
     void addKeycodeToQueue(const uint16_t keycode, const uint8_t modifier);
-    void process_keyboard_function(uint16_t keycode);
+
     void checkforsleep(void);
     #ifndef USER_MACRO_FUNCTION  
     #define USER_MACRO_FUNCTION 1  

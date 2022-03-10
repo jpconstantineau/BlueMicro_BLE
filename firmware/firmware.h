@@ -16,13 +16,7 @@
 #include "nrf52battery.h"
 #include "nrf52gpio.h"
 #include "datastructures.h"
-
 #include "combo_engine.h"
-
 #include "firmware_loop.h"
-
-
-
-
 
 #endif /* FIRMWARE_H */

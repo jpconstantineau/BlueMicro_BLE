@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: BSD-3-Clause
 
 #include <cstdint>
-
+#include "command_queues.h"
 #ifndef ADVANCED_KEYCODES_H
 #define ADVANCED_KEYCODES_H
 
@@ -41,6 +41,7 @@ enum class Duration {
 #define KS(KC) (((uint16_t) KC << 8 ) | KC_RESERVED_AA )             // move KC to upper 8 bits and use KC_RESERVED_AA keycode for marking this as a special key.
 #define KI(KC) (((uint16_t) KC << 8 ) | KC_RESERVED_AB )             // move KC to upper 8 bits and use KC_RESERVED_AB keycode for marking this as a macro for international/special characters (ALT-0233 = é).
 #define KINT(KC) (((uint16_t) KC << 8 ) | KC_RESERVED_AE )             // Internal Keyboard Functions
+
 #define TG(KC) ((static_cast<int>(Duration::TOGGLE) << 16) | KC)
 #define OS(KC) ((static_cast<int>(Duration::ONE_SHOT) << 16) | KC)
 #define MAC(KC) ((static_cast<int>(Duration::ONE_SHOT) << 16) |  (KC << 8 ) | KC_RESERVED_A5)
@@ -87,5 +88,39 @@ enum class Duration {
 #define LGUI(KEY) MOD(MOD_LGUI, KEY)
 #define RGUI(KEY) MOD(MOD_RGUI, KEY)
 
+
+#define SETUP_HID       COMMANDID(0)
+#define SETUP_GPIO      COMMANDID(1) 
+#define SETUP_WDT       COMMANDID(2)
+#define SETUP_SERIAL    COMMANDID(3)
+#define SETUP_VCCSWITCH COMMANDID(4) 
+#define SETUP_CHARGER   COMMANDID(5) 
+#define SETUP_KEYMAP    COMMANDID(6) 
+#define SETUP_MATRIX    COMMANDID(7) 
+
+#define LED_ENABLE      COMMANDID(9)
+#define LED_HELLO       COMMANDID(10)
+#define LED_UPDATE      COMMANDID(11)
+
+#define PROCESSS_WDT    COMMANDID(12)
+#define PROCESSS_MATRIX COMMANDID(13)
+#define UPDATE_KEYS     COMMANDID(14)
+#define RENDER_HID      COMMANDID(15)
+#define RENDER_SLEEP    COMMANDID(16)
+#define UPDATE_UNPAIR   COMMANDID(17)
+#define RENDER_UNPAIR   COMMANDID(18)
+#define UPDATE_SAVE     COMMANDID(19)
+#define RENDER_SAVE     COMMANDID(20)
+#define UPDATE_FORMAT   COMMANDID(21)
+#define RENDER_FORMAT   COMMANDID(22)
+#define UPDATE_REBOOT   COMMANDID(23)
+#define RENDER_REBOOT   COMMANDID(24)
+#define BATTERY_UPDATE  COMMANDID(25)
+
+#define CLEAR_STRINGBUFFER    COMMANDID(252)
+#define CLEAR_REPORTBUFFER    COMMANDID(253)
+
+#define RUN_COMMAND_QUEUE   COMMANDID(254)
+#define CLEAR_COMMAND_QUEUE COMMANDID(255)
 
 #endif

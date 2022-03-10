@@ -13,15 +13,6 @@
 
 ComboEngine::ComboEngine()
 {
- /*combolist = {};
- monolist = {}; 
- substlist = {};
- macrolist = {};
- activecombos = {};
- activesubst = {};
- keycodesused_multi = {};
- keycodesused_single = {};
- keycodebuffertosend = {};*/ // these get initialized with empty vectors anyways...
  activemacrosent= false;
  activecomboscount = 0;
  activesubstcount = 0;

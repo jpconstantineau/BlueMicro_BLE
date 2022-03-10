@@ -10,6 +10,13 @@ commandqueue_t setupQueue;
 commandqueue_t commandQueue;
 commandqueue_t loopQueue;
 
+PersistentState keyboardconfig;
+DynamicState keyboardstate;
+
+led_handler statusLEDs(&keyboardconfig, &keyboardstate);  /// Typically a Blue LED and a Red LED
+KeyScanner keys(&keyboardconfig, &keyboardstate);
+Battery batterymonitor;
+
 
 using namespace Adafruit_LittleFS_Namespace;
 #define SETTINGS_FILE "/settings"
@@ -180,40 +187,42 @@ void setupMatrix(void) {
 
 void addsetupcommands()
 {
-  SETUPCOMMAND(commandList, COMMANDID(0) , setuphid());
-  ADDCOMMAND(setupQueue, COMMANDID(0));
-  SETUPCOMMAND(commandList, COMMANDID(1) , setupnrf52());
-  ADDCOMMAND(setupQueue, COMMANDID(1));
-  SETUPCOMMAND(commandList, COMMANDID(2) , serialsplash());
+  SETUPCOMMAND(commandList, SETUP_HID , setuphid());
+  ADDCOMMAND(setupQueue, SETUP_HID );
+  SETUPCOMMAND(commandList, SETUP_GPIO , setupGpio());
+  ADDCOMMAND(setupQueue, SETUP_GPIO );
+  SETUPCOMMAND(commandList, SETUP_WDT , setupWDT());
+  ADDCOMMAND(setupQueue, SETUP_WDT );
+  SETUPCOMMAND(commandList, SETUP_SERIAL, serialsplash());
   if (keyboardconfig.enableSerial) 
   {
-    ADDCOMMAND(setupQueue, COMMANDID(2));
+    ADDCOMMAND(setupQueue, SETUP_SERIAL);
   }
-  SETUPCOMMAND(commandList, COMMANDID(3) , switchVCC(keyboardconfig.polarityVCCSwitch)); // turn on VCC when starting up if needed.
+  SETUPCOMMAND(commandList, SETUP_VCCSWITCH, switchVCC(keyboardconfig.polarityVCCSwitch)); // turn on VCC when starting up if needed.
   if(keyboardconfig.enableVCCSwitch)
   {
-    ADDCOMMAND(setupQueue, COMMANDID(3));
+    ADDCOMMAND(setupQueue, SETUP_VCCSWITCH);
   }
-  SETUPCOMMAND(commandList, COMMANDID(4) , switchCharger(keyboardconfig.polarityChargerControl)); // turn on Charger when starting up if needed.
+  SETUPCOMMAND(commandList, SETUP_CHARGER, switchCharger(keyboardconfig.polarityChargerControl)); // turn on Charger when starting up if needed.
   if(keyboardconfig.enableChargerControl)
   {
-    ADDCOMMAND(setupQueue, COMMANDID(4));
+    ADDCOMMAND(setupQueue, SETUP_CHARGER);
   }
 
-  SETUPCOMMAND(commandList, COMMANDID(5) , setupKeymap());
-  ADDCOMMAND(setupQueue, COMMANDID(5));
-  SETUPCOMMAND(commandList, COMMANDID(6) , setupMatrix());
-  ADDCOMMAND(setupQueue, COMMANDID(6));
+  SETUPCOMMAND(commandList, SETUP_KEYMAP , setupKeymap());
+  ADDCOMMAND(setupQueue, SETUP_KEYMAP );
+  SETUPCOMMAND(commandList, SETUP_MATRIX , setupMatrix());
+  ADDCOMMAND(setupQueue, SETUP_MATRIX );
   
-  SETUPCOMMAND(commandList, COMMANDID(7) , stringbuffer.clear());
-  ADDCOMMAND(setupQueue, COMMANDID(7));
-  SETUPCOMMAND(commandList, COMMANDID(8) , reportbuffer.clear());
-  ADDCOMMAND(setupQueue, COMMANDID(8));
+  SETUPCOMMAND(commandList, CLEAR_STRINGBUFFER , stringbuffer.clear());
+  ADDCOMMAND(setupQueue, CLEAR_STRINGBUFFER );
+  SETUPCOMMAND(commandList, CLEAR_REPORTBUFFER , reportbuffer.clear());
+  ADDCOMMAND(setupQueue, CLEAR_REPORTBUFFER );
 
-  SETUPCOMMAND(commandList, COMMANDID(9) , statusLEDs.enable());
-  ADDCOMMAND(setupQueue, COMMANDID(9));
-  SETUPCOMMAND(commandList, COMMANDID(10) , statusLEDs.hello()); // blinks Status LEDs a couple as last step of setup.
-  ADDCOMMAND(setupQueue, COMMANDID(10));
+  SETUPCOMMAND(commandList, LED_ENABLE , statusLEDs.enable());
+  ADDCOMMAND(setupQueue, LED_ENABLE );
+  SETUPCOMMAND(commandList, LED_HELLO , statusLEDs.hello()); // blinks Status LEDs a couple as last step of setup.
+  ADDCOMMAND(setupQueue, LED_HELLO);
 }
 
 void toggleserial()

@@ -49,18 +49,6 @@
 #include "firmware.h"
 #include "command_queues.h"
 
-
-PersistentState keyboardconfig;
-DynamicState keyboardstate;
-
-led_handler statusLEDs(&keyboardconfig, &keyboardstate);  /// Typically a Blue LED and a Red LED
-KeyScanner keys(&keyboardconfig, &keyboardstate);
-Battery batterymonitor;
-
-
-/**************************************************************************************************************************/
-// put your setup code here, to run once:
-/**************************************************************************************************************************/
 // cppcheck-suppress unusedFunction
 void setup() {
   addsetupcommands();
@@ -68,35 +56,20 @@ void setup() {
   addloopcommands();
   SORTCOMMANDS(commandList);
   RUNCOMMANDS(setupQueue, commandList);
-  LOG_LV1("BLEMIC","Started %s" ,DEVICE_NAME); 
 };
 
-
-/**************************************************************************************************************************/
-// put your main code here, to run repeatedly:
-/**************************************************************************************************************************/
 // cppcheck-suppress unusedFunction
-void loop() {  // has task priority TASK_PRIO_LOW
+void loop() {  
   static uint32_t last_timestamp = 0;
   RUNCOMMANDS(loopQueue, commandList);   
-  LOG_LV1("BLEMIC","In Loop %i %i %i %i" ,commandList.size(),setupQueue.size(), loopQueue.size(), commandQueue.size());
   uint32_t end_timestamp = millis();
   uint32_t diff = (last_timestamp + HIDREPORTINGINTERVAL > end_timestamp) ? last_timestamp + HIDREPORTINGINTERVAL - end_timestamp:1;
   last_timestamp = end_timestamp;
-  LOG_LV1("BLEMIC","Loop delay %i" ,diff);
-  delay(diff);              // wait not too long  
+  delay(diff); 
 }
 
-
-//********************************************************************************************//
-//* Idle Task - runs when there is nothing to do                                             *//
-//* Any impact of placing code here on current consumption?                                  *//
-//********************************************************************************************//
 // cppcheck-suppress unusedFunction  
 extern "C" void vApplicationIdleHook(void) {
-  // Don't call any other FreeRTOS blocking API()
-  // Perform background task(s) here
-  // this task has LOWEST priority (HIGHEST>HIGH>NORMAL>LOW>LOWEST)
     sd_power_mode_set(NRF_POWER_MODE_LOWPWR); // 944uA
     //sd_power_mode_set(NRF_POWER_MODE_CONSTLAT); // 1.5mA
     sd_app_evt_wait();  // puts the nrf52 to sleep when there is nothing to do.  You need this to reduce power consumption. (removing this will increase current to 8mA)

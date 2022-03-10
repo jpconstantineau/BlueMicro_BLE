@@ -5,9 +5,6 @@
 /**************************************************************************************************************************/
 #include "firmware_loop.h"
 
-
-
-
 /**************************************************************************************************************************/
 // Keyboard Scanning
 /**************************************************************************************************************************/
@@ -147,19 +144,8 @@ void addKeycodeToQueue(const uint16_t keycode, const uint8_t modifier)
                 it = stringbuffer.insert(it, keyreport);
         }
   }  
-/**************************************************************************************************************************/
-/**************************************************************************************************************************/
-void process_keyboard_function(uint16_t keycode)
-{
- // send command to command queue
-}
 
-/**************************************************************************************************************************/
-/**************************************************************************************************************************/
-void process_user_special_keys()
-{
-// send KS(KC_ESC) as command
-}
+
 
 /**************************************************************************************************************************/
 // Communication with computer and other boards
@@ -169,15 +155,15 @@ void sendKeyPresses() {
    KeyScanner::getReport();                                         // get state data - Data is in KeyScanner::currentReport 
 
   if (KeyScanner::special_key > 0){
-      process_user_special_keys();
+      ADDCOMMAND(commandQueue, KS(KC_ESC) );
       KeyScanner::special_key = 0;
   }
 
   if (KeyScanner::macro > 0){
       process_user_macros(KeyScanner::macro);
-      KeyScanner::macro = 0;
-      
+      KeyScanner::macro = 0; 
   } 
+
   UpdateQueue();
   if (!stringbuffer.empty()) // if the macro buffer isn't empty, send the first character of the buffer... which is located at the back of the queue
   {  
@@ -207,7 +193,7 @@ void sendKeyPresses() {
   {  
     HIDKeyboard reportarray  = reportbuffer.back();
     reportbuffer.pop_back();
-    bluemicro_hid.keyboardReport(0, reportarray.keycode);
+    bluemicro_hid.keyboardReport(reportarray.modifier , reportarray.keycode);
     
     
     if (reportbuffer.empty()) // make sure to send an empty report when done...
@@ -219,12 +205,13 @@ void sendKeyPresses() {
   else if ((KeyScanner::reportChanged))  //any new key presses anywhere?
   {     
 
-      bluemicro_hid.keyboardReport(0, KeyScanner::currentReport.keycode);
+      bluemicro_hid.keyboardReport(KeyScanner::currentReport.modifier, KeyScanner::currentReport.keycode);
                                                                       
     //    LOG_LV1("MXSCAN","SEND: %i %i %i %i %i %i %i %i %i " ,keyboardstate.timestamp,KeyScanner::currentReport.modifier, KeyScanner::currentReport.keycode[0],KeyScanner::currentReport.keycode[1],KeyScanner::currentReport.keycode[2], KeyScanner::currentReport.keycode[3],KeyScanner::currentReport.keycode[4], KeyScanner::currentReport.keycode[5],KeyScanner::currentReport.layer);        
   } else if (KeyScanner::specialfunction > 0)
   {
-    process_keyboard_function(KeyScanner::specialfunction);
+    
+    ADDCOMMAND(commandQueue, KeyScanner::specialfunction);
     KeyScanner::specialfunction = 0; 
   } else if (KeyScanner::consumer > 0)
   {
@@ -236,16 +223,6 @@ void sendKeyPresses() {
     KeyScanner::mouse = 0; 
   }
   
-
-  #if BLE_PERIPHERAL ==1   | BLE_CENTRAL ==1                            /**************************************************/
-    if(KeyScanner::layerChanged || (keyboardstate.timestamp-keyboardstate.lastupdatetime > 1000))     //layer comms
-    {   
-        keyboardstate.lastupdatetime = keyboardstate.timestamp;
-        sendlayer(KeyScanner::localLayer);
-        LOG_LV1("MXSCAN","Layer %i  %i" ,keyboardstate.timestamp,KeyScanner::localLayer);
-        KeyScanner::layerChanged = false;                                      // mark layer as "not changed" since last update
-    } 
-  #endif                                                                /**************************************************/
 }
 
 
@@ -273,7 +250,7 @@ void checkforunpair()
 {
   if (keyboardstate.needUnpair)
   {
-      ADDCOMMAND(commandQueue, (KINT(6)) );
+      ADDCOMMAND(commandQueue, RENDER_UNPAIR);
   }
 }
 
@@ -303,7 +280,7 @@ void checkforsave2flash()
 {
   if (keyboardstate.save2flash)
   { 
-    ADDCOMMAND(commandQueue, (KINT(8)) );
+    ADDCOMMAND(commandQueue, RENDER_SAVE );
     keyboardstate.save2flash = false;
   }
 
@@ -312,18 +289,15 @@ void checkforsave2flash()
 void checkforformat()
 {
   if (keyboardstate.needFSReset)
-  {
-    
-    ADDCOMMAND(commandQueue, (KINT(10)) );
+  {  
+    ADDCOMMAND(commandQueue, RENDER_FORMAT );
     keyboardstate.needReset = true;
   }
 }
 
 void checkforreboot()
 {
-    if (keyboardstate.needReset) 
-        ADDCOMMAND(commandQueue, (KINT(12)) );
-
+    if (keyboardstate.needReset)  ADDCOMMAND(commandQueue, RENDER_REBOOT );
 }
   
 
@@ -347,45 +321,37 @@ void updateleds()
 
 void addloopcommands(void)
 {
-    SETUPCOMMAND(commandList, (KINT(0)) , updateWDT());
-    SETUPCOMMAND(commandList, (KINT(1)) , scanMatrix());
-    SETUPCOMMAND(commandList, (KINT(2)) , sendKeyPresses() );
-    SETUPCOMMAND(commandList, (KINT(3)) , bluemicro_hid.processQueues(CONNECTION_MODE_AUTO) );
-    SETUPCOMMAND(commandList, (KINT(4)) , checkforsleep() );
-    SETUPCOMMAND(commandList, (KINT(5)) , checkforunpair() );
-    SETUPCOMMAND(commandList, (KINT(6)) , unpaircommand() );
-    SETUPCOMMAND(commandList, (KINT(7)) , checkforsave2flash() );
-    SETUPCOMMAND(commandList, (KINT(8)) , saveConfig() );
-    SETUPCOMMAND(commandList, (KINT(9)) , checkforformat() );
-    SETUPCOMMAND(commandList, (KINT(10)), InternalFS.format() );
-    SETUPCOMMAND(commandList, (KINT(11)), checkforreboot() );
-    SETUPCOMMAND(commandList, (KINT(12)), NVIC_SystemReset() );   // this reboots the keyboard.
+    SETUPCOMMAND(commandList, PROCESSS_WDT , updateWDT());
+    SETUPCOMMAND(commandList, PROCESSS_MATRIX , scanMatrix());
+    SETUPCOMMAND(commandList, UPDATE_KEYS , sendKeyPresses() );
+    SETUPCOMMAND(commandList, RENDER_HID , bluemicro_hid.processQueues(CONNECTION_MODE_AUTO) );
+    SETUPCOMMAND(commandList, RENDER_SLEEP , checkforsleep() );
+    SETUPCOMMAND(commandList, UPDATE_UNPAIR , checkforunpair() );
+    SETUPCOMMAND(commandList, RENDER_UNPAIR , unpaircommand() );
+    SETUPCOMMAND(commandList, UPDATE_SAVE , checkforsave2flash() );
+    SETUPCOMMAND(commandList, RENDER_SAVE , saveConfig() );
+    SETUPCOMMAND(commandList, UPDATE_FORMAT , checkforformat() );
+    SETUPCOMMAND(commandList, RENDER_FORMAT, InternalFS.format() );
+    SETUPCOMMAND(commandList, UPDATE_REBOOT, checkforreboot() );
+    SETUPCOMMAND(commandList, RENDER_REBOOT, NVIC_SystemReset() );   // this reboots the keyboard.
+    SETUPCOMMAND(commandList, BATTERY_UPDATE, updatebattery() );
+    SETUPCOMMAND(commandList, LED_UPDATE , updateleds() );
 
-    ADDCOMMAND(loopQueue, (KINT(0)) );
+    ADDCOMMAND(loopQueue, PROCESSS_WDT );
+    ADDCOMMAND(loopQueue, PROCESSS_MATRIX );
+    ADDCOMMAND(loopQueue, UPDATE_KEYS );   
+    ADDCOMMAND(loopQueue, RENDER_HID);
+    ADDCOMMAND(loopQueue, RENDER_SLEEP ); 
+    ADDCOMMAND(loopQueue, UPDATE_UNPAIR ); 
+    ADDCOMMAND(loopQueue, UPDATE_SAVE ); 
+    ADDCOMMAND(loopQueue, UPDATE_FORMAT ); 
+    ADDCOMMAND(loopQueue, UPDATE_REBOOT ); 
+    ADDCOMMAND(loopQueue, BATTERY_UPDATE );
+    ADDCOMMAND(loopQueue, LED_UPDATE );
 
-        ADDCOMMAND(loopQueue, (KINT(1)) );
-
-        ADDCOMMAND(loopQueue, (KINT(2)) );   
-
-    ADDCOMMAND(loopQueue, (KINT(3)) );
-
-        ADDCOMMAND(loopQueue, (KINT(4)) ); 
-
-
-    ADDCOMMAND(loopQueue, (KINT(5)) ); 
-    ADDCOMMAND(loopQueue, (KINT(7)) ); 
-    ADDCOMMAND(loopQueue, (KINT(9)) ); 
-    ADDCOMMAND(loopQueue, (KINT(11)) ); 
-
-    SETUPCOMMAND(commandList, (KINT(20)) , updatebattery() );
-    SETUPCOMMAND(commandList, (KINT(21)) , updateleds() );
-
-    ADDCOMMAND(loopQueue, (KINT(20)) );
-    ADDCOMMAND(loopQueue, (KINT(21)) );
-
-    SETUPCOMMAND(commandList, (KINT(254)), RUNCOMMANDS(commandQueue, commandList) );  // second to command is to run the command queue
-    SETUPCOMMAND(commandList, (KINT(255)), commandQueue.clear());  // last command to run is to clear the command queue
-    ADDCOMMAND(loopQueue, (KINT(254)) );
-    ADDCOMMAND(loopQueue, (KINT(255)) ); 
+    SETUPCOMMAND(commandList, RUN_COMMAND_QUEUE, RUNCOMMANDS(commandQueue, commandList) );  // second to command is to run the command queue
+    SETUPCOMMAND(commandList, CLEAR_COMMAND_QUEUE, commandQueue.clear());  // last command to run is to clear the command queue
+    ADDCOMMAND(loopQueue, RUN_COMMAND_QUEUE );
+    ADDCOMMAND(loopQueue, CLEAR_COMMAND_QUEUE ); 
 
 }
