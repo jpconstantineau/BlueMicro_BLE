@@ -151,12 +151,6 @@ void setuphid()
   bluemicro_hid.begin(); 
 }
 
-//todo: delete setupnrf52 if no longer needed
-void setupnrf52()
-{
-  setupGpio();                                                                // checks that NFC functions on GPIOs are disabled.
-  setupWDT();
-}
 
 //todo re-install debug CLI as module
 void serialsplash()

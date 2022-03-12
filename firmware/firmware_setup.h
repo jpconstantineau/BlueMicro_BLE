@@ -30,7 +30,6 @@ extern  led_handler statusLEDs;  /// Typically a Blue LED and a Red LED
     void setupMatrix(void);
 
     void setuphid(void);
-    void setupnrf52(void);
     void serialsplash(void);
     void addsetupcommands(void);
     void addkeyboardcommands(void);
