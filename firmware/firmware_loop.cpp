@@ -8,7 +8,8 @@
 /**************************************************************************************************************************/
 // Keyboard Scanning
 /**************************************************************************************************************************/
-
+//todo get scanning code into separate module
+//todo get generic code scanning module for non-nrf52 boards.
 #if DIODE_DIRECTION == COL2ROW
 #define writeRow(r) digitalWrite(r,LOW)
 #define modeCol(c) pinMode(c, INPUT_PULLUP)
@@ -94,6 +95,7 @@ LOG_LV1("BLEMIC","scanMatrix" );
     }
 #endif
 
+//TODO refactor stringbuffer into HID queues
 void UpdateQueue()
 {
   #ifdef ENABLE_COMBOS
@@ -215,17 +217,17 @@ void sendKeyPresses() {
     KeyScanner::specialfunction = 0; 
   } else if (KeyScanner::consumer > 0)
   {
-    // send consumeer code
+    // TODO send consumeer code
     KeyScanner::consumer = 0; 
   } else if (KeyScanner::mouse > 0)
   {
-    // send mouse code
+    // TODO  send mouse code
     KeyScanner::mouse = 0; 
   }
   
 }
 
-
+//TODO re-implement sleep as module
 void checkforsleep()
 {
     
@@ -312,6 +314,8 @@ void updatebattery()
       keyboardstate.vbat_vdd = batterymonitor.vbat_vdd;
 }
 
+
+//todo Implement LEDs as module
 void updateleds()
 {
     keyboardstate.statusledtimer = keyboardstate.timestamp;

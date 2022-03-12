@@ -30,6 +30,7 @@ byte columns[] MATRIX_COL_PINS;     // Contains the GPIO Pin Numbers defined in 
  std::vector<HIDKeyboard> reportbuffer; 
 
 /**************************************************************************************************************************/
+//todo setup save to flash as module.
 void setupConfig() {
   InternalFS.begin();
   loadConfig();
@@ -150,12 +151,14 @@ void setuphid()
   bluemicro_hid.begin(); 
 }
 
+//todo: delete setupnrf52 if no longer needed
 void setupnrf52()
 {
   setupGpio();                                                                // checks that NFC functions on GPIOs are disabled.
   setupWDT();
 }
 
+//todo re-install debug CLI as module
 void serialsplash()
 {
   Serial.begin(115200);

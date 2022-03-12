@@ -32,6 +32,7 @@
 #define BIRTHDAY  MC(KC_Z)
 
 #ifdef ENABLE_AUDIO
+//todo re-install audio features as module
 //extern BlueMicro_tone speaker; 
 #endif
 

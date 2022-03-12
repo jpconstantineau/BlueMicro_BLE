@@ -41,6 +41,9 @@ StatePayload  statedata;
 /**************************************************************************************************************************/
 void bt_setup(uint8_t BLEProfile)
 {
+  //TODO review what can be extracted for single boards
+
+  //TODO review what is needed for split boards and provide in separate module
 ble_gap_conn_params_t _ppcp;
   _ppcp = ((ble_gap_conn_params_t) {
     .min_conn_interval = 6,
@@ -88,7 +91,7 @@ sd_ble_gap_ppcp_set(&_ppcp);
   bledis.setModel(DEVICE_MODEL);                                              // Defined in keyboard_config.h
   bledis.begin();
 
- 
+  //TODO Split Battery Reporting Service into separate module.
   // Configure and Start Battery Service
   blebas.begin();
   blebas.write(100); // put the battery level at 100% - until it is updated by the battery monitoring loop.
@@ -98,6 +101,7 @@ sd_ble_gap_ppcp_set(&_ppcp);
   statedata.layer =0;
   statedata.timesync=0;
 
+//TODO Get Peripheral into separate module
 #if BLE_PERIPHERAL == 1      // PERIPHERAL IS THE SLAVE BOARD
 
   Linkdata.keycode[0] =0;  // initialize the slave to master link data...
@@ -152,7 +156,7 @@ sd_ble_gap_ppcp_set(&_ppcp);
    * up to 11.25 ms. Therefore BLEHidAdafruit::begin() will try to set the min and max
    * connection interval to 11.25  ms and 15 ms respectively for best performance.
    */
-   
+  //TODO setup LED feedback for both USB and BLE
 #if BLE_HID == 1
   blehid.begin();
   // Set callback for set LED from central
@@ -164,6 +168,7 @@ sd_ble_gap_ppcp_set(&_ppcp);
    * min = 9*1.25=11.25 ms, max = 12*1.25= 15 ms 
    */
 
+//TODO split central role into separate module.
  #if BLE_CENTRAL == 1                                   // CENTRAL IS THE MASTER BOARD
 
   KBLinkClientService.begin();
@@ -197,6 +202,8 @@ ble_gap_addr_t bt_getMACAddr(void)
 /**************************************************************************************************************************/
 //
 /**************************************************************************************************************************/
+
+//TODO setup advertising setup group of tasks
 void bt_startAdv(void)
 {  
   // Advertising packet

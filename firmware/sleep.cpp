@@ -4,6 +4,8 @@
 
 #include "sleep.h"
 
+//todo refactor sleep so that each module can register a pre-sleep command.
+
 extern led_handler statusLEDs; /// Typically a Blue and Red LED
 /**************************************************************************************************************************/
 // Prepare sense pins for waking up from complete shutdown

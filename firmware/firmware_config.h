@@ -49,7 +49,7 @@
 #endif
 #endif
 
-
+//todo review if timings are needed and default values.
 #ifndef DEBOUNCETIME 
 #define DEBOUNCETIME 3   // changing this to 1 and you will have problems with the debounce logic - repeated keys perhaps...
 #endif

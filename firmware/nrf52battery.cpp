@@ -4,6 +4,8 @@
 
 #include "nrf52battery.h"
 
+//todo split battery read from battery update
+
 /**************************************************************************************************************************/
   BLEBas blebas;                                                                    // Battery Service
 

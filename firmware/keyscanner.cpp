@@ -4,6 +4,7 @@
 
 #include "keyscanner.h"
 
+//todo refactor KeyScanner and split into get/update/send sequences
 
 KeyScanner::KeyScanner(PersistentState* cfg, DynamicState* stat) {    // Constructor
     config=cfg;

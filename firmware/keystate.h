@@ -13,7 +13,7 @@
 
 
 
-
+//todo review default tap/hold tap/doubletap defaullt timings
 #ifndef DOUBLETAP_TIME_LIMIT
   #define DOUBLETAP_TIME_LIMIT 200
 #endif
