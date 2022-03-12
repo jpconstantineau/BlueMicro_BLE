@@ -73,7 +73,7 @@ void setupKeymap()
 #else
 
 /*
- * TODO: configure right side
+ * TO DO: configure right side
  */
 
 std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =

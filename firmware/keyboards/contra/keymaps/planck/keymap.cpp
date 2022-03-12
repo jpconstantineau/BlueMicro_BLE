@@ -18,14 +18,6 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 #include "keymap.h"
 
-// todo: test toggle with layers
-// todo: test one shot with macros
-// todo: test toggle with modifiers
-// todo: test one shot with modifiers
-
-// todo: Test tap/double-tap
-// todo: test press/hold: mod when held, key when tapped
-// todo: test press/hold: layer when held, key when tapped
 
 std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
     {{

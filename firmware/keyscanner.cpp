@@ -62,7 +62,7 @@ void KeyScanner::resetReport() {
     currentReport.keycode[4] = 0;
     currentReport.keycode[5] = 0;
     currentReport.modifier = 0;
-  //  currentReport.layer = 0; TODO FIGURE OUT LAYEEERS
+  //  currentReport.layer = 0; TODO FIGURE OUT LAYERS
 }
 
 
@@ -390,7 +390,7 @@ bool KeyScanner::getReport()
     }
 
     currentReport.modifier = currentMod;
-   // currentReport.layer = localLayer;  TODO FIGURE OUOT LAYERS IN
+   // currentReport.layer = localLayer;  TODO Review how layers are managed across boards
     
 
 if (activeKeys.empty() && processingmacros) {processingmacros = false;}

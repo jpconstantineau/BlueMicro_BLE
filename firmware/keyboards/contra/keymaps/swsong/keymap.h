@@ -118,7 +118,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 
 
-#define KC_GESC XXXXXXX //KC_GESC  https://github.com/qmk/qmk_firmware/blob/master/docs/feature_grave_esc.md  TODO
+#define KC_GESC XXXXXXX //KC_GESC  https://github.com/qmk/qmk_firmware/blob/master/docs/feature_grave_esc.md  TODO Re-implement Grave-esc feature
 
 // define macro hooks
 
