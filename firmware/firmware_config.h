@@ -217,4 +217,6 @@
     #endif
 #endif
 
+//TODO Remove override value of ENABLE_COMBOS once combos are tested
+#define ENABLE_COMBOS 1  
 #endif /* FIRMWARE_CONFIG_H */

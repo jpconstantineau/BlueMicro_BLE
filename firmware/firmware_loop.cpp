@@ -95,58 +95,42 @@ LOG_LV1("BLEMIC","scanMatrix" );
     }
 #endif
 
-//TODO refactor stringbuffer into HID queues
-void UpdateQueue()
-{
-  #ifdef ENABLE_COMBOS
-     stringbuffer.insert(stringbuffer.end(), combos.keycodebuffertosend.rbegin(),combos.keycodebuffertosend.rend());
-     combos.keycodebuffertosend.clear();
-  #endif
-
-}
-
 /**************************************************************************************************************************/
 // macro string queue management
 /**************************************************************************************************************************/
 void addStringToQueue(const char* str)
 {
-  auto it = stringbuffer.begin();
-  char ch;
-  while( (ch = *str++) != 0 )
-  {
-    uint8_t modifier = ( hid_ascii_to_keycode[(uint8_t)ch][0] ) ? KEYBOARD_MODIFIER_LEFTSHIFT : 0;
-    uint8_t keycode = hid_ascii_to_keycode[(uint8_t)ch][1];
-    uint16_t keyreport = MOD( modifier << 8 , keycode);
-    it = stringbuffer.insert(it, keyreport);
-  }
+  bluemicro_hid.keySequence(str);
+   LOG_LV1("QUEUE","addStringToQueue" );        
 
 }
 /**************************************************************************************************************************/
 /**************************************************************************************************************************/
-void addKeycodeToQueue(const uint16_t keycode)
-{
-  auto it = stringbuffer.begin();
-  auto hidKeycode = static_cast<uint8_t>(keycode & 0x00FF);
 
-        if (hidKeycode >= KC_A && hidKeycode <= KC_EXSEL)  // only insert keycodes if they are valid keyboard codes...
-        {
-            it = stringbuffer.insert(it, keycode);
-        }
-  }
 
 void addKeycodeToQueue(const uint16_t keycode, const uint8_t modifier)
 {
-  auto it = stringbuffer.begin();
+  LOG_LV1("QUEUE","addKeycodeToQueue km" ); 
   auto hidKeycode = static_cast<uint8_t>(keycode & 0x00FF);
-     //  auto extraModifiers = static_cast<uint8_t>((keycode & 0xFF00) >> 8);
-
         if (hidKeycode >= KC_A && hidKeycode <= KC_EXSEL)  // only insert keycodes if they are valid keyboard codes...
         {
-                uint16_t keyreport = MOD( modifier << 8 , hidKeycode);
-                it = stringbuffer.insert(it, keyreport);
+            HIDKeyboard reportarray = {modifier, {hidKeycode, 0 ,0, 0, 0, 0}};
+            bluemicro_hid.keyboardReport(reportarray.modifier , reportarray.keycode);
         }
   }  
 
+void addKeycodeToQueue(const uint16_t keycode)
+{
+  LOG_LV1("QUEUE","addKeycodeToQueue k" ); 
+  auto hidKeycode = static_cast<uint8_t>(keycode & 0x00FF);
+     auto extraModifiers = static_cast<uint8_t>((keycode & 0xFF00) >> 8);
+
+        if (hidKeycode >= KC_A && hidKeycode <= KC_EXSEL)  // only insert keycodes if they are valid keyboard codes...
+        {
+            HIDKeyboard reportarray = {extraModifiers, {hidKeycode, 0 ,0, 0, 0, 0}};
+            bluemicro_hid.keyboardReport(reportarray.modifier , reportarray.keycode);
+        }
+  }  
 
 
 /**************************************************************************************************************************/
@@ -166,60 +150,30 @@ void sendKeyPresses() {
       KeyScanner::macro = 0; 
   } 
 
-  UpdateQueue();
-  if (!stringbuffer.empty()) // if the macro buffer isn't empty, send the first character of the buffer... which is located at the back of the queue
-  {  
-    HIDKeyboard reportarray = {0, {0, 0 ,0, 0, 0, 0}};
-    uint16_t keyreport = stringbuffer.back();
-    stringbuffer.pop_back();
-    
-    reportarray.modifier = static_cast<uint8_t>((keyreport & 0xFF00) >> 8);// mods
-    reportarray.keycode[0] = static_cast<uint8_t>(keyreport & 0x00FF);
+  #ifdef ENABLE_COMBOS
+     std::for_each(combos.keycodebuffertosend.rbegin(), combos.keycodebuffertosend.rend(), [](uint16_t keycode){addKeycodeToQueue(keycode);} );
+     combos.keycodebuffertosend.clear();
+  #endif
 
-    auto buffer_iterator = reportbuffer.begin();
-    buffer_iterator = reportbuffer.insert(buffer_iterator, reportarray);
-
-      uint16_t lookahead_keyreport = stringbuffer.back();
-      if (lookahead_keyreport == keyreport) // if the next key is the same, make sure to send a key release before sending it again... but keep the mods.
-      {
-        reportarray.modifier = static_cast<uint8_t>((keyreport & 0xFF00) >> 8);// mods;
-        reportarray.keycode[0] = 0;
-        buffer_iterator = reportbuffer.begin();
-        buffer_iterator = reportbuffer.insert(buffer_iterator, reportarray);
-      }
-  }  
-
-
- 
-  if (!reportbuffer.empty()) // if the report buffer isn't empty, send the first character of the buffer... which is located at the end of the queue
-  {  
-    HIDKeyboard reportarray  = reportbuffer.back();
-    reportbuffer.pop_back();
-    bluemicro_hid.keyboardReport(reportarray.modifier , reportarray.keycode);
-    
-    
-    if (reportbuffer.empty()) // make sure to send an empty report when done...
-    { 
-        bluemicro_hid.keyboardRelease();
-    }
-   // KeyScanner::processingmacros=0;
-  }
-  else if ((KeyScanner::reportChanged))  //any new key presses anywhere?
+  if ((KeyScanner::reportChanged))  //any new key presses anywhere?
   {     
 
       bluemicro_hid.keyboardReport(KeyScanner::currentReport.modifier, KeyScanner::currentReport.keycode);
                                                                       
     //    LOG_LV1("MXSCAN","SEND: %i %i %i %i %i %i %i %i %i " ,keyboardstate.timestamp,KeyScanner::currentReport.modifier, KeyScanner::currentReport.keycode[0],KeyScanner::currentReport.keycode[1],KeyScanner::currentReport.keycode[2], KeyScanner::currentReport.keycode[3],KeyScanner::currentReport.keycode[4], KeyScanner::currentReport.keycode[5],KeyScanner::currentReport.layer);        
-  } else if (KeyScanner::specialfunction > 0)
+  } 
+  if (KeyScanner::specialfunction > 0)
   {
     
     ADDCOMMAND(commandQueue, KeyScanner::specialfunction);
     KeyScanner::specialfunction = 0; 
-  } else if (KeyScanner::consumer > 0)
+  } 
+  if (KeyScanner::consumer > 0)
   {
     // TODO send consumeer code
     KeyScanner::consumer = 0; 
-  } else if (KeyScanner::mouse > 0)
+  } 
+  if (KeyScanner::mouse > 0)
   {
     // TODO  send mouse code
     KeyScanner::mouse = 0; 

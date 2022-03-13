@@ -26,7 +26,7 @@ File file(InternalFS);
 // Keyboard Matrix
 byte rows[] MATRIX_ROW_PINS;        // Contains the GPIO Pin Numbers defined in keyboard_config.h
 byte columns[] MATRIX_COL_PINS;     // Contains the GPIO Pin Numbers defined in keyboard_config.h  
- std::vector<uint16_t> stringbuffer; // buffer for macros to type into...
+// std::vector<uint16_t> stringbuffer; // buffer for macros to type into...
  std::vector<HIDKeyboard> reportbuffer; 
 
 /**************************************************************************************************************************/
@@ -211,10 +211,6 @@ void addsetupcommands()
   SETUPCOMMAND(commandList, SETUP_MATRIX , setupMatrix());
   ADDCOMMAND(setupQueue, SETUP_MATRIX );
   
-  SETUPCOMMAND(commandList, CLEAR_STRINGBUFFER , stringbuffer.clear());
-  ADDCOMMAND(setupQueue, CLEAR_STRINGBUFFER );
-  SETUPCOMMAND(commandList, CLEAR_REPORTBUFFER , reportbuffer.clear());
-  ADDCOMMAND(setupQueue, CLEAR_REPORTBUFFER );
 
   SETUPCOMMAND(commandList, LED_ENABLE , statusLEDs.enable());
   ADDCOMMAND(setupQueue, LED_ENABLE );

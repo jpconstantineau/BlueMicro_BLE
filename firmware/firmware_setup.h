@@ -18,8 +18,7 @@ extern commandqueue_t commandQueue;
 extern commandqueue_t loopQueue;
 extern PersistentState keyboardconfig;
 extern DynamicState keyboardstate;
-extern  std::vector<uint16_t> stringbuffer; // buffer for macros to type into...
-extern  std::vector<HIDKeyboard> reportbuffer; 
+
 extern Battery batterymonitor;
 extern  led_handler statusLEDs;  /// Typically a Blue LED and a Red LED
 
