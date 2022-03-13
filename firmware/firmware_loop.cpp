@@ -38,7 +38,7 @@
 // NEED TO RE-WORK THIS ROUTINE.  IDEALLY WE SHOULD HAVE THIS AS A COMPILE-TIME OPTION TO SWITCH BETWEEN ROUTINES.
 /**************************************************************************************************************************/
 void scanMatrix() {
-LOG_LV1("BLEMIC","scanMatrix" ); 
+//LOG_LV1("BLEMIC","scanMatrix" ); 
     keyboardstate.timestamp  = millis();   // lets call it once per scan instead of once per key in the matrix
     
     static PINDATATYPE pindata[MATRIX_ROWS][DEBOUNCETIME];
@@ -138,14 +138,19 @@ void addKeycodeToQueue(const uint16_t keycode)
 /**************************************************************************************************************************/
 void sendKeyPresses() {
 
+    // use to send consumer release report
+    static bool has_consumer_key = false;
+
    KeyScanner::getReport();                                         // get state data - Data is in KeyScanner::currentReport 
 
   if (KeyScanner::special_key > 0){
+    LOG_LV1("RENDER","SPECIAL %i" ,KeyScanner::special_key);
       ADDCOMMAND(commandQueue, KS(KC_ESC) );
       KeyScanner::special_key = 0;
   }
 
   if (KeyScanner::macro > 0){
+    LOG_LV1("RENDER","MACRO %i" ,KeyScanner::macro);
       process_user_macros(KeyScanner::macro);
       KeyScanner::macro = 0; 
   } 
@@ -157,25 +162,38 @@ void sendKeyPresses() {
 
   if ((KeyScanner::reportChanged))  //any new key presses anywhere?
   {     
-
+      LOG_LV1("RENDER","KEYBOARD %i" ,KeyScanner::currentReport.keycode[0]);
       bluemicro_hid.keyboardReport(KeyScanner::currentReport.modifier, KeyScanner::currentReport.keycode);
                                                                       
     //    LOG_LV1("MXSCAN","SEND: %i %i %i %i %i %i %i %i %i " ,keyboardstate.timestamp,KeyScanner::currentReport.modifier, KeyScanner::currentReport.keycode[0],KeyScanner::currentReport.keycode[1],KeyScanner::currentReport.keycode[2], KeyScanner::currentReport.keycode[3],KeyScanner::currentReport.keycode[4], KeyScanner::currentReport.keycode[5],KeyScanner::currentReport.layer);        
   } 
   if (KeyScanner::specialfunction > 0)
   {
-    
+    LOG_LV1("RENDER","FUNC %i" ,KeyScanner::specialfunction);
     ADDCOMMAND(commandQueue, KeyScanner::specialfunction);
     KeyScanner::specialfunction = 0; 
   } 
   if (KeyScanner::consumer > 0)
   {
-    // TODO send consumeer code
+    LOG_LV1("RENDER","CONSUMER %i" ,KeyScanner::consumer);
+    bluemicro_hid.consumerKeyPress(hid_GetMediaUsageCode(KeyScanner::consumer));
     KeyScanner::consumer = 0; 
-  } 
+    has_consumer_key = true;
+  }
+  else
+  {
+      if (has_consumer_key) 
+      { 
+        LOG_LV1("RENDER","CONSUMER 0 ELSE");
+        bluemicro_hid.consumerKeyRelease();
+        has_consumer_key = false;
+      }
+  }
   if (KeyScanner::mouse > 0)
   {
+    LOG_LV1("RENDER","MOUSE %i" ,KeyScanner::mouse);
     // TODO  send mouse code
+    // bluemicro_hid.mouseMove(delta, delta); // right + down
     KeyScanner::mouse = 0; 
   }
   
@@ -313,3 +331,49 @@ void addloopcommands(void)
     ADDCOMMAND(loopQueue, CLEAR_COMMAND_QUEUE ); 
 
 }
+uint16_t hid_GetMediaUsageCode(uint16_t keycode)
+{
+  uint16_t usagecode = 0;
+
+  switch (keycode)
+  {
+    case KC_SYSTEM_POWER: usagecode = HID_USAGE_CONSUMER_POWER; break;
+    case KC_SYSTEM_RESET: usagecode = HID_USAGE_CONSUMER_RESET; break;
+    case KC_SYSTEM_SLEEP: usagecode = HID_USAGE_CONSUMER_SLEEP; break;
+    case KC_DISPLAY_BRIGHTI: usagecode = HID_USAGE_CONSUMER_BRIGHTNESS_INCREMENT; break;
+    case KC_DISPLAY_BRIGHTD: usagecode = HID_USAGE_CONSUMER_BRIGHTNESS_DECREMENT; break;
+    case KC_RADIO_CONTROL: usagecode = HID_USAGE_CONSUMER_WIRELESS_RADIO_CONTROLS; break;
+    case KC_RADIO_BUTTONS: usagecode = HID_USAGE_CONSUMER_WIRELESS_RADIO_BUTTONS; break;
+    case KC_RADIO_LED: usagecode = HID_USAGE_CONSUMER_WIRELESS_RADIO_LED; break;
+    case KC_RADIO_SWITCH: usagecode = HID_USAGE_CONSUMER_WIRELESS_RADIO_SLIDER_SWITCH; break;
+    case KC_MEDIA_PLAY_PAUSE: usagecode = HID_USAGE_CONSUMER_PLAY_PAUSE; break;
+    case KC_MEDIA_NEXT_TRACK: usagecode = HID_USAGE_CONSUMER_SCAN_NEXT; break;
+    case KC_MEDIA_PREV_TRACK: usagecode = HID_USAGE_CONSUMER_SCAN_PREVIOUS; break;
+    case KC_MEDIA_STOP: usagecode = HID_USAGE_CONSUMER_STOP; break;
+    case KC_AUDIO_VOL: usagecode = HID_USAGE_CONSUMER_VOLUME; break;
+    case KC_AUDIO_MUTE: usagecode = HID_USAGE_CONSUMER_MUTE; break;
+    case KC_AUDIO_BASS: usagecode = HID_USAGE_CONSUMER_BASS; break;
+    case KC_AUDIO_TREBLE: usagecode = HID_USAGE_CONSUMER_TREBLE; break;
+    case KC_AUDIO_BASS_BOOST: usagecode = HID_USAGE_CONSUMER_BASS_BOOST; break;
+    case KC_AUDIO_VOL_UP: usagecode = HID_USAGE_CONSUMER_VOLUME_INCREMENT; break;
+    case KC_AUDIO_VOL_DOWN: usagecode = HID_USAGE_CONSUMER_VOLUME_DECREMENT; break;
+    case KC_AUDIO_BASS_UP: usagecode = HID_USAGE_CONSUMER_BASS_INCREMENT; break;
+    case KC_AUDIO_BASS_DOWN: usagecode = HID_USAGE_CONSUMER_BASS_DECREMENT; break;
+    case KC_AUDIO_TREBLE_UP: usagecode = HID_USAGE_CONSUMER_TREBLE_INCREMENT; break;
+    case KC_AUDIO_TREBLE_DOWN: usagecode = HID_USAGE_CONSUMER_TREBLE_DECREMENT; break;
+    case KC_MSEL: usagecode = HID_USAGE_CONSUMER_AL_CONSUMER_CONTROL_CONFIGURATION; break;
+    case KC_WWW: usagecode = HID_USAGE_CONSUMER_AL_EMAIL_READER; break;
+    case KC_CALCULATOR: usagecode = HID_USAGE_CONSUMER_AL_CALCULATOR; break;
+    case KC_MYCM: usagecode = HID_USAGE_CONSUMER_AL_LOCAL_BROWSER; break;
+
+    case KC_WWW_SEARCH: usagecode = HID_USAGE_CONSUMER_AC_SEARCH; break;
+    case KC_WWW_HOME: usagecode = HID_USAGE_CONSUMER_AC_HOME; break;
+    case KC_WWW_BACK: usagecode = HID_USAGE_CONSUMER_AC_BACK; break;
+    case KC_WWW_FORWARD: usagecode = HID_USAGE_CONSUMER_AC_FORWARD; break;
+    case KC_WWW_STOP: usagecode = HID_USAGE_CONSUMER_AC_STOP; break;
+    case KC_WWW_REFRESH: usagecode = HID_USAGE_CONSUMER_AC_REFRESH; break;
+    case KC_WWW_FAVORITES: usagecode = HID_USAGE_CONSUMER_AC_BOOKMARKS; break;
+    case KC_AC_PAN: usagecode = HID_USAGE_CONSUMER_AC_PAN; break;
+  }
+  return usagecode;
+  }
