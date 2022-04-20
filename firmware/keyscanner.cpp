@@ -365,6 +365,7 @@ bool KeyScanner::getReport()
         }
         
         //check if the hid keycode contains a modifier. // also check for macros.
+        uint8_t steps = 5;
         switch (hidKeycode) { 
             case KC_LCTRL:  currentMod |= 1;    currentMod |= extraModifiers; break;
             case KC_LSHIFT: currentMod |= 2;    currentMod |= extraModifiers; break;
@@ -378,7 +379,31 @@ bool KeyScanner::getReport()
             case KC_RESERVED_A6: if(!processingmacros){specialfunction = keycode; processingmacros=true;} extraModifiers=0; break;        // KC_RESERVED_A6 is the keycode marker for special keyboard functions.
             case KC_RESERVED_A7: if(!processingmacros){consumer = keycode; processingmacros=true;} extraModifiers=0; break;               // KC_RESERVED_A7 is the keycode marker for consumer reports.
             case KC_RESERVED_A8: consumer = keycode;  extraModifiers=0; break;              // KC_RESERVED_A8 is the keycode marker for repeating consumer reports.
-            case KC_RESERVED_A9: mouse = keycode; extraModifiers=0; break;                  // KC_RESERVED_A8 is the keycode marker for mouse reports. Mousekeys can be repeated... We therefore don't need the macro logic
+            case KC_RESERVED_A9: 
+                HIDMouse thismousereport;
+                
+                switch (keycode)
+                {
+                    case KC_MS_OFF:   thismousereport.buttons  = RID_MOUSE; break;
+                    case KC_MS_BTN1:  thismousereport.buttons  = MOUSE_BUTTON_LEFT; break;
+                    case KC_MS_BTN2:  thismousereport.buttons  = MOUSE_BUTTON_RIGHT; break;
+                    case KC_MS_BTN3:  thismousereport.buttons  = MOUSE_BUTTON_MIDDLE; break;
+                    case KC_MS_BTN4:  thismousereport.buttons  = MOUSE_BUTTON_BACKWARD; break;
+                    case KC_MS_BTN5:  thismousereport.buttons  = MOUSE_BUTTON_FORWARD; break;
+
+                    case KC_MS_UP:    thismousereport.y = -steps; break;
+                    case KC_MS_DOWN:  thismousereport.y =  steps; break;
+                    case KC_MS_LEFT:  thismousereport.x = -steps; break;
+                    case KC_MS_RIGHT: thismousereport.x =  steps; break;
+
+                    case KC_MS_WH_UP:    thismousereport.wheel = -1; break;
+                    case KC_MS_WH_DOWN:  thismousereport.wheel =  1; break;
+                    case KC_MS_WH_LEFT:  thismousereport.pan   = -1; break;
+                    case KC_MS_WH_RIGHT: thismousereport.pan   =  1; break;
+                }
+                mouseReports.push_back(thismousereport);
+                extraModifiers=0;
+            break;                  // KC_RESERVED_A8 is the keycode marker for mouse reports. Mousekeys can be repeated... We therefore don't need the macro logic
             case KC_RESERVED_AA: special_key = keycode; extraModifiers=0; break;            // KC_RESERVED_AA is the keycode marker for special keys.
             case KC_RESERVED_AB: if(!processingmacros){specialfunction = keycode; processingmacros=true;} extraModifiers=0; break;               // KC_RESERVED_AB keycode for marking this as a specialfunction for international/special characters (ALT-0233 = é).
         }
@@ -455,6 +480,7 @@ uint8_t KeyScanner::remoteMod = 0;
 uint8_t KeyScanner::currentMod = 0;
 unsigned long KeyScanner::lastPressed = 0;
 uint8_t KeyScanner::bufferposition = 0;
+std::vector<HIDMouse> KeyScanner::mouseReports {};
 std::vector<uint16_t> KeyScanner::activeKeys {};
 std::vector<uint16_t> KeyScanner::encoderKeys {};
 std::vector<uint16_t> KeyScanner::macroBuffer {};

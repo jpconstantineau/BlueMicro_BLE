@@ -133,6 +133,8 @@ void addKeycodeToQueue(const uint16_t keycode)
   }  
 
 
+
+
 /**************************************************************************************************************************/
 // Communication with computer and other boards
 /**************************************************************************************************************************/
@@ -140,6 +142,7 @@ void sendKeyPresses() {
 
     // use to send consumer release report
     static bool has_consumer_key = false;
+    static bool has_mouse_key = false;
 
    KeyScanner::getReport();                                         // get state data - Data is in KeyScanner::currentReport 
 
@@ -189,12 +192,31 @@ void sendKeyPresses() {
         has_consumer_key = false;
       }
   }
-  if (KeyScanner::mouse > 0)
+ 
+  if (KeyScanner::mouseReports.size() > 0)
   {
     LOG_LV1("RENDER","MOUSE %i" ,KeyScanner::mouse);
-    // TODO  send mouse code
-    // bluemicro_hid.mouseMove(delta, delta); // right + down
-    KeyScanner::mouse = 0; 
+    HIDMouse mousereportinit;
+    HIDMouse mousereport = std::accumulate(KeyScanner::mouseReports.begin(), KeyScanner::mouseReports.end(),mousereportinit, [](HIDMouse a, HIDMouse b) {
+                          HIDMouse c;
+                          c.buttons = a.buttons | b.buttons;
+                          c.x = a.x+b.x;
+                          c.y = a.y+b.y; 
+                          c.wheel = a.wheel + b.wheel; 
+                          c.pan = a.pan + b.pan;
+                         return c;
+                     });
+    bluemicro_hid.mouseReport(&mousereport);
+    KeyScanner::mouseReports.clear();
+    has_mouse_key = true;
+  } else
+  {
+      if (has_mouse_key) 
+      { 
+        LOG_LV1("RENDER","MOUSE 0 ELSE");
+        bluemicro_hid.mouseButtonRelease();
+        has_mouse_key = false;
+      }
   }
   
 }

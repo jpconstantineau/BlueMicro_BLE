@@ -224,7 +224,6 @@ void bt_startAdv(void)
   #endif
 
   // There is no other service for Central 
-  // ToDo: Consider Configuration Service... Save config to board, reset to default values, go to DFU, etc...
   
   // There is probably not enough room for the dev name in the advertising packet. Putting it in the ScanResponse Packet
   //Bluefruit.ScanResponse.addName();

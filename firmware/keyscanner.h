@@ -51,7 +51,7 @@ class KeyScanner {
         static uint16_t remotespecialkeycode;
         //static uint8_t currentReport[8];
         static HIDKeyboard currentReport;
-
+        static std::vector<HIDMouse> mouseReports;
         static uint8_t bufferposition;
 
     private:
@@ -61,7 +61,7 @@ class KeyScanner {
 
         static void copyRemoteReport();
 
-       
+        
         static uint8_t getlayer(uint16_t layers);
         static bool processingmacros;
         static uint16_t oneshotLayer;
@@ -77,6 +77,8 @@ class KeyScanner {
         static uint32_t triggerkeytimer;
         static uint8_t remoteMod;
         static uint8_t currentMod;
+
+        
 
         static std::vector<uint16_t> activeKeys; 
         static std::vector<uint16_t> encoderKeys; 
