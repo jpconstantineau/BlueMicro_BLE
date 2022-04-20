@@ -26,31 +26,6 @@ void KeyScanner::release(unsigned long currentMillis, const int& row, const int&
     matrix[row][col].clear(currentMillis);
 }
 
-/**************************************************************************************************************************/
-// Called by callback function when remote data is received
-/**************************************************************************************************************************/
-void KeyScanner::updateRemoteLayer(uint16_t data)
-{
-    remoteLayer = data;
-}
-
-/**************************************************************************************************************************/
-// Called by callback function when remote data is received
-/**************************************************************************************************************************/
-void KeyScanner::updateRemoteReport(uint8_t data0, uint8_t data1, uint8_t data2,uint8_t data3, uint8_t data4, uint8_t data5,uint8_t data6)
-{
-    remoteMod=data0;
-    remoteReport[0]= data0;
-    remoteReport[1]= data1;
-    remoteReport[2]= data2;
-    remoteReport[3]= data3;
-    remoteReport[4]= data4;
-    remoteReport[5]= data5;
-    remoteReport[6]= data6;
-}
-
-
-
 
 /**************************************************************************************************************************/
 void KeyScanner::resetReport() {
@@ -63,27 +38,8 @@ void KeyScanner::resetReport() {
     currentReport.keycode[4] = 0;
     currentReport.keycode[5] = 0;
     currentReport.modifier = 0;
-  //  currentReport.layer = 0; TODO FIGURE OUT LAYERS
 }
 
-
-/**************************************************************************************************************************/
-void KeyScanner::copyRemoteReport()
-{
-#if BLE_PERIPHERAL == 1  // PERIPHERAL MUST BE HANDLED DIFFERENTLY THAN CENTRAL - OTHERWISE, THE REPORTS WILL JUST KEEP BOUNCING FROM ONE BOARD TO THE OTHER 
-    resetReport();
-#else
-    currentMod = remoteMod;
-    currentReport.modifier = remoteMod;
-    bufferposition = 0;
-    if (remoteReport[1]>0){currentReport.keycode[bufferposition] = remoteReport[1]; bufferposition++; }
-    if (remoteReport[2]>0){currentReport.keycode[bufferposition] = remoteReport[2]; bufferposition++; }
-    if (remoteReport[3]>0){currentReport.keycode[bufferposition] = remoteReport[3]; bufferposition++; }
-    if (remoteReport[4]>0){currentReport.keycode[bufferposition] = remoteReport[4]; bufferposition++; }
-    if (remoteReport[5]>0){currentReport.keycode[bufferposition] = remoteReport[5]; bufferposition++; }
-    if (remoteReport[6]>0){currentReport.keycode[bufferposition] = remoteReport[6]; bufferposition++; }
-#endif
-}
 
 /**************************************************************************************************************************/
 uint8_t KeyScanner::getlayer(uint16_t layers)
@@ -228,8 +184,8 @@ void process_user_layers(uint16_t layermask)
 /**************************************************************************************************************************/
 bool KeyScanner::updateLayer()
 {
-    uint16_t prevlayer = localLayer;                    // remember last layer mask
-    detectedlayerkeys = localLayer | remoteLayer | oneshotLayer; // merge the layer masks
+    
+    detectedlayerkeys = localLayer  | oneshotLayer; // merge the layer masks
     // TODO: check is remotelayer being sent/received is a bitmasked layer
     // oneshotLayer is a bitmasked layer
     // localLayer is a bitmasked layer
@@ -257,8 +213,8 @@ bool KeyScanner::updateLayer()
     }
     
     
-    layerChanged = (prevlayer != localLayer);
-    return layerChanged;
+    
+    return true;
 }
 
 
@@ -266,15 +222,9 @@ bool KeyScanner::updateLayer()
 
 bool KeyScanner::getReport()
 {
-    previousReport = currentReport;
 
     resetReport();
-    copyRemoteReport();
     updateLayer();
-    if (remotespecialkeycode>0){
-        activeKeys.push_back(remotespecialkeycode);
-        remotespecialkeycode=0;
-    }
 
     #ifdef ENABLE_COMBOS
         // process single-key substs (macros) first.
@@ -365,7 +315,9 @@ bool KeyScanner::getReport()
         }
         
         //check if the hid keycode contains a modifier. // also check for macros.
-        uint8_t steps = 5;
+        #define MOVE_STEP    5
+        uint8_t steps = MOVE_STEP;
+
         switch (hidKeycode) { 
             case KC_LCTRL:  currentMod |= 1;    currentMod |= extraModifiers; break;
             case KC_LSHIFT: currentMod |= 2;    currentMod |= extraModifiers; break;
@@ -375,13 +327,12 @@ bool KeyScanner::getReport()
             case KC_RSHIFT: currentMod |= 32;   currentMod |= extraModifiers; break;
             case KC_RALT:   currentMod |= 64;   currentMod |= extraModifiers; break;
             case KC_RGUI:   currentMod |= 128;  currentMod |= extraModifiers; break;
-            case KC_RESERVED_A5: if(!processingmacros){macro = keycode; processingmacros=true; } extraModifiers=0; break;                  // KC_RESERVED_A5 is the keycode marker for user macros.
-            case KC_RESERVED_A6: if(!processingmacros){specialfunction = keycode; processingmacros=true;} extraModifiers=0; break;        // KC_RESERVED_A6 is the keycode marker for special keyboard functions.
-            case KC_RESERVED_A7: if(!processingmacros){consumer = keycode; processingmacros=true;} extraModifiers=0; break;               // KC_RESERVED_A7 is the keycode marker for consumer reports.
-            case KC_RESERVED_A8: consumer = keycode;  extraModifiers=0; break;              // KC_RESERVED_A8 is the keycode marker for repeating consumer reports.
+            case KC_RESERVED_A5: macroKeys.push_back(keycode); extraModifiers=0; break;                  // KC_RESERVED_A5 is the keycode marker for user macros.
+            case KC_RESERVED_A6: specialfunctionKeys.push_back(keycode); extraModifiers=0; break;        // KC_RESERVED_A6 is the keycode marker for special keyboard functions.
+            case KC_RESERVED_A7: consumerReports.push_back(keycode);  extraModifiers=0; break;               // KC_RESERVED_A7 is the keycode marker for consumer reports.
+            case KC_RESERVED_A8: consumerReports.push_back(keycode);  extraModifiers=0; break;              // KC_RESERVED_A8 is the keycode marker for repeating consumer reports.
             case KC_RESERVED_A9: 
                 HIDMouse thismousereport;
-                
                 switch (keycode)
                 {
                     case KC_MS_OFF:   thismousereport.buttons  = RID_MOUSE; break;
@@ -404,8 +355,8 @@ bool KeyScanner::getReport()
                 mouseReports.push_back(thismousereport);
                 extraModifiers=0;
             break;                  // KC_RESERVED_A8 is the keycode marker for mouse reports. Mousekeys can be repeated... We therefore don't need the macro logic
-            case KC_RESERVED_AA: special_key = keycode; extraModifiers=0; break;            // KC_RESERVED_AA is the keycode marker for special keys.
-            case KC_RESERVED_AB: if(!processingmacros){specialfunction = keycode; processingmacros=true;} extraModifiers=0; break;               // KC_RESERVED_AB keycode for marking this as a specialfunction for international/special characters (ALT-0233 = é).
+            case KC_RESERVED_AA: specialKeys.push_back(keycode); extraModifiers=0; break;               // KC_RESERVED_AA is the keycode marker for special keys.
+            case KC_RESERVED_AB: specialfunctionKeys.push_back(keycode);  extraModifiers=0; break;      // KC_RESERVED_AB keycode for marking this as a specialfunction for international/special characters (ALT-0233 = é).
         }
         //add all of the extra modifiers into the curren modifier 
         currentMod |= extraModifiers;
@@ -416,37 +367,9 @@ bool KeyScanner::getReport()
     }
 
     currentReport.modifier = currentMod;
-   // currentReport.layer = localLayer;  TODO Review how layers are managed across boards
+    keyboardReports.push_back(currentReport);
     
-
-if (activeKeys.empty() && processingmacros) {processingmacros = false;}
-
-   if(currentReport  != previousReport) 
-    {
-        reportChanged = true;
-        status->lastreporttime = status->timestamp;
-        if (processingmacros)
-            if ((currentReport.modifier == 0 )
-                && (currentReport.keycode[0] == 0 )
-                && (currentReport.keycode[1] == 0 )
-                && (currentReport.keycode[2] == 0 )
-                && (currentReport.keycode[3] == 0 )
-                && (currentReport.keycode[4] == 0 )
-                && (currentReport.keycode[5] == 0 ))
-            {processingmacros=false; macro=0; specialfunction=0; consumer=0; mouse=0;}
-    }
-    else
-    {reportChanged = false;
-    
-    }
-    if ((status->timestamp)-(status->lastreporttime) > 125) // make sure we have at least 1 report every 125 ms even if we don't type.
-    {
-        reportChanged = true;
-        status->lastreporttime = status->timestamp;
-    } 
-
-
-    return reportChanged;
+    return true;
 }
 
 unsigned long KeyScanner::getLastPressed() 
@@ -456,31 +379,34 @@ unsigned long KeyScanner::getLastPressed()
 /**************************************************************************************************************************/
 
 HIDKeyboard KeyScanner::currentReport = {0, {0, 0 ,0, 0, 0, 0}}; 
-HIDKeyboard KeyScanner::previousReport = {0, {0, 0 ,0, 0, 0, 0}}; 
 
-uint8_t KeyScanner::remoteReport[8]  = {0, 0, 0 ,0, 0, 0, 0, 0}; 
 
-bool    KeyScanner::layerChanged = false;
-bool    KeyScanner::reportChanged = false;
-bool    KeyScanner::processingmacros = false;
+
 uint16_t KeyScanner::detectedlayerkeys = 0;
 uint16_t KeyScanner::localLayer = 0;
-uint16_t KeyScanner::macro = 0;
-uint16_t KeyScanner::specialfunction = 0;
-uint16_t KeyScanner::consumer = 0;
-uint16_t KeyScanner::mouse = 0;
-uint16_t KeyScanner::special_key = 0;
-uint16_t KeyScanner::remoteLayer = 0;
-uint16_t KeyScanner::remotespecialkeycode = 0;
+
+
+std::vector<uint16_t> KeyScanner::macroKeys {};
+std::vector<uint16_t> KeyScanner::specialfunctionKeys {};
+std::vector<uint16_t> KeyScanner::specialKeys {};
+
+std::vector<HIDKeyboard> KeyScanner::keyboardReports {};
+std::vector<uint16_t> KeyScanner::consumerReports {};
+std::vector<HIDMouse>    KeyScanner::mouseReports {};
+
+
+
 uint32_t KeyScanner::combotimer = 0;
 uint32_t KeyScanner::triggerkeytimer = 0;
 
 uint16_t KeyScanner::oneshotLayer = 0;
-uint8_t KeyScanner::remoteMod = 0;
 uint8_t KeyScanner::currentMod = 0;
 unsigned long KeyScanner::lastPressed = 0;
 uint8_t KeyScanner::bufferposition = 0;
-std::vector<HIDMouse> KeyScanner::mouseReports {};
+
+
+
+
 std::vector<uint16_t> KeyScanner::activeKeys {};
 std::vector<uint16_t> KeyScanner::encoderKeys {};
 std::vector<uint16_t> KeyScanner::macroBuffer {};

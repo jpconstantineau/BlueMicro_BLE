@@ -34,51 +34,42 @@ class KeyScanner {
 
         static void press(unsigned long millis, const int& row, const int& col);
         static void release(unsigned long millis, const int& row, const int& col);
-        static void updateRemoteReport(uint8_t data0 , uint8_t data1, uint8_t data2,uint8_t data3, uint8_t data4, uint8_t data5,uint8_t data6);
-        static void updateRemoteLayer(uint16_t data0);
         static void process_for_tri_layers(uint8_t if_layer1, uint8_t and_layer2, uint8_t use_layer3);
         static void add_to_encoderKeys(uint16_t keycode);
         static bool getReport();
         static unsigned long getLastPressed();
-        static bool layerChanged;
-        static bool reportChanged;
-        static uint16_t macro;
-        static uint16_t specialfunction;
-        static uint16_t consumer;
-        static uint16_t mouse;
-        static uint16_t localLayer;
-        static uint16_t special_key;
-        static uint16_t remotespecialkeycode;
-        //static uint8_t currentReport[8];
-        static HIDKeyboard currentReport;
-        static std::vector<HIDMouse> mouseReports;
-        static uint8_t bufferposition;
+
+        static std::vector<uint16_t> macroKeys;
+        static std::vector<uint16_t> specialfunctionKeys;
+        static std::vector<uint16_t> specialKeys;
+
+        static std::vector<HIDKeyboard> keyboardReports;
+        static std::vector<uint16_t> consumerReports;
+        static std::vector<HIDMouse>    mouseReports;
+
+        
 
     private:
+
         static void resetReport();
         static void updateBuffer();
         static bool updateLayer();
 
-        static void copyRemoteReport();
-
-        
         static uint8_t getlayer(uint16_t layers);
-        static bool processingmacros;
+
+        static uint8_t bufferposition;
+
+        static uint16_t localLayer;
+
         static uint16_t oneshotLayer;
-        static uint8_t remoteReport[8];
-        //static HIDKeyboard remoteReport;
-        //static uint8_t previousReport[8];
-        static HIDKeyboard previousReport;
         
+        static HIDKeyboard currentReport;
+
         static unsigned long lastPressed;
         static uint16_t detectedlayerkeys;
-        static uint16_t remoteLayer;
         static uint32_t combotimer;
         static uint32_t triggerkeytimer;
-        static uint8_t remoteMod;
         static uint8_t currentMod;
-
-        
 
         static std::vector<uint16_t> activeKeys; 
         static std::vector<uint16_t> encoderKeys; 

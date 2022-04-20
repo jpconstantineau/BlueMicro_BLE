@@ -136,58 +136,84 @@ void addKeycodeToQueue(const uint16_t keycode)
 
 
 /**************************************************************************************************************************/
-// Communication with computer and other boards
+// Communication with computer
 /**************************************************************************************************************************/
 void sendKeyPresses() {
 
-    // use to send consumer release report
+    // keep track wether a release needs to be sent.
     static bool has_consumer_key = false;
     static bool has_mouse_key = false;
+    static bool has_keyboard_key = false;
+    static bool has_specialfunctionKeys = false;
+    static bool has_macro_key = false;
+    
 
    KeyScanner::getReport();                                         // get state data - Data is in KeyScanner::currentReport 
 
-  if (KeyScanner::special_key > 0){
-    LOG_LV1("RENDER","SPECIAL %i" ,KeyScanner::special_key);
-      ADDCOMMAND(commandQueue, KS(KC_ESC) );
-      KeyScanner::special_key = 0;
+  if (KeyScanner::specialKeys.size() > 0)
+  {
+    std::for_each(KeyScanner::specialKeys.cbegin(), KeyScanner::specialKeys.cend(), [](uint16_t key){ADDCOMMAND(commandQueue, KS(KC_ESC) );} );
+    KeyScanner::specialKeys.clear();  
   }
 
-  if (KeyScanner::macro > 0){
-    LOG_LV1("RENDER","MACRO %i" ,KeyScanner::macro);
-      process_user_macros(KeyScanner::macro);
-      KeyScanner::macro = 0; 
-  } 
+  if (KeyScanner::macroKeys.size() > 0)
+  {
+      if (!has_macro_key)
+      {
+        std::for_each(KeyScanner::macroKeys.cbegin(), KeyScanner::macroKeys.cend(), [](uint16_t key){process_user_macros(key);} );
+        has_macro_key = true;
+      }
+      KeyScanner::macroKeys.clear();  
+  }
+  else
+  {
+    has_macro_key = false;
+  }
 
   #ifdef ENABLE_COMBOS
      std::for_each(combos.keycodebuffertosend.rbegin(), combos.keycodebuffertosend.rend(), [](uint16_t keycode){addKeycodeToQueue(keycode);} );
      combos.keycodebuffertosend.clear();
   #endif
 
-  if ((KeyScanner::reportChanged))  //any new key presses anywhere?
-  {     
-      LOG_LV1("RENDER","KEYBOARD %i" ,KeyScanner::currentReport.keycode[0]);
-      bluemicro_hid.keyboardReport(KeyScanner::currentReport.modifier, KeyScanner::currentReport.keycode);
-                                                                      
-    //    LOG_LV1("MXSCAN","SEND: %i %i %i %i %i %i %i %i %i " ,keyboardstate.timestamp,KeyScanner::currentReport.modifier, KeyScanner::currentReport.keycode[0],KeyScanner::currentReport.keycode[1],KeyScanner::currentReport.keycode[2], KeyScanner::currentReport.keycode[3],KeyScanner::currentReport.keycode[4], KeyScanner::currentReport.keycode[5],KeyScanner::currentReport.layer);        
-  } 
-  if (KeyScanner::specialfunction > 0)
+  if (KeyScanner::keyboardReports.size() > 0)
+  {   
+      std::for_each(KeyScanner::keyboardReports.cbegin(), KeyScanner::keyboardReports.cend(), [](HIDKeyboard report){bluemicro_hid.keyboardReport(report.modifier, report.keycode);} );
+      has_keyboard_key = true;
+      KeyScanner::keyboardReports.clear(); 
+  }
+  else
   {
-    LOG_LV1("RENDER","FUNC %i" ,KeyScanner::specialfunction);
-    ADDCOMMAND(commandQueue, KeyScanner::specialfunction);
-    KeyScanner::specialfunction = 0; 
-  } 
-  if (KeyScanner::consumer > 0)
+      if (has_keyboard_key) 
+      { 
+        bluemicro_hid.keyboardRelease();
+        has_keyboard_key = false;
+      } 
+  }
+  
+  if (KeyScanner::specialfunctionKeys.size() > 0)
   {
-    LOG_LV1("RENDER","CONSUMER %i" ,KeyScanner::consumer);
-    bluemicro_hid.consumerKeyPress(hid_GetMediaUsageCode(KeyScanner::consumer));
-    KeyScanner::consumer = 0; 
+    if (!has_specialfunctionKeys)
+    {
+      std::for_each(KeyScanner::specialfunctionKeys.cbegin(), KeyScanner::specialfunctionKeys.cend(), [](uint16_t key){ADDCOMMAND(commandQueue, key);} );
+      has_specialfunctionKeys = true;
+    }
+    KeyScanner::specialfunctionKeys.clear(); 
+  } 
+  else
+  {
+    has_specialfunctionKeys = false;
+  }
+
+  if (KeyScanner::consumerReports.size() > 0)
+  {
+    std::for_each(KeyScanner::consumerReports.cbegin(), KeyScanner::consumerReports.cend(), [](uint16_t key){bluemicro_hid.consumerKeyPress(hid_GetMediaUsageCode(key));} );
+    KeyScanner::consumerReports.clear(); 
     has_consumer_key = true;
   }
   else
   {
       if (has_consumer_key) 
       { 
-        LOG_LV1("RENDER","CONSUMER 0 ELSE");
         bluemicro_hid.consumerKeyRelease();
         has_consumer_key = false;
       }
@@ -195,7 +221,6 @@ void sendKeyPresses() {
  
   if (KeyScanner::mouseReports.size() > 0)
   {
-    LOG_LV1("RENDER","MOUSE %i" ,KeyScanner::mouse);
     HIDMouse mousereportinit;
     HIDMouse mousereport = std::accumulate(KeyScanner::mouseReports.begin(), KeyScanner::mouseReports.end(),mousereportinit, [](HIDMouse a, HIDMouse b) {
                           HIDMouse c;
@@ -209,18 +234,17 @@ void sendKeyPresses() {
     bluemicro_hid.mouseReport(&mousereport);
     KeyScanner::mouseReports.clear();
     has_mouse_key = true;
-  } else
+  } 
+  else
   {
       if (has_mouse_key) 
       { 
-        LOG_LV1("RENDER","MOUSE 0 ELSE");
         bluemicro_hid.mouseButtonRelease();
         has_mouse_key = false;
       }
   }
-  
 }
-
+/********************************************************************************/
 //TODO re-implement sleep as module
 void checkforsleep()
 {
