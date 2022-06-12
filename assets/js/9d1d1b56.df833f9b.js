@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkdocumentation=self.webpackChunkdocumentation||[]).push([[4360],{4062:function(t){t.exports=JSON.parse('{"allTagsPath":"/blog/tags","slug":"/blog/tags/circuit-python-2022","name":"CircuitPython2022","count":1,"permalink":"/blog/tags/circuit-python-2022"}')}}]);

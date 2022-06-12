@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkdocumentation=self.webpackChunkdocumentation||[]).push([[2006],{845:function(e){e.exports=JSON.parse('{"allTagsPath":"/blog/tags","slug":"/blog/tags/blue-micro","name":"BlueMicro","count":1,"permalink":"/blog/tags/blue-micro"}')}}]);
