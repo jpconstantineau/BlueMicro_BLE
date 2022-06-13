@@ -28,6 +28,7 @@
    * 
    * You will need the following libraries installed:
    * bluemicro_hid
+   * bluemicro_engine
    */
 
    /* Compiling and Flashing
@@ -36,7 +37,7 @@
     * 
     * Board Selected:
     * Most nrf52832 based boards: Adafruit nRF52 Feather
-    * Most nrf52840 based boards: PCA10056
+    * Most nrf52840 based boards: Nordic nRF52840 DK (PCA10056)
     * Programmer: Bootloader DFU for BlueFruit nRF52
     * 
     * Note that for serial DFU (Device Firmware Upgrade) you may need to manually press the "reset" button if the serial reset circuitry using the DTR line is not used.  
@@ -44,10 +45,7 @@
     */
 
 /**************************************************************************************************************************/
-
-#include "firmware_config.h"
 #include "firmware.h"
-#include "command_queues.h"
 
 // cppcheck-suppress unusedFunction
 void setup() {
@@ -56,7 +54,7 @@ void setup() {
   addloopcommands();
   SORTCOMMANDS(commandList);
   RUNCOMMANDS(setupQueue, commandList);
-};
+}
 
 // cppcheck-suppress unusedFunction
 void loop() {  

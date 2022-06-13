@@ -32,6 +32,7 @@ byte columns[] MATRIX_COL_PINS;     // Contains the GPIO Pin Numbers defined in 
 /**************************************************************************************************************************/
 //todo setup save to flash as module.
 void setupConfig() {
+  LOG_LV1("SETUP","setupConfig");
   InternalFS.begin();
   loadConfig();
 
@@ -59,6 +60,7 @@ void setupConfig() {
 /**************************************************************************************************************************/
 void loadConfig()
 {
+  LOG_LV1("SETUP","loadConfig");
   file.open(SETTINGS_FILE, FILE_O_READ);
 
   if(file)
@@ -82,6 +84,7 @@ void loadConfig()
 /**************************************************************************************************************************/
 void resetConfig()
 {
+  LOG_LV1("SETUP","resetConfig");
   keyboardconfig.version=BLUEMICRO_CONFIG_VERSION;
   keyboardconfig.pinPWMLED=BACKLIGHT_LED_PIN;
   keyboardconfig.pinRGBLED=WS2812B_LED_PIN;
@@ -130,6 +133,7 @@ void resetConfig()
 /**************************************************************************************************************************/
 void saveConfig()
 {
+  LOG_LV1("SETUP","saveConfig");
   InternalFS.remove(SETTINGS_FILE);
 
   if (file.open(SETTINGS_FILE, FILE_O_WRITE))
@@ -142,6 +146,7 @@ void saveConfig()
 
 void setuphid()
 {
+  LOG_LV1("SETUP","setuphid");
   bluemicro_hid.setBLEManufacturer(MANUFACTURER_NAME);
   bluemicro_hid.setBLETxPower(DEVICE_POWER);
   bluemicro_hid.setBLEModel(DEVICE_NAME);
@@ -155,6 +160,7 @@ void setuphid()
 //todo re-install debug CLI as module
 void serialsplash()
 {
+  LOG_LV1("SETUP","serialsplash");
   Serial.begin(115200);
         Serial.println(" ____  _            __  __ _                   ____  _     _____ ");
         Serial.println("| __ )| |_   _  ___|  \\/  (_) ___ _ __ ___    | __ )| |   | ____|");
@@ -169,6 +175,7 @@ void serialsplash()
 //
 /**************************************************************************************************************************/
 void setupMatrix(void) {
+  LOG_LV1("SETUP","setupMatrix");
     //inits all the columns as INPUT
    for (const auto& column : columns) {
       LOG_LV2("BLEMIC","Setting to INPUT Column: %i" ,column);
@@ -184,6 +191,7 @@ void setupMatrix(void) {
 
 void addsetupcommands()
 {
+  LOG_LV1("SETUP","addsetupcommands");
   SETUPCOMMAND(commandList, SETUP_HID , setuphid());
   ADDCOMMAND(setupQueue, SETUP_HID );
   SETUPCOMMAND(commandList, SETUP_GPIO , setupGpio());
@@ -490,10 +498,10 @@ void setbleprofile3()
 
 void process_user_special_keys_command()
 {
-
+LOG_LV1("LOOP","process_user_special_keys_command");
   //todo update special keys
 ////  uint8_t mods = KeyScanner::currentReport.modifier ;
-          LOG_LV1("SPECIAL","PROCESS: %i %i %i %i %i %i %i %i %i" ,KeyScanner::special_key,mods, KeyScanner::currentReport.keycode[0],KeyScanner::currentReport.keycode[1],KeyScanner::currentReport.keycode[2], KeyScanner::currentReport.keycode[3],KeyScanner::currentReport.keycode[4], KeyScanner::currentReport.keycode[5],KeyScanner::bufferposition );  
+       ;//   LOG_LV1("SPECIAL","PROCESS: %i %i %i %i %i %i %i %i %i" ,KeyScanner::special_key,mods, KeyScanner::currentReport.keycode[0],KeyScanner::currentReport.keycode[1],KeyScanner::currentReport.keycode[2], KeyScanner::currentReport.keycode[3],KeyScanner::currentReport.keycode[4], KeyScanner::currentReport.keycode[5],KeyScanner::bufferposition );  
 
  /*       switch (mods)
         {
@@ -515,6 +523,7 @@ void process_user_special_keys_command()
 
 void addkeyboardcommands()
 {
+  LOG_LV1("SETUP","addkeyboardcommands");
     SETUPCOMMAND(commandList,  RESET, NVIC_SystemReset() );
     SETUPCOMMAND(commandList,  DEBUG, toggleserial() );
     SETUPCOMMAND(commandList,  EEPROM_RESET, {keyboardstate.needFSReset = true;} );
@@ -607,6 +616,4 @@ void addkeyboardcommands()
 
     SETUPCOMMAND(commandList,   SYM_DEGREE, EXPAND_ALT_CODE(KC_KP_0, KC_KP_1, KC_KP_7, KC_KP_6) ); // Alt 0176 degree symbol   
     SETUPCOMMAND(commandList,   KS(KC_ESC), process_user_special_keys_command());
-
-
 }

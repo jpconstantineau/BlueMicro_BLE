@@ -2,11 +2,9 @@
 //
 // SPDX-License-Identifier: BSD-3-Clause
 
-#include <bluemicro_hid.h>
 #include "firmware.h"
 #include <Adafruit_LittleFS.h>
 #include <InternalFileSystem.h>
-#include "command_queues.h"
 #include "datastructures.h"
 #include "nrf52gpio.h"
 #include "nrf52battery.h"

@@ -62,6 +62,14 @@
 #endif
 
 
+#ifndef DEVICE_POWER
+#define DEVICE_POWER 0
+#endif
+
+#ifndef FILTER_RSSI_BELOW_STRENGTH
+#define FILTER_RSSI_BELOW_STRENGTH  -90
+#endif
+
 // Battery Service definitions.
 
 #ifndef BATTERY_TYPE

@@ -3,7 +3,6 @@
 // SPDX-License-Identifier: BSD-3-Clause
 
 #include <cstdint>
-#include "command_queues.h"
 #ifndef ADVANCED_KEYCODES_H
 #define ADVANCED_KEYCODES_H
 

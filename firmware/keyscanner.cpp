@@ -367,7 +367,7 @@ bool KeyScanner::getReport()
     }
 
     currentReport.modifier = currentMod;
-    keyboardReports.push_back(currentReport);
+    if (currentReport.modifier || (currentReport.keycode[0]>0)) keyboardReports.push_back(currentReport);
     
     return true;
 }

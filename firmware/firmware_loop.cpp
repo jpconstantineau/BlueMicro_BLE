@@ -150,14 +150,21 @@ void sendKeyPresses() {
 
    KeyScanner::getReport();                                         // get state data - Data is in KeyScanner::currentReport 
 
+LOG_LV1("HID","Millis:%i SK%i MC%i KB%i FN%i CR%i MS%i", millis(),KeyScanner::specialKeys.size(),KeyScanner::macroKeys.size(),KeyScanner::keyboardReports.size(),KeyScanner::specialfunctionKeys.size(),KeyScanner::consumerReports.size(),KeyScanner::mouseReports.size());
   if (KeyScanner::specialKeys.size() > 0)
   {
+    //LOG_LV1("HID-SK","size>0");
     std::for_each(KeyScanner::specialKeys.cbegin(), KeyScanner::specialKeys.cend(), [](uint16_t key){ADDCOMMAND(commandQueue, KS(KC_ESC) );} );
     KeyScanner::specialKeys.clear();  
+  }
+  else
+  {
+   ;// LOG_LV1("HID-SK","size=0");
   }
 
   if (KeyScanner::macroKeys.size() > 0)
   {
+  //  LOG_LV1("HID-MC","size>0");
       if (!has_macro_key)
       {
         std::for_each(KeyScanner::macroKeys.cbegin(), KeyScanner::macroKeys.cend(), [](uint16_t key){process_user_macros(key);} );
@@ -167,6 +174,7 @@ void sendKeyPresses() {
   }
   else
   {
+  //  LOG_LV1("HID-MC","size=0");
     has_macro_key = false;
   }
 
@@ -177,12 +185,14 @@ void sendKeyPresses() {
 
   if (KeyScanner::keyboardReports.size() > 0)
   {   
+   // LOG_LV1("HID-KB","size>0");
       std::for_each(KeyScanner::keyboardReports.cbegin(), KeyScanner::keyboardReports.cend(), [](HIDKeyboard report){bluemicro_hid.keyboardReport(report.modifier, report.keycode);} );
       has_keyboard_key = true;
       KeyScanner::keyboardReports.clear(); 
   }
   else
   {
+  //  LOG_LV1("HID-KB","size=0");
       if (has_keyboard_key) 
       { 
         bluemicro_hid.keyboardRelease();
@@ -192,6 +202,7 @@ void sendKeyPresses() {
   
   if (KeyScanner::specialfunctionKeys.size() > 0)
   {
+  //  LOG_LV1("HID-FN","size>0");
     if (!has_specialfunctionKeys)
     {
       std::for_each(KeyScanner::specialfunctionKeys.cbegin(), KeyScanner::specialfunctionKeys.cend(), [](uint16_t key){ADDCOMMAND(commandQueue, key);} );
@@ -201,17 +212,20 @@ void sendKeyPresses() {
   } 
   else
   {
+   // LOG_LV1("HID-FN","size=0");
     has_specialfunctionKeys = false;
   }
 
   if (KeyScanner::consumerReports.size() > 0)
   {
+  //  LOG_LV1("HID-MD","size>0");
     std::for_each(KeyScanner::consumerReports.cbegin(), KeyScanner::consumerReports.cend(), [](uint16_t key){bluemicro_hid.consumerKeyPress(hid_GetMediaUsageCode(key));} );
     KeyScanner::consumerReports.clear(); 
     has_consumer_key = true;
   }
   else
   {
+  //  LOG_LV1("HID-MD","size=0");
       if (has_consumer_key) 
       { 
         bluemicro_hid.consumerKeyRelease();
@@ -221,22 +235,16 @@ void sendKeyPresses() {
  
   if (KeyScanner::mouseReports.size() > 0)
   {
+  //  LOG_LV1("HID-MS","size>0");
     HIDMouse mousereportinit;
-    HIDMouse mousereport = std::accumulate(KeyScanner::mouseReports.begin(), KeyScanner::mouseReports.end(),mousereportinit, [](HIDMouse a, HIDMouse b) {
-                          HIDMouse c;
-                          c.buttons = a.buttons | b.buttons;
-                          c.x = a.x+b.x;
-                          c.y = a.y+b.y; 
-                          c.wheel = a.wheel + b.wheel; 
-                          c.pan = a.pan + b.pan;
-                         return c;
-                     });
+    HIDMouse mousereport = std::accumulate(KeyScanner::mouseReports.begin(), KeyScanner::mouseReports.end(),mousereportinit);
     bluemicro_hid.mouseReport(&mousereport);
     KeyScanner::mouseReports.clear();
     has_mouse_key = true;
   } 
   else
   {
+  //  LOG_LV1("HID-MS","size=0");
       if (has_mouse_key) 
       { 
         bluemicro_hid.mouseButtonRelease();
