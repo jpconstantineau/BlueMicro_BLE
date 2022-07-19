@@ -33,11 +33,11 @@ Watch the video above to see how to install the Arduino IDE and get the library 
 These are the steps followed in the video (Original Instructions by [Adafruit](https://learn.adafruit.com/bluefruit-nrf52-feather-learning-guide/arduino-bsp-setup)):
 - Download and install the Arduino IDE (At least v1.8). Download it from [here](https://www.arduino.cc/en/Main/Software). Do not install it from the App Store.
 - Start the Arduino IDE
-- Add `https://www.adafruit.com/package_adafruit_index.json` and `https://github.com/jpconstantineau/Community_nRF52_Arduino/releases/latest/download/package_jpconstantineau_boards_index.json` as an **Additional Board Manager URL** (see image below)
+- Add `https://adafruit.github.io/arduino-board-index/package_adafruit_index.json` and `https://github.com/jpconstantineau/Community_nRF52_Arduino/releases/latest/download/package_jpconstantineau_boards_index.json` as an **Additional Board Manager URL** (see image below)
 - To add board Community nRF52 board support, start Arduino and open the Preferences window (**File** > **Preferences**). Now copy and paste the following 2 URLs into the 'Additional Boards Manager URLs' input field:
 
 ```
-https://www.adafruit.com/package_adafruit_index.json
+https://adafruit.github.io/arduino-board-index/package_adafruit_index.json
 https://github.com/jpconstantineau/Community_nRF52_Arduino/releases/latest/download/package_jpconstantineau_boards_index.json
 ```
 
