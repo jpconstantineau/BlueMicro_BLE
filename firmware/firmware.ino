@@ -29,6 +29,7 @@
    * You will need the following libraries installed:
    * bluemicro_hid
    * bluemicro_engine
+   * bluemicro_nrf52 (for nrf52 keyboards)
    */
 
    /* Compiling and Flashing
@@ -52,23 +53,10 @@ void setup() {
   addsetupcommands();
   addkeyboardcommands();
   addloopcommands();
-  SORTCOMMANDS(commandList);
-  RUNCOMMANDS(setupQueue, commandList);
+  run_setup_commands();
 }
 
 // cppcheck-suppress unusedFunction
 void loop() {  
-  static uint32_t last_timestamp = 0;
-  RUNCOMMANDS(loopQueue, commandList);   
-  uint32_t end_timestamp = millis();
-  uint32_t diff = (last_timestamp + HIDREPORTINGINTERVAL > end_timestamp) ? last_timestamp + HIDREPORTINGINTERVAL - end_timestamp:1;
-  last_timestamp = end_timestamp;
-  delay(diff); 
+   processing_loop(HIDREPORTINGINTERVAL);
 }
-
-// cppcheck-suppress unusedFunction  
-extern "C" void vApplicationIdleHook(void) {
-    sd_power_mode_set(NRF_POWER_MODE_LOWPWR); // 944uA
-    //sd_power_mode_set(NRF_POWER_MODE_CONSTLAT); // 1.5mA
-    sd_app_evt_wait();  // puts the nrf52 to sleep when there is nothing to do.  You need this to reduce power consumption. (removing this will increase current to 8mA)
-};

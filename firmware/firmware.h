@@ -6,13 +6,13 @@
 #define FIRMWARE_H
 #undef min
 #undef max
+#include <bluemicro_hid.h>
+#include <bluemicro_engine.h>
+#include <bluemicro_nrf52.h>
 #include "firmware_setup.h"
 #include "firmware_config.h"
 #include "keymap.h"
 #include "keyscanner.h"
-#include "sleep.h"
-#include "nrf52battery.h"
-#include "nrf52gpio.h"
 #include "datastructures.h"
 #include "combo_engine.h"
 #include "firmware_loop.h"

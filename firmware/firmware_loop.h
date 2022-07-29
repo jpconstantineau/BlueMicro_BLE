@@ -6,8 +6,6 @@
 #include <Adafruit_LittleFS.h>
 #include <InternalFileSystem.h>
 #include "datastructures.h"
-#include "nrf52gpio.h"
-#include "nrf52battery.h"
 #include <numeric>
 
 extern commandlist_t commandList; 
@@ -18,10 +16,10 @@ extern commandqueue_t loopQueue;
 extern PersistentState keyboardconfig;
 extern DynamicState keyboardstate;
 
-extern Battery batterymonitor;
-extern  led_handler statusLEDs;  /// Typically a Blue LED and a Red LED
+//extern Battery batterymonitor;
+//extern  led_handler statusLEDs;  /// Typically a Blue LED and a Red LED
 
-
+void processing_loop(uint32_t interval);
 void addloopcommands(void);
 void scanMatrix(void);
 void sendKeyPresses(void);

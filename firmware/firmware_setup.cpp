@@ -13,9 +13,9 @@ commandqueue_t loopQueue;
 PersistentState keyboardconfig;
 DynamicState keyboardstate;
 
-led_handler statusLEDs(&keyboardconfig, &keyboardstate);  /// Typically a Blue LED and a Red LED
+//led_handler statusLEDs(&keyboardconfig, &keyboardstate);  /// Typically a Blue LED and a Red LED
 KeyScanner keys(&keyboardconfig, &keyboardstate);
-Battery batterymonitor;
+//Battery batterymonitor;
 
 
 using namespace Adafruit_LittleFS_Namespace;
@@ -203,15 +203,15 @@ void addsetupcommands()
   {
     ADDCOMMAND(setupQueue, SETUP_SERIAL);
   }
-  SETUPCOMMAND(commandList, SETUP_VCCSWITCH, switchVCC(keyboardconfig.polarityVCCSwitch)); // turn on VCC when starting up if needed.
+//  SETUPCOMMAND(commandList, SETUP_VCCSWITCH, switchVCC(keyboardconfig.polarityVCCSwitch)); // turn on VCC when starting up if needed.
   if(keyboardconfig.enableVCCSwitch)
   {
-    ADDCOMMAND(setupQueue, SETUP_VCCSWITCH);
+ ///   ADDCOMMAND(setupQueue, SETUP_VCCSWITCH);
   }
-  SETUPCOMMAND(commandList, SETUP_CHARGER, switchCharger(keyboardconfig.polarityChargerControl)); // turn on Charger when starting up if needed.
+//  SETUPCOMMAND(commandList, SETUP_CHARGER, switchCharger(keyboardconfig.polarityChargerControl)); // turn on Charger when starting up if needed.
   if(keyboardconfig.enableChargerControl)
   {
-    ADDCOMMAND(setupQueue, SETUP_CHARGER);
+//    ADDCOMMAND(setupQueue, SETUP_CHARGER);
   }
 
   SETUPCOMMAND(commandList, SETUP_KEYMAP , setupKeymap());
@@ -222,10 +222,10 @@ void addsetupcommands()
 
 
 
-  SETUPCOMMAND(commandList, LED_ENABLE , statusLEDs.enable());
-  ADDCOMMAND(setupQueue, LED_ENABLE );
-  SETUPCOMMAND(commandList, LED_HELLO , statusLEDs.hello()); // blinks Status LEDs a couple as last step of setup.
-  ADDCOMMAND(setupQueue, LED_HELLO);
+//  SETUPCOMMAND(commandList, LED_ENABLE , statusLEDs.enable());
+//  ADDCOMMAND(setupQueue, LED_ENABLE );
+//  SETUPCOMMAND(commandList, LED_HELLO , statusLEDs.hello()); // blinks Status LEDs a couple as last step of setup.
+ // ADDCOMMAND(setupQueue, LED_HELLO);
 }
 
 void toggleserial()
@@ -242,10 +242,8 @@ void togglehelpmode()
 
 void clearbonds()
 {
-        // Bluefruit.clearBonds(); //removed in next BSP?
     if (keyboardstate.connectionState == CONNECTION_BLE)
       keyboardstate.needUnpair = true;
-    // Bluefruit.Central.clearBonds();
 }
 
 void automode()
@@ -297,47 +295,47 @@ void blemode()
 
 void printbattery()
 {
-    char buffer [50];
+ /*   char buffer [50];
   uint8_t intval;
-      intval = batterymonitor.vbat_per;
+  //    intval = batterymonitor.vbat_per;
       switch (batterymonitor.batt_type)
       {
         case BATT_UNKNOWN:
-            snprintf (buffer, sizeof(buffer), "VDD = %.0f mV, VBatt = %.0f mV", batterymonitor.vbat_vdd*1.0, batterymonitor.vbat_mv*1.0);
+   //         snprintf (buffer, sizeof(buffer), "VDD = %.0f mV, VBatt = %.0f mV", batterymonitor.vbat_vdd*1.0, batterymonitor.vbat_mv*1.0);
         break;
         case BATT_CR2032:
             if (intval>99)
             {
-              snprintf (buffer, sizeof(buffer), "VDD = %.0f mV (%4d %%)", batterymonitor.vbat_mv*1.0, intval);
+      //        snprintf (buffer, sizeof(buffer), "VDD = %.0f mV (%4d %%)", batterymonitor.vbat_mv*1.0, intval);
             }
             else
             {
-              snprintf (buffer, sizeof(buffer), "VDD = %.0f mV (%3d %%)", batterymonitor.vbat_mv*1.0, intval);
+    //          snprintf (buffer, sizeof(buffer), "VDD = %.0f mV (%3d %%)", batterymonitor.vbat_mv*1.0, intval);
             }    
         break;
         case BATT_LIPO:
             if (intval>99)
             {
-              sprintf (buffer, "LIPO = %.0f mV (%4d %%)", batterymonitor.vbat_mv*1.0, intval);
+        //      sprintf (buffer, "LIPO = %.0f mV (%4d %%)", batterymonitor.vbat_mv*1.0, intval);
             }
             else
             {
-              sprintf (buffer, "LIPO = %.0f mV (%3d %%)", batterymonitor.vbat_mv*1.0, intval);
+       //       sprintf (buffer, "LIPO = %.0f mV (%3d %%)", batterymonitor.vbat_mv*1.0, intval);
             }   
         break;
         case BATT_VDDH:
             if (intval>99)
             {
-              sprintf (buffer, "LIPO = %.0f mV (%4d %%)", batterymonitor.vbat_mv*1.0, intval);
+      //        sprintf (buffer, "LIPO = %.0f mV (%4d %%)", batterymonitor.vbat_mv*1.0, intval);
             }
             else
             {
-              sprintf (buffer, "LIPO = %.0f mV (%3d %%)", batterymonitor.vbat_mv*1.0, intval);
+        //      sprintf (buffer, "LIPO = %.0f mV (%3d %%)", batterymonitor.vbat_mv*1.0, intval);
             }   
         break;
       } 
     addStringToQueue(buffer);
-    addKeycodeToQueue(KC_ENTER);
+    addKeycodeToQueue(KC_ENTER);*/
 }
 
 void printinfo()
@@ -446,20 +444,20 @@ void printinfo()
 
   void sleepnow()
   {
-      if (keyboardstate.connectionState != CONNECTION_USB) sleepNow();
+    // if (keyboardstate.connectionState != CONNECTION_USB) sleepNow();
   }
 
 
 
 void setdefaultbatterycalc()
 {
-      batterymonitor.setmvToPercentCallback(mvToPercent_default);
-      batterymonitor.updateBattery(); // force an update
+  //    batterymonitor.setmvToPercentCallback(mvToPercent_default);
+  //    batterymonitor.updateBattery(); // force an update
 }
 void settestbatterycalc()
 {
-      batterymonitor.setmvToPercentCallback(mvToPercent_test);
-      batterymonitor.updateBattery(); // force an update
+   //   batterymonitor.setmvToPercentCallback(mvToPercent_test);
+   //   batterymonitor.updateBattery(); // force an update
 } 
 
 void setbleprofile1()
@@ -539,7 +537,7 @@ void addkeyboardcommands()
     SETUPCOMMAND(commandList,  PRINT_INFO, printinfo());
     SETUPCOMMAND(commandList,  PRINT_BLE, printble());
     SETUPCOMMAND(commandList,  PRINT_HELP, printhelp());
-    SETUPCOMMAND(commandList,  SLEEP_NOW, sleepnow());
+ //   SETUPCOMMAND(commandList,  SLEEP_NOW, sleepnow());
     SETUPCOMMAND(commandList,  BATTERY_CALC_DEFAULT, setdefaultbatterycalc());
     SETUPCOMMAND(commandList,  BATTERY_CALC_TEST, settestbatterycalc());
     SETUPCOMMAND(commandList,  BLEPROFILE_1, setbleprofile1());
@@ -616,4 +614,11 @@ void addkeyboardcommands()
 
     SETUPCOMMAND(commandList,   SYM_DEGREE, EXPAND_ALT_CODE(KC_KP_0, KC_KP_1, KC_KP_7, KC_KP_6) ); // Alt 0176 degree symbol   
     SETUPCOMMAND(commandList,   KS(KC_ESC), process_user_special_keys_command());
+}
+
+
+void run_setup_commands(void)
+{
+    SORTCOMMANDS(commandList);
+    RUNCOMMANDS(setupQueue, commandList);
 }

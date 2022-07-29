@@ -5,6 +5,20 @@
 /**************************************************************************************************************************/
 #include "firmware_loop.h"
 
+extern byte rows[] ;        // Contains the GPIO Pin Numbers defined in keyboard_config.h
+extern byte columns[] ;     // Contains the GPIO Pin Numbers defined in keyboard_config.h  
+
+
+void processing_loop(uint32_t interval) {  
+  static uint32_t last_timestamp = 0;
+  RUNCOMMANDS(loopQueue, commandList);   
+  uint32_t end_timestamp = millis();
+  uint32_t diff = (last_timestamp + interval > end_timestamp) ? last_timestamp + interval - end_timestamp:1;
+  last_timestamp = end_timestamp;
+  delay(diff); 
+}
+
+
 /**************************************************************************************************************************/
 // Keyboard Scanning
 /**************************************************************************************************************************/
@@ -332,12 +346,12 @@ void checkforreboot()
 
 void updatebattery()
 {
-      batterymonitor.updateBattery(); 
+  /*  //  batterymonitor.updateBattery(); 
       keyboardstate.batterytimer = keyboardstate.timestamp;
       keyboardstate.batt_type = batterymonitor.batt_type;
       keyboardstate.vbat_mv = batterymonitor.vbat_mv;
       keyboardstate.vbat_per = batterymonitor.vbat_per;
-      keyboardstate.vbat_vdd = batterymonitor.vbat_vdd;
+      keyboardstate.vbat_vdd = batterymonitor.vbat_vdd;*/
 }
 
 
@@ -345,7 +359,7 @@ void updatebattery()
 void updateleds()
 {
     keyboardstate.statusledtimer = keyboardstate.timestamp;
-    statusLEDs.update();
+  //  statusLEDs.update();
 }
 
 
